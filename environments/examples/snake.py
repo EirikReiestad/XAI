@@ -20,5 +20,18 @@ def main():
                 quit()
 
         env.render(pygame.display.get_surface())
+        input = pygame.key.get_pressed()
+        action = None
+        if input[pygame.K_UP]:
+            action = "UP"
+        elif input[pygame.K_DOWN]:
+            action = "DOWN"
+        elif input[pygame.K_LEFT]:
+            action = "LEFT"
+        elif input[pygame.K_RIGHT]:
+            action = "RIGHT"
+
+        env.step(action)
+
         pygame.display.flip()
-        pygame.time.wait(100)
+        pygame.time.wait(1000)

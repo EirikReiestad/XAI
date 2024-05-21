@@ -27,26 +27,20 @@ class SnakeEnvironment(Environment):
         self.snake = Snake(head)
         for i in range(starting_snake_length-1):
             self.snake.grow()
-            self.move_snake(Direction.RIGHT)
+            self._move_snake(Direction.RIGHT)
 
-    def move_snake(self, direction: Direction) -> bool:
+    def _move_snake(self, direction: Direction = None) -> bool:
         """
         Return:
             - bool: True if valid move, False otherwise
         """
+        if direction is None:
+            direction = self.direction
+
         assert isinstance(
             direction, Direction), f"Direction must be a Direction, not {type(direction)}"
 
-        # Check if the snake is moving in the opposite direction
-        if direction == Direction.UP and self.snake.direction == Direction.DOWN:
-            pass
-        elif direction == Direction.DOWN and self.snake.direction == Direction.UP:
-            pass
-        elif direction == Direction.LEFT and self.snake.direction == Direction.RIGHT:
-            pass
-        elif direction == Direction.RIGHT and self.snake.direction == Direction.LEFT:
-            pass
-        else:  # Valid move
+        if self._valid_direction(direction):
             self.direction = direction
 
         # Check if inside the grid
@@ -67,6 +61,23 @@ class SnakeEnvironment(Environment):
             False
 
         return self.snake.move(self.direction)
+
+    def _valid_direction(self, direction: Direction) -> bool:
+        if direction is None:
+            return True
+        assert isinstance(
+            direction, Direction), f"Direction must be a Direction, not {type(direction)}"
+
+        # Check if the snake is moving in the opposite direction
+        if direction == Direction.UP and self.snake.direction == Direction.DOWN:
+            return False
+        elif direction == Direction.DOWN and self.snake.direction == Direction.UP:
+            return False
+        elif direction == Direction.LEFT and self.snake.direction == Direction.RIGHT:
+            return False
+        elif direction == Direction.RIGHT and self.snake.direction == Direction.LEFT:
+            return False
+        return True
 
     def _init_food(self):
         self.food = Food()
@@ -93,5 +104,34 @@ class SnakeEnvironment(Environment):
         self.snake.render(screen, cell_width, cell_height)
         self.food.render(screen, cell_width, cell_height)
 
-    def step(self):
-        pass
+    def step(self, action=None):
+        """
+        Action is per now a synonym for direction, but it can be extended to include more actions
+
+        Parameters:
+            action: Direction
+        """
+        # We will just have a text to direction mapping to not make it mandatory to use the Direction enum
+        if isinstance(action, str):
+            action = self._text_to_direction(action)
+
+        if not self._valid_direction(action):
+            action = None
+
+        if action is not None:
+            self._move_snake(action)
+        else:
+            self._move_snake()
+
+    def _text_to_direction(self, text: str) -> Direction:
+        match text:
+            case "UP":
+                return Direction.UP
+            case "DOWN":
+                return Direction.DOWN
+            case "LEFT":
+                return Direction.LEFT
+            case "RIGHT":
+                return Direction.RIGHT
+            case _:
+                assert ValueError(text), f"Invalid direction: {text}"
