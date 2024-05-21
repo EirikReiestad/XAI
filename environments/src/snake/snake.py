@@ -24,13 +24,20 @@ class Snake:
         assert isinstance(segment, SnakeSegment), "head must be a SnakeSegment"
         self.head = segment
         self.should_grow = False
+        self._direction = Direction.RIGHT
 
     def grow(self):
         self.should_grow = True
 
-    def move(self, direction: Direction):
+    def move(self, direction: Direction) -> bool:
+        """
+        Parameters:
+            direction: Direction
+        Return:
+            bool: True if valid move, False otherwise
+        """
         assert isinstance(
-            direction, Direction), "direction must be a Direction"
+            direction, Direction), f"Direction must be a Direction, not {type(direction)}"
 
         match direction:
             case Direction.UP:
@@ -53,7 +60,10 @@ class Snake:
 
         if not self.should_grow:
             current.next = None
+
         self.should_grow = False
+
+        return True
 
     def render(self, screen: pygame.Surface, cell_width: float, cell_height: float):
         current = self.head
@@ -62,6 +72,16 @@ class Snake:
             pygame.draw.rect(screen, color, (current.x * cell_width,
                              current.y * cell_height, cell_width, cell_height))
             current = current.next
+
+    @property
+    def direction(self):
+        return self._direction
+
+    @direction.setter
+    def direction(self, direction: Direction):
+        assert isinstance(
+            direction, Direction), f"Direction must be a Direction, not {type(direction)}"
+        self._direction = direction
 
     def __str__(self):
         current = self.head

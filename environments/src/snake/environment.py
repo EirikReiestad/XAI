@@ -15,7 +15,6 @@ class SnakeEnvironment(Environment):
         assert height > 0, "Height must be greater than 0"
 
         self.grid = Grid(width, height)
-        self.direction = None
         self._init_snake()
         self._init_food()
 
@@ -36,29 +35,38 @@ class SnakeEnvironment(Environment):
             - bool: True if valid move, False otherwise
         """
         assert isinstance(
-            direction, Direction), "Direction must be a Direction"
+            direction, Direction), f"Direction must be a Direction, not {type(direction)}"
 
         # Check if the snake is moving in the opposite direction
-        if self.direction is not None:
-            if direction == Direction.UP and self.direction == Direction.DOWN:
-                pass
-            elif direction == Direction.DOWN and self.direction == Direction.UP:
-                pass
-            elif direction == Direction.LEFT and self.direction == Direction.RIGHT:
-                pass
-            elif direction == Direction.RIGHT and self.direction == Direction.LEFT:
-                pass
-            else:  # Valid move
-                self.direction = direction
-                return True
+        if direction == Direction.UP and self.snake.direction == Direction.DOWN:
+            pass
+        elif direction == Direction.DOWN and self.snake.direction == Direction.UP:
+            pass
+        elif direction == Direction.LEFT and self.snake.direction == Direction.RIGHT:
+            pass
+        elif direction == Direction.RIGHT and self.snake.direction == Direction.LEFT:
+            pass
+        else:  # Valid move
+            self.direction = direction
 
         # Check if inside the grid
         head = self.snake.head
         new_x, new_y = head.x, head.y
 
         match direction:
+            case Direction.UP:
+                new_y -= 1
+            case Direction.DOWN:
+                new_y += 1
+            case Direction.LEFT:
+                new_x -= 1
+            case Direction.RIGHT:
+                new_x += 1
 
-        self.snake.move(self.direction)
+        if new_x < 0 or new_x >= self.grid.width or new_y < 0 or new_y >= self.grid.height:
+            False
+
+        return self.snake.move(self.direction)
 
     def _init_food(self):
         self.food = Food()
