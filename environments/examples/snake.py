@@ -11,27 +11,33 @@ def main():
     screen = pygame.display.set_mode((width, height))
     env.set_screen(screen)
 
+    clock = pygame.time.Clock()
+
     while True:
         env.screen.fill((0, 0, 0))
 
+        action = None
+        env.render(pygame.display.get_surface())
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    quit()
 
-        env.render(pygame.display.get_surface())
-        input = pygame.key.get_pressed()
-        action = None
-        if input[pygame.K_UP]:
-            action = "UP"
-        elif input[pygame.K_DOWN]:
-            action = "DOWN"
-        elif input[pygame.K_LEFT]:
-            action = "LEFT"
-        elif input[pygame.K_RIGHT]:
-            action = "RIGHT"
+                if event.key == pygame.K_UP:
+                    action = "UP"
+                elif event.key == pygame.K_DOWN:
+                    action = "DOWN"
+                elif event.key == pygame.K_LEFT:
+                    action = "LEFT"
+                elif event.key == pygame.K_RIGHT:
+                    action = "RIGHT"
 
         env.step(action)
 
         pygame.display.flip()
-        pygame.time.wait(1000)
+        clock.tick(2)
+        # pygame.time.wait(1000)

@@ -39,6 +39,8 @@ class Snake:
         assert isinstance(
             direction, Direction), f"Direction must be a Direction, not {type(direction)}"
 
+        self.direction = direction
+
         match direction:
             case Direction.UP:
                 new_x, new_y = self.head.x, self.head.y - 1
@@ -64,6 +66,14 @@ class Snake:
         self.should_grow = False
 
         return True
+
+    def collides(self, x: int, y: int) -> bool:
+        current = self.head
+        while current is not None:
+            if current.x == x and current.y == y:
+                return True
+            current = current.next
+        return False
 
     def render(self, screen: pygame.Surface, cell_width: float, cell_height: float):
         current = self.head

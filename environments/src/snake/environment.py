@@ -1,6 +1,7 @@
 import pygame
-from src.environment import Environment
-from src.grid import Grid
+import numpy as np
+from ..environment import Environment
+from ..grid import Grid
 from .snake import Snake, SnakeSegment
 from .direction import Direction
 from .food import Food
@@ -14,9 +15,34 @@ class SnakeEnvironment(Environment):
         assert width > 0, "Width must be greater than 0"
         assert height > 0, "Height must be greater than 0"
 
+        self._rewards = {
+            "move": 0,
+            "eat": 1,
+            "collision": -1
+        }
+
         self.grid = Grid(width, height)
-        self._init_snake()
         self._init_food()
+        self._init_snake()
+
+        assert self._rewards is not None, "Rewards must not be None"
+        assert self.grid is not None, "Grid must not be None"
+        assert self.snake is not None, "Snake must not be None"
+        assert self.food is not None, "Food must not be None"
+
+        self.game_over = False
+
+    @property
+    def rewards(self):
+        return self._rewards
+
+    @rewards.setter
+    def rewards(self, rewards: dict):
+        assert isinstance(rewards, dict), "Rewards must be a dictionary"
+        assert "move" in rewards, "Reward for moving must be defined"
+        assert "eat" in rewards, "Reward for eating must be defined"
+        assert "collision" in rewards, "Reward for collision must be defined"
+        self._rewards = rewards
 
     def _init_snake(self):
         starting_snake_length = 3
@@ -29,10 +55,11 @@ class SnakeEnvironment(Environment):
             self.snake.grow()
             self._move_snake(Direction.RIGHT)
 
-    def _move_snake(self, direction: Direction = None) -> bool:
+    def _move_snake(self, direction: Direction = None) -> (bool, float):
         """
         Return:
-            - bool: True if valid move, False otherwise
+            bool: game over
+            float: reward 
         """
         if direction is None:
             direction = self.direction
@@ -57,14 +84,41 @@ class SnakeEnvironment(Environment):
             case Direction.RIGHT:
                 new_x += 1
 
-        if new_x < 0 or new_x >= self.grid.width or new_y < 0 or new_y >= self.grid.height:
-            False
+        game_over, reward = self._game_over(new_x, new_y)
+        if game_over:
+            return True, reward
 
-        return self.snake.move(self.direction)
+        # Check if the snake eats the food
+        reward = 0
+        if new_x == self.food.x and new_y == self.food.y:
+            self.snake.grow()
+            self._init_food()
+            reward += self.rewards["eat"]
+
+        self.snake.move(self.direction)
+        reward += self.rewards["move"]
+        return False, reward
+
+    def _game_over(self, new_x: int, new_y: int) -> (bool, float):
+        """
+        Return:
+            (bool, float): game over, reward
+        """
+        if new_x < 0 or new_x >= self.grid.width or new_y < 0 or new_y >= self.grid.height:
+            self.game_over = True
+            return True, self.rewards["collision"]
+
+        # Check if the snake collides with itself
+        if self.snake.collides(new_x, new_y):
+            self.game_over = True
+            return True, self.rewards["collision"]
+
+        return False, 0
 
     def _valid_direction(self, direction: Direction) -> bool:
         if direction is None:
             return True
+
         assert isinstance(
             direction, Direction), f"Direction must be a Direction, not {type(direction)}"
 
@@ -92,7 +146,8 @@ class SnakeEnvironment(Environment):
         pass
 
     def reset(self):
-        pass
+        self._init_snake()
+        self._init_food()
 
     def render(self, screen: pygame.Surface):
         assert screen is not None, "Screen must not be None"
@@ -104,24 +159,36 @@ class SnakeEnvironment(Environment):
         self.snake.render(screen, cell_width, cell_height)
         self.food.render(screen, cell_width, cell_height)
 
-    def step(self, action=None):
+    def step(self, action=None) -> (bool, float):
         """
         Action is per now a synonym for direction, but it can be extended to include more actions
 
         Parameters:
             action: Direction
+
+        Return:
+            bool: Game over
+            float: Reward
         """
         # We will just have a text to direction mapping to not make it mandatory to use the Direction enum
         if isinstance(action, str):
             action = self._text_to_direction(action)
 
+        if isinstance(action, int):
+            action = self._int_to_direction(action)
+
+        if isinstance(action, np.int64):
+            action = self._int_to_direction(action.item())
+
         if not self._valid_direction(action):
             action = None
 
         if action is not None:
-            self._move_snake(action)
+            assert isinstance(
+                action, Direction), f"Action must be a Direction, not {type(action)}"
+            return self._move_snake(action)
         else:
-            self._move_snake()
+            return self._move_snake()
 
     def _text_to_direction(self, text: str) -> Direction:
         match text:
@@ -135,3 +202,16 @@ class SnakeEnvironment(Environment):
                 return Direction.RIGHT
             case _:
                 assert ValueError(text), f"Invalid direction: {text}"
+
+    def _int_to_direction(self, number: int) -> Direction:
+        direction = Direction(number)
+        if direction in Direction:
+            return direction
+
+    def state_to_index(self) -> int:
+        num_cells = self.grid.width * self.grid.height
+        num_actions = len(Direction)
+        state_index = (self.snake.head.x * self.grid.width + self.snake.head.y) * num_actions + \
+            self.snake.direction * num_cells + self.food.x * self.grid.width + self.food.y
+
+        return state_index
