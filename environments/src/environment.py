@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import numpy as np
 import pygame
 
 
@@ -23,4 +24,8 @@ class Environment(ABC):
 
     @abstractmethod
     def step(self):
+        pass
+
+    @abstractmethod
+    def get_state(self) -> np.ndarray:
         pass

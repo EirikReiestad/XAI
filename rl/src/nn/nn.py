@@ -1,34 +1,72 @@
 import torch
+import torch.nn as nn
 
 
 class NeuralNetwork:
-    def __init__(self, model: torch.nn.Module, lr: float = 0.001, gamma: float = 0.99, epsilon: float = 0.1):
+    def __init__(self, input_dim: int, output_dim: int, hidden_dims: [int], lr: float = 0.001, gamma: float = 0.99, epsilon: float = 0.1):
         assert isinstance(
-            model, torch.nn.Module), "model must be an instance of torch.nn.Module"
-        # Last layer should be a linear layer with the number of actions
+            input_dim, int), "input_dim must be an instance of int"
         assert isinstance(
-            model.fc, torch.nn.Linear), "Last layer must be a linear layer"
-        assert model.fc.out_features > 0, "Number of actions must be greater than 0"
+            hidden_dims, list), "hidden_dims must be an instance of list"
+        assert all(
+            isinstance(hidden_dim, int) for hidden_dim in hidden_dims), "hidden_dims must be a list of integers"
+        assert isinstance(
+            output_dim, int), "output_dim must be an instance of int"
         assert lr > 0, "Learning rate must be greater than 0"
         assert 0 <= gamma <= 1, "Gamma must be between 0 and 1"
         assert 0 <= epsilon <= 1, "Epsilon must be between 0 and 1"
 
-        self.model = model
+        self.output_dim = output_dim
+        self.model = self._init_model(input_dim, output_dim, hidden_dims)
         self.lr = lr
         self.gamma = gamma
         self.epsilon = epsilon
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.lr)
         self.criterion = torch.nn.MSELoss()
 
+    def _init_model(self, input_dim: int, output_dim: int, hidden_dims: [int]) -> nn.Module:
+        assert isinstance(
+            input_dim, int), "input_dim must be an instance of int"
+        assert isinstance(
+            hidden_dims, list), "hidden_dims must be an instance of list"
+        assert all(
+            isinstance(hidden_dim, int) for hidden_dim in hidden_dims), "hidden_dims must be a list of integers"
+        assert isinstance(
+            output_dim, int), "output_dim must be an instance of int"
+        layers = []
+        last_dim = input_dim
+        for hidden_dim in hidden_dims:
+            layers.append(nn.Linear(last_dim, hidden_dim))
+            layers.append(nn.ReLU())
+            last_dim = hidden_dim
+        layers.append(nn.Linear(last_dim, output_dim))
+        return nn.Sequential(*layers)
+
     def choose_action(self, state: torch.Tensor) -> int:
         assert isinstance(
             state, torch.Tensor), "state must be an instance of torch.Tensor"
         if torch.rand(1).item() < self.epsilon:
             # assuming the last layer is a linear layer with the number of actions
-            return torch.randint(0, self.model.fc.out_features, (1,)).item()
+            result = torch.randint(0, self.output_dim, (1,)).item()
+
+            assert 0 <= result < self.output_dim, "result must be between 0 and the number of actions"
+            return result
         else:
             with torch.no_grad():
-                return self.model(state).argmax().item()
+                output = self.model(state).argmax(dim=1)
+                # Step 1: Identify the maximum value
+                max_value = output.max().item()
+                # Step 2: Find all indices of this maximum value
+                max_indices = (output == max_value).nonzero(as_tuple=True)
+                # Step 3: Select one of these indices randomly
+                random_index = max_indices[torch.randint(
+                    len(max_indices), (1,)).item()]
+
+                result = random_index.item()
+
+                assert 0 <= result < self.output_dim, f"result must be between 0 and the number of actions, not {result}"
+                return result
+        raise ValueError("The function should have returned by now")
 
     def update(self, state: torch.Tensor, action: int, reward: float, next_state: torch.Tensor) -> None:
         assert isinstance(
@@ -60,12 +98,32 @@ class NeuralNetwork:
         assert isinstance(
             state, torch.Tensor), "state must be an instance of torch.Tensor"
 
-        self.model.train()
+        # Get Q-values for the current state
+        # TODO: Check if we need to flatten the state
+        state = state.flatten()
+        next_state = next_state.flatten()
+
         q_values = self.model(state)
-        next_q_values = self.model(next_state).max(1)[0].detach()
+
+        # Get max Q-values for the next state
+        next_q_values = self.model(next_state).max().detach()
+
+        # Calculate the target Q-values
         target = reward + self.gamma * next_q_values
-        loss = self.criterion(q_values.gather(
-            1, torch.tensor([[action]])), target.unsqueeze(1))
+
+        # Ensure action is a tensor with correct shape
+        if not isinstance(action, torch.Tensor):
+            action = torch.tensor(action, dtype=torch.int64)
+        if action.dim() == 1:
+            action = action.unsqueeze(1)
+
+        # Gather the Q-values corresponding to the actions taken
+        current_q_value = q_values[action]
+
+        # Calculate the loss
+        loss = self.criterion(current_q_value, target)
+
+        # Optimize the model
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()

@@ -16,10 +16,17 @@ class SnakeEnvironment(Environment):
         assert height > 0, "Height must be greater than 0"
 
         self._rewards = {
-            "move": 0,
-            "eat": 1,
-            "collision": -1
+            "move": 0.0,
+            "eat": 1.0,
+            "collision": -1.0
         }
+
+        assert isinstance(
+            self._rewards["move"], float), "Reward for moving must be a float"
+        assert isinstance(
+            self._rewards["eat"], float), "Reward for eating must be a float"
+        assert isinstance(
+            self._rewards["collision"], float), "Reward for collision must be a float"
 
         self.grid = Grid(width, height)
         self._init_food()
@@ -42,6 +49,12 @@ class SnakeEnvironment(Environment):
         assert "move" in rewards, "Reward for moving must be defined"
         assert "eat" in rewards, "Reward for eating must be defined"
         assert "collision" in rewards, "Reward for collision must be defined"
+        assert isinstance(
+            rewards["move"], float), "Reward for moving must be a float"
+        assert isinstance(
+            rewards["eat"], float), "Reward for eating must be a float"
+        assert isinstance(
+            rewards["collision"], float), "Reward for collision must be a float"
         self._rewards = rewards
 
     def _init_snake(self):
@@ -86,10 +99,12 @@ class SnakeEnvironment(Environment):
 
         game_over, reward = self._game_over(new_x, new_y)
         if game_over:
+            assert isinstance(
+                reward, float), f"Reward must be a float, not {type(reward)}"
             return True, reward
 
         # Check if the snake eats the food
-        reward = 0
+        reward = 0.0
         if new_x == self.food.x and new_y == self.food.y:
             self.snake.grow()
             self._init_food()
@@ -97,6 +112,8 @@ class SnakeEnvironment(Environment):
 
         self.snake.move(self.direction)
         reward += self.rewards["move"]
+        assert isinstance(
+            reward, float), f"Reward must be a float, not {type(reward)}"
         return False, reward
 
     def _game_over(self, new_x: int, new_y: int) -> (bool, float):
@@ -106,11 +123,15 @@ class SnakeEnvironment(Environment):
         """
         if new_x < 0 or new_x >= self.grid.width or new_y < 0 or new_y >= self.grid.height:
             self.game_over = True
+            assert isinstance(
+                self.rewards["collision"], float), f"Reward must be a float, not {type(self.rewards['collision'])}"
             return True, self.rewards["collision"]
 
         # Check if the snake collides with itself
         if self.snake.collides(new_x, new_y):
             self.game_over = True
+            assert isinstance(
+                self.rewards["collision"], float), f"Reward must be a float, not {type(self.rewards['collision'])}"
             return True, self.rewards["collision"]
 
         return False, 0
@@ -207,6 +228,13 @@ class SnakeEnvironment(Environment):
         direction = Direction(number)
         if direction in Direction:
             return direction
+
+    def get_state(self) -> np.ndarray:
+        state = np.zeros((self.grid.width, self.grid.height))
+        for segment in self.snake.get_segments():
+            state[segment.x, segment.y] = 1
+        state[self.food.x, self.food.y] = 2
+        return state
 
     def state_to_index(self) -> int:
         num_cells = self.grid.width * self.grid.height

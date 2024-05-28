@@ -1,5 +1,6 @@
 import pygame
 from .direction import Direction
+import numpy as np
 
 
 class SnakeSegment:
@@ -92,6 +93,21 @@ class Snake:
         assert isinstance(
             direction, Direction), f"Direction must be a Direction, not {type(direction)}"
         self._direction = direction
+
+    def get_segments(self) -> np.ndarray:
+        """
+        Return
+            np.ndarray: Array of SnakeSegment
+        """
+        segments = []
+        current = self.head
+        while current is not None:
+            segments.append(current)
+            current = current.next
+        assert len(segments) > 0, "Snake has no segments"
+        assert all(isinstance(segment, SnakeSegment)
+                   for segment in segments), "All segments must be SnakeSegment"
+        return segments
 
     def __str__(self):
         current = self.head
