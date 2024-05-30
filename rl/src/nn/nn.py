@@ -1,5 +1,7 @@
 import torch
 import torch.nn as nn
+import os
+import logging
 
 
 class NeuralNetwork:
@@ -33,6 +35,7 @@ class NeuralNetwork:
             isinstance(hidden_dim, int) for hidden_dim in hidden_dims), "hidden_dims must be a list of integers"
         assert isinstance(
             output_dim, int), "output_dim must be an instance of int"
+
         layers = []
         last_dim = input_dim
         for hidden_dim in hidden_dims:
@@ -53,16 +56,13 @@ class NeuralNetwork:
             return result
         else:
             with torch.no_grad():
-                output = self.model(state).argmax(dim=1)
-                # Step 1: Identify the maximum value
-                max_value = output.max().item()
-                # Step 2: Find all indices of this maximum value
-                max_indices = (output == max_value).nonzero(as_tuple=True)
-                # Step 3: Select one of these indices randomly
-                random_index = max_indices[torch.randint(
-                    len(max_indices), (1,)).item()]
+                output = self.model(state).argmax()
 
-                result = random_index.item()
+                # TODO:
+                # Note, multiple actions can have the same value, so we need to randomly choose one
+                # But for now, we will just choose the first one for simplicity
+
+                result = output.item()
 
                 assert 0 <= result < self.output_dim, f"result must be between 0 and the number of actions, not {result}"
                 return result
@@ -86,7 +86,10 @@ class NeuralNetwork:
 
     def load(self, path: str) -> None:
         assert isinstance(path, str), "path must be an instance of str"
+        assert os.path.exists(path), "Model not found"
+
         self.model.load_state_dict(torch.load(path))
+        logging.info(f"Model loaded from {path}")
 
     def train(self, state: torch.Tensor, action: int, reward: float, next_state: torch.Tensor) -> None:
         assert isinstance(

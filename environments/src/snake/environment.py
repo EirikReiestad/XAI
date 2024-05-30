@@ -8,12 +8,15 @@ from .food import Food
 
 
 class SnakeEnvironment(Environment):
-    def __init__(self, name: str, description: str, width: int, height: int):
+    def __init__(self, name: str, description: str, width: int, height: int, number_of_food: int = 1):
         super().__init__(name, description)
         assert isinstance(width, int), "Width must be an integer"
         assert isinstance(height, int), "Height must be an integer"
         assert width > 0, "Width must be greater than 0"
         assert height > 0, "Height must be greater than 0"
+        assert isinstance(
+            number_of_food, int), "Number of food must be an integer"
+        self.number_of_food = number_of_food
 
         self._rewards = {
             "move": 0.0,
@@ -29,13 +32,15 @@ class SnakeEnvironment(Environment):
             self._rewards["collision"], float), "Reward for collision must be a float"
 
         self.grid = Grid(width, height)
-        self._init_food()
+        self.food = []
         self._init_snake()
+        self._init_food()
 
         assert self._rewards is not None, "Rewards must not be None"
         assert self.grid is not None, "Grid must not be None"
         assert self.snake is not None, "Snake must not be None"
         assert self.food is not None, "Food must not be None"
+        assert len(self.food) > 0, "Food must not be empty"
 
         self.game_over = False
 
@@ -105,10 +110,12 @@ class SnakeEnvironment(Environment):
 
         # Check if the snake eats the food
         reward = 0.0
-        if new_x == self.food.x and new_y == self.food.y:
-            self.snake.grow()
-            self._init_food()
-            reward += self.rewards["eat"]
+        for (i, food) in enumerate(self.food):
+            if new_x == food.x and new_y == food.y:
+                self.snake.grow()
+                self.food.pop(i)
+                self._add_food()
+                reward += self.rewards["eat"]
 
         self.snake.move(self.direction)
         reward += self.rewards["move"]
@@ -155,8 +162,21 @@ class SnakeEnvironment(Environment):
         return True
 
     def _init_food(self):
-        self.food = Food()
-        self.food.randomize_position(self.grid.width-1, self.grid.height-1)
+        self.food = []
+        for _ in range(self.number_of_food):
+            self._add_food()
+
+    def _add_food(self):
+        food = Food()
+        while True:
+            food.randomize_position(
+                self.grid.width-1, self.grid.height-1)
+
+            if not self.snake.collides(food.x, food.y):
+                break
+            if food not in self.food:
+                break
+        self.food.append(food)
 
     def set_screen(self, screen: pygame.Surface):
         assert screen is not None, "Screen must not be None"
@@ -178,7 +198,8 @@ class SnakeEnvironment(Environment):
 
         self.grid.render(screen, cell_width, cell_height)
         self.snake.render(screen, cell_width, cell_height)
-        self.food.render(screen, cell_width, cell_height)
+        for food in self.food:
+            food.render(screen, cell_width, cell_height)
 
     def step(self, action=None) -> (bool, float):
         """
@@ -233,7 +254,8 @@ class SnakeEnvironment(Environment):
         state = np.zeros((self.grid.width, self.grid.height))
         for segment in self.snake.get_segments():
             state[segment.x, segment.y] = 1
-        state[self.food.x, self.food.y] = 2
+        for food in self.food:
+            state[food.x, food.y] = 2
         return state
 
     def state_to_index(self) -> int:
