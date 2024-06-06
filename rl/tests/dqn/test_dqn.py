@@ -1,7 +1,7 @@
 import unittest
 import torch
 import torch.nn as nn
-from rl.src.nn.nn import NeuralNetwork
+from src.nn.nn import NeuralNetwork
 
 
 class SimpleModel(nn.Module):
