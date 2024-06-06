@@ -164,9 +164,6 @@ class DQN:
             raise TypeError("dones must be a torch.Tensor")
 
         # Get the Q-values for the current state and action
-        print(actions)
-        print(actions.unsqueeze(1).squeeze(1))
-        print(self.model(states).gather(1, actions.unsqueeze(1)).squeeze(1))
         q_values = self.model(states).gather(
             1, actions.unsqueeze(1)).squeeze(1)
 
