@@ -25,8 +25,8 @@ class TestSnakeEnvironment(unittest.TestCase):
         height = 10
         env = SnakeEnvironment(name, description, width, height)
         # Test invalid move
-        self.assertRaises(AssertionError, env.move_snake, "INVALID")
-        self.assertRaises(AssertionError, env.move_snake, "DOWN")
+        self.assertRaises(AssertionError, env._move_snake, "INVALID")
+        self.assertRaises(AssertionError, env._move_snake, "DOWN")
         # This is not a valid move since the snake is moving right
         self.assertTrue(env._move_snake(direction=Direction.LEFT))
         # Test valid move
