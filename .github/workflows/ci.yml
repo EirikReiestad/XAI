@@ -30,6 +30,6 @@ jobs:
 
     - name: Run tests
       run: |
-        pytest environments/tests
-        pytest demo/src/tests
-        pytest rl/tests
+        python -m pytest environments/tests  # Use python -m pytest to ensure it uses the correct environment
+        python -m pytest demo/src/tests
+        python -m pytest rl/tests
