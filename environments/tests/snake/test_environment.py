@@ -67,7 +67,7 @@ class TestSnakeEnvironment(unittest.TestCase):
         self.assertEqual(len(env.snake), 3)
 
         env.snake.grow()
-        env.move_snake(direction=Direction.RIGHT)
+        env._move_snake(direction=Direction.RIGHT)
         self.assertEqual(len(env.snake), 4)
 
 
