@@ -10,6 +10,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        folder: [environments/tests, demo/src/tests, rl/tests]
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
@@ -25,11 +29,7 @@ jobs:
         pip install -r requirements.txt
 
     - name: Set up PYTHONPATH
-      run: |
-        echo "PYTHONPATH=$PYTHONPATH:$(pwd)" >> $GITHUB_ENV  # Set PYTHONPATH to include the current directory       pip install -r requirements.txt
+      run: echo "PYTHONPATH=$(pwd):$(pwd)/src" >> $GITHUB_ENV  # Set PYTHONPATH to include the current directory and src
 
     - name: Run tests
-      run: |
-        python -m pytest environments/tests  # Use python -m pytest to ensure it uses the correct environment
-        python -m pytest demo/src/tests
-        python -m pytest rl/tests
+      run: python -m unittest discover -s ${{ matrix.folder }}
