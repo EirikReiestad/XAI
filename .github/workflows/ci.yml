@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        folder: [environments/tests, demo/src/tests, rl/tests]
+        folder: [environments, rl]
 
     steps:
     - name: Checkout repository
@@ -32,4 +32,5 @@ jobs:
       run: echo "PYTHONPATH=$(pwd):$(pwd)/src" >> $GITHUB_ENV  # Set PYTHONPATH to include the current directory and src
 
     - name: Run tests
-      run: python -m unittest discover -s ${{ matrix.folder }}
+      run: cd ${{ matrix.folder }}
+      run: python -m unittest discover -s tests
