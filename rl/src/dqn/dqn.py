@@ -93,7 +93,7 @@ class DQN:
             output = self.model(state).argmax().item()
             return output
 
-    def update(self, state: torch.Tensor, action: int, reward: float, next_state: torch.Tensor, done: bool) -> None:
+    def update(self, state: torch.Tensor, action: int, reward: float, next_state: torch.Tensor, done: bool = False) -> None:
         """
         Store transition in replay buffer and perform training if buffer is sufficiently populated.
 
@@ -164,6 +164,9 @@ class DQN:
             raise TypeError("dones must be a torch.Tensor")
 
         # Get the Q-values for the current state and action
+        print(actions)
+        print(actions.unsqueeze(1).squeeze(1))
+        print(self.model(states).gather(1, actions.unsqueeze(1)).squeeze(1))
         q_values = self.model(states).gather(
             1, actions.unsqueeze(1)).squeeze(1)
 

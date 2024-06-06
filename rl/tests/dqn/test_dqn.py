@@ -7,7 +7,7 @@ from src.dqn.dqn import DQN
 class TestDQN(unittest.TestCase):
     def setUp(self):
         self.dqn = DQN(input_dim=4, output_dim=2, hidden_dims=[],
-                       lr=0.01, gamma=0.9, epsilon=0.1)
+                       lr=0.01, gamma=0.9, epsilon=0.1, batch_size=1)
         self.state = torch.tensor([[1.0, 2.0, 3.0, 4.0]])
         self.next_state = torch.tensor([[4.0, 3.0, 2.0, 1.0]])
         self.action = 0
@@ -22,7 +22,7 @@ class TestDQN(unittest.TestCase):
         initial_params = list(self.dqn.model.parameters())[0].clone()
         self.dqn.update(
             self.state, self.action, self.reward, self.next_state)
-        updated_params = list(self.model.parameters())[0].clone()
+        updated_params = list(self.dqn.model.parameters())[0].clone()
         self.assertFalse(torch.equal(initial_params, updated_params))
 
     def test_save_and_load(self):
