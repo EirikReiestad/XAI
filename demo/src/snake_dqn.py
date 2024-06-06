@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import os
 import torch
 from environments.src.snake.environment import SnakeEnvironment
-from rl.src.nn.nn import NeuralNetwork
+from rl.src.dqn.dqn import DQN
 import logging
 import json
 
@@ -18,8 +18,19 @@ def main():
     action_space = 4  # Assuming there are 4 possible actions
 
     # Define the model here
-    nn_agent = NeuralNetwork(input_dim=input_dim, output_dim=action_space, hidden_dims=[
-                             24, 24], lr=0.01, gamma=0.9, epsilon=0.1)
+    nn_agent = DQN(
+        input_dim=input_dim,
+        output_dim=action_space,
+        hidden_dims=[128, 128],
+        lr=.001,
+        gamma=.99,
+        epsilon=1.0,
+        epsilon_decay=.995,
+        epsilon_min=.01,
+        replay_buffer_size=10000,
+        batch_size=64,
+        target_update_frequency=10,
+    )
 
     save_path = "model.pth"
 
@@ -38,10 +49,14 @@ def main():
     env.set_screen(screen)
 
     env.rewards = {
-        "move": 1000.0,
-        "eat": 100.0,
-        "collision": -1000.0
+        "move": 2.0,
+        "eat": 10.0,
+        "collision": -10.0,
     }
+
+    last_snake_length = 0
+    no_progress_steps = 1000  # Number of steps before no progress reward
+    no_progress_reward = -10.0  # Reward for no progress
 
     clock = pygame.time.Clock()
 
@@ -87,31 +102,41 @@ def main():
         plt.draw()
 
     while True:
-        current_state = torch.tensor(
+        state = torch.tensor(
             env.get_state().flatten(), dtype=torch.float32).unsqueeze(0)
-        action = nn_agent.choose_action(current_state)
+        action = nn_agent.choose_action(state)
 
-        game_over, reward = env.step(action)
+        done, reward = env.step(action)
+
+        if game_lengths[-1] % no_progress_steps == 0:
+            if last_snake_length == len(env.snake):
+                reward = no_progress_reward
+                done, reward = env.step(action, reward)
+            last_snake_length = len(env.snake)
 
         next_state = torch.tensor(
             env.get_state(), dtype=torch.float32).unsqueeze(0)
-        nn_agent.update(current_state, action, reward, next_state)
+
+        state = state.flatten()
+        next_state = next_state.flatten()
+
+        nn_agent.update(state, action, reward, next_state, done)
 
         game_lengths[-1] += 1
 
-        if game_over:
+        if done:
             iteration += 1
             snake_lengths.append(len(env.snake))
             game_lengths.append(0)
             iterations.append(iteration)
             env.reset()
 
-        if iteration % render_every != 0:
-            continue
-
         if iteration % save_every == 0:
             nn_agent.save(save_path)
             save_to_json(parameter_file)
+
+        if iteration % render_every != 0:
+            continue
 
         env.screen.fill((0, 0, 0))
 
