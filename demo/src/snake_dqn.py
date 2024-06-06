@@ -49,8 +49,8 @@ def main():
     env.set_screen(screen)
 
     env.rewards = {
-        "move": 2.0,
-        "eat": 10.0,
+        "move": 1.0,
+        "eat": 5.0,
         "collision": -10.0,
     }
 
