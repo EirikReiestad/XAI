@@ -73,8 +73,12 @@ class SnakeEnvironment(Environment):
             self.snake.grow()
             self._move_snake(Direction.RIGHT)
 
-    def _move_snake(self, direction: Direction = None) -> (bool, float):
+    def _move_snake(self, direction: Direction = None, reward: float = 0.0) -> (bool, float):
         """
+        Parameters:
+            direction: Direction
+            reward: float
+                This is optional if we want to add a reward for a specific action outside the environment
         Return:
             bool: game over
             float: reward 
@@ -84,6 +88,9 @@ class SnakeEnvironment(Environment):
 
         assert isinstance(
             direction, Direction), f"Direction must be a Direction, not {type(direction)}"
+
+        assert isinstance(
+            reward, float), f"Reward must be a float, not {type(reward)}"
 
         if self._valid_direction(direction):
             self.direction = direction
@@ -109,7 +116,6 @@ class SnakeEnvironment(Environment):
             return True, reward
 
         # Check if the snake eats the food
-        reward = 0.0
         for (i, food) in enumerate(self.food):
             if new_x == food.x and new_y == food.y:
                 self.snake.grow()
@@ -169,8 +175,7 @@ class SnakeEnvironment(Environment):
     def _add_food(self):
         food = Food()
         while True:
-            food.randomize_position(
-                self.grid.width-1, self.grid.height-1)
+            food.randomize_position(self.grid.width, self.grid.height)
 
             if not self.snake.collides(food.x, food.y):
                 break
@@ -201,12 +206,14 @@ class SnakeEnvironment(Environment):
         for food in self.food:
             food.render(screen, cell_width, cell_height)
 
-    def step(self, action=None) -> (bool, float):
+    def step(self, action: Direction = None, reward: float = None) -> (bool, float):
         """
         Action is per now a synonym for direction, but it can be extended to include more actions
 
         Parameters:
             action: Direction
+            reward (optional): float
+                Add a reward for a specific action outside the environment
 
         Return:
             bool: Game over
@@ -228,8 +235,12 @@ class SnakeEnvironment(Environment):
         if action is not None:
             assert isinstance(
                 action, Direction), f"Action must be a Direction, not {type(action)}"
+            if reward is not None:
+                return self._move_snake(action, reward)
             return self._move_snake(action)
         else:
+            if reward is not None:
+                return self._move_snake(reward=reward)
             return self._move_snake()
 
     def _text_to_direction(self, text: str) -> Direction:
