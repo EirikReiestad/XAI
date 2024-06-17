@@ -2,7 +2,7 @@ import pygame as pg
 import matplotlib.pyplot as plt
 import os
 import torch
-from environments.src.snake.environment import SnakeEnvironment
+from environments.src.maze.environment import MazeEnvironment
 from rl.src.dqn.dqn import DQN
 import logging
 import json
@@ -11,9 +11,9 @@ import json
 def main():
     # Init logging
     logging.basicConfig(level=logging.INFO)
-    pg.init()
 
-    env = SnakeEnvironment("Maze", "A simple maze environment", 10, 10, 1)
+    env = MazeEnvironment(
+        "Maze", "A simple maze environment", 10, 10, goal_x=3, goal_y=3)
     # Assuming env.get_state() returns a numpy array
     input_dim = env.get_state().shape[0] * env.get_state().shape[1]
     action_space = 4  # Assuming there are 4 possible actions
@@ -33,13 +33,13 @@ def main():
         target_update_frequency=100,
     )
 
-    save_path = "model_snake.pth"
+    save_path = "maze_model.pth"
 
     if os.path.exists(save_path):
         nn_agent.load(save_path)
 
     tick = 10
-    render_every = 1000
+    render_every = 100
     save_every = 1000
 
     width = 800
@@ -50,20 +50,18 @@ def main():
     env.set_screen(screen)
 
     env.rewards = {
-        "move": 1.0,
-        "eat": 10.0,
-        "collision": -10.0,
+        "goal": 100.0,
+        "move": -1.0,
+        "wall": -1.0,
     }
 
-    last_snake_length = 0
-    no_progress_steps = 1000  # Number of steps before no progress reward
+    no_progress_steps = 100  # Number of steps before no progress reward
     no_progress_reward = -10.0  # Reward for no progress
 
     clock = pg.time.Clock()
 
-    parameter_file = "parameters_snake.json"
+    parameter_file = "maze_parameters.json"
 
-    snake_lengths = []
     game_lengths = [0]
     iterations = []
     iteration = 0
@@ -72,7 +70,6 @@ def main():
         logging.info("Loading parameters from file")
         with open(parameter_file, 'r') as json_file:
             data = json.load(json_file)
-            snake_lengths = data['snake_lengths']
             game_lengths = data['game_lengths']
             iterations = data['iterations']
             nn_agent.epsilon = data['epsilon']
@@ -80,7 +77,6 @@ def main():
     def save_to_json(filename):
         data = {
             'iterations': iterations,
-            'snake_lengths': snake_lengths,
             'game_lengths': game_lengths,
             'epsilon': nn_agent.epsilon,
         }
@@ -92,25 +88,14 @@ def main():
 
     def plot():
         ax.clear()
-        ax.set_title('Snake Length Over Time')
         ax.set_xlabel('Iterations')
-        ax.set_ylabel('Snake Length', color='b')
-        # ax.plot(snake_lengths, linestyle='-')
+        ax.set_title('Game Length Over Time')
+        # ax.plot(game_lengths[:-1])
 
-        # Take average over the last 100 games
         n = 100
-        avg_snake_lengths = [
-            sum(snake_lengths[i:i+n]) / n for i in range(0, len(snake_lengths)-n)]
-        ax.plot(avg_snake_lengths, linestyle='-')
-
-        ax2 = ax.twinx()
-        ax2.set_ylabel('Game Length', color='r')
-        # ax2.plot(game_lengths[:-1], 'r-', label='Game Length')
-        ax2.tick_params('y', colors='r')
-
         avg_game_lengths = [
-            sum(game_lengths[i:i+n]) / n for i in range(0, len(game_lengths)-n)][1:]
-        ax2.plot(avg_game_lengths, 'r-', label='Avg Game Length')
+            sum(game_lengths[i:i+n]) / n for i in range(0, len(game_lengths)-n)]
+        ax.plot(avg_game_lengths)
 
         plt.draw()
 
@@ -122,11 +107,10 @@ def main():
 
         done, reward = env.step(action)
 
-        if game_lengths[-1] % no_progress_steps == 0:
-            if last_snake_length == len(env.snake):
-                reward = no_progress_reward
-                done, reward = env.step(action, reward)
-            last_snake_length = len(env.snake)
+        if game_lengths[-1] != 0 and game_lengths[-1] % no_progress_steps == 0:
+            reward = no_progress_reward
+            done, reward = env.step(action, reward)
+            done = True
 
         next_state = torch.tensor(
             env.get_state(), dtype=torch.float32).unsqueeze(0)
@@ -140,7 +124,6 @@ def main():
 
         if done:
             iteration += 1
-            snake_lengths.append(len(env.snake))
             game_lengths.append(0)
             iterations.append(iteration)
             env.reset()
@@ -161,14 +144,12 @@ def main():
         env.render(pg.display.get_surface())
         for event in pg.event.get():
             if event.type == pg.QUIT:
-                pg.quit()
                 nn_agent.save(save_path)
                 save_to_json(parameter_file)
                 running = False
                 pg.quit()
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
-                    pg.quit()
                     nn_agent.save(save_path)
                     save_to_json(parameter_file)
                     running = False

@@ -1,5 +1,5 @@
 import pygame
-from .direction import Direction
+from ..direction import Direction
 import numpy as np
 
 
