@@ -1,5 +1,4 @@
 import unittest
-
 from src.maze.environment import MazeEnvironment
 from src.direction import Direction
 
@@ -17,7 +16,8 @@ class TestMazeEnvironment(unittest.TestCase):
         description = "Test description"
         width = 4
         height = 4
-        env = MazeEnvironment(name, description, width, height)
+        env = MazeEnvironment(name, description, width,
+                              height, start_x=0, start_y=0, maze_path='test_maze.txt')
         self.assertEqual(env.name, name)
         self.assertEqual(env.description, description)
         self.assertEqual(env.grid.width, width)
@@ -32,7 +32,7 @@ class TestMazeEnvironment(unittest.TestCase):
         width = 4
         height = 4
         env = MazeEnvironment(name, description, width,
-                              height, start_x=0, start_y=0, maze_path='test_maze.txt')
+                              height, goal_x=3, goal_y=3, start_x=0, start_y=0, maze_path='test_maze.txt')
         # Start at position (0, 0)
         # Test invalid move
         self.assertRaises(AssertionError, env._move_agent, "INVALID")
@@ -49,7 +49,7 @@ class TestMazeEnvironment(unittest.TestCase):
         width = 4
         height = 4
         env = MazeEnvironment(name, description, width,
-                              height, start_x=0, start_y=0, maze_path='test_maze.txt')
+                              height, goal_x=3, goal_y=3, start_x=0, start_y=0, maze_path='test_maze.txt')
         env.reset()
         self.assertIsNotNone(env.agent)
         self.assertIsNotNone(env.grid)
@@ -62,7 +62,7 @@ class TestMazeEnvironment(unittest.TestCase):
         width = 4
         height = 4
         env = MazeEnvironment(name, description, width,
-                              height, start_x=0, start_y=0, maze_path='test_maze.txt')
+                              height, goal_x=3, goal_y=3, start_x=0, start_y=0, maze_path='test_maze.txt')
         env.step("DOWN")
         self.assertEqual(env.agent.pos_x, 0)
         self.assertEqual(env.agent.pos_y, 1)

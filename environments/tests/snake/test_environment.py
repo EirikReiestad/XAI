@@ -1,7 +1,7 @@
 import unittest
 
 from src.snake.environment import SnakeEnvironment
-from src.snake.direction import Direction
+from src.direction import Direction
 
 
 class TestSnakeEnvironment(unittest.TestCase):
