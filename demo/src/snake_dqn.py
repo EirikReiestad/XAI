@@ -29,7 +29,7 @@ def main():
         epsilon_min=.01,
         replay_buffer_size=10000,
         batch_size=64,
-        target_update_frequency=10,
+        target_update_frequency=100,
     )
 
     save_path = "model.pth"
@@ -50,8 +50,8 @@ def main():
 
     env.rewards = {
         "move": 1.0,
-        "eat": 5.0,
-        "collision": -10.0,
+        "eat": 20.0,
+        "collision": -100.0,
     }
 
     last_snake_length = 0
@@ -74,12 +74,14 @@ def main():
             snake_lengths = data['snake_lengths']
             game_lengths = data['game_lengths']
             iterations = data['iterations']
+            nn_agent.epsilon = data['epsilon']
 
     def save_to_json(filename):
         data = {
             'iterations': iterations,
             'snake_lengths': snake_lengths,
-            'game_lengths': game_lengths
+            'game_lengths': game_lengths,
+            'epsilon': nn_agent.epsilon,
         }
         with open(filename, 'w') as json_file:
             json.dump(data, json_file)

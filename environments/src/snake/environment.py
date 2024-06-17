@@ -177,9 +177,6 @@ class SnakeEnvironment(Environment):
         while True:
             food.randomize_position(self.grid.width, self.grid.height)
 
-            # TODO: REMOVE THIS, JUST TEMP
-            food.set_position(self.grid.width, self.grid.height, 1, 1)
-
             if not self.snake.collides(food.x, food.y):
                 break
             if food not in self.food:
