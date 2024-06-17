@@ -17,7 +17,7 @@ class TestMazeEnvironment(unittest.TestCase):
         width = 4
         height = 4
         env = MazeEnvironment(name, description, width,
-                              height, start_x=0, start_y=0, maze_path='test_maze.txt')
+                              height, goal_x=3, goal_y=3, start_x=0, start_y=0, maze_path='test_maze.txt')
         self.assertEqual(env.name, name)
         self.assertEqual(env.description, description)
         self.assertEqual(env.grid.width, width)
@@ -35,8 +35,8 @@ class TestMazeEnvironment(unittest.TestCase):
                               height, goal_x=3, goal_y=3, start_x=0, start_y=0, maze_path='test_maze.txt')
         # Start at position (0, 0)
         # Test invalid move
-        self.assertRaises(AssertionError, env._move_agent, "INVALID")
-        self.assertRaises(AssertionError, env._move_agent, "DOWN")
+        self.assertRaises(ValueError, env._move_agent, "INVALID")
+        self.assertRaises(ValueError, env._move_agent, "DOWN")
         # Test invalid move
         self.assertFalse(env._move_agent(direction=Direction.UP))
         # Test valid move
