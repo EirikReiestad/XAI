@@ -1,194 +1,145 @@
+"""
+# BATCH_SIZE is the number of transitions sampled from the replay buffer
+# GAMMA is the discount factor as mentioned in the previous section
+# EPS_START is the starting value of epsilon
+# EPS_END is the final value of epsilon
+# EPS_DECAY controls the rate of exponential decay of epsilon, higher means a slower decay
+# TAU is the update rate of the target network
+# LR is the learning rate of the ``AdamW`` optimizer""
+"""
+
 import torch
 import torch.nn as nn
-import os
-import logging
+import torch.optim as optim
 import random
-from collections import deque
+import math
+
+from .replay_memory import ReplayMemory, Transition
+from .dqnnet import DQNNet
+
+BATCH_SIZE = 128
+GAMMA = 0.99
+EPS_START = 0.9
+EPS_END = 0.05
+EPS_DECAY = 1000
+TAU = 0.005
+LR = 1e-4
 
 
-class DQN:
-    def __init__(self,
-                 input_dim: int,
-                 output_dim: int,
-                 hidden_dims: [int],
-                 lr: float = 0.001,
-                 gamma: float = 0.99,
-                 epsilon: float = 1.0,
-                 epsilon_decay: float = .995,
-                 epsilon_min: float = .01,
-                 replay_buffer_size: int = 10000,
-                 batch_size: int = 32,
-                 target_update_frequency: int = 10):
+# if gpu is to be used
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-        # Validate initialization parameters
-        if not isinstance(input_dim, int):
-            raise TypeError("input_dim must be an instance of int")
-        if not isinstance(hidden_dims, list) or not all(isinstance(hidden_dim, int) for hidden_dim in hidden_dims):
-            raise TypeError("hidden_dims must be a list of integers")
-        if not isinstance(output_dim, int):
-            raise TypeError("output_dim must be an instance of int")
-        if lr <= 0:
-            raise ValueError("Learning rate must be greater than 0")
-        if not (0 <= gamma <= 1):
-            raise ValueError("Gamma must be between 0 and 1")
-        if not (0 <= epsilon <= 1):
-            raise ValueError("Epsilon must be between 0 and 1")
-        if not (0 <= epsilon_decay <= 1):
-            raise ValueError("Epsilon decay must be between 0 and 1")
-        if not (0 <= epsilon_min <= 1):
-            raise ValueError("Epsilon min must be between 0 and 1")
-        if not isinstance(replay_buffer_size, int) or replay_buffer_size <= 0:
-            raise ValueError("Replay buffer size must be a positive integer")
-        if not isinstance(batch_size, int) or batch_size <= 0:
-            raise ValueError("Batch size must be a positive integer")
 
-        self.output_dim = output_dim
-        self.model = self._init_model(input_dim, output_dim, hidden_dims)
-        self.target_model = self._init_model(
-            input_dim, output_dim, hidden_dims)
-        self.target_model.load_state_dict(self.model.state_dict())
-        self.target_model.eval()  # Set target model to evaluation mode
-        self.lr = lr
-        self.gamma = gamma
-        self.epsilon = epsilon
-        self.epsilon_decay = epsilon_decay
-        self.epsilon_min = epsilon_min
-        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.lr)
-        self.criterion = torch.nn.MSELoss()
-        self.batch_size = batch_size
-        # Initialize replay buffer
-        self.replay_buffer = deque(maxlen=replay_buffer_size)
-        # Set frequency for updating target model
-        self.target_update_frequency = target_update_frequency
-        self.train_step = 0  # Initialize training step counter
+class DQN():
+    global device
 
-    def _init_model(self, input_dim: int, output_dim: int, hidden_dims: [int]) -> nn.Module:
-        """Initialize the neural network architecture"""
-        layers = []
-        last_dim = input_dim
-        for hidden_dim in hidden_dims:
-            layers.append(nn.Linear(last_dim, hidden_dim))
-            layers.append(nn.ReLU())
-            # Add dropout layer for regularization
-            layers.append(nn.Dropout(0.5))
-            last_dim = hidden_dim
-        layers.append(nn.Linear(last_dim, output_dim))  # Output layer
-        return nn.Sequential(*layers)
+    def __init__(self, n_observations: int, n_actions: int):
+        self.n_actions = n_actions
+        self.n_observations = n_observations
 
-    def _update_epsilon(self):
-        """Decay epsilon to reduce exploration over time"""
-        if self.epsilon > self.epsilon_min:
-            self.epsilon *= self.epsilon_decay
+        self.policy_net = DQNNet(n_observations, n_actions).to(device)
+        self.target_net = DQNNet(n_observations, n_actions).to(device)
+        self.target_net.load_state_dict(self.policy_net.state_dict())
 
-    def choose_action(self, state: torch.Tensor) -> int:
-        """Select action using epsilon-greedy policy"""
-        if not isinstance(state, torch.Tensor):
-            raise TypeError("state must be an instance of torch.Tensor")
+        self.optimizer = optim.AdamW(
+            self.policy_net.parameters(), lr=LR, amsgrad=True)
+        self.memory = ReplayMemory(10000)
 
-        if random.random() < self.epsilon:
-            # Explore: random action
-            return random.randint(0, self.output_dim - 1)
+        self.steps_done = 0
+
+    # Called with either one element to determine next action, or a batch
+    # during optimization. Returns tensor([[left0exp,right0exp]...]).
+
+    def select_action(self, state: torch.Tensor):
+        sample = random.random()
+        eps_threshold = EPS_END + (EPS_START - EPS_END) * \
+            math.exp(-1. * self.steps_done / EPS_DECAY)
+        self.steps_done += 1
+        if sample > eps_threshold:
+            with torch.no_grad():
+                # t.max(1) will return largest column value of each row.
+                # second column on max result is index of where max element was
+                # found, so we pick action with the larger expected reward.
+                return self.policy_net(state).max(1)[1].view(1, 1)
+        else:
+            return torch.tensor([[random.randrange(self.n_actions)]], device=device, dtype=torch.long)
+
+    def optimize_model(self):
+        if len(self.memory) < BATCH_SIZE:
+            return
+        transitions = self.memory.sample(BATCH_SIZE)
+        # Transpose the batch (see https://stackoverflow.com/a/19343/3343043 for
+        # detailed explanation). This converts batch-array of Transitions
+        # to Transition of batch-arrays.
+        batch = Transition(*zip(*transitions))
+
+        # Compute a mask of non-final states and concatenate the batch elements
+        # (a final state would've been the one after which simulation ended)
+        non_final_mask = torch.tensor(tuple(map(lambda s: s is not None,
+                                                batch.next_state)), device=device, dtype=torch.bool)
+        non_final_next_states = torch.cat([s for s in batch.next_state
+                                           if s is not None])
+        state_batch = torch.cat(batch.state)
+        action_batch = torch.cat(batch.action)
+        reward_batch = torch.cat(batch.reward)
+
+        # Compute Q(s_t, a) - the model computes Q(s_t), then we select the
+        # columns of actions taken. These are the actions which would've been taken
+        # for each batch state according to policy_net
+        state_action_values = self.policy_net(
+            state_batch).gather(1, action_batch)
+
+        # Compute V(s_{t+1}) for all next states.
+        # Expected values of actions for non_final_next_states are computed based
+        # on the "older" target_net; selecting their best reward with max(1).values
+        # This is merged based on the mask, such that we'll have either the expected
+        # state value or 0 in case the state was final.
+        next_state_values = torch.zeros(BATCH_SIZE, device=device)
         with torch.no_grad():
-            # Exploit: action with the highest Q-value
-            output = self.model(state).argmax().item()
-            return output
+            next_state_values[non_final_mask] = self.target_net(
+                non_final_next_states).max(1).values
+        # Compute the expected Q values
+        expected_state_action_values = (
+            next_state_values * GAMMA) + reward_batch
 
-    def update(self, state: torch.Tensor, action: int, reward: float, next_state: torch.Tensor, done: bool = False) -> None:
-        """
-        Store transition in replay buffer and perform training if buffer is sufficiently populated.
+        # Compute Huber loss
+        criterion = nn.SmoothL1Loss()
+        loss = criterion(state_action_values,
+                         expected_state_action_values.unsqueeze(1))
 
-        Parameters
-            state: torch.Tensor
-            action: int
-            reward: float
-            next_state: torch.Tensor
-            done: bool
-                flag to indicate if the episode is done
-        """
-        if not isinstance(state, torch.Tensor):
-            raise TypeError("state must be a torch.Tensor")
-        if not isinstance(action, int):
-            raise TypeError("action must be an int")
-        if not isinstance(reward, (int, float)):
-            raise TypeError("reward must be a number")
-        if not isinstance(next_state, torch.Tensor):
-            raise TypeError("next_state must be a torch.Tensor")
-        if not isinstance(done, (int, bool)):
-            raise TypeError("done must be an int or bool")
+        # Optimize the model
+        self.optimizer.zero_grad()
+        loss.backward()
+        # In-place gradient clipping
+        torch.nn.utils.clip_grad_value_(self.policy_net.parameters(), 100)
+        self.optimizer.step()
 
-        self.replay_buffer.append(
-            (state, action, reward, next_state, done))
-        if len(self.replay_buffer) < self.batch_size:
-            return  # Not enough samples for training
+    def train(self, state, action, observation, reward, terminated, truncated) -> bool:
+        reward = torch.tensor([reward], device=device)
+        done = terminated or truncated
 
-        # Sample a batch from replay buffer
-        batch = random.sample(self.replay_buffer, self.batch_size)
-        states, actions, rewards, next_states, dones = zip(*batch)
+        if terminated:
+            next_state = None
+        else:
+            next_state = torch.tensor(observation, dtype=torch.float32,
+                                      device=device).unsqueeze(0)
 
-        states = torch.stack([s.clone().detach() for s in states])
-        actions = torch.tensor(actions, dtype=torch.long)
-        rewards = torch.tensor(rewards, dtype=torch.float32)
-        next_states = torch.stack([ns.clone().detach() for ns in next_states])
-        dones = torch.tensor(dones, dtype=torch.bool)
+        # Store the transition in memory
+        self.memory.push(state, action, next_state, reward)
 
-        self.train(states, actions, rewards,
-                   next_states, dones)  # Train the model
-        self._update_epsilon()  # Decay epsilon
+        # Move to the next state
+        state = next_state
 
-    def save(self, path: str) -> None:
-        if not isinstance(path, str):
-            raise TypeError("path must be an instance of str")
-        torch.save(self.model.state_dict(), path)
+        # Perform one step of the optimization (on the target network)
+        self.optimize_model()
 
-    def load(self, path: str) -> None:
-        """Load model state from a file"""
-        if not isinstance(path, str):
-            raise TypeError("path must be an instance of str")
-        if not os.path.exists(path):
-            raise FileNotFoundError("Model not found")
+        # Soft update of the target network's weights
+        # θ′ ← τ θ + (1 −τ )θ′
+        target_net_state_dict = self.target_net.state_dict()
+        policy_net_state_dict = self.policy_net.state_dict()
+        for key in policy_net_state_dict:
+            target_net_state_dict[key] = policy_net_state_dict[key] * \
+                TAU + target_net_state_dict[key]*(1-TAU)
+        self.target_net.load_state_dict(target_net_state_dict)
 
-        self.model.load_state_dict(torch.load(path))
-        logging.info(f"Model loaded from {path}")
-
-    def train(self, states: [torch.Tensor], actions: [int], rewards: [float], next_states: [torch.Tensor], dones: [bool]) -> None:
-        """Perform a training step"""
-        if not all(isinstance(s, torch.Tensor) for s in states):
-            raise TypeError("All states must be torch.Tensor")
-        if not all(isinstance(ns, torch.Tensor) for ns in next_states):
-            raise TypeError("All next_states must be torch.Tensor")
-        if not isinstance(actions, torch.Tensor):
-            raise TypeError("actions must be a torch.Tensor")
-        if not isinstance(rewards, torch.Tensor):
-            raise TypeError("rewards must be a torch.Tensor")
-        if not isinstance(dones, torch.Tensor):
-            raise TypeError("dones must be a torch.Tensor")
-
-        # Get the Q-values for the current state and action
-        q_values = self.model(states).gather(
-            1, actions.unsqueeze(1)).squeeze(1)
-
-        with torch.no_grad():
-            # Compute the target Q-values using the target model
-            next_q_values = self.target_model(next_states).max(1)[0]
-            targets = rewards + self.gamma * next_q_values * ~dones
-
-        # Compute the loss between the current Q-values and the target Q-values
-        loss = self.criterion(q_values, targets)
-        self.optimizer.zero_grad()  # Zero gradients
-        loss.backward()  # Backpropagate loss
-        self.optimizer.step()  # Update model parameters
-
-        self.train_step += 1
-        if self.train_step % self.target_update_frequency == 0:
-            # Periodically update the target model to match the main model
-            self.target_model.load_state_dict(
-                self.model.state_dict())  # Update target network
-
-    def predict(self, state: torch.Tensor) -> torch.Tensor:
-        """Predict Q-values for a given state"""
-        if not isinstance(state, torch.Tensor):
-            raise TypeError("state must be an instance of torch.Tensor")
-
-        self.model.eval()
-        with torch.no_grad():
-            return self.model(state)
+        return done
