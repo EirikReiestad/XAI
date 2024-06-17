@@ -38,10 +38,10 @@ class TestMazeEnvironment(unittest.TestCase):
         self.assertRaises(ValueError, env._move_agent, "INVALID")
         self.assertRaises(ValueError, env._move_agent, "DOWN")
         # Test invalid move
-        self.assertFalse(env._move_agent(direction=Direction.UP))
+        self.assertFalse(env._move_agent(direction=Direction.UP)[0])
         # Test valid move
-        self.assertTrue(env._move_agent(direction=Direction.DOWN))
-        self.assertTrue(env._move_agent(direction=Direction.RIGHT))
+        self.assertTrue(env._move_agent(direction=Direction.DOWN[0]))
+        self.assertTrue(env._move_agent(direction=Direction.RIGHT[0]))
 
     def test_reset(self):
         name = "Test Maze Environment"
