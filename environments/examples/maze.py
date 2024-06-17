@@ -38,7 +38,6 @@ def main():
                     action = "RIGHT"
 
         game, reward = env.step(action)
-        print(game)
         if game:
             env.reset()
 

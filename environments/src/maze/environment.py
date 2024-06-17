@@ -31,7 +31,7 @@ class MazeEnvironment(Environment):
         self._rewards = {
             "goal": 1.0,
             "move": 0.0,
-            "wall": 0.0,
+            "wall": -1.0,
         }
 
         self.start_x = start_x
@@ -235,8 +235,10 @@ class MazeEnvironment(Environment):
             return direction
 
     def get_state(self) -> np.ndarray:
-        state = np.zeros((self.grid.width, self.grid.height))
-        return state
+        state = self.grid.cells
+        state[self.agent.pos_y][self.agent.pos_x] = 2
+        state[self.goal.pos_y][self.goal.pos_x] = 3
+        return np.array(state)
 
     def state_to_index(self) -> int:
         """
@@ -249,9 +251,10 @@ class MazeEnvironment(Environment):
         num_actions = len(Direction)
 
         # Calculate base index based on agent position
-        state_index = (self.agent.x * num_cells + self.agent.y) * num_actions
+        state_index = (self.agent.pos_x * num_cells +
+                       self.agent.pos_y) * num_actions
 
         # Add offset based on goal position (assuming unique goal location)
-        state_index += self.goal.x + self.goal.y * num_cells
+        state_index += self.goal.pos_x + self.goal.pos_y * num_cells
 
         return state_index

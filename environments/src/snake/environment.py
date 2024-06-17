@@ -3,7 +3,7 @@ import numpy as np
 from ..environment import Environment
 from ..grid import Grid
 from .snake import Snake, SnakeSegment
-from .direction import Direction
+from ..direction import Direction
 from .food import Food
 
 
@@ -201,7 +201,7 @@ class SnakeEnvironment(Environment):
         cell_width = screen.get_width() / self.grid.width
         cell_height = screen.get_height() / self.grid.height
 
-        self.grid.render(screen, cell_width, cell_height)
+        self.grid.render_grid(screen, cell_width, cell_height)
         self.snake.render(screen, cell_width, cell_height)
         for food in self.food:
             food.render(screen, cell_width, cell_height)
