@@ -2,7 +2,8 @@ import unittest
 import torch
 from unittest.mock import patch
 
-from your_dqn_module_file import DQNModule, Transition  # Replace with your file path
+# Replace with your file path
+from rl.src.dqn.dqn_module import DQNModule, Transition
 
 
 class TestDQNModule(unittest.TestCase):
