@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import torch
 from itertools import count
 
-from rl.src.dqn.dqn import DQN
+from rl.src.dqn.dqn_module import DQNModule
 
 # Set up matplotlib
 is_ipython = 'inline' in matplotlib.get_backend()
@@ -17,14 +17,15 @@ episode_durations = []
 
 def main():
     env = gym.make('CartPole-v1', render_mode='rgb_array')
-    dqn = DQN(env.observation_space.shape[0], env.action_space.n)
+
+    state, info = env.reset()
+    n_observation = len(state)
+
+    dqn = DQNModule(n_observation, env.action_space.n, seed=4)
 
     plt.ion()
 
-    if torch.cuda.is_available():
-        num_episodes = 600
-    else:
-        num_episodes = 200
+    num_episodes = 300
 
     for i_episode in range(num_episodes):
         state, info = env.reset()
@@ -35,15 +36,15 @@ def main():
             observation, reward, terminated, truncated, _ = env.step(
                 action.item())
 
-            done = dqn.train(state, action, observation,
-                             reward, terminated, truncated)
+            done, state = dqn.train(state, action, observation,
+                                    reward, terminated, truncated)
 
             if done:
                 episode_durations.append(t + 1)
                 plot_durations()
                 break
 
-            env.render()
+    env.close()
 
     print('Complete')
     plot_durations(show_result=True)
