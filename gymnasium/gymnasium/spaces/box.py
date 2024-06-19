@@ -1,4 +1,4 @@
-"""Implementation of a space that represents closed boxes in euclidean space."""
+"""Implementation of a space that represents closed boxes in euclidean spaces."""
 
 from __future__ import annotations
 

@@ -177,7 +177,8 @@ class CartPoleEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
             force + self.polemass_length * theta_dot**2 * sintheta
         ) / self.total_mass
         thetaacc = (self.gravity * sintheta - costheta * temp) / (
-            self.length * (4.0 / 3.0 - self.masspole * costheta**2 / self.total_mass)
+            self.length * (4.0 / 3.0 - self.masspole *
+                           costheta**2 / self.total_mass)
         )
         xacc = temp - self.polemass_length * thetaacc * costheta / self.total_mass
 
@@ -277,7 +278,8 @@ class CartPoleEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
                     (self.screen_width, self.screen_height)
                 )
             else:  # mode == "rgb_array"
-                self.screen = pygame.Surface((self.screen_width, self.screen_height))
+                self.screen = pygame.Surface(
+                    (self.screen_width, self.screen_height))
         if self.clock is None:
             self.clock = pygame.time.Clock()
 
@@ -413,8 +415,10 @@ class CartPoleVectorEnv(VectorEnv):
 
         self.single_action_space = spaces.Discrete(2)
         self.action_space = batch_space(self.single_action_space, num_envs)
-        self.single_observation_space = spaces.Box(-high, high, dtype=np.float32)
-        self.observation_space = batch_space(self.single_observation_space, num_envs)
+        self.single_observation_space = spaces.Box(
+            -high, high, dtype=np.float32)
+        self.observation_space = batch_space(
+            self.single_observation_space, num_envs)
 
         self.screen_width = 600
         self.screen_height = 400
@@ -442,7 +446,8 @@ class CartPoleVectorEnv(VectorEnv):
             force + self.polemass_length * theta_dot**2 * sintheta
         ) / self.total_mass
         thetaacc = (self.gravity * sintheta - costheta * temp) / (
-            self.length * (4.0 / 3.0 - self.masspole * costheta**2 / self.total_mass)
+            self.length * (4.0 / 3.0 - self.masspole *
+                           costheta**2 / self.total_mass)
         )
         xacc = temp - self.polemass_length * thetaacc * costheta / self.total_mass
 
@@ -598,7 +603,8 @@ class CartPoleVectorEnv(VectorEnv):
             screen.blit(self.surf, (0, 0))
 
         return [
-            np.transpose(np.array(pygame.surfarray.pixels3d(screen)), axes=(1, 0, 2))
+            np.transpose(
+                np.array(pygame.surfarray.pixels3d(screen)), axes=(1, 0, 2))
             for screen in self.screens
         ]
 

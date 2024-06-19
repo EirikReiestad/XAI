@@ -344,14 +344,16 @@ def _check_namespace_exists(ns: str | None):
 
     # Otherwise, the namespace doesn't exist and raise a helpful message
     suggestion = (
-        difflib.get_close_matches(ns, namespaces, n=1) if len(namespaces) > 0 else None
+        difflib.get_close_matches(ns, namespaces, n=1) if len(
+            namespaces) > 0 else None
     )
     if suggestion:
         suggestion_msg = f"Did you mean: `{suggestion[0]}`?"
     else:
         suggestion_msg = f"Have you installed the proper package for {ns}?"
 
-    raise error.NamespaceNotFound(f"Namespace {ns} not found. {suggestion_msg}")
+    raise error.NamespaceNotFound(
+        f"Namespace {ns} not found. {suggestion_msg}")
 
 
 def _check_name_exists(ns: str | None, name: str):
@@ -405,9 +407,11 @@ def _check_version_exists(ns: str | None, name: str, version: int | None):
         for env_spec in registry.values()
         if env_spec.namespace == ns and env_spec.name == name
     ]
-    env_specs = sorted(env_specs, key=lambda env_spec: int(env_spec.version or -1))
+    env_specs = sorted(
+        env_specs, key=lambda env_spec: int(env_spec.version or -1))
 
-    default_spec = [env_spec for env_spec in env_specs if env_spec.version is None]
+    default_spec = [
+        env_spec for env_spec in env_specs if env_spec.version is None]
 
     if default_spec:
         message += f" It provides the default version `{default_spec[0].id}`."
@@ -420,9 +424,11 @@ def _check_version_exists(ns: str | None, name: str, version: int | None):
         env_spec for env_spec in env_specs if env_spec.version is not None
     ]
 
-    latest_spec = max(versioned_specs, key=lambda env_spec: env_spec.version, default=None)  # type: ignore
+    latest_spec = max(
+        versioned_specs, key=lambda env_spec: env_spec.version, default=None)  # type: ignore
     if latest_spec is not None and version > latest_spec.version:
-        version_list_msg = ", ".join(f"`v{env_spec.version}`" for env_spec in env_specs)
+        version_list_msg = ", ".join(
+            f"`v{env_spec.version}`" for env_spec in env_specs)
         message += f" It provides versioned environments: [ {version_list_msg} ]."
 
         raise error.VersionNotFound(message)
@@ -496,7 +502,8 @@ def _find_spec(env_id: str) -> EnvSpec:
     assert isinstance(env_id, str)
 
     # The environment name can include an unloaded module in "module:env_name" style
-    module, env_name = (None, env_id) if ":" not in env_id else env_id.split(":")
+    module, env_name = (
+        None, env_id) if ":" not in env_id else env_id.split(":")
     if module is not None:
         try:
             importlib.import_module(module)
@@ -639,7 +646,8 @@ def register(
     _check_spec_register(new_spec)
 
     if new_spec.id in registry:
-        logger.warn(f"Overriding environment {new_spec.id} already in registry.")
+        logger.warn(
+            f"Overriding environment {new_spec.id} already in registry.")
     registry[new_spec.id] = new_spec
 
 
@@ -694,7 +702,8 @@ def make(
 
     # Load the environment creator
     if env_spec.entry_point is None:
-        raise error.Error(f"{env_spec.id} registered but entry_point is not specified")
+        raise error.Error(
+            f"{env_spec.id} registered but entry_point is not specified")
     elif callable(env_spec.entry_point):
         env_creator = env_spec.entry_point
     else:
@@ -716,7 +725,8 @@ def make(
         and render_modes is not None
         and render_mode not in render_modes
     ):
-        displayable_modes = {"rgb_array", "rgb_array_list"}.intersection(render_modes)
+        displayable_modes = {"rgb_array",
+                             "rgb_array_list"}.intersection(render_modes)
         if render_mode == "human" and len(displayable_modes) > 0:
             logger.warn(
                 "You are trying to use 'human' rendering for an environment that doesn't natively support it. "
@@ -819,7 +829,8 @@ def make(
                 f"{wrapper_spec.name} wrapper does not inherit from `gymnasium.utils.RecordConstructorArgs`, therefore, the wrapper cannot be recreated."
             )
 
-        env = load_env_creator(wrapper_spec.entry_point)(env=env, **wrapper_spec.kwargs)
+        env = load_env_creator(wrapper_spec.entry_point)(
+            env=env, **wrapper_spec.kwargs)
 
     # Add human rendering wrapper
     if apply_human_rendering:
@@ -869,7 +880,8 @@ def make_vec(
     elif isinstance(id, str):
         env_spec = _find_spec(id)
     else:
-        raise error.Error(f"Invalid id type: {type(id)}. Expected `str` or `EnvSpec`")
+        raise error.Error(
+            f"Invalid id type: {type(id)}. Expected `str` or `EnvSpec`")
 
     env_spec = copy.deepcopy(env_spec)
     env_spec_kwargs = env_spec.kwargs
@@ -877,7 +889,8 @@ def make_vec(
     env_spec.kwargs = dict()
 
     num_envs = env_spec_kwargs.pop("num_envs", num_envs)
-    vectorization_mode = env_spec_kwargs.pop("vectorization_mode", vectorization_mode)
+    vectorization_mode = env_spec_kwargs.pop(
+        "vectorization_mode", vectorization_mode)
     vector_kwargs = env_spec_kwargs.pop("vector_kwargs", vector_kwargs)
     wrappers = env_spec_kwargs.pop("wrappers", wrappers)
 
