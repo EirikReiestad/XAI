@@ -46,7 +46,7 @@ class TestDQNModule(unittest.TestCase):
         done, next_state = self.module.train(
             state, action, observation, reward, terminated, truncated)
         self.assertFalse(done)
-        self.assertEqual(next_state.size(), (1, 1, self.n_observations))
+        self.assertEqual(next_state.size(), (1, self.n_observations))
 
     def test_train_terminated(self):
         state = torch.zeros(1, self.n_observations)
