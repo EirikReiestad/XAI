@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        folder: [environments, rl]
+        folder: [environments, rl, gymnasium]
 
     steps:
     - name: Checkout repository
