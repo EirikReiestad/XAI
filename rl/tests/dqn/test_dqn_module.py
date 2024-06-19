@@ -1,6 +1,6 @@
 import unittest
 import torch
-from dqn_module import DQNModule
+from src.dqn.dqn_module import DQNModule
 
 
 class TestDQNModule(unittest.TestCase):
