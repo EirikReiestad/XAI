@@ -40,7 +40,8 @@ class TestDQNModule(unittest.TestCase):
         state = torch.zeros(1, self.n_observations)
         action = torch.tensor([[0]], dtype=torch.long)
         observation = np.array([0.0, 0.0, 0.0, 0.0])
-        observation = torch.tensor(observation, dtype=torch.float32)
+        observation = torch.tensor(
+            observation, dtype=torch.float32).unsqueeze(0)
         reward = 1.0
         terminated = False
         truncated = False
@@ -54,7 +55,8 @@ class TestDQNModule(unittest.TestCase):
         state = torch.zeros(1, self.n_observations)
         action = torch.tensor([[0]], dtype=torch.long)
         observation = np.array([0.0, 0.0, 0.0, 0.0])
-        observation = torch.tensor(observation, dtype=torch.float32)
+        observation = torch.tensor(
+            observation, dtype=torch.float32).unsqueeze(0)
         reward = 1.0
         terminated = True
         truncated = False
