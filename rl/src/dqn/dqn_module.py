@@ -54,6 +54,11 @@ class DQNModule():
         Returns:
             torch.Tensor: The action to take in the environment
         """
+
+        if state.shape != (1, self.n_observations):
+            raise ValueError(
+                f"Expected state to have shape (1, {self.n_observations}), but got {state.shape}")
+
         sample = random.random()
         eps_threshold = self.eps_end + (self.eps_start - self.eps_end) * \
             math.exp(-1. * self.steps_done / self.eps_decay)
@@ -120,7 +125,7 @@ class DQNModule():
         torch.nn.utils.clip_grad_value_(self.policy_net.parameters(), 100)
         self.optimizer.step()
 
-    def train(self, state, action, observation, reward, terminated, truncated) -> (bool, torch.Tensor):
+    def train(self, state: torch.Tensor, action: torch.Tensor, observation: list, reward: float, terminated: bool, truncated: bool) -> (bool, torch.Tensor):
         """
         Parameters:
             state (torch.Tensor): The current state of the environment
@@ -134,14 +139,26 @@ class DQNModule():
             bool: Whether the environment is done
             state (torch.Tensor): The next state of the environment
         """
+
+        if state.shape != (1, self.n_observations):
+            raise ValueError(
+                f"Expected state to have shape (1, {self.n_observations}), but got {state.shape}")
+
+        if observation.shape != (1, self.n_observations):
+            raise ValueError(
+                f"Expected observation to have shape (1, {self.n_observations}), but got {observation.shape}")
+
         reward = torch.tensor([reward], device=device)
         done = terminated or truncated
 
         if terminated:
             next_state = None
         else:
-            next_state = torch.tensor(observation, dtype=torch.float32,
-                                      device=device).unsqueeze(0)
+            next_state = observation.clone().detach()
+
+        if next_state is not None and next_state.shape != (1, self.n_observations):
+            raise ValueError(
+                f"Expected next_state to have shape (1, {self.n_observations}), but got {next_state.shape}")
 
         # Store the transition in memory
         self.memory.push(state, action, next_state, reward)

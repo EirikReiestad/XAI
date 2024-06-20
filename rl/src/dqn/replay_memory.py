@@ -12,6 +12,9 @@ class ReplayMemory:
 
     def push(self, *args) -> None:
         """Saves a transition."""
+        if len(self.memory) > 0 and Transition(*args).state.shape != self.memory[0].state.shape:
+            print(
+                f"Expected state to have shape {self.memory[0].state.shape}, but got {Transition(*args).state.shape}")
         self.memory.append(Transition(*args))
 
     def sample(self, batch_size: int) -> Transition:
