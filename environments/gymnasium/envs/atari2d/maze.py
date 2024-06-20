@@ -4,7 +4,6 @@ Maze system
 
 __credits__ = ["Eirik Reiestad"]
 
-import random
 from typing import Optional, Tuple, Union
 
 import numpy as np
@@ -37,14 +36,16 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
     The reward is ´1´ if the agent reaches the goal position, otherwise ´0´.
 
     ## Starting State
+
     The starting state is a random position in the maze.
     The goal is a random position in the maze.
 
     ## Episode Termination
-    The episode ends if any one of the following occurs:
 
-    1. The agent reaches the goal position.
+    The episode ends if any one of the following occurs:
+1. The agent reaches the goal position.
     2. The agent reaches the maximum number of steps.
+
     ## Arguments
 
     Optional arguments
@@ -136,22 +137,6 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
               options: Optional[dict] = None,
               ) -> np.ndarray:
 
-        def generate_random_position(other: utils.Position = None) -> utils.Position:
-            count = 0
-            position = utils.Position(
-                random.randint(0, self.width-1), random.randint(0, self.height-1))
-            if other is None:
-                return position
-
-            while position is not None and position == other:
-                count += 1
-                if count > self.width * self.height:
-                    raise ValueError(
-                        "Could not generate a random position.")
-                position = utils.Position(
-                    random.randint(0, self.width-1), random.randint(0, self.height-1))
-            return position
-
         if options is not None and "start" in options:
             self.agent = utils.Position(options["start"])
             if "goal" in options:
@@ -160,13 +145,16 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
                         "The goal position is the same as the agent position.")
                 self.goal = utils.Position(options["goal"])
             else:
-                generate_random_position(self.agent)
+                utils.generate_random_position(
+                    self.width, self.height, self.agent)
         else:
             if "goal" in options:
                 self.goal = utils.Position(options["goal"])
             else:
-                self.goal = generate_random_position()
-            self.agent = generate_random_position(self.goal)
+                self.goal = utils.generate_random_position(
+                    self.width, self.height)
+            self.agent = utils.generate_random_position(
+                self.width, self.height, self.goal)
 
         self.steps = 0
 
@@ -231,7 +219,6 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
             pygame.event.pump()
             self.clock.tick(self.metadata["render_fps"])
             pygame.display.flip()
-
         elif self.render_mode == "rgb_array":
             return np.transpose(
                 np.array(pygame.surfarray.pixels3d(self.screen)), axes=(1, 0, 2))
