@@ -1,10 +1,16 @@
-import gymnasium as gym
 import matplotlib
 import matplotlib.pyplot as plt
 import torch
 from itertools import count
+import gymnasium as gym
 
 from rl.src.dqn.dqn_module import DQNModule
+
+
+gym.register(
+    id='Maze-v0',
+    entry_point='environments.gymnasium.envs.atari2d.maze:MazeEnv',
+)
 
 # Set up matplotlib
 is_ipython = 'inline' in matplotlib.get_backend()
@@ -16,25 +22,39 @@ episode_durations = []
 
 
 def main():
-    env = gym.make('CartPole-v1', render_mode='rgb_array')
+    env = gym.make('Maze-v0', render_mode='human')
 
-    state, info = env.reset()
-    n_observation = len(state)
+    options = {
+        "start": (0, 0),
+        "goal": (4, 4),
+    }
+
+    state, info = env.reset(options=options)
+    n_observation = len(state) * len(state[0])
 
     dqn = DQNModule(n_observation, env.action_space.n, seed=4)
 
     plt.ion()
 
-    num_episodes = 300
+    num_episodes = 1000
+    render_every = 10
 
     for i_episode in range(num_episodes):
-        state, info = env.reset()
+        state, info = env.reset(options=options)
         state = torch.tensor(state, dtype=torch.float32,
-                             device=device).unsqueeze(0)
+                             device=device)
+
         for t in count():
+            if i_episode % render_every == 0:
+                env.render()
+
+            state = state.flatten().unsqueeze(0)
             action = dqn.select_action(state)
             observation, reward, terminated, truncated, _ = env.step(
                 action.item())
+
+            observation = torch.tensor(
+                observation, dtype=torch.float32, device=device).flatten().unsqueeze(0)
 
             done, state = dqn.train(state, action, observation,
                                     reward, terminated, truncated)
