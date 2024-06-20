@@ -125,12 +125,12 @@ class DQNModule():
         torch.nn.utils.clip_grad_value_(self.policy_net.parameters(), 100)
         self.optimizer.step()
 
-    def train(self, state: torch.Tensor, action: torch.Tensor, observation: list, reward: float, terminated: bool, truncated: bool) -> (bool, torch.Tensor):
+    def train(self, state: torch.Tensor, action: torch.Tensor, observation: torch.Tensor, reward: float, terminated: bool, truncated: bool) -> (bool, torch.Tensor):
         """
         Parameters:
             state (torch.Tensor): The current state of the environment
             action (torch.Tensor): The action taken in the current state
-            observation (list): The observation from the environment
+            observation (torch.Tensor): The observation from the environment
             reward (float): The reward from the environment
             terminated (bool): Whether the environment is terminated
             truncated (bool): Whether the environment is truncated

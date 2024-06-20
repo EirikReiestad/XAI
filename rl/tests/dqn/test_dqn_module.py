@@ -39,7 +39,8 @@ class TestDQNModule(unittest.TestCase):
     def test_train(self):
         state = torch.zeros(1, self.n_observations)
         action = torch.tensor([[0]], dtype=torch.long)
-        observation = np.array(1, [0.0, 0.0, 0.0, 0.0])
+        observation = np.array([0.0, 0.0, 0.0, 0.0])
+        observation = torch.tensor(observation, dtype=torch.float32)
         reward = 1.0
         terminated = False
         truncated = False
@@ -52,7 +53,8 @@ class TestDQNModule(unittest.TestCase):
     def test_train_terminated(self):
         state = torch.zeros(1, self.n_observations)
         action = torch.tensor([[0]], dtype=torch.long)
-        observation = np.array(1, [0.0, 0.0, 0.0, 0.0])
+        observation = np.array([0.0, 0.0, 0.0, 0.0])
+        observation = torch.tensor(observation, dtype=torch.float32)
         reward = 1.0
         terminated = True
         truncated = False
