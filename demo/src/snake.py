@@ -26,9 +26,12 @@ def main():
     env = gym.make('Snake-v0', render_mode='human')
 
     state, info = env.reset()
-    n_observation = len(state) * len(state[0])
+    n_observation = len(state)
 
-    dqn = DQNModule(n_observation, env.action_space.n, seed=4)
+    hidden_layers = [128, 128]
+
+    dqn = DQNModule(n_observation, env.action_space.n,
+                    hidden_layers=hidden_layers)
 
     plt.ion()
 

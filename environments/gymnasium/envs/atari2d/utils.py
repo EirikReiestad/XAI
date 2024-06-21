@@ -37,6 +37,23 @@ class Position:
         dx, dy = other
         return Position(self.x + dx, self.y + dy)
 
+    def __sub__(self, other):
+        """Subtract a tuple(dx, dy) from the Position to move it."""
+        if not isinstance(other, Position) and (not isinstance(other, tuple) or len(other) != 2):
+            raise ValueError(
+                "Subtraction should be performed with a tuple of length 2.")
+        if isinstance(other, Position):
+            dx, dy = other.x, other.y
+        else:
+            dx, dy = other
+        return Position(self.x - dx, self.y - dy)
+
+    def __len__(self):
+        return 2
+
+    def to_tuple(self):
+        return (self.x, self.y)
+
 
 DIRECTIONS = {
     0: (0, 1),  # Up

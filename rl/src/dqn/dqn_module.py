@@ -17,7 +17,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 class DQNModule():
     global device
 
-    def __init__(self, n_observations: int, n_actions: int, seed=None):
+    def __init__(self, n_observations: int, n_actions: int, hidden_layers: [int] = [64], seed=None):
         if seed is not None:
             torch.manual_seed(seed)
 
@@ -33,8 +33,10 @@ class DQNModule():
         self.tau = 0.005  # The update rate of the target network
         self.lr = 1e-4  # The learning rate of the ``AdamW`` optimizer
 
-        self.policy_net = DQN(n_observations, n_actions).to(device)
-        self.target_net = DQN(n_observations, n_actions).to(device)
+        self.policy_net = DQN(n_observations, n_actions,
+                              hidden_layers).to(device)
+        self.target_net = DQN(n_observations, n_actions,
+                              hidden_layers).to(device)
         self.target_net.load_state_dict(self.policy_net.state_dict())
 
         self.optimizer = optim.AdamW(
