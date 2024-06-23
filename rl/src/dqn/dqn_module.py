@@ -8,7 +8,7 @@ import random
 import math
 
 from .replay_memory import ReplayMemory, Transition
-from .dqn import DQN
+from .dueling_dqn import DuelingDQN
 
 # if gpu is to be used
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -24,7 +24,7 @@ class DQNModule():
         self.n_actions = n_actions
         self.n_observations = n_observations
 
-        self.batch_size = 128  # The number of transitions sampled from the replay buffer
+        self.batch_size = 512  # The number of transitions sampled from the replay buffer
         self.gamma = 0.999  # The discount factor
         self.eps_start = 0.9  # The starting value of epsilon
         self.eps_end = 0.05  # The final value of epsilon
@@ -33,10 +33,10 @@ class DQNModule():
         self.tau = 0.005  # The update rate of the target network
         self.lr = 1e-4  # The learning rate of the ``AdamW`` optimizer
 
-        self.policy_net = DQN(n_observations, n_actions,
-                              hidden_layers).to(device)
-        self.target_net = DQN(n_observations, n_actions,
-                              hidden_layers).to(device)
+        self.policy_net = DuelingDQN(n_observations, n_actions,
+                                     hidden_layers).to(device)
+        self.target_net = DuelingDQN(n_observations, n_actions,
+                                     hidden_layers).to(device)
         self.target_net.load_state_dict(self.policy_net.state_dict())
 
         self.optimizer = optim.AdamW(
