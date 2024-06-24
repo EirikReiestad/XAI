@@ -74,9 +74,9 @@ class SnakeEnv(gym.Env[np.array, Union[int, np.ndarray]]):
             low=-10, high=10, shape=(10,), dtype=np.float32)
 
         self.rewards = {
-            "food": 100,
-            "step": 1,
-            "terminate": -1000,
+            "food": 1,
+            "step": 0,
+            "terminate": -1,
         }
 
         self.render_mode = render_mode
