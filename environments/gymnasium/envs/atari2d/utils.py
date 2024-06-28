@@ -3,6 +3,7 @@ Utility functions used for Atari2D environments.
 """
 
 from dataclasses import dataclass
+import random
 
 
 @dataclass
@@ -36,10 +37,46 @@ class Position:
         dx, dy = other
         return Position(self.x + dx, self.y + dy)
 
+    def __sub__(self, other):
+        """Subtract a tuple(dx, dy) from the Position to move it."""
+        if not isinstance(other, Position) and (not isinstance(other, tuple) or len(other) != 2):
+            raise ValueError(
+                "Subtraction should be performed with a tuple of length 2.")
+        if isinstance(other, Position):
+            dx, dy = other.x, other.y
+        else:
+            dx, dy = other
+        return Position(self.x - dx, self.y - dy)
+
+    def __len__(self):
+        return 2
+
+    def to_tuple(self):
+        return (self.x, self.y)
+
 
 DIRECTIONS = {
-    0: (0, 1),
-    1: (1, 0),
-    2: (0, -1),
-    3: (-1, 0),
+    0: (0, 1),  # Up
+    1: (1, 0),  # Right
+    2: (0, -1),  # Down
+    3: (-1, 0),  # Left
 }
+
+
+def generate_random_position(width: int, height: int, other: [Position] = None) -> Position:
+    if not isinstance(width, int) or not isinstance(height, int):
+        raise ValueError("Width and height should be integers.")
+    count = 0
+    position = Position(random.randint(0, width-1),
+                        random.randint(0, height-1))
+    if other is None:
+        return position
+
+    while position in other:
+        count += 1
+        if count > width * height:
+            raise ValueError(
+                "Could not generate a random position.")
+        position = Position(random.randint(0, width-1),
+                            random.randint(0, height-1))
+    return position

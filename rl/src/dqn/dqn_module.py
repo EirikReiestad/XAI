@@ -8,7 +8,7 @@ import random
 import math
 
 from .replay_memory import ReplayMemory, Transition
-from .dqn import DQN
+from .dueling_dqn import DuelingDQN
 
 # if gpu is to be used
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -17,24 +17,26 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 class DQNModule():
     global device
 
-    def __init__(self, n_observations: int, n_actions: int, seed=None):
+    def __init__(self, n_observations: int, n_actions: int, hidden_layers: [int] = [64], seed=None):
         if seed is not None:
             torch.manual_seed(seed)
 
         self.n_actions = n_actions
         self.n_observations = n_observations
 
-        self.batch_size = 128  # The number of transitions sampled from the replay buffer
-        self.gamma = 0.99  # The discount factor
+        self.batch_size = 512  # The number of transitions sampled from the replay buffer
+        self.gamma = 0.999  # The discount factor
         self.eps_start = 0.9  # The starting value of epsilon
         self.eps_end = 0.05  # The final value of epsilon
         # The rate of exponential decay of epsilon, higher means a slower decay
-        self.eps_decay = 1000
+        self.eps_decay = 10000
         self.tau = 0.005  # The update rate of the target network
         self.lr = 1e-4  # The learning rate of the ``AdamW`` optimizer
 
-        self.policy_net = DQN(n_observations, n_actions).to(device)
-        self.target_net = DQN(n_observations, n_actions).to(device)
+        self.policy_net = DuelingDQN(n_observations, n_actions,
+                                     hidden_layers).to(device)
+        self.target_net = DuelingDQN(n_observations, n_actions,
+                                     hidden_layers).to(device)
         self.target_net.load_state_dict(self.policy_net.state_dict())
 
         self.optimizer = optim.AdamW(
@@ -106,9 +108,14 @@ class DQNModule():
         # This is merged based on the mask, such that we'll have either the expected
         # state value or 0 in case the state was final.
         next_state_values = torch.zeros(self.batch_size, device=device)
+
+        # NOTE: Double DQN
         with torch.no_grad():
+            next_actions = self.policy_net(non_final_next_states).max(1)[
+                1].unsqueeze(1)
             next_state_values[non_final_mask] = self.target_net(
-                non_final_next_states).max(1).values
+                non_final_next_states).gather(1, next_actions).squeeze(1)
+
         # Compute the expected Q values
         expected_state_action_values = (
             next_state_values * self.gamma) + reward_batch

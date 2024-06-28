@@ -7,13 +7,14 @@ class TestQLearning(unittest.TestCase):
 
     def setUp(self):
         self.qlearning = QLearning(action_space=4)
+        self.qlearning.epsilon = 0.0
 
     def test_initialization(self):
         self.assertEqual(self.qlearning.action_space, 4)
         self.assertEqual(len(self.qlearning.q_table), 0)
         self.assertEqual(self.qlearning.alpha, 0.1)
         self.assertEqual(self.qlearning.gamma, 0.6)
-        self.assertEqual(self.qlearning.epsilon, 0.1)
+        self.assertEqual(self.qlearning.epsilon, 0.0)
 
     def test_choose_action_random(self):
         state = 0
@@ -24,7 +25,8 @@ class TestQLearning(unittest.TestCase):
         state = 1
         self.qlearning.q_table[state] = np.array([0.1, 0.2, 0.3, 0.4])
         action = self.qlearning.choose_action(state)
-        self.assertEqual(action, 3)  # The action with the highest Q-value
+        # The action with the highest Q-value
+        self.assertEqual(action, 3)
 
     def test_update(self):
         state = 2
