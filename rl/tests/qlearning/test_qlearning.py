@@ -13,7 +13,7 @@ class TestQLearning(unittest.TestCase):
         self.assertEqual(len(self.qlearning.q_table), 0)
         self.assertEqual(self.qlearning.alpha, 0.1)
         self.assertEqual(self.qlearning.gamma, 0.6)
-        self.assertEqual(self.qlearning.epsilon, 0.1)
+        self.assertEqual(self.qlearning.epsilon, 0.0)
 
     def test_choose_action_random(self):
         state = 0
