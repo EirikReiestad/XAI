@@ -7,6 +7,7 @@ class TestQLearning(unittest.TestCase):
 
     def setUp(self):
         self.qlearning = QLearning(action_space=4)
+        self.qlearning.epsilon = 0.0
 
     def test_initialization(self):
         self.assertEqual(self.qlearning.action_space, 4)
@@ -25,7 +26,7 @@ class TestQLearning(unittest.TestCase):
         self.qlearning.q_table[state] = np.array([0.1, 0.2, 0.3, 0.4])
         action = self.qlearning.choose_action(state)
         # The action with the highest Q-value
-        self.assertEqual(action, np.int(3))
+        self.assertEqual(action, 4)
 
     def test_update(self):
         state = 2
