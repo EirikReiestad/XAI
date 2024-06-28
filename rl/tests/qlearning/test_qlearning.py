@@ -26,7 +26,7 @@ class TestQLearning(unittest.TestCase):
         self.qlearning.q_table[state] = np.array([0.1, 0.2, 0.3, 0.4])
         action = self.qlearning.choose_action(state)
         # The action with the highest Q-value
-        self.assertEqual(int(action), 3)
+        self.assertEqual(action, 3)
 
     def test_update(self):
         state = 2
