@@ -15,7 +15,10 @@ python -m unittest discover -s *foldername*
 
 ### Issues examples
 feature/add-user-authentication
+
 bugfix/fix-login-page
+
 release/v1.0
+
 hotfix/fix-login-bug
 
