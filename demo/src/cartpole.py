@@ -36,6 +36,9 @@ def main():
             observation, reward, terminated, truncated, _ = env.step(
                 action.item())
 
+            observation = torch.tensor(
+                observation, dtype=torch.float32, device=device).unsqueeze(0)
+
             done, state = dqn.train(state, action, observation,
                                     reward, terminated, truncated)
 
