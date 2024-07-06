@@ -278,3 +278,12 @@ class SnakeEnv(gym.Env[np.array, Union[int, np.ndarray]]):
         ] + immediate_obstacles + flat_snake
 
         return np.array(state, dtype=np.float32)
+
+
+if __name__ == "__main__":
+    env = SnakeEnv()
+    env.reset()
+    env.render()
+    env.step(1)
+    env.render()
+    env.close()

@@ -24,7 +24,7 @@ class Direction(enum.Enum):
 
 
 class GenerateMaze():
-    def __init__(self, width: int, height: int, name: str = "maze.txt"):
+    def __init__(self, width: int, height: int, name: str = "mazes/maze.txt"):
         self.width = width
         self.height = height
 
