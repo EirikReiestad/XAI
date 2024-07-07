@@ -2,33 +2,33 @@ import enum
 
 
 @enum.unique
-class TileType(enum.Enum):
+class MazeTileType(enum.Enum):
     EMPTY = 0
     OBSTACLE = 1
     START = 2
     END = 3
 
     def __str__(self):
-        if self == TileType.EMPTY:
+        if self == MazeTileType.EMPTY:
             return "Empty"
-        if self == TileType.OBSTACLE:
+        if self == MazeTileType.OBSTACLE:
             return "Obstacle"
-        if self == TileType.START:
+        if self == MazeTileType.START:
             return "Start"
-        if self == TileType.END:
+        if self == MazeTileType.END:
             return "End"
 
     def __add__(self, other):
-        new_value = (self.value + other) % len(TileType)
-        return TileType(new_value)
+        new_value = (self.value + other) % len(MazeTileType)
+        return MazeTileType(new_value)
 
     def __iadd__(self, other):
-        new_value = (self.value + other) % len(TileType)
-        return TileType(new_value)
+        new_value = (self.value + other) % len(MazeTileType)
+        return MazeTileType(new_value)
 
 
 @enum.unique
-class DrawMode(enum.Enum):
+class MazeDrawMode(enum.Enum):
     NOTHING = 0
     OBSTACLE = 1
     ERASE = 2
@@ -36,20 +36,20 @@ class DrawMode(enum.Enum):
     END = 4
 
     def __str__(self):
-        if self == DrawMode.NOTHING:
+        if self == MazeDrawMode.NOTHING:
             return "Nothing"
-        if self == DrawMode.OBSTACLE:
+        if self == MazeDrawMode.OBSTACLE:
             return "Obstacle"
-        if self == DrawMode.ERASE:
+        if self == MazeDrawMode.ERASE:
             return "Erase"
 
     def __add__(self, other):
-        new_value = (self.value + other) % (len(DrawMode)-2)
-        return DrawMode(new_value)
+        new_value = (self.value + other) % (len(MazeDrawMode)-2)
+        return MazeDrawMode(new_value)
 
     def __iadd__(self, other):
-        new_value = (self.value + other) % (len(DrawMode)-2)
-        return DrawMode(new_value)
+        new_value = (self.value + other) % (len(MazeDrawMode)-2)
+        return MazeDrawMode(new_value)
 
 
 @enum.unique
@@ -68,3 +68,11 @@ class Direction(enum.Enum):
             return (0, 1)
         if self == Direction.LEFT:
             return (-1, 0)
+
+
+class Color(enum.Enum):
+    RED = (255, 0, 0)
+    GREEN = (0, 255, 0)
+    BLUE = (0, 0, 255)
+    WHITE = (255, 255, 255)
+    BLACK = (0, 0, 0)

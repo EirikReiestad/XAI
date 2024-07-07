@@ -4,6 +4,8 @@ Maze system
 
 __credits__ = ["Eirik Reiestad"]
 
+import os
+import logging
 from typing import Optional, Tuple, Union
 
 import numpy as np
@@ -13,9 +15,10 @@ from gymnasium import spaces
 import gymnasium.logger as logger
 from gymnasium.error import DependencyNotInstalled
 
-from environments.gymnasium.utils import Color
-
 from . import utils
+from ...utils.enums import MazeTileType as TileType, Color
+
+logging.basicConfig(level=logging.INFO)
 
 
 class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
@@ -43,7 +46,7 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
     ## Episode Termination
 
     The episode ends if any one of the following occurs:
-1. The agent reaches the goal position.
+    1. The agent reaches the goal position.
     2. The agent reaches the maximum number of steps.
 
     ## Arguments
@@ -84,7 +87,19 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
         self.screen = None
         self.clock = None
         self.isopen = True
-        self.state = np.zeros((self.height, self.width), dtype=np.uint8)
+
+        dirpath = "environments/gymnasium/data/maze/"
+
+        if not os.path.exists(dirpath):
+            raise FileNotFoundError(
+                f"Directory {dirpath} does not exist.")
+
+        filename = "maze-0-10-10.txt"
+        filename = dirpath + filename
+
+        ok = self._load_init_state(filename)
+        if not ok:
+            raise ValueError("Failed to load initial state.")
 
         self.steps = 0
 
@@ -159,11 +174,11 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
         self.steps = 0
 
         self.state = np.zeros((self.height, self.width), dtype=np.uint8)
-        self.state[self.agent.y, self.agent.x] = 1
-        self.state[self.goal.y, self.goal.x] = 2
+        self.state[self.agent.y, self.agent.x] = TileType.START.value
+        self.state[self.goal.y, self.goal.x] = TileType.END.value
         self.steps_beyond_terminated = None
 
-        if np.where(self.state == 2)[0].size == 0:
+        if np.where(self.state == TileType.END.value)[0].size == 0:
             raise ValueError("The goal position is not set.")
 
         return self.state, {}
@@ -201,11 +216,11 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
         color_matrix = np.zeros(
             (self.height, self.width, 3), dtype=np.uint8)
 
-        obstracle_mask = self.state == 0
-        agent_mask = self.state == 1
-        goal_mask = self.state == 2
+        obstacle_mask = self.state == TileType.OBSTACLE.value
+        agent_mask = self.state == TileType.START.value
+        goal_mask = self.state == TileType.END.value
 
-        color_matrix[obstracle_mask] = Color.BLACK.value
+        color_matrix[obstacle_mask] = Color.BLACK.value
         color_matrix[agent_mask] = Color.BLUE.value
         color_matrix[goal_mask] = Color.GREEN.value
 
@@ -245,7 +260,39 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
         new_state = state.copy()
         new_agent = self.agent + utils.DIRECTIONS[action]
         if new_agent.x >= 0 and new_agent.x < self.width and new_agent.y >= 0 and new_agent.y < self.height:
-            new_state[self.agent.y, self.agent.x] = 0
+            new_state[self.agent.y, self.agent.x] = TileType.EMPTY.value
             self.agent = new_agent
-            new_state[self.agent.y, self.agent.x] = 1
+            new_state[self.agent.y, self.agent.x] = TileType.START.value
         return new_state
+
+    def _load_init_state(self, filename) -> bool:
+        if not os.path.exists(filename):
+            logging.info(f"Current working directory: {os.getcwd()}")
+            raise FileNotFoundError(f"File {filename} does not exist.")
+
+        with open(filename, "r") as f:
+            maze = f.readlines()
+            maze = [list(map(int, list(row.strip()))) for row in maze]
+
+            if maze in [None, [], ""]:
+                logging.error(
+                    f"No data: Failed to read maze from file {filename}.")
+                return False
+
+            if len(maze) != self.height or len(maze[0]) != self.width:
+                logging.error(
+                    f"Invalid maze size. Expected {self.height}x{self.width}, got {len(maze)}x{len(maze[0])}")
+                return False
+
+            flatten_maze = np.array(maze).flatten()
+
+            if np.where(flatten_maze == TileType.END.value)[0].size == 0:
+                logging.error("The goal position is not set.")
+                return False
+            if np.where(flatten_maze == TileType.START.value)[0].size == 0:
+                logging.error("The start position is not set.")
+                return False
+
+            self.state = np.array(maze)
+            return True
+        return False

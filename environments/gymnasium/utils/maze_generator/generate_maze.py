@@ -5,11 +5,11 @@ import os
 import sys
 import logging
 import pygame as pg
-from .enums import Direction, DrawMode, TileType
+from ..enums import Direction, MazeDrawMode as DrawMode, MazeTileType as TileType
 
 logging.basicConfig(level=logging.INFO)
 
-MAZE_DATA_DIR = "environments/gymnasium/utils/maze_generator/maze_data/"
+MAZE_DATA_DIR = "environments/gymnasium/data/maze/"
 
 if not os.path.exists(MAZE_DATA_DIR):
     logging.info(f"Current directory: {os.getcwd()}")
