@@ -1,1 +1,1 @@
-
+from .maze import MazeEnv

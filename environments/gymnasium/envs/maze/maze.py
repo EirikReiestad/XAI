@@ -15,8 +15,12 @@ from gymnasium import spaces
 import gymnasium.logger as logger
 from gymnasium.error import DependencyNotInstalled
 
-from . import utils
-from ...utils.enums import MazeTileType as TileType, Color
+from .utils import MazeTileType as TileType
+from environments.gymnasium.utils import (
+    Color,
+    Position,
+    generate_random_position,
+    Direction)
 
 logging.basicConfig(level=logging.INFO)
 
@@ -153,22 +157,22 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
               ) -> np.ndarray:
 
         if options is not None and "start" in options:
-            self.agent = utils.Position(options["start"])
+            self.agent = Position(options["start"])
             if "goal" in options:
                 if options["goal"] == self.agent:
                     raise ValueError(
                         "The goal position is the same as the agent position.")
-                self.goal = utils.Position(options["goal"])
+                self.goal = Position(options["goal"])
             else:
-                utils.generate_random_position(
+                generate_random_position(
                     self.width, self.height, self.agent)
         else:
             if "goal" in options:
-                self.goal = utils.Position(options["goal"])
+                self.goal = Position(options["goal"])
             else:
-                self.goal = utils.generate_random_position(
+                self.goal = generate_random_position(
                     self.width, self.height)
-            self.agent = utils.generate_random_position(
+            self.agent = generate_random_position(
                 self.width, self.height, self.goal)
 
         self.steps = 0
@@ -246,7 +250,7 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
             pygame.quit()
             self.isopen = False
 
-    def _move_agent(self, state: (np.ndarray, utils.Position), action: int) -> list[np.ndarray, utils.Position]:
+    def _move_agent(self, state: (np.ndarray, Position), action: int) -> list[np.ndarray, Position]:
         """
         Move the agent in the maze.
         :Arguments
@@ -258,7 +262,7 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
         """
 
         new_state = state.copy()
-        new_agent = self.agent + utils.DIRECTIONS[action]
+        new_agent = self.agent + Direction[action]
         if new_agent.x >= 0 and new_agent.x < self.width and new_agent.y >= 0 and new_agent.y < self.height:
             new_state[self.agent.y, self.agent.x] = TileType.EMPTY.value
             self.agent = new_agent
