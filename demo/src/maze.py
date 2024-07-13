@@ -26,7 +26,7 @@ def main():
 
     options = {
         "start": (0, 0),
-        "goal": (4, 4),
+        "goal": (7, 7),
     }
 
     state, info = env.reset(options=options)
