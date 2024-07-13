@@ -1,1 +1,1 @@
-from .atari2d import MazeEnv
+import environments.gymnasium.envs.maze

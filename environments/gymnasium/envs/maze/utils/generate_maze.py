@@ -5,7 +5,7 @@ import os
 import sys
 import logging
 import pygame as pg
-from ..enums import Direction, MazeDrawMode as DrawMode, MazeTileType as TileType
+from .enums import Direction, MazeDrawMode as DrawMode, MazeTileType as TileType
 
 logging.basicConfig(level=logging.INFO)
 
