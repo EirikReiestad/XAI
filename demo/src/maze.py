@@ -24,12 +24,7 @@ episode_durations = []
 def main():
     env = gym.make('Maze-v0', render_mode='human')
 
-    options = {
-        "start": (0, 0),
-        "goal": (7, 7),
-    }
-
-    state, info = env.reset(options=options)
+    state, info = env.reset()
     n_observation = len(state) * len(state[0])
 
     dqn = DQNModule(n_observation, env.action_space.n, seed=4)
@@ -40,7 +35,7 @@ def main():
     render_every = 10
 
     for i_episode in range(num_episodes):
-        state, info = env.reset(options=options)
+        state, info = env.reset()
         state = torch.tensor(state, dtype=torch.float32,
                              device=device)
 
