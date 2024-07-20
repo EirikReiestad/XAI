@@ -1,1 +1,1 @@
-from .gymnasium.envs import MazeEnv
+from .gymnasium import maze
