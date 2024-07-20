@@ -5,7 +5,8 @@ import os
 import sys
 import logging
 import pygame as pg
-from .enums import Direction, MazeDrawMode as DrawMode, MazeTileType as TileType
+from .enums import MazeDrawMode as DrawMode, MazeTileType as TileType
+from environments.gymnasium.utils import Direction
 
 logging.basicConfig(level=logging.INFO)
 

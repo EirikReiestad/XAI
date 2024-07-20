@@ -262,7 +262,7 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
         """
 
         new_state = state.copy()
-        new_agent = self.agent + Direction[action]
+        new_agent = self.agent + Direction(action).to_tuple()
         if new_agent.x >= 0 and new_agent.x < self.width and new_agent.y >= 0 and new_agent.y < self.height:
             new_state[self.agent.y, self.agent.x] = TileType.EMPTY.value
             self.agent = new_agent

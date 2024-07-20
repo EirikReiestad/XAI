@@ -9,7 +9,7 @@ from rl.src.dqn.dqn_module import DQNModule
 
 gym.register(
     id='Maze-v0',
-    entry_point='environments.gymnasium.envs.atari2d.maze:MazeEnv',
+    entry_point='environments.gymnasium.envs.maze.maze:MazeEnv',
 )
 
 # Set up matplotlib
