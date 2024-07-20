@@ -153,7 +153,7 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
     def reset(self,
               *,
               seed: Optional[int] = None,
-              options: Optional[dict] = None,
+              options: Optional[dict] = None
               ) -> np.ndarray:
 
         if options is not None and "start" in options:
@@ -167,19 +167,25 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
                 generate_random_position(
                     self.width, self.height, self.agent)
         else:
-            if "goal" in options:
+            if options is not None and "goal" in options:
                 self.goal = Position(options["goal"])
+                self.agent = self.init_agent
             else:
-                self.goal = generate_random_position(
-                    self.width, self.height)
-            self.agent = generate_random_position(
-                self.width, self.height, self.goal)
+                self.agent = self.init_agent
+                self.goal = self.init_goal
 
         self.steps = 0
 
-        self.state = np.zeros((self.height, self.width), dtype=np.uint8)
-        self.state[self.agent.y, self.agent.x] = TileType.START.value
-        self.state[self.goal.y, self.goal.x] = TileType.END.value
+        self.state[self.agent.y, self.agent.x] = TileType.EMPTY.value
+        self.state[self.goal.y, self.goal.x] = TileType.EMPTY.value
+
+        for agent in np.argwhere(self.state == TileType.START.value):
+            self.state[agent[0], agent[1]] = TileType.EMPTY.value
+        for goal in np.argwhere(self.state == TileType.END.value):
+            self.state[goal[0], goal[1]] = TileType.EMPTY.value
+
+        self.state[self.init_agent.y, self.init_agent.x] = TileType.START.value
+        self.state[self.init_goal.y, self.init_goal.x] = TileType.END.value
         self.steps_beyond_terminated = None
 
         if np.where(self.state == TileType.END.value)[0].size == 0:
@@ -217,8 +223,8 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
         if self.state is None:
             return None
 
-        color_matrix = np.zeros(
-            (self.height, self.width, 3), dtype=np.uint8)
+        color_matrix = np.full(
+            (self.height, self.width, 3), Color.WHITE.value)
 
         obstacle_mask = self.state == TileType.OBSTACLE.value
         agent_mask = self.state == TileType.START.value
@@ -264,6 +270,8 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
         new_state = state.copy()
         new_agent = self.agent + Direction(action).to_tuple()
         if new_agent.x >= 0 and new_agent.x < self.width and new_agent.y >= 0 and new_agent.y < self.height:
+            if new_state[new_agent.y, new_agent.x] == TileType.OBSTACLE.value:
+                return new_state
             new_state[self.agent.y, self.agent.x] = TileType.EMPTY.value
             self.agent = new_agent
             new_state[self.agent.y, self.agent.x] = TileType.START.value
@@ -277,6 +285,13 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
         with open(filename, "r") as f:
             maze = f.readlines()
             maze = [list(map(int, list(row.strip()))) for row in maze]
+
+            self.state = np.array(maze, dtype=np.uint8)
+
+            self.init_agent = Position(tuple(
+                map(int, np.argwhere(self.state == TileType.START.value)[0])))
+            self.init_goal = Position(tuple(
+                map(int, np.argwhere(self.state == TileType.END.value)[0])))
 
             if maze in [None, [], ""]:
                 logging.error(
@@ -297,6 +312,5 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
                 logging.error("The start position is not set.")
                 return False
 
-            self.state = np.array(maze)
             return True
         return False
