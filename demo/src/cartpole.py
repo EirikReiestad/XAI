@@ -2,6 +2,7 @@ import gymnasium as gym
 import matplotlib
 import matplotlib.pyplot as plt
 import torch
+import logging
 from itertools import count
 
 from rl.src.dqn.dqn_module import DQNModule
@@ -30,14 +31,14 @@ def main():
     for i_episode in range(num_episodes):
         state, info = env.reset()
         state = torch.tensor(state, dtype=torch.float32,
-                             device=device).unsqueeze(0)
+                             device=device)
         for t in count():
             action = dqn.select_action(state)
             observation, reward, terminated, truncated, _ = env.step(
                 action.item())
 
             observation = torch.tensor(
-                observation, dtype=torch.float32, device=device).unsqueeze(0)
+                observation, dtype=torch.float32, device=device)
 
             done, state = dqn.train(state, action, observation,
                                     reward, terminated, truncated)
@@ -49,7 +50,7 @@ def main():
 
     env.close()
 
-    print('Complete')
+    logging.info('Complete')
     plot_durations(show_result=True)
     plt.ioff()
     plt.show()

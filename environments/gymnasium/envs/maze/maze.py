@@ -9,11 +9,11 @@ import logging
 from typing import Optional, Tuple, Union
 
 import numpy as np
+import pygame as pg
 
 import gymnasium as gym
 from gymnasium import spaces
 import gymnasium.logger as logger
-from gymnasium.error import DependencyNotInstalled
 
 from .utils import MazeTileType as TileType
 from environments.gymnasium.utils import (
@@ -89,17 +89,18 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
         self.screen_width = 600
         self.screen_height = 400
         self.screen = None
+        self.surface = None
         self.clock = None
-        self.isopen = True
+        self.is_open = True
 
-        dirpath = "environments/gymnasium/data/maze/"
+        dir_path = "environments/gymnasium/data/maze/"
 
-        if not os.path.exists(dirpath):
+        if not os.path.exists(dir_path):
             raise FileNotFoundError(
-                f"Directory {dirpath} does not exist.")
+                f"Directory {dir_path} does not exist.")
 
         filename = "maze-0-10-10.txt"
-        filename = dirpath + filename
+        filename = dir_path + filename
 
         ok = self._load_init_state(filename)
         if not ok:
@@ -155,6 +156,16 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
               seed: Optional[int] = None,
               options: Optional[dict] = None
               ) -> np.ndarray:
+        """
+        Reset the environment to the initial state.
+
+        Parameters:
+            seed: The seed to use.
+            options: Additional options.
+
+        Returns:
+            np.ndarray: The initial state of the environment.
+        """
 
         if options is not None and "start" in options:
             self.agent = Position(options["start"])
@@ -193,32 +204,24 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
 
         return self.state, {}
 
-    def render(self):
-        if self.render_mode is None:
+    def render(self, render_mode: Optional[str] = None):
+        render_mode = render_mode if render_mode is not None else self.render_mode
+        if render_mode is None:
             assert self.spec is not None
             gym.logger.warn(
                 "No render mode was set. Using 'human' as default.")
-            return
+            render_mode = "human"
 
-        try:
-            import pygame
-            # from pygame import gfxdraw
-        except ImportError as e:
-            raise DependencyNotInstalled(
-                "To use the render mode you need to install the 'pygame' package."
-            ) from e
+        if self.screen is None or self.surface is None:
+            pg.init()
+            pg.display.init()
+            self.screen = pg.display.set_mode(
+                (self.screen_width, self.screen_height))
+            self.surface = pg.Surface(
+                (self.screen_width, self.screen_height))
 
-        if self.screen is None:
-            pygame.init()
-            if self.render_mode == "human":
-                pygame.display.init()
-                self.screen = pygame.display.set_mode(
-                    (self.screen_width, self.screen_height))
-            else:
-                self.screen = pygame.Surface(
-                    (self.screen_width, self.screen_height))
         if self.clock is None:
-            self.clock = pygame.time.Clock()
+            self.clock = pg.time.Clock()
 
         if self.state is None:
             return None
@@ -234,27 +237,27 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
         color_matrix[agent_mask] = Color.BLUE.value
         color_matrix[goal_mask] = Color.GREEN.value
 
-        surf = pygame.surfarray.make_surface(color_matrix)
-        surf = pygame.transform.scale(
+        surf = pg.surfarray.make_surface(color_matrix)
+        surf = pg.transform.scale(
             surf, (self.screen_width, self.screen_height))
-        surf = pygame.transform.flip(surf, True, False)
+        surf = pg.transform.flip(surf, True, False)
 
-        self.screen.blit(surf, (0, 0))
-        if self.render_mode == "human":
-            pygame.event.pump()
-            self.clock.tick(self.metadata["render_fps"])
-            pygame.display.flip()
-        elif self.render_mode == "rgb_array":
+        if render_mode == "rgb_array":
+            self.surface.blit(surf, (0, 0))
             return np.transpose(
-                np.array(pygame.surfarray.pixels3d(self.screen)), axes=(1, 0, 2))
+                np.array(pg.surfarray.pixels3d(self.surface)), axes=(1, 0, 2))
+        elif render_mode == "human":
+            self.screen.blit(surf, (0, 0))
+            pg.event.pump()
+            self.clock.tick(self.metadata["render_fps"])
+            pg.display.flip()
+            return None
 
     def close(self):
         if self.screen is not None:
-            import pygame
-
-            pygame.display.quit()
-            pygame.quit()
-            self.isopen = False
+            pg.display.quit()
+            pg.quit()
+            self.is_open = False
 
     def _move_agent(self, state: (np.ndarray, Position), action: int) -> list[np.ndarray, Position]:
         """
