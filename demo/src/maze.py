@@ -1,10 +1,12 @@
 import matplotlib
 import matplotlib.pyplot as plt
 import torch
+import logging
 from itertools import count
 import gymnasium as gym
 
 from rl.src.dqn.dqn_module import DQNModule
+from environments.gymnasium.envs.maze.utils.preprocess_state import preprocess_state
 
 
 gym.register(
@@ -22,12 +24,13 @@ episode_durations = []
 
 
 def main():
-    env = gym.make('Maze-v0', render_mode='human')
+    env = gym.make('Maze-v0', render_mode='rgb_array')
 
-    state, info = env.reset()
-    n_observation = len(state) * len(state[0])
+    _, _ = env.reset()
+    state = env.render()
+    state = preprocess_state(state)
 
-    dqn = DQNModule(n_observation, env.action_space.n, seed=4)
+    dqn = DQNModule(state.shape, env.action_space.n, seed=4)
 
     plt.ion()
 
@@ -35,21 +38,20 @@ def main():
     render_every = 10
 
     for i_episode in range(num_episodes):
-        state, info = env.reset()
-        state = torch.tensor(state, dtype=torch.float32,
-                             device=device)
+        _, _ = env.reset()
+        state = env.render()
+        state = preprocess_state(state)
 
         for t in count():
             if i_episode % render_every == 0:
-                env.render()
+                env.render(render_mode='human')
 
-            state = state.flatten().unsqueeze(0)
             action = dqn.select_action(state)
-            observation, reward, terminated, truncated, _ = env.step(
+            _, reward, terminated, truncated, _ = env.step(
                 action.item())
 
-            observation = torch.tensor(
-                observation, dtype=torch.float32, device=device).flatten().unsqueeze(0)
+            observation = env.render()
+            observation = preprocess_state(observation)
 
             done, state = dqn.train(state, action, observation,
                                     reward, terminated, truncated)
@@ -61,7 +63,7 @@ def main():
 
     env.close()
 
-    print('Complete')
+    logging.info('Complete')
     plot_durations(show_result=True)
     plt.ioff()
     plt.show()

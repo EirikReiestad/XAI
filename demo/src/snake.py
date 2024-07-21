@@ -1,6 +1,7 @@
 import matplotlib
 import matplotlib.pyplot as plt
 import torch
+import logging
 from itertools import count
 import gymnasium as gym
 
@@ -66,7 +67,7 @@ def main():
 
     env.close()
 
-    print('Complete')
+    logging.info('Complete')
     plot_durations(show_result=True)
     plt.ioff()
     plt.show()
