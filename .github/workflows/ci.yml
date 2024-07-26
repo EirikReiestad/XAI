@@ -23,10 +23,8 @@ jobs:
       with:
         python-version: '3.11'
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        poetry install
+    - name: Install Poetry
+      run: curl -sSL https://install.python-poetry.org | python3 -
 
     - name: Set up PYTHONPATH
       run: echo "PYTHONPATH=$(pwd):$(pwd)/src" >> $GITHUB_ENV  # Set PYTHONPATH to include the current directory and src
@@ -34,4 +32,4 @@ jobs:
     - name: Run tests
       run: |
         cd ${{ matrix.folder }}
-        python -m unittest discover -s tests
+        poetry run python -m unittest discover -s tests
