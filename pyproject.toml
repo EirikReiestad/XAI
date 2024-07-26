@@ -12,6 +12,7 @@ matplotlib = "^3.9.1"
 torch = "^2.4.0"
 gymnasium = "^0.29.1"
 pygame = "^2.6.0"
+numpy = "^2.0.1"
 
 
 [build-system]
