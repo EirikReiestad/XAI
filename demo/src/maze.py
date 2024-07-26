@@ -35,7 +35,7 @@ def main():
     plt.ion()
 
     num_episodes = 100
-    render_every = 5
+    render_every = 1
 
     for i_episode in range(num_episodes):
         _, _ = env.reset()
