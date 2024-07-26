@@ -25,10 +25,11 @@ class DQNModule():
         self.n_actions = n_actions
         self.observation_shape = observation_shape
 
-        self.batch_size = 512  # The number of transitions sampled from the replay buffer
+        self.batch_size = 64  # The number of transitions sampled from the replay buffer
         self.gamma = 0.999  # The discount factor
         self.eps_start = 0.9  # The starting value of epsilon
         self.eps_end = 0.05  # The final value of epsilon
+
         # The rate of exponential decay of epsilon, higher means a slower decay
         self.eps_decay = 10000
         self.tau = 0.005  # The update rate of the target network
@@ -42,7 +43,10 @@ class DQNModule():
 
         self.optimizer = optim.AdamW(
             self.policy_net.parameters(), lr=self.lr, amsgrad=True)
-        self.memory = ReplayMemory(10000)
+        self.memory = ReplayMemory(1000)
+
+        self.update_interval = 4
+        self.step_count = 0
 
         self.steps_done = 0
 
@@ -82,6 +86,11 @@ class DQNModule():
         """
         if len(self.memory) < self.batch_size:
             return
+
+        self.step_count += 1
+        if self.step_count % self.update_interval != 0:
+            return
+
         transitions = self.memory.sample(self.batch_size)
         # Transpose the batch (see https://stackoverflow.com/a/19343/3343043 for
         # detailed explanation). This converts batch-array of Transitions
