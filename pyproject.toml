@@ -3,10 +3,15 @@ name = "xai"
 version = "0.1.0"
 description = ""
 authors = ["EirikReiestad <eirik@reiestad.no>"]
-readme = "README.md"
+readme = "readme.md"
+packages = [{ include = "demo" }]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.11"
+matplotlib = "^3.9.1"
+torch = "^2.4.0"
+gymnasium = "^0.29.1"
+pygame = "^2.6.0"
 
 
 [build-system]
