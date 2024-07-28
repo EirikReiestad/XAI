@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from src.qlearning.qlearning import QLearning
+from rl.src.qlearning.qlearning import QLearning
 
 
 class TestQLearning(unittest.TestCase):

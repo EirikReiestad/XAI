@@ -6,6 +6,7 @@ import torch.nn as nn
 import torch.optim as optim
 import random
 import math
+import logging
 
 from .replay_memory import ReplayMemory, Transition
 from .dueling_dqn import DuelingDQN
@@ -24,7 +25,9 @@ class DQNModule():
         self.n_actions = n_actions
         self.observation_shape = observation_shape
 
-        if len(self.observation_shape) != 3:
+        if len(self.observation_shape) != 4:
+            logging.warning(
+                f"Using image as the input resulting in 4 dimensions (batch size, color channels, width, height), got {len(self.observation_shape)}")
             raise ValueError(
                 f"Expected observation_shape to have length 3, but got {len(self.observation_shape)}")
 
