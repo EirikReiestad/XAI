@@ -7,9 +7,10 @@ from src.dqn.dqn_module import DQNModule
 class TestDQNModule(unittest.TestCase):
 
     def setUp(self):
-        self.n_observations = 4
+        self.observation_shape = (4, 4, 3)
         self.n_actions = 2
-        self.module = DQNModule(self.n_observations, self.n_actions, seed=42)
+        self.module = DQNModule(self.observation_shape,
+                                self.n_actions, seed=42)
 
     def test_initialization(self):
         self.assertEqual(self.module.n_actions, self.n_actions)
