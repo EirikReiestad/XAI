@@ -14,11 +14,11 @@ class TestDQNModule(unittest.TestCase):
 
     def test_initialization(self):
         self.assertEqual(self.module.n_actions, self.n_actions)
-        self.assertEqual(self.module.n_observations, self.n_observations)
+        self.assertEqual(self.module.observation_shape, self.observation_shape)
         self.assertEqual(self.module.steps_done, 0)
 
     def test_select_action_exploration(self):
-        state = torch.zeros(1, self.n_observations)
+        state = torch.zeros(1, self.observation_shape)
         action = self.module.select_action(state)
         self.assertEqual(action.size(), (1, 1))
         self.assertTrue(0 <= action.item() < self.n_actions)
@@ -29,16 +29,16 @@ class TestDQNModule(unittest.TestCase):
         self.assertTrue(True)  # If no exception, the test passes
 
     def test_memory_push(self):
-        state = torch.zeros(1, self.n_observations)
+        state = torch.zeros(1, self.observation_shape)
         action = torch.tensor([[0]], dtype=torch.long)
-        next_state = torch.zeros(1, self.n_observations)
+        next_state = torch.zeros(1, self.observation_shape)
         reward = torch.tensor([1.0])
 
         self.module.memory.push(state, action, next_state, reward)
         self.assertEqual(len(self.module.memory), 1)
 
     def test_train(self):
-        state = torch.zeros(1, self.n_observations)
+        state = torch.zeros(1, self.observation_shape)
         action = torch.tensor([[0]], dtype=torch.long)
         observation = np.array([0.0, 0.0, 0.0, 0.0])
         observation = torch.tensor(
@@ -50,10 +50,10 @@ class TestDQNModule(unittest.TestCase):
         done, next_state = self.module.train(
             state, action, observation, reward, terminated, truncated)
         self.assertFalse(done)
-        self.assertEqual(next_state.size(), (1, self.n_observations))
+        self.assertEqual(next_state.size(), (1, self.observation_shape))
 
     def test_train_terminated(self):
-        state = torch.zeros(1, self.n_observations)
+        state = torch.zeros(1, self.observation_shape)
         action = torch.tensor([[0]], dtype=torch.long)
         observation = np.array([0.0, 0.0, 0.0, 0.0])
         observation = torch.tensor(
