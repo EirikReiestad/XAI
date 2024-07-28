@@ -24,6 +24,10 @@ class DQNModule():
         self.n_actions = n_actions
         self.observation_shape = observation_shape
 
+        if len(self.observation_shape) != 3:
+            raise ValueError(
+                f"Expected observation_shape to have length 3, but got {len(self.observation_shape)}")
+
         self.batch_size = 512  # The number of transitions sampled from the replay buffer
         self.gamma = 0.999  # The discount factor
         self.eps_start = 0.9  # The starting value of epsilon
