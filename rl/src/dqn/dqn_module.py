@@ -1,6 +1,9 @@
-"""
+""" DQN Module.
+
+This module contains the DQN agent that interacts with the environment.
 """
 
+import os
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -8,8 +11,9 @@ import random
 import math
 import logging
 
-from .replay_memory import ReplayMemory, Transition
-from .dueling_dqn import DuelingDQN
+from rl.src.dqn.replay_memory import ReplayMemory, Transition
+from rl.src.dqn.dueling_dqn import DuelingDQN
+from rl.src.hyperparameters.dqn_hyperparameter import DQNHyperparameter
 
 # if gpu is to be used
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -18,9 +22,11 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 class DQNModule():
     global device
 
-    def __init__(self, observation_shape: tuple, n_actions: int, hidden_layers: [int] = [64], seed=None):
+    def __init__(self, path: str, observation_shape: tuple, n_actions: int, hidden_layers: [int] = [64], seed=None):
         if seed is not None:
             torch.manual_seed(seed)
+
+        self.path = path
 
         self.n_actions = n_actions
         self.observation_shape = observation_shape
@@ -31,25 +37,21 @@ class DQNModule():
             raise ValueError(
                 f"Expected observation_shape to have length 3, but got {len(self.observation_shape)}")
 
-        self.batch_size = 512  # The number of transitions sampled from the replay buffer
-        self.gamma = 0.999  # The discount factor
-        self.eps_start = 0.9  # The starting value of epsilon
-        self.eps_end = 0.05  # The final value of epsilon
-
-        # The rate of exponential decay of epsilon, higher means a slower decay
-        self.eps_decay = 10000
-        self.tau = 0.005  # The update rate of the target network
-        self.lr = 1e-4  # The learning rate of the ``AdamW`` optimizer
+        hyperparameter_path = self.path + '.hyper'
+        self.hp = DQNHyperparameter()
+        self.hp.load(hyperparameter_path)
 
         self.policy_net = DuelingDQN(observation_shape, n_actions,
                                      hidden_layers).to(device)
         self.target_net = DuelingDQN(observation_shape, n_actions,
                                      hidden_layers).to(device)
-        self.target_net.load_state_dict(self.policy_net.state_dict())
 
         self.optimizer = optim.AdamW(
-            self.policy_net.parameters(), lr=self.lr, amsgrad=True)
+            self.policy_net.parameters(), lr=self.hp.lr, amsgrad=True)
         self.memory = ReplayMemory(1000)
+
+        if self.path is not None and os.path.exists(self.path):
+            self.load()
 
         self.update_interval = 256
         self.step_count = 0
@@ -73,9 +75,9 @@ class DQNModule():
                 f"Expected state to have shape {self.observation_shape}, but got {state.shape}")
 
         sample = random.random()
-        eps_threshold = self.eps_end + \
-            (self.eps_start - self.eps_end) * \
-            math.exp(-1. * self.steps_done / self.eps_decay)
+        eps_threshold = self.hp.eps_end + \
+            (self.hp.eps_start - self.hp.eps_end) * \
+            math.exp(-1. * self.steps_done / self.hp.eps_decay)
         self.steps_done += 1
         if sample > eps_threshold:
             with torch.no_grad():
@@ -90,14 +92,14 @@ class DQNModule():
         """
         This function samples a batch from the replay memory and performs a single optimization step
         """
-        if len(self.memory) < self.batch_size:
+        if len(self.memory) < self.hp.batch_size:
             return
 
         self.step_count += 1
         if self.step_count % self.update_interval != 0:
             return
 
-        transitions = self.memory.sample(self.batch_size)
+        transitions = self.memory.sample(self.hp.batch_size)
         # Transpose the batch (see https://stackoverflow.com/a/19343/3343043 for
         # detailed explanation). This converts batch-array of Transitions
         # to Transition of batch-arrays.
@@ -126,7 +128,7 @@ class DQNModule():
         # on the "older" target_net; selecting their best reward with max(1).values
         # This is merged based on the mask, such that we'll have either the expected
         # state value or 0 in case the state was final.
-        next_state_values = torch.zeros(self.batch_size, device=device)
+        next_state_values = torch.zeros(self.hp.batch_size, device=device)
 
         # NOTE: Double DQN
         with torch.no_grad():
@@ -137,7 +139,7 @@ class DQNModule():
 
         # Compute the expected Q values
         expected_state_action_values = (
-            next_state_values * self.gamma) + reward_batch
+            next_state_values * self.hp.gamma) + reward_batch
 
         # Compute Huber loss
         criterion = nn.SmoothL1Loss()
@@ -150,6 +152,8 @@ class DQNModule():
         # In-place gradient clipping
         torch.nn.utils.clip_grad_value_(self.policy_net.parameters(), 100)
         self.optimizer.step()
+
+        self.save()
 
     def train(self, state: torch.Tensor, action: torch.Tensor, observation: torch.Tensor, reward: float, terminated: bool, truncated: bool) -> (bool, torch.Tensor):
         """
@@ -201,7 +205,49 @@ class DQNModule():
         policy_net_state_dict = self.policy_net.state_dict()
         for key in policy_net_state_dict:
             target_net_state_dict[key] = policy_net_state_dict[key] * \
-                self.tau + target_net_state_dict[key]*(1-self.tau)
+                self.hp.tau + target_net_state_dict[key]*(1-self.tau)
         self.target_net.load_state_dict(target_net_state_dict)
 
         return done, state
+
+    def save(self):
+        """
+        Save the model and memory to the specified path
+        Parameters:
+            path (str): The path to save the model and memory
+        """
+        self._save_model()
+
+    def _save_model(self):
+        """
+        Save the model to the specified path
+        Parameters:
+            path (str): The path to save the model
+        """
+        torch.save(self.policy_net.state_dict(), self.path)
+
+    def load(self):
+        """
+        Load the model and memory from the specified path
+        Parameters:
+            path (str): The path to load the model and memory
+        """
+        self._load_model(self.path)
+
+    def _load_model(self):
+        """
+        Load the model from the specified path
+        Parameters:
+            path (str): The path to load the model
+        """
+        if not os.path.exists(self.path):
+            logging.warning(f"Model not found at {self.path}")
+            self.target_net.load_state_dict(
+                self.policy_net.state_dict())
+
+        self.policy_net.load_state_dict(
+            torch.load(self.path, weights_only=True))
+        self.target_net.load_state_dict(
+            torch.load(self.path, weights_only=True))
+        self.policy_net.eval()
+        self.target_net.eval()

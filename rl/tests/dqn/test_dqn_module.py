@@ -1,11 +1,9 @@
 import unittest
 import torch
-import numpy as np
 from rl.src.dqn.dqn_module import DQNModule
 
 
 class TestDQNModule(unittest.TestCase):
-
     def setUp(self):
         self.observation_shape = torch.Size([1, 3, 64, 64])
         self.n_actions = 2
