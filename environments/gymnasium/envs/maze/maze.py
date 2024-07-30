@@ -19,8 +19,7 @@ from .utils import MazeTileType as TileType
 from environments.gymnasium.utils import (
     Color,
     Position,
-    generate_random_position,
-    Direction)
+    generate_random_position, Direction)
 
 logging.basicConfig(level=logging.INFO)
 
@@ -67,8 +66,8 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 50}
 
     def __init__(self, render_mode: Optional[str] = None):
-        self.height = 10
-        self.width = 10
+        self.height = 5
+        self.width = 5
         self.max_steps = 100
 
         self.agent = None

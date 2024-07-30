@@ -30,43 +30,46 @@ def main():
     state = env.render()
     state = preprocess_state(state)
 
-    dqn = DQNModule(state.shape, env.action_space.n, seed=4)
+    model_path = 'maze_dqn.pth'
+    dqn = DQNModule(model_path, state.shape, env.action_space.n, seed=4)
 
     plt.ion()
 
     num_episodes = 100
-    render_every = 1
+    render_every = 5
+    try:
+        for i_episode in range(num_episodes):
+            _, _ = env.reset()
+            state = env.render()
+            state = preprocess_state(state)
 
-    for i_episode in range(num_episodes):
-        _, _ = env.reset()
-        state = env.render()
-        state = preprocess_state(state)
+            for t in count():
+                if i_episode % render_every == 0:
+                    env.render(render_mode='human')
 
-        for t in count():
-            if i_episode % render_every == 0:
-                env.render(render_mode='human')
+                action = dqn.select_action(state)
+                _, reward, terminated, truncated, _ = env.step(
+                    action.item())
 
-            action = dqn.select_action(state)
-            _, reward, terminated, truncated, _ = env.step(
-                action.item())
+                observation = env.render()
+                observation = preprocess_state(observation)
 
-            observation = env.render()
-            observation = preprocess_state(observation)
+                done, state = dqn.train(state, action, observation,
+                                        reward, terminated, truncated)
 
-            done, state = dqn.train(state, action, observation,
-                                    reward, terminated, truncated)
+                if done:
+                    episode_durations.append(t + 1)
+                    plot_durations()
+                    break
+    except Exception as e:
+        logging.exception(e)
+    finally:
+        env.close()
 
-            if done:
-                episode_durations.append(t + 1)
-                plot_durations()
-                break
-
-    env.close()
-
-    logging.info('Complete')
-    plot_durations(show_result=True)
-    plt.ioff()
-    plt.show()
+        logging.info('Complete')
+        plot_durations(show_result=True)
+        plt.ioff()
+        plt.show()
 
 
 def plot_durations(show_result=False):
