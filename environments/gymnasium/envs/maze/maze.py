@@ -68,7 +68,7 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
     def __init__(self, render_mode: Optional[str] = None):
         self.height = 5
         self.width = 5
-        self.max_steps = 100
+        self.max_steps = (self.height * self.width) * 2
 
         self.agent = None
         self.goal = None
@@ -79,7 +79,8 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
         )
 
         self.rewards = {
-            "goal": 1,
+            "goal": 10,
+            "move": 0,
             "truncate": -1,
         }
 
@@ -132,7 +133,8 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
             return self.state, self.rewards["truncate"], True, True, {}
 
         terminated = self.agent == self.goal
-        reward = self.rewards["goal"] if terminated else 0
+
+        reward = self._get_reward()
 
         if not terminated:
             self.state = self._move_agent(self.state, action)
@@ -257,6 +259,13 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
             pg.display.quit()
             pg.quit()
             self.is_open = False
+
+    def _get_reward(self) -> int:
+        """ Calculate the reward of the current state.
+        """
+        terminated = self.agent == self.goal
+        reward = self.rewards["goal"] if terminated else 0
+        return reward
 
     def _move_agent(self, state: (np.ndarray, Position), action: int) -> list[np.ndarray, Position]:
         """

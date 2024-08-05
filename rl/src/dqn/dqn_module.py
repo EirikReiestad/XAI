@@ -48,12 +48,12 @@ class DQNModule():
 
         self.optimizer = optim.AdamW(
             self.policy_net.parameters(), lr=self.hp.lr, amsgrad=True)
-        self.memory = ReplayMemory(1000)
+        self.memory = ReplayMemory(64)
 
         if self.path is not None and os.path.exists(self.path):
             self.load()
 
-        self.update_interval = 256
+        self.update_interval = 1
         self.step_count = 0
 
         self.steps_done = 0
@@ -205,7 +205,7 @@ class DQNModule():
         policy_net_state_dict = self.policy_net.state_dict()
         for key in policy_net_state_dict:
             target_net_state_dict[key] = policy_net_state_dict[key] * \
-                self.hp.tau + target_net_state_dict[key]*(1-self.tau)
+                self.hp.tau + target_net_state_dict[key]*(1-self.hp.tau)
         self.target_net.load_state_dict(target_net_state_dict)
 
         return done, state

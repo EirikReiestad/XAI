@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 @dataclass
 class DQNHyperparameter:
-    lr = 0.001
+    lr = 0.1
     gamma = 0.999
     eps_start = 0.9
     eps_end = 0.05
