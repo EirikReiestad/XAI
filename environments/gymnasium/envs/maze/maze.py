@@ -262,9 +262,15 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
 
     def _get_reward(self) -> int:
         """ Calculate the reward of the current state.
+
+        The distance to the goal
         """
-        terminated = self.agent == self.goal
-        reward = self.rewards["goal"] if terminated else 0
+        # terminated = self.agent == self.goal
+
+        distance = np.linalg.norm(
+            np.array(self.agent) - np.array(self.goal), ord=1)
+
+        reward = self.rewards["goal"] - distance
         return reward
 
     def _move_agent(self, state: (np.ndarray, Position), action: int) -> list[np.ndarray, Position]:
