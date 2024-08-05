@@ -18,6 +18,8 @@ class DQNHyperparameter:
             f.write(str(self))
 
     def load(self, path):
+        if path is None:
+            return
         if not os.path.exists(path):
             logging.warning(f"Hyperparameters not found at {path}")
             self.save(path)

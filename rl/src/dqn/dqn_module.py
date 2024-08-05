@@ -22,7 +22,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 class DQNModule():
     global device
 
-    def __init__(self, path: str, observation_shape: tuple, n_actions: int, hidden_layers: [int] = [64], seed=None):
+    def __init__(self, observation_shape: tuple, n_actions: int, hidden_layers: [int] = [64], path: str = None,  seed: int = None):
         if seed is not None:
             torch.manual_seed(seed)
 
