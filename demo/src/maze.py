@@ -31,7 +31,7 @@ def main():
     state = preprocess_state(state)
 
     model_path = 'maze_dqn.pth'
-    dqn = DQNModule(model_path, state.shape, env.action_space.n, seed=4)
+    dqn = DQNModule(state.shape, env.action_space.n, path=model_path, seed=4)
 
     plt.ion()
 
