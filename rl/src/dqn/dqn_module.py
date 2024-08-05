@@ -37,9 +37,10 @@ class DQNModule():
             raise ValueError(
                 f"Expected observation_shape to have length 3, but got {len(self.observation_shape)}")
 
-        hyperparameter_path = self.path + '.hyper'
         self.hp = DQNHyperparameter()
-        self.hp.load(hyperparameter_path)
+        if self.path is not None:
+            hyperparameter_path = self.path + '.hyper'
+            self.hp.load(hyperparameter_path)
 
         self.policy_net = DuelingDQN(observation_shape, n_actions,
                                      hidden_layers).to(device)
