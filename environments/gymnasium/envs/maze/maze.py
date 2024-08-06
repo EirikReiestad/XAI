@@ -267,8 +267,10 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
         """
         # terminated = self.agent == self.goal
 
-        distance = np.linalg.norm(
-            np.array(self.agent) - np.array(self.goal), ord=1)
+        agent = np.array(self.agent.to_tuple())
+        goal = np.array(self.goal.to_tuple())
+
+        distance = np.linalg.norm(agent - goal, ord=1)
 
         reward = self.rewards["goal"] - distance
         return reward
