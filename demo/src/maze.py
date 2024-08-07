@@ -9,7 +9,6 @@ from IPython import display
 
 from rl.src.dqn.dqn_module import DQNModule
 from environments.gymnasium.envs.maze.utils.preprocess_state import preprocess_state
-from environments.gymnasium.envs.maze.maze import MazeEnv
 from demo.src.common import EpisodeInformation
 
 gym.register(
