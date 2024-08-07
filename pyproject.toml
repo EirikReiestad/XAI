@@ -13,6 +13,7 @@ torch = "^2.4.0"
 gymnasium = "^0.29.1"
 pygame = "^2.6.0"
 numpy = "^2.0.1"
+pylint = "^3.2.6"
 
 [tool.pyright]
 venvPath = "."
