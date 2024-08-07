@@ -10,27 +10,27 @@ from IPython import display
 from rl.src.dqn.dqn_module import DQNModule
 from environments.gymnasium.envs.maze.utils.preprocess_state import preprocess_state
 from environments.gymnasium.envs.maze.maze import MazeEnv
-from demo.src.dataclasses import EpisodeInformation 
+from demo.src.common import EpisodeInformation
 
 gym.register(
-    id='Maze-v0',
-    entry_point='environments.gymnasium.envs.maze.maze:MazeEnv',
+    id="Maze-v0",
+    entry_point="environments.gymnasium.envs.maze.maze:MazeEnv",
 )
 
 # Set up matplotlib
-is_ipython = 'inline' in matplotlib.get_backend()
+is_ipython = "inline" in matplotlib.get_backend()
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 class Demo:
     def __init__(self):
         self.episode_information: EpisodeInformation = EpisodeInformation(
-            durations=[],
-            rewards=[]
+            durations=[], rewards=[]
         )
 
     def main(self):
-        env = gym.make('Maze-v0', render_mode='rgb_array')
+        env = gym.make("Maze-v0", render_mode="rgb_array")
 
         _, _ = env.reset()
         state = env.render()
@@ -38,7 +38,7 @@ class Demo:
         state = np.array(state)
         state = preprocess_state(state)
 
-        model_path = 'maze_dqn.pth'
+        model_path = "maze_dqn.pth"
         n_actions = env.action_space.n
         dqn = DQNModule(state.shape, n_actions, path=model_path, seed=4)
 
@@ -56,18 +56,18 @@ class Demo:
                 for t in count():
                     if i_episode % render_every == 0:
                         env.render()
-                        env.render_mode = 'human'
+                        env.render_mode = "human"
 
                     action = dqn.select_action(state)
-                    _, reward, terminated, truncated, _ = env.step(
-                        action.item())
+                    _, reward, terminated, truncated, _ = env.step(action.item())
 
                     observation = env.render()
                     observation = np.array(observation)
                     observation = preprocess_state(observation)
 
-                    done, state = dqn.train(state, action, observation,
-                                            float(reward), terminated, truncated)
+                    done, state = dqn.train(
+                        state, action, observation, float(reward), terminated, truncated
+                    )
 
                     if done:
                         self.episode_information.durations.append(t + 1)
@@ -78,22 +78,23 @@ class Demo:
         finally:
             env.close()
 
-            logging.info('Complete')
+            logging.info("Complete")
             self.plot_durations(show_result=True)
             plt.ioff()
         plt.show()
 
-
     def plot_durations(self, show_result=False):
         plt.figure(1)
-        durations_t = torch.tensor(self.episode_information.durations, dtype=torch.float)
+        durations_t = torch.tensor(
+            self.episode_information.durations, dtype=torch.float
+        )
         if show_result:
-            plt.title('Result')
+            plt.title("Result")
         else:
             plt.clf()
-            plt.title('Training...')
-        plt.xlabel('Episode')
-        plt.ylabel('Duration')
+            plt.title("Training...")
+        plt.xlabel("Episode")
+        plt.ylabel("Duration")
         plt.plot(durations_t.numpy())
         # Take 100 episode averages and plot them too
         if len(durations_t) >= 100:
