@@ -9,7 +9,7 @@ class QLearning:
 
     def __init__(self, action_space: int):
         self.action_space = action_space
-        self.q_table = {}
+        self.q_table: dict = {}
 
     def choose_action(self, state: int) -> int:
 
@@ -19,7 +19,7 @@ class QLearning:
             if self.q_table.get(state) is None:
                 self.q_table[state] = np.zeros(self.action_space)
                 return random.choice(range(self.action_space))
-            return np.argmax(self.q_table[state])
+            return int(np.argmax(self.q_table[state]))
 
     def update(self, state: int, action: int, reward: float, next_state: int) -> None:
         if self.q_table.get(state) is None:
@@ -32,7 +32,7 @@ class QLearning:
             reward + self.gamma * np.max(self.q_table[next_state]) - self.q_table[state][action])
 
     def save(self, path: str) -> None:
-        np.save(path, self.q_table)
+        np.save(path, np.array(list(self.q_table.items())))
 
     def load(self, path: str) -> None:
         self.q_table = np.load(path, allow_pickle=True).item()

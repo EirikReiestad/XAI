@@ -3,11 +3,13 @@ import matplotlib.pyplot as plt
 import torch
 import logging
 from itertools import count
-import numpy
+import numpy as np
 import gymnasium as gym
+from IPython import display
 
 from rl.src.dqn.dqn_module import DQNModule
 from environments.gymnasium.envs.maze.utils.preprocess_state import preprocess_state
+from environments.gymnasium.envs.maze.maze import MazeEnv
 from demo.src.dataclasses import EpisodeInformation 
 
 gym.register(
@@ -17,15 +19,13 @@ gym.register(
 
 # Set up matplotlib
 is_ipython = 'inline' in matplotlib.get_backend()
-if is_ipython:
-    from IPython import display
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class Demo:
     def __init__(self):
         self.episode_information: EpisodeInformation = EpisodeInformation(
-            duration=[],
+            durations=[],
             rewards=[]
         )
 
@@ -39,7 +39,8 @@ class Demo:
         state = preprocess_state(state)
 
         model_path = 'maze_dqn.pth'
-        dqn = DQNModule(state.shape, env.action_space.n, path=model_path, seed=4)
+        n_actions = env.action_space.n
+        dqn = DQNModule(state.shape, n_actions, path=model_path, seed=4)
 
         plt.ion()
 
@@ -49,25 +50,28 @@ class Demo:
             for i_episode in range(num_episodes):
                 _, _ = env.reset()
                 state = env.render()
+                state = np.array(state)
                 state = preprocess_state(state)
 
                 for t in count():
                     if i_episode % render_every == 0:
-                        env.render(render_mode='human')
+                        env.render()
+                        env.render_mode = 'human'
 
                     action = dqn.select_action(state)
                     _, reward, terminated, truncated, _ = env.step(
                         action.item())
 
                     observation = env.render()
+                    observation = np.array(observation)
                     observation = preprocess_state(observation)
 
                     done, state = dqn.train(state, action, observation,
-                                            reward, terminated, truncated)
+                                            float(reward), terminated, truncated)
 
                     if done:
                         self.episode_information.durations.append(t + 1)
-                        plot_durations()
+                        self.plot_durations()
                         break
         except Exception as e:
             logging.exception(e)
@@ -75,7 +79,7 @@ class Demo:
             env.close()
 
             logging.info('Complete')
-            plot_durations(show_result=True)
+            self.plot_durations(show_result=True)
             plt.ioff()
         plt.show()
 
@@ -107,4 +111,5 @@ class Demo:
 
 
 if __name__ == "__main__":
-    main()
+    demo = Demo()
+    demo.main()

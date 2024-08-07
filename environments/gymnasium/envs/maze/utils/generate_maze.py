@@ -19,6 +19,8 @@ if not os.path.exists(MAZE_DATA_DIR):
 
 
 class GenerateMaze():
+    maze: list[list[int]]
+
     def __init__(self, width: int, height: int):
         pg.init()
         pg.font.init()
@@ -43,7 +45,7 @@ class GenerateMaze():
         self.draw_mode = DrawMode.NOTHING
         self.placement_mode = DrawMode.NOTHING
 
-        self.maze = None
+        self.maze = []
         self.maze_index = 0
         self._get_maze(self.maze_index)
 

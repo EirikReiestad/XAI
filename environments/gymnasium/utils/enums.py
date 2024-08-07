@@ -1,4 +1,5 @@
 import enum
+import logging
 
 
 @enum.unique
@@ -8,7 +9,7 @@ class Direction(enum.Enum):
     DOWN = 2
     LEFT = 3
 
-    def to_tuple(self):
+    def to_tuple(self) -> tuple[int, int]:
         if self == Direction.UP:
             return (0, -1)
         if self == Direction.RIGHT:
@@ -17,6 +18,8 @@ class Direction(enum.Enum):
             return (0, 1)
         if self == Direction.LEFT:
             return (-1, 0)
+        else: # should never happen
+            raise ValueError("Invalid direction.")
 
 
 @enum.unique

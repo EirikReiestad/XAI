@@ -8,7 +8,7 @@ class MazeTileType(enum.Enum):
     START = 2
     END = 3
 
-    def __str__(self):
+    def __str__(self) -> str:
         if self == MazeTileType.EMPTY:
             return "Empty"
         if self == MazeTileType.OBSTACLE:
@@ -17,6 +17,7 @@ class MazeTileType(enum.Enum):
             return "Start"
         if self == MazeTileType.END:
             return "End"
+        return "Unknown"
 
     def __add__(self, other):
         new_value = (self.value + other) % len(MazeTileType)
@@ -35,13 +36,14 @@ class MazeDrawMode(enum.Enum):
     START = 3
     END = 4
 
-    def __str__(self):
+    def __str__(self) -> str:
         if self == MazeDrawMode.NOTHING:
             return "Nothing"
         if self == MazeDrawMode.OBSTACLE:
             return "Obstacle"
         if self == MazeDrawMode.ERASE:
             return "Erase"
+        return "Unknown"
 
     def __add__(self, other):
         new_value = (self.value + other) % (len(MazeDrawMode)-2)

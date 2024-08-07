@@ -11,7 +11,7 @@ def preprocess_state(state: np.ndarray) -> torch.Tensor:
     Returns:
         torch.Tensor: The preprocessed state of the maze
     """
-    state = torch.tensor(state, dtype=torch.float32)
-    state = state.permute(2, 0, 1)
-    state = state.unsqueeze(0)
-    return state
+    torch_state = torch.tensor(state, dtype=torch.float32)
+    permute_state = torch_state.permute(2, 0, 1)
+    unsqueeze_state = permute_state.unsqueeze(0)
+    return unsqueeze_state

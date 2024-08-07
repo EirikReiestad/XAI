@@ -59,7 +59,7 @@ class DuelingDQN(nn.Module):
         advantage_layers.append(nn.Linear(hidden_layers[-1], n_actions))
         self.advantage_stream = nn.Sequential(*advantage_layers)
 
-    def forward(self, x: torch.tensor):
+    def forward(self, x: torch.Tensor):
         # Ensure the shape is (batch, channels, height, width)
         if x.dim() != 4:  # Input is already in (batch_size, channels, height, width) format
             raise ValueError(f"Unexpected input shape: {x.shape}")

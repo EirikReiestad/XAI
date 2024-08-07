@@ -6,7 +6,7 @@ This module contains the DQN agent that interacts with the environment.
 import os
 import torch
 import torch.nn as nn
-import torch.optim as optim
+from torch.optim.adamw import AdamW
 import random
 import math
 import logging
@@ -22,7 +22,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 class DQNModule():
     global device
 
-    def __init__(self, observation_shape: tuple, n_actions: int, hidden_layers: [int] = [64], path: str = None,  seed: int = None):
+    def __init__(self, observation_shape: tuple, n_actions: int, hidden_layers: list[int] = [64], path: str | None = None,  seed: int | None = None):
         if seed is not None:
             torch.manual_seed(seed)
 
@@ -47,7 +47,7 @@ class DQNModule():
         self.target_net = DuelingDQN(observation_shape, n_actions,
                                      hidden_layers).to(device)
 
-        self.optimizer = optim.AdamW(
+        self.optimizer = AdamW(
             self.policy_net.parameters(), lr=self.hp.lr, amsgrad=True)
         self.memory = ReplayMemory(64)
 
@@ -156,7 +156,7 @@ class DQNModule():
 
         self.save()
 
-    def train(self, state: torch.Tensor, action: torch.Tensor, observation: torch.Tensor, reward: float, terminated: bool, truncated: bool) -> (bool, torch.Tensor):
+    def train(self, state: torch.Tensor, action: torch.Tensor, observation: torch.Tensor, reward: float, terminated: bool, truncated: bool) -> tuple[bool, torch.Tensor]:
         """
         Parameters:
             state (torch.Tensor): The current state of the environment
@@ -179,7 +179,7 @@ class DQNModule():
             raise ValueError(
                 f"Expected observation to have shape {self.observation_shape}, but got {observation.shape}")
 
-        reward = torch.tensor([reward], device=device)
+        reward = torch.tensor([reward], device=device, dtype=torch.float).item()
         done = terminated or truncated
 
         if terminated:
@@ -193,6 +193,9 @@ class DQNModule():
 
         # Store the transition in memory
         self.memory.push(state, action, next_state, reward)
+
+        if next_state is None:
+            return done, state
 
         # Move to the next state
         state = next_state
@@ -225,6 +228,9 @@ class DQNModule():
         Parameters:
             path (str): The path to save the model
         """
+        if self.path is None:
+            raise ValueError("Model path is not specified")
+
         torch.save(self.policy_net.state_dict(), self.path)
 
     def load(self):
@@ -233,7 +239,7 @@ class DQNModule():
         Parameters:
             path (str): The path to load the model and memory
         """
-        self._load_model(self.path)
+        self._load_model()
 
     def _load_model(self):
         """
@@ -241,6 +247,9 @@ class DQNModule():
         Parameters:
             path (str): The path to load the model
         """
+        if self.path is None:
+            raise ValueError("Model path is not specified")
+
         if not os.path.exists(self.path):
             logging.warning(f"Model not found at {self.path}")
             self.target_net.load_state_dict(

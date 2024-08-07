@@ -20,7 +20,7 @@ def main():
     env = gym.make('CartPole-v1', render_mode='human')
 
     state, info = env.reset()
-    n_observation = len(state)
+    n_observation: int = len(state)
 
     dqn = DQNModule(n_observation, env.action_space.n, seed=4)
 

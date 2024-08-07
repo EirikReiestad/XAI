@@ -29,7 +29,6 @@ logging.basicConfig(level=logging.INFO)
 class MazeEnv(gym.Env):
     """
     ## Description
-
     This class implements a simple maze environment. The goal is to reach the goal position
 
     ## Action Space
@@ -70,15 +69,12 @@ class MazeEnv(gym.Env):
     action_space: spaces.Discrete
     observation_space: spaces.Box
 
-    def __init__(self, render_mode: Optional[str] = None):
-        super().__init__()
+    state: np.ndarray
 
+    def __init__(self):
         self.height = 5
         self.width = 5
         self.max_steps = (self.height * self.width) * 2
-
-        self.agent = None
-        self.goal = None
 
         self.action_space = spaces.Discrete(4)
         self.observation_space: spaces.Box = gym.spaces.Box(
@@ -92,7 +88,7 @@ class MazeEnv(gym.Env):
             "truncated": -10,
         }
 
-        self.render_mode = render_mode
+        self._render_mode = "human" 
 
         self.screen_width = 600
         self.screen_height = 400
@@ -117,7 +113,7 @@ class MazeEnv(gym.Env):
 
         self.steps_beyond_terminated = None
 
-    def step(self, action: int) -> Tuple[np.array, int, bool, bool, dict]:
+    def step(self, action: int) -> Tuple[np.ndarray, int, bool, bool, dict]:
         """
         This method is called to take a step in the environment.
         Parameters:
@@ -150,7 +146,7 @@ class MazeEnv(gym.Env):
 
             terminated = collided or terminated
 
-            if not collided:
+            if not collided and state is not None:
                 self.state = state
         elif self.steps_beyond_terminated is None:
             self.steps_beyond_terminated = 0
@@ -191,7 +187,7 @@ class MazeEnv(gym.Env):
                     )
                 self.goal = Position(options["goal"])
             else:
-                generate_random_position(self.width, self.height, self.agent)
+                self.goal = generate_random_position(self.width, self.height, self.agent)
         else:
             if options is not None and "goal" in options:
                 self.goal = Position(options["goal"])
@@ -201,6 +197,9 @@ class MazeEnv(gym.Env):
                 self.goal = self.init_goal
 
         self.steps = 0
+
+        if self.state is None:
+            raise ValueError("The state is not set.")
 
         self.state[self.agent.y, self.agent.x] = TileType.EMPTY.value
         self.state[self.goal.y, self.goal.x] = TileType.EMPTY.value
@@ -288,8 +287,8 @@ class MazeEnv(gym.Env):
             return self.rewards["move"]
 
     def _move_agent(
-        self, state: (np.ndarray, Position), action: int
-    ) -> list[np.ndarray, Position]:
+        self, state: np.ndarray, action: int
+    ) -> np.ndarray | None:
         """
         Move the agent in the maze.
         Parameters:
@@ -300,15 +299,15 @@ class MazeEnv(gym.Env):
             The new state of the maze. Return None if the state are the same, meaning the agent collided.
         """
 
-        new_state = state.copy()
-        new_agent = self.agent + Direction(action).to_tuple()
+        new_state: np.ndarray = state.copy()
+        new_agent: Position = self.agent + Direction(action).to_tuple()
         if (
             new_agent.x >= 0
             and new_agent.x < self.width
             and new_agent.y >= 0
             and new_agent.y < self.height
         ):
-            if new_state[new_agent.y, new_agent.x] == TileType.OBSTACLE.value:
+            if new_state[int(new_agent.y), int(new_agent.y)] == TileType.OBSTACLE.value:
                 return new_state
             new_state[self.agent.y, self.agent.x] = TileType.EMPTY.value
             self.agent = new_agent
@@ -355,4 +354,14 @@ class MazeEnv(gym.Env):
                 return False
 
             return True
-        return False
+
+    @property
+    def render_mode(self) -> str | None:
+        return self._render_mode
+
+    @render_mode.setter
+    def render_mode(self, value: str) -> str:
+        if value not in self.metadata["render_modes"]:
+            raise ValueError(f"Invalid render mode: {value!r}")
+        self._render_mode = value
+        return value

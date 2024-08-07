@@ -15,7 +15,7 @@ from gymnasium.error import DependencyNotInstalled
 
 from environments.gymnasium.utils import Color
 
-from . import utils
+import environments.gymnasium.utils as utils
 
 
 class SnakeEnv(gym.Env[np.array, Union[int, np.ndarray]]):
@@ -25,13 +25,13 @@ class SnakeEnv(gym.Env[np.array, Union[int, np.ndarray]]):
     This class implements the snake game environment. The goal is to eat the food and grow the snake.
 
     ## Action Space
-    The action is a ´ndarray´ with (1,) which can take values `{0, 1, 2}` indicating nothing, left or right.
+    The action is a 'ndarray' with (1,) which can take values `{0, 1, 2}` indicating nothing, left or right.
 
     ## Observation Space
 
     The state that is returned includes a tuple with the following elements:
     1. Relative Food Position: The position of the food relative to the head of the snake.
-    2. Direction of Movement: Include the current direction of the snake's head as an integer. (´0´ for up, ´1´ for right, ´2´ for down, ´3´ for left)
+    2. Direction of Movement: Include the current direction of the snake's head as an integer. ('0' for up, '1' for right, '2' for down, '3' for left)
     3. Immediate Obstacles: A list of 3 elements indicating if there is an obstacle in the direction of movement, to the left and to the right.
     4. Snake's Body: A list of positions of the snake's body.
 
@@ -94,7 +94,7 @@ class SnakeEnv(gym.Env[np.array, Union[int, np.ndarray]]):
         self.last_snake_length = 0
         self.steps_beyond_terminated = None
 
-    def step(self, action: int) -> np.array:
+    def step(self, action: int) -> np.ndarray:
         """
         This method is called to take a step in the environment.
         Parameters:

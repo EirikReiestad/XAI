@@ -2,5 +2,5 @@ from dataclasses import dataclass
 
 @dataclass
 class EpisodeInformation:
-    duration: list[int]
+    durations: list[int]
     rewards: list[float]

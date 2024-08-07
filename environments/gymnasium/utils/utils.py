@@ -2,7 +2,7 @@ import random
 from environments.gymnasium.utils.position import Position
 
 
-def generate_random_position(width: int, height: int, other: [Position] = None) -> Position:
+def generate_random_position(width: int, height: int, other: list[Position] | None = None) -> Position:
     if not isinstance(width, int) or not isinstance(height, int):
         raise ValueError("Width and height should be integers.")
     count = 0
