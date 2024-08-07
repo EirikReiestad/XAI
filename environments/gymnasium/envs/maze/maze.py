@@ -71,7 +71,7 @@ class MazeEnv(gym.Env):
 
     state: np.ndarray
 
-    def __init__(self):
+    def __init__(self, render_mode: Optional[str] = "human"):
         self.height = 5
         self.width = 5
         self.max_steps = (self.height * self.width) * 2
@@ -88,7 +88,7 @@ class MazeEnv(gym.Env):
             "truncated": -10,
         }
 
-        self._render_mode = "human" 
+        self.render_mode = render_mode
 
         self.screen_width = 600
         self.screen_height = 400
@@ -142,7 +142,7 @@ class MazeEnv(gym.Env):
 
         if not terminated:
             state = self._move_agent(self.state, action)
-            collided = state == None
+            collided = state is None
 
             terminated = collided or terminated
 
@@ -165,7 +165,11 @@ class MazeEnv(gym.Env):
         return self.state, reward, terminated, False, {}
 
     def reset(
-        self, *, seed: Optional[int] = None, options: Optional[dict] = None
+        self,
+        *,
+        seed: Optional[int] = None,
+        options: Optional[dict] = None,
+        render_mode: Optional[str] = None,
     ) -> Tuple[np.ndarray, dict]:
         """
         Reset the environment to the initial state.
@@ -178,16 +182,23 @@ class MazeEnv(gym.Env):
             np.ndarray: The initial state of the environment.
         """
 
+        self.render_mode = (
+            render_mode
+            if render_mode is not None and render_mode in self.metadata["render_mode"]
+            else self.render_mode
+        )
+
         if options is not None and "start" in options:
             self.agent = Position(options["start"])
             if "goal" in options:
-                if options["goal"] == self.agent:
-                    raise ValueError(
-                        "The goal position is the same as the agent position."
-                    )
                 self.goal = Position(options["goal"])
             else:
-                self.goal = generate_random_position(self.width, self.height, self.agent)
+                if self.agent is None:
+                    raise ValueError("The agent position is not set.")
+
+                self.goal = generate_random_position(
+                    self.width, self.height, [self.agent]
+                )
         else:
             if options is not None and "goal" in options:
                 self.goal = Position(options["goal"])
@@ -286,9 +297,7 @@ class MazeEnv(gym.Env):
         else:
             return self.rewards["move"]
 
-    def _move_agent(
-        self, state: np.ndarray, action: int
-    ) -> np.ndarray | None:
+    def _move_agent(self, state: np.ndarray, action: int) -> np.ndarray | None:
         """
         Move the agent in the maze.
         Parameters:
@@ -354,14 +363,3 @@ class MazeEnv(gym.Env):
                 return False
 
             return True
-
-    @property
-    def render_mode(self) -> str | None:
-        return self._render_mode
-
-    @render_mode.setter
-    def render_mode(self, value: str) -> str:
-        if value not in self.metadata["render_modes"]:
-            raise ValueError(f"Invalid render mode: {value!r}")
-        self._render_mode = value
-        return value
