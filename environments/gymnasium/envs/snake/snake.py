@@ -71,7 +71,8 @@ class SnakeEnv(gym.Env[np.array, Union[int, np.ndarray]]):
 
         self.action_space = spaces.Discrete(3)
         self.observation_space = spaces.Box(
-            low=-10, high=10, shape=(10,), dtype=np.float32)
+            low=-10, high=10, shape=(10,), dtype=np.float32
+        )
 
         self.rewards = {
             "food": 1,
@@ -103,7 +104,7 @@ class SnakeEnv(gym.Env[np.array, Union[int, np.ndarray]]):
             tuple: The new state of the environment.
             int: The reward of the action.
             bool: A boolean indicating if the episode is terminated.
-            bool: A boolean indicating if the episode is truncated. dict: Additional information. """
+            bool: A boolean indicating if the episode is truncated. dict: Additional information."""
         if not self.action_space.contains(action):
             raise ValueError(f"Invalid action {action}")
         if self.raw_state is None:
@@ -127,8 +128,13 @@ class SnakeEnv(gym.Env[np.array, Union[int, np.ndarray]]):
 
         new_head = head + utils.DIRECTIONS[self.direction]
 
-        terminated = new_head in self.snake[2:] or not (  # self.snake[2:] is the body of the snake
-            0 <= new_head.x < self.width) or not (0 <= new_head.y < self.height)
+        terminated = (
+            new_head in self.snake[2:]
+            or not (  # self.snake[2:] is the body of the snake
+                0 <= new_head.x < self.width
+            )
+            or not (0 <= new_head.y < self.height)
+        )
         reward = self.rewards["terminate"] if terminated else self.rewards["step"]
 
         if not terminated:
@@ -136,12 +142,12 @@ class SnakeEnv(gym.Env[np.array, Union[int, np.ndarray]]):
             if head == self.food:
                 self.steps = 0  # Reset steps because the snake ate the food
                 self.food = utils.generate_random_position(
-                    self.width-1, self.height-1, self.snake)
+                    self.width - 1, self.height - 1, self.snake
+                )
             else:
                 self.snake.pop()
             reward = self.rewards["food"]
-            self.raw_state = np.zeros(
-                (self.height, self.width), dtype=np.uint8)
+            self.raw_state = np.zeros((self.height, self.width), dtype=np.uint8)
             for segment in self.snake:
                 self.raw_state[segment.y, segment.x] = 1
             self.raw_state[self.food.y, self.food.x] = 2
@@ -159,10 +165,9 @@ class SnakeEnv(gym.Env[np.array, Union[int, np.ndarray]]):
 
         return self._get_state(), reward, terminated, False, {}
 
-    def reset(self,
-              *,
-              seed: Optional[int] = None,
-              options: Optional[dict] = None) -> Tuple[np.array, dict]:
+    def reset(
+        self, *, seed: Optional[int] = None, options: Optional[dict] = None
+    ) -> Tuple[np.array, dict]:
         """
         The state that is returned includes a tuple with the following elements:
         1. Relative Food Position: The position of the food relative to the head of the snake.
@@ -171,10 +176,10 @@ class SnakeEnv(gym.Env[np.array, Union[int, np.ndarray]]):
         4. Snake's Body: A list of positions of the snake's body.
         """
 
-        self.snake = [utils.Position(4, 4), utils.Position(
-            3, 4), utils.Position(2, 4)]
+        self.snake = [utils.Position(4, 4), utils.Position(3, 4), utils.Position(2, 4)]
         self.food = utils.generate_random_position(
-            self.width-1, self.height-1, self.snake)
+            self.width - 1, self.height - 1, self.snake
+        )
         self.direction = 1  # Rigth
 
         self.steps = 0
@@ -195,6 +200,7 @@ class SnakeEnv(gym.Env[np.array, Union[int, np.ndarray]]):
         """
         if self.screen is not None:
             import pygame
+
             pygame.display.quit()
             pygame.quit()
             self.isopen = False
@@ -203,7 +209,8 @@ class SnakeEnv(gym.Env[np.array, Union[int, np.ndarray]]):
         if self.render_mode is None:
             assert self.spec is not None
             gym.logger.warn(
-                "No render mode specified. Using the default render mode 'human'.")
+                "No render mode specified. Using the default render mode 'human'."
+            )
             return
 
         try:
@@ -219,17 +226,16 @@ class SnakeEnv(gym.Env[np.array, Union[int, np.ndarray]]):
             if self.render_mode == "human":
                 pygame.display.init()
                 self.screen = pygame.display.set_mode(
-                    (self.screen_width, self.screen_height))
+                    (self.screen_width, self.screen_height)
+                )
                 pygame.display.set_caption("Snake")
             else:
-                self.screen = pygame.Surface(
-                    (self.screen_width, self.screen_height))
+                self.screen = pygame.Surface((self.screen_width, self.screen_height))
         if self.clock is None:
             self.clock = pygame.time.Clock()
         if self.raw_state is None:
             return None
-        color_matrix = np.zeros(
-            (self.height, self.width, 3), dtype=np.uint8)
+        color_matrix = np.zeros((self.height, self.width, 3), dtype=np.uint8)
         snake_mask = self.raw_state == 1
         food_mask = self.raw_state == 2
 
@@ -237,8 +243,7 @@ class SnakeEnv(gym.Env[np.array, Union[int, np.ndarray]]):
         color_matrix[food_mask] = Color.RED.value
 
         surf = pygame.surfarray.make_surface(color_matrix)
-        surf = pygame.transform.scale(
-            surf, (self.screen_width, self.screen_height))
+        surf = pygame.transform.scale(surf, (self.screen_width, self.screen_height))
         surf = pygame.transform.flip(surf, True, False)
 
         self.screen.blit(surf, (0, 0))
@@ -264,7 +269,9 @@ class SnakeEnv(gym.Env[np.array, Union[int, np.ndarray]]):
         food = head - self.food
         direction = self.direction
         immediate_obstacles = [
-            head + utils.DIRECTIONS[(direction + i) % 4] in self.snake for i in range(-1, 2)]
+            head + utils.DIRECTIONS[(direction + i) % 4] in self.snake
+            for i in range(-1, 2)
+        ]
 
         dx_food, dy_food = food.to_tuple()
 
@@ -272,10 +279,11 @@ class SnakeEnv(gym.Env[np.array, Union[int, np.ndarray]]):
         flat_snake = [head.x, head.y, tail.x, tail.y]
 
         # Flatten and normalize the state
-        state = [
-            dx_food/self.width, dy_food/self.height, direction /
-            3
-        ] + immediate_obstacles + flat_snake
+        state = (
+            [dx_food / self.width, dy_food / self.height, direction / 3]
+            + immediate_obstacles
+            + flat_snake
+        )
 
         return np.array(state, dtype=np.float32)
 

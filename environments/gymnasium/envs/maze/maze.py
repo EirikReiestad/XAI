@@ -6,7 +6,7 @@ __credits__ = ["Eirik Reiestad"]
 
 import os
 import logging
-from typing import Optional, Tuple, Union
+from typing import Optional, Tuple
 
 import numpy as np
 import pygame as pg
@@ -19,12 +19,14 @@ from .utils import MazeTileType as TileType
 from environments.gymnasium.utils import (
     Color,
     Position,
-    generate_random_position, Direction)
+    generate_random_position,
+    Direction,
+)
 
 logging.basicConfig(level=logging.INFO)
 
 
-class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
+class MazeEnv(gym.Env):
     """
     ## Description
 
@@ -65,7 +67,12 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
 
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 50}
 
+    action_space: spaces.Discrete
+    observation_space: spaces.Box
+
     def __init__(self, render_mode: Optional[str] = None):
+        super().__init__()
+
         self.height = 5
         self.width = 5
         self.max_steps = (self.height * self.width) * 2
@@ -74,14 +81,15 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
         self.goal = None
 
         self.action_space = spaces.Discrete(4)
-        self.observation_space = spaces.Box(
+        self.observation_space: spaces.Box = gym.spaces.Box(
             low=0, high=3, shape=(self.height, self.width), dtype=np.uint8
         )
 
         self.rewards = {
             "goal": 10,
-            "move": 0,
-            "truncate": -1,
+            "move": -1,
+            "terminated": -5,
+            "truncated": -10,
         }
 
         self.render_mode = render_mode
@@ -96,8 +104,7 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
         dir_path = "environments/gymnasium/data/maze/"
 
         if not os.path.exists(dir_path):
-            raise FileNotFoundError(
-                f"Directory {dir_path} does not exist.")
+            raise FileNotFoundError(f"Directory {dir_path} does not exist.")
 
         filename = "maze-0-10-10.txt"
         filename = dir_path + filename
@@ -110,7 +117,7 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
 
         self.steps_beyond_terminated = None
 
-    def step(self, action: int) -> Tuple[np.ndarray, int, bool, bool, dict]:
+    def step(self, action: int) -> Tuple[np.array, int, bool, bool, dict]:
         """
         This method is called to take a step in the environment.
         Parameters:
@@ -123,21 +130,28 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
             bool: A boolean indicating if the episode is truncated.
             dict: Additional information.
         """
+        # TODO: Make if statements
         assert self.action_space.contains(
-            action), f"{action!r} ({type(action)}) invalid"
+            action
+        ), f"{action!r} ({type(action)}) invalid"
         assert self.state is not None, "Call reset before using step method."
 
         self.steps += 1
 
         if self.steps >= self.max_steps:
-            return self.state, self.rewards["truncate"], True, True, {}
+            return self.state, self.rewards["truncated"], True, True, {}
 
         terminated = self.agent == self.goal
-
-        reward = self._get_reward()
+        collided = False
 
         if not terminated:
-            self.state = self._move_agent(self.state, action)
+            state = self._move_agent(self.state, action)
+            collided = state == None
+
+            terminated = collided or terminated
+
+            if not collided:
+                self.state = state
         elif self.steps_beyond_terminated is None:
             self.steps_beyond_terminated = 0
         else:
@@ -150,13 +164,13 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
                 )
             self.steps_beyond_terminated += 1
 
+        reward = self._get_reward(collided)
+
         return self.state, reward, terminated, False, {}
 
-    def reset(self,
-              *,
-              seed: Optional[int] = None,
-              options: Optional[dict] = None
-              ) -> np.ndarray:
+    def reset(
+        self, *, seed: Optional[int] = None, options: Optional[dict] = None
+    ) -> Tuple[np.ndarray, dict]:
         """
         Reset the environment to the initial state.
 
@@ -173,11 +187,11 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
             if "goal" in options:
                 if options["goal"] == self.agent:
                     raise ValueError(
-                        "The goal position is the same as the agent position.")
+                        "The goal position is the same as the agent position."
+                    )
                 self.goal = Position(options["goal"])
             else:
-                generate_random_position(
-                    self.width, self.height, self.agent)
+                generate_random_position(self.width, self.height, self.agent)
         else:
             if options is not None and "goal" in options:
                 self.goal = Position(options["goal"])
@@ -209,17 +223,14 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
         render_mode = render_mode if render_mode is not None else self.render_mode
         if render_mode is None:
             assert self.spec is not None
-            gym.logger.warn(
-                "No render mode was set. Using 'human' as default.")
+            gym.logger.warn("No render mode was set. Using 'human' as default.")
             render_mode = "human"
 
         if self.screen is None or self.surface is None:
             pg.init()
             pg.display.init()
-            self.screen = pg.display.set_mode(
-                (self.screen_width, self.screen_height))
-            self.surface = pg.Surface(
-                (self.screen_width, self.screen_height))
+            self.screen = pg.display.set_mode((self.screen_width, self.screen_height))
+            self.surface = pg.Surface((self.screen_width, self.screen_height))
 
         if self.clock is None:
             self.clock = pg.time.Clock()
@@ -227,8 +238,7 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
         if self.state is None:
             return None
 
-        color_matrix = np.full(
-            (self.height, self.width, 3), Color.WHITE.value)
+        color_matrix = np.full((self.height, self.width, 3), Color.WHITE.value)
 
         obstacle_mask = self.state == TileType.OBSTACLE.value
         agent_mask = self.state == TileType.START.value
@@ -239,14 +249,14 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
         color_matrix[goal_mask] = Color.GREEN.value
 
         surf = pg.surfarray.make_surface(color_matrix)
-        surf = pg.transform.scale(
-            surf, (self.screen_width, self.screen_height))
+        surf = pg.transform.scale(surf, (self.screen_width, self.screen_height))
         surf = pg.transform.flip(surf, True, False)
 
         if render_mode == "rgb_array":
             self.surface.blit(surf, (0, 0))
             return np.transpose(
-                np.array(pg.surfarray.pixels3d(self.surface)), axes=(1, 0, 2))
+                np.array(pg.surfarray.pixels3d(self.surface)), axes=(1, 0, 2)
+            )
         elif render_mode == "human":
             self.screen.blit(surf, (0, 0))
             pg.event.pump()
@@ -260,41 +270,52 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
             pg.quit()
             self.is_open = False
 
-    def _get_reward(self) -> int:
-        """ Calculate the reward of the current state.
+    def _get_reward(self, collided: bool = False) -> int:
+        """Calculate the reward of the current state.
 
-        The distance to the goal
+        Parameters:
+            colided: bool
+                If the agent collided or not
+
+        Returns:
+            int: a reward
         """
-        # terminated = self.agent == self.goal
+        if self.agent == self.goal:
+            return self.rewards["goal"]
+        elif collided:
+            return self.rewards["terminated"]
+        else:
+            return self.rewards["move"]
 
-        agent = np.array(self.agent.to_tuple())
-        goal = np.array(self.goal.to_tuple())
-
-        distance = np.linalg.norm(agent - goal, ord=1)
-
-        reward = self.rewards["goal"] - distance
-        return reward
-
-    def _move_agent(self, state: (np.ndarray, Position), action: int) -> list[np.ndarray, Position]:
+    def _move_agent(
+        self, state: (np.ndarray, Position), action: int
+    ) -> list[np.ndarray, Position]:
         """
         Move the agent in the maze.
-        :Arguments
-        - state: The current state of the maze.
-        - action: The action to take.
-        :Returns
-        - The new state of the maze.
-        - A boolean indicating if the agent reached the goal.
+        Parameters:
+            state: The current state of the maze.
+            action: The action to take.
+
+        Returns
+            The new state of the maze. Return None if the state are the same, meaning the agent collided.
         """
 
         new_state = state.copy()
         new_agent = self.agent + Direction(action).to_tuple()
-        if new_agent.x >= 0 and new_agent.x < self.width and new_agent.y >= 0 and new_agent.y < self.height:
+        if (
+            new_agent.x >= 0
+            and new_agent.x < self.width
+            and new_agent.y >= 0
+            and new_agent.y < self.height
+        ):
             if new_state[new_agent.y, new_agent.x] == TileType.OBSTACLE.value:
                 return new_state
             new_state[self.agent.y, self.agent.x] = TileType.EMPTY.value
             self.agent = new_agent
             new_state[self.agent.y, self.agent.x] = TileType.START.value
-        return new_state
+            return new_state
+        else:
+            return None
 
     def _load_init_state(self, filename) -> bool:
         if not os.path.exists(filename):
@@ -307,19 +328,21 @@ class MazeEnv(gym.Env[np.ndarray, Union[int, np.ndarray]]):
 
             self.state = np.array(maze, dtype=np.uint8)
 
-            self.init_agent = Position(tuple(
-                map(int, np.argwhere(self.state == TileType.START.value)[0])))
-            self.init_goal = Position(tuple(
-                map(int, np.argwhere(self.state == TileType.END.value)[0])))
+            self.init_agent = Position(
+                tuple(map(int, np.argwhere(self.state == TileType.START.value)[0]))
+            )
+            self.init_goal = Position(
+                tuple(map(int, np.argwhere(self.state == TileType.END.value)[0]))
+            )
 
             if maze in [None, [], ""]:
-                logging.error(
-                    f"No data: Failed to read maze from file {filename}.")
+                logging.error(f"No data: Failed to read maze from file {filename}.")
                 return False
 
             if len(maze) != self.height or len(maze[0]) != self.width:
                 logging.error(
-                    f"Invalid maze size. Expected {self.height}x{self.width}, got {len(maze)}x{len(maze[0])}")
+                    f"Invalid maze size. Expected {self.height}x{self.width}, got {len(maze)}x{len(maze[0])}"
+                )
                 return False
 
             flatten_maze = np.array(maze).flatten()

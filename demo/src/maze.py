@@ -3,11 +3,12 @@ import matplotlib.pyplot as plt
 import torch
 import logging
 from itertools import count
+import numpy
 import gymnasium as gym
 
 from rl.src.dqn.dqn_module import DQNModule
 from environments.gymnasium.envs.maze.utils.preprocess_state import preprocess_state
-
+from demo.src.dataclasses import EpisodeInformation 
 
 gym.register(
     id='Maze-v0',
@@ -20,82 +21,89 @@ if is_ipython:
     from IPython import display
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-episode_durations = []
 
+class Demo:
+    def __init__(self):
+        self.episode_information: EpisodeInformation = EpisodeInformation(
+            duration=[],
+            rewards=[]
+        )
 
-def main():
-    env = gym.make('Maze-v0', render_mode='rgb_array')
+    def main(self):
+        env = gym.make('Maze-v0', render_mode='rgb_array')
 
-    _, _ = env.reset()
-    state = env.render()
-    state = preprocess_state(state)
+        _, _ = env.reset()
+        state = env.render()
 
-    model_path = 'maze_dqn.pth'
-    dqn = DQNModule(state.shape, env.action_space.n, path=model_path, seed=4)
+        state = np.array(state)
+        state = preprocess_state(state)
 
-    plt.ion()
+        model_path = 'maze_dqn.pth'
+        dqn = DQNModule(state.shape, env.action_space.n, path=model_path, seed=4)
 
-    num_episodes = 1000
-    render_every = 100
-    try:
-        for i_episode in range(num_episodes):
-            _, _ = env.reset()
-            state = env.render()
-            state = preprocess_state(state)
+        plt.ion()
 
-            for t in count():
-                if i_episode % render_every == 0:
-                    env.render(render_mode='human')
+        num_episodes = 1000
+        render_every = 1
+        try:
+            for i_episode in range(num_episodes):
+                _, _ = env.reset()
+                state = env.render()
+                state = preprocess_state(state)
 
-                action = dqn.select_action(state)
-                _, reward, terminated, truncated, _ = env.step(
-                    action.item())
+                for t in count():
+                    if i_episode % render_every == 0:
+                        env.render(render_mode='human')
 
-                observation = env.render()
-                observation = preprocess_state(observation)
+                    action = dqn.select_action(state)
+                    _, reward, terminated, truncated, _ = env.step(
+                        action.item())
 
-                done, state = dqn.train(state, action, observation,
-                                        reward, terminated, truncated)
+                    observation = env.render()
+                    observation = preprocess_state(observation)
 
-                if done:
-                    episode_durations.append(t + 1)
-                    plot_durations()
-                    break
-    except Exception as e:
-        logging.exception(e)
-    finally:
-        env.close()
+                    done, state = dqn.train(state, action, observation,
+                                            reward, terminated, truncated)
 
-        logging.info('Complete')
-        plot_durations(show_result=True)
-        plt.ioff()
+                    if done:
+                        self.episode_information.durations.append(t + 1)
+                        plot_durations()
+                        break
+        except Exception as e:
+            logging.exception(e)
+        finally:
+            env.close()
+
+            logging.info('Complete')
+            plot_durations(show_result=True)
+            plt.ioff()
         plt.show()
 
 
-def plot_durations(show_result=False):
-    plt.figure(1)
-    durations_t = torch.tensor(episode_durations, dtype=torch.float)
-    if show_result:
-        plt.title('Result')
-    else:
-        plt.clf()
-        plt.title('Training...')
-    plt.xlabel('Episode')
-    plt.ylabel('Duration')
-    plt.plot(durations_t.numpy())
-    # Take 100 episode averages and plot them too
-    if len(durations_t) >= 100:
-        means = durations_t.unfold(0, 100, 1).mean(1).view(-1)
-        means = torch.cat((torch.zeros(99), means))
-        plt.plot(means.numpy())
-
-    plt.pause(0.001)  # pause a bit so that plots are updated
-    if is_ipython:
-        if not show_result:
-            display.display(plt.gcf())
-            display.clear_output(wait=True)
+    def plot_durations(self, show_result=False):
+        plt.figure(1)
+        durations_t = torch.tensor(self.episode_information.durations, dtype=torch.float)
+        if show_result:
+            plt.title('Result')
         else:
-            display.display(plt.gcf())
+            plt.clf()
+            plt.title('Training...')
+        plt.xlabel('Episode')
+        plt.ylabel('Duration')
+        plt.plot(durations_t.numpy())
+        # Take 100 episode averages and plot them too
+        if len(durations_t) >= 100:
+            means = durations_t.unfold(0, 100, 1).mean(1).view(-1)
+            means = torch.cat((torch.zeros(99), means))
+            plt.plot(means.numpy())
+
+        plt.pause(0.001)  # pause a bit so that plots are updated
+        if is_ipython:
+            if not show_result:
+                display.display(plt.gcf())
+                display.clear_output(wait=True)
+            else:
+                display.display(plt.gcf())
 
 
 if __name__ == "__main__":
