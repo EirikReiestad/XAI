@@ -23,6 +23,8 @@ from environments.gymnasium.utils import (
     Direction,
 )
 
+from environments import settings
+
 logging.basicConfig(level=logging.INFO)
 
 
@@ -72,8 +74,8 @@ class MazeEnv(gym.Env):
     state: np.ndarray
 
     def __init__(self, render_mode: Optional[str] = "human"):
-        self.height = 5
-        self.width = 5
+        self.height = settings.MAZE_HEIGHT
+        self.width = settings.MAZE_WIDTH
         self.max_steps = (self.height * self.width) * 2
 
         self.action_space = spaces.Discrete(4)
@@ -82,16 +84,16 @@ class MazeEnv(gym.Env):
         )
 
         self.rewards = {
-            "goal": 10,
-            "move": -1,
-            "terminated": -5,
-            "truncated": -10,
+            "goal": settings.GOAL_REWARD,
+            "move": settings.MOVE_REWARD,
+            "terminated": settings.TERMINATED_REWARD,
+            "truncated": settings.TRUNCATED_REWARD,
         }
 
         self.render_mode = render_mode
 
-        self.screen_width = 600
-        self.screen_height = 400
+        self.screen_width = settings.SCREEN_WIDTH
+        self.screen_height = settings.SCREEN_HEIGHT
         self.screen = None
         self.surface = None
         self.clock = None
@@ -102,7 +104,7 @@ class MazeEnv(gym.Env):
         if not os.path.exists(dir_path):
             raise FileNotFoundError(f"Directory {dir_path} does not exist.")
 
-        filename = "maze-0-10-10.txt"
+        filename = settings.FILENAME
         filename = dir_path + filename
 
         ok = self._load_init_state(filename)

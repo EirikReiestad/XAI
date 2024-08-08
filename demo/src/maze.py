@@ -11,6 +11,8 @@ from rl.src.dqn.dqn_module import DQNModule
 from environments.gymnasium.envs.maze.utils.preprocess_state import preprocess_state
 from demo.src.common import EpisodeInformation
 
+from demo.src import settings
+
 gym.register(
     id="Maze-v0",
     entry_point="environments.gymnasium.envs.maze.maze:MazeEnv",
@@ -46,8 +48,8 @@ class Demo:
 
         plt.ion()
 
-        num_episodes = 1000
-        render_every = 1
+        num_episodes = settings.NUM_EPISODES
+        render_every = settings.RENDER_EVERY
         try:
             for i_episode in range(num_episodes):
                 _, _ = env.reset()

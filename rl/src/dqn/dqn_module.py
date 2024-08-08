@@ -1,4 +1,4 @@
-""" DQN Module.
+"""DQN Module.
 
 This module contains the DQN agent that interacts with the environment.
 """
@@ -15,14 +15,23 @@ from rl.src.dqn.replay_memory import ReplayMemory, Transition
 from rl.src.dqn.dueling_dqn import DuelingDQN
 from rl.src.hyperparameters.dqn_hyperparameter import DQNHyperparameter
 
+from rl.src import settings
+
 # if gpu is to be used
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
-class DQNModule():
+class DQNModule:
     global device
 
-    def __init__(self, observation_shape: tuple, n_actions: int, hidden_layers: list[int] = [64], path: str | None = None,  seed: int | None = None):
+    def __init__(
+        self,
+        observation_shape: tuple,
+        n_actions: int,
+        hidden_layers: list[int] = [64],
+        path: str | None = None,
+        seed: int | None = None,
+    ):
         if seed is not None:
             torch.manual_seed(seed)
 
@@ -33,23 +42,28 @@ class DQNModule():
 
         if len(self.observation_shape) != 4:
             logging.warning(
-                f"Using image as the input resulting in 4 dimensions (batch size, color channels, width, height), got {len(self.observation_shape)}")
+                f"Using image as the input resulting in 4 dimensions (batch size, color channels, width, height), got {len(self.observation_shape)}"
+            )
             raise ValueError(
-                f"Expected observation_shape to have length 3, but got {len(self.observation_shape)}")
+                f"Expected observation_shape to have length 3, but got {len(self.observation_shape)}"
+            )
 
         self.hp = DQNHyperparameter()
         if self.path is not None:
-            hyperparameter_path = self.path + '.hyper'
+            hyperparameter_path = self.path + ".hyper"
             self.hp.load(hyperparameter_path)
 
-        self.policy_net = DuelingDQN(observation_shape, n_actions,
-                                     hidden_layers).to(device)
-        self.target_net = DuelingDQN(observation_shape, n_actions,
-                                     hidden_layers).to(device)
+        self.policy_net = DuelingDQN(observation_shape, n_actions, hidden_layers).to(
+            device
+        )
+        self.target_net = DuelingDQN(observation_shape, n_actions, hidden_layers).to(
+            device
+        )
 
         self.optimizer = AdamW(
-            self.policy_net.parameters(), lr=self.hp.lr, amsgrad=True)
-        self.memory = ReplayMemory(64)
+            self.policy_net.parameters(), lr=self.hp.lr, amsgrad=True
+        )
+        self.memory = ReplayMemory(settings.REPLAY_MEMORY_SIZE)
 
         if self.path is not None and os.path.exists(self.path):
             self.load()
@@ -73,12 +87,13 @@ class DQNModule():
 
         if state.shape != self.observation_shape:
             raise ValueError(
-                f"Expected state to have shape {self.observation_shape}, but got {state.shape}")
+                f"Expected state to have shape {self.observation_shape}, but got {state.shape}"
+            )
 
         sample = random.random()
-        eps_threshold = self.hp.eps_end + \
-            (self.hp.eps_start - self.hp.eps_end) * \
-            math.exp(-1. * self.steps_done / self.hp.eps_decay)
+        eps_threshold = self.hp.eps_end + (
+            self.hp.eps_start - self.hp.eps_end
+        ) * math.exp(-1.0 * self.steps_done / self.hp.eps_decay)
         self.steps_done += 1
         if sample > eps_threshold:
             with torch.no_grad():
@@ -87,7 +102,9 @@ class DQNModule():
                 # found, so we pick action with the larger expected reward.
                 return self.policy_net(state).max(1)[1].view(1, 1)
         else:
-            return torch.tensor([[random.randrange(self.n_actions)]], device=device, dtype=torch.long)
+            return torch.tensor(
+                [[random.randrange(self.n_actions)]], device=device, dtype=torch.long
+            )
 
     def optimize_model(self):
         """
@@ -108,10 +125,14 @@ class DQNModule():
 
         # Compute a mask of non-final states and concatenate the batch elements
         # (a final state would've been the one after which simulation ended)
-        non_final_mask = torch.tensor(tuple(
-            map(lambda s: s is not None, batch.next_state)), device=device, dtype=torch.bool)
+        non_final_mask = torch.tensor(
+            tuple(map(lambda s: s is not None, batch.next_state)),
+            device=device,
+            dtype=torch.bool,
+        )
         non_final_next_states = torch.cat(
-            [s for s in batch.next_state if s is not None])
+            [s for s in batch.next_state if s is not None]
+        )
 
         # Concatenate states, actions, and rewards
         state_batch = torch.cat([s for s in batch.state])
@@ -121,8 +142,7 @@ class DQNModule():
         # Compute Q(s_t, a) - the model computes Q(s_t), then we select the
         # columns of actions taken. These are the actions which would've been taken
         # for each batch state according to policy_net
-        state_action_values = self.policy_net(
-            state_batch).gather(1, action_batch)
+        state_action_values = self.policy_net(state_batch).gather(1, action_batch)
 
         # Compute V(s_{t+1}) for all next states.
         # Expected values of actions for non_final_next_states are computed based
@@ -133,19 +153,21 @@ class DQNModule():
 
         # NOTE: Double DQN
         with torch.no_grad():
-            next_actions = self.policy_net(non_final_next_states).max(1)[
-                1].unsqueeze(1)
-            next_state_values[non_final_mask] = self.target_net(
-                non_final_next_states).gather(1, next_actions).squeeze(1)
+            next_actions = self.policy_net(non_final_next_states).max(1)[1].unsqueeze(1)
+            next_state_values[non_final_mask] = (
+                self.target_net(non_final_next_states)
+                .gather(1, next_actions)
+                .squeeze(1)
+            )
 
         # Compute the expected Q values
         expected_state_action_values = (
-            next_state_values * self.hp.gamma) + reward_batch
+            next_state_values * self.hp.gamma
+        ) + reward_batch
 
         # Compute Huber loss
         criterion = nn.SmoothL1Loss()
-        loss = criterion(state_action_values,
-                         expected_state_action_values.unsqueeze(1))
+        loss = criterion(state_action_values, expected_state_action_values.unsqueeze(1))
 
         # Optimize the model
         self.optimizer.zero_grad()
@@ -156,7 +178,15 @@ class DQNModule():
 
         self.save()
 
-    def train(self, state: torch.Tensor, action: torch.Tensor, observation: torch.Tensor, reward: float, terminated: bool, truncated: bool) -> tuple[bool, torch.Tensor]:
+    def train(
+        self,
+        state: torch.Tensor,
+        action: torch.Tensor,
+        observation: torch.Tensor,
+        reward: float,
+        terminated: bool,
+        truncated: bool,
+    ) -> tuple[bool, torch.Tensor]:
         """
         Parameters:
             state (torch.Tensor): The current state of the environment
@@ -173,11 +203,13 @@ class DQNModule():
 
         if state.shape != self.observation_shape:
             raise ValueError(
-                f"Expected state to have shape {self.observation_shape}, but got {state.shape}")
+                f"Expected state to have shape {self.observation_shape}, but got {state.shape}"
+            )
 
         if observation.shape != self.observation_shape:
             raise ValueError(
-                f"Expected observation to have shape {self.observation_shape}, but got {observation.shape}")
+                f"Expected observation to have shape {self.observation_shape}, but got {observation.shape}"
+            )
 
         reward = torch.tensor([reward], device=device, dtype=torch.float).item()
         done = terminated or truncated
@@ -189,7 +221,8 @@ class DQNModule():
 
         if next_state is not None and next_state.shape != self.observation_shape:
             raise ValueError(
-                f"Expected next_state to have shape (1, {self.observation_shape}), but got {next_state.shape}")
+                f"Expected next_state to have shape (1, {self.observation_shape}), but got {next_state.shape}"
+            )
 
         # Store the transition in memory
         self.memory.push(state, action, next_state, reward)
@@ -208,8 +241,9 @@ class DQNModule():
         target_net_state_dict = self.target_net.state_dict()
         policy_net_state_dict = self.policy_net.state_dict()
         for key in policy_net_state_dict:
-            target_net_state_dict[key] = policy_net_state_dict[key] * \
-                self.hp.tau + target_net_state_dict[key]*(1-self.hp.tau)
+            target_net_state_dict[key] = policy_net_state_dict[
+                key
+            ] * self.hp.tau + target_net_state_dict[key] * (1 - self.hp.tau)
         self.target_net.load_state_dict(target_net_state_dict)
 
         return done, state
@@ -252,12 +286,9 @@ class DQNModule():
 
         if not os.path.exists(self.path):
             logging.warning(f"Model not found at {self.path}")
-            self.target_net.load_state_dict(
-                self.policy_net.state_dict())
+            self.target_net.load_state_dict(self.policy_net.state_dict())
 
-        self.policy_net.load_state_dict(
-            torch.load(self.path, weights_only=True))
-        self.target_net.load_state_dict(
-            torch.load(self.path, weights_only=True))
+        self.policy_net.load_state_dict(torch.load(self.path, weights_only=True))
+        self.target_net.load_state_dict(torch.load(self.path, weights_only=True))
         self.policy_net.eval()
         self.target_net.eval()
