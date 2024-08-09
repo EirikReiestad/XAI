@@ -5,6 +5,7 @@ import logging
 @enum.unique
 class StateType(enum.Enum):
     RGB = "rgb"
+    FULL = "full"
     PARTIAL = "partial"
 
     def __str__(self):
@@ -14,6 +15,8 @@ class StateType(enum.Enum):
     def from_string(state: str):
         if state == "rgb":
             return StateType.RGB
+        if state == "full":
+            return StateType.FULL
         if state == "partial":
             return StateType.PARTIAL
         else:
