@@ -1,11 +1,18 @@
 import torch
 from torch import nn
 import numpy as np
+from rl.src.common import ConvLayer
 
 
 class DuelingDQN(nn.Module):
-    def __init__(self, input_shape: tuple, n_actions: int, hidden_layers: list):
-        """ Initialize the Dueling DQN module.
+    def __init__(
+        self,
+        input_shape: tuple,
+        n_actions: int,
+        hidden_layers: list,
+        conv_layers: list[ConvLayer] | None = None,
+    ):
+        """Initialize the Dueling DQN module.
 
         Parameters:
             input_shape (tuple): The shape of the input tensor (channels, height, width)
@@ -15,22 +22,23 @@ class DuelingDQN(nn.Module):
         super(DuelingDQN, self).__init__()
 
         input_channels = input_shape[1]
+        if conv_layers:
+            build_conv_layers = []
+            for layer in conv_layers:
+                build_conv_layers.append(layer.build(input_channels))
+                build_conv_layers.append(layer.build_activation())
+                input_channels = layer.filters
 
-        self.conv = nn.Sequential(
-            nn.Conv2d(input_channels, 32, kernel_size=8, stride=4),
-            nn.ReLU(),
-            nn.Conv2d(32, 64, kernel_size=4, stride=2),
-            nn.ReLU(),
-            nn.Conv2d(64, 64, kernel_size=3, stride=1),
-            nn.ReLU(),
-        )
+            self.conv = nn.Sequential(*build_conv_layers)
+        else:
+            self.conv = nn.Sequential()
 
-        # Calculate the size of the feature map after the conv layers
         conv_output_size = self._get_conv_output(input_shape)
+        input_dim = conv_output_size
 
         # Define the common feature layers
         layers = []
-        input_dim = conv_output_size
+        input_dim = int(input_dim)
         for hidden_dim in hidden_layers:
             layers.append(nn.Linear(input_dim, hidden_dim))
             layers.append(nn.ReLU())
@@ -60,10 +68,6 @@ class DuelingDQN(nn.Module):
         self.advantage_stream = nn.Sequential(*advantage_layers)
 
     def forward(self, x: torch.Tensor):
-        # Ensure the shape is (batch, channels, height, width)
-        if x.dim() != 4:  # Input is already in (batch_size, channels, height, width) format
-            raise ValueError(f"Unexpected input shape: {x.shape}")
-
         x = self.conv(x)  # Apply the convolutional layers
         x = x.reshape(x.size(0), -1)  # Flatten the output from the conv layers
         x = self.feature(x)  # Apply the feature layers

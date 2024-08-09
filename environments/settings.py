@@ -1,3 +1,5 @@
+from environments.gymnasium.utils.enums import StateType
+
 # Maze settings
 MAZE_HEIGHT = 5
 MAZE_WIDTH = 5
@@ -14,3 +16,6 @@ SCREEN_HEIGHT = 400
 
 # Path: environments
 FILENAME = "maze-0-10-10.txt"
+
+# State
+STATE_TYPE = StateType.PARTIAL

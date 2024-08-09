@@ -3,6 +3,25 @@ import logging
 
 
 @enum.unique
+class StateType(enum.Enum):
+    RGB = "rgb"
+    PARTIAL = "partial"
+
+    def __str__(self):
+        return self.value
+
+    @staticmethod
+    def from_string(state: str):
+        if state == "rgb":
+            return StateType.RGB
+        if state == "partial":
+            return StateType.PARTIAL
+        else:
+            logging.error("Invalid state type.")
+            return None
+
+
+@enum.unique
 class Direction(enum.Enum):
     UP = 0
     RIGHT = 1
@@ -18,7 +37,7 @@ class Direction(enum.Enum):
             return (0, 1)
         if self == Direction.LEFT:
             return (-1, 0)
-        else: # should never happen
+        else:  # should never happen
             raise ValueError("Invalid direction.")
 
 

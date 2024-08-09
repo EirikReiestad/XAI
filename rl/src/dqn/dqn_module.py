@@ -17,6 +17,8 @@ from rl.src.hyperparameters.dqn_hyperparameter import DQNHyperparameter
 
 from rl.src import settings
 
+from rl.src.common import ConvLayer
+
 # if gpu is to be used
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -28,7 +30,8 @@ class DQNModule:
         self,
         observation_shape: tuple,
         n_actions: int,
-        hidden_layers: list[int] = [64],
+        hidden_layers: list[int] = [64, 128, 256, 128, 64],
+        conv_layers: list[ConvLayer] | None = None,
         path: str | None = None,
         seed: int | None = None,
     ):
@@ -40,25 +43,17 @@ class DQNModule:
         self.n_actions = n_actions
         self.observation_shape = observation_shape
 
-        if len(self.observation_shape) != 4:
-            logging.warning(
-                f"Using image as the input resulting in 4 dimensions (batch size, color channels, width, height), got {len(self.observation_shape)}"
-            )
-            raise ValueError(
-                f"Expected observation_shape to have length 3, but got {len(self.observation_shape)}"
-            )
-
         self.hp = DQNHyperparameter()
         if self.path is not None:
             hyperparameter_path = self.path + ".hyper"
             self.hp.load(hyperparameter_path)
 
-        self.policy_net = DuelingDQN(observation_shape, n_actions, hidden_layers).to(
-            device
-        )
-        self.target_net = DuelingDQN(observation_shape, n_actions, hidden_layers).to(
-            device
-        )
+        self.policy_net = DuelingDQN(
+            observation_shape, n_actions, hidden_layers, conv_layers
+        ).to(device)
+        self.target_net = DuelingDQN(
+            observation_shape, n_actions, hidden_layers, conv_layers
+        ).to(device)
 
         self.optimizer = AdamW(
             self.policy_net.parameters(), lr=self.hp.lr, amsgrad=True

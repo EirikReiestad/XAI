@@ -6,8 +6,10 @@ from itertools import count
 import numpy as np
 import gymnasium as gym
 from IPython import display
+from time import sleep
 
 from rl.src.dqn.dqn_module import DQNModule
+from rl.src.common import ConvLayer
 from environments.gymnasium.envs.maze.utils.preprocess_state import preprocess_state
 from demo.src.common import EpisodeInformation
 
@@ -34,16 +36,31 @@ class Demo:
         self.ax2 = self.ax1.twinx()
 
     def main(self):
-        env = gym.make("Maze-v0", render_mode="rgb_array")
+        env = gym.make("Maze-v0", render_mode="human")
 
-        _, _ = env.reset()
-        state = env.render()
-
+        state, info = env.reset()
         state = np.array(state)
         state = preprocess_state(state)
 
         model_path = "maze_dqn.pth"
         n_actions = env.action_space.n
+
+        state_type = info.get("state_type") if info else None
+
+        conv_layers = None
+        if state_type == "rgb":
+            conv_layers = [
+                ConvLayer(
+                    filters=32, kernel_size=2, strides=2, activation="relu", padding=2
+                ),
+                ConvLayer(
+                    filters=32, kernel_size=2, strides=2, activation="relu", padding=2
+                ),
+                ConvLayer(
+                    filters=32, kernel_size=2, strides=2, activation="relu", padding=2
+                ),
+            ]
+
         dqn = DQNModule(state.shape, n_actions, path=model_path, seed=4)
 
         plt.ion()
@@ -52,23 +69,22 @@ class Demo:
         render_every = settings.RENDER_EVERY
         try:
             for i_episode in range(num_episodes):
-                _, _ = env.reset()
-                state = env.render()
-                state = np.array(state)
+                state, _ = env.reset()
                 state = preprocess_state(state)
 
                 total_reward = 0
 
                 for t in count():
                     if i_episode % render_every == 0:
-                        env.render(render_mode="human")
+                        env.render()
 
                     action = dqn.select_action(state)
-                    _, reward, terminated, truncated, _ = env.step(action.item())
+                    observation, reward, terminated, truncated, _ = env.step(
+                        action.item()
+                    )
 
                     total_reward += float(reward)
 
-                    observation = env.render()
                     observation = np.array(observation)
                     observation = preprocess_state(observation)
 
