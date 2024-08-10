@@ -9,20 +9,17 @@ class Plotter:
     """Handles plotting of training progress."""
 
     def __init__(self):
-        self.episode_information = EpisodeInformation(durations=[], rewards=[])
         self.fig, self.ax1 = plt.subplots()
         self.ax2 = self.ax1.twinx()
         self.is_ipython = "inline" in plt.get_backend()
 
-    def update(self, show_result=False):
+    def update(self, episode_information: EpisodeInformation, show_result=False):
         """Update the plot with the latest data."""
         self.ax1.clear()
         self.ax2.clear()
 
-        durations_t = torch.tensor(
-            self.episode_information.durations, dtype=torch.float
-        )
-        rewards_t = torch.tensor(self.episode_information.rewards, dtype=torch.float)
+        durations_t = torch.tensor(episode_information.durations, dtype=torch.float)
+        rewards_t = torch.tensor(episode_information.rewards, dtype=torch.float)
 
         self._plot_metrics(durations_t, rewards_t)
         self.fig.tight_layout()
@@ -35,7 +32,7 @@ class Plotter:
             else:
                 display.display(self.fig)
 
-    def _plot_metrics(self, durations_t, rewards_t):
+    def _plot_metrics(self, durations_t: torch.Tensor, rewards_t: torch.Tensor):
         """Plot metrics such as duration and rewards."""
         self.ax1.set_xlabel("Episode")
         self.ax1.set_ylabel("Duration", color="tab:orange")
@@ -52,8 +49,8 @@ class Plotter:
         self.ax2.plot(rewards_means.numpy(), color="tab:cyan")
 
     @staticmethod
-    def _moving_average(tensor, window_size: int = 100):
+    def _moving_average(tensor: torch.Tensor, window_size: int = 100):
         """Compute the moving average of a tensor."""
         len_averages = min(window_size, len(tensor))
         means = tensor.unfold(0, len_averages, 1).mean(1).view(-1)
-        return torch.cat((torch.zeros(len_averages - 1), means))
+        return torch.cat((torch.zeros(len_averages), means))

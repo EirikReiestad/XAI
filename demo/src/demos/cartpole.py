@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import torch
 
 from demo import settings
-from demo.src.common import EpisodeInformation
+from demo.src.common import EpisodeInformation, episode_information
 from demo.src.plotters import Plotter
 from demo.src.wrappers import EnvironmentWrapper
 from environments.gymnasium.envs.maze.utils import preprocess_state
@@ -59,14 +59,14 @@ class CartPoleDemo:
                     if done:
                         self.episode_information.durations.append(t + 1)
                         self.episode_information.rewards.append(total_reward)
-                        self.plotter.update()
+                        self.plotter.update(self.episode_information)
                         break
         except Exception as e:
             logging.error(e)
         finally:
             env_wrapper.close()
             logging.info("Complete")
-            self.plotter.update(show_result=True)
+            self.plotter.update(self.episode_information, show_result=True)
             plt.ioff()
         plt.show()
 

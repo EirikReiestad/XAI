@@ -45,6 +45,7 @@ class DQN(nn.Module):
         Returns:
             nn.Tensor: Output tensor representing Q-values for each action.
         """
+        x = x.flatten(start_dim=1)
         x = F.relu(self.input_layer(x))
         for layer in self.hidden_layers:
             x = F.relu(layer(x))

@@ -2,7 +2,7 @@ import numpy as np
 import torch
 
 
-def preprocess_state(state: np.ndarray) -> torch.Tensor:
+def preprocess_state(state: torch.Tensor | np.ndarray) -> torch.Tensor:
     """
     Preprocesses the state of the maze to be compatible with the DQN module.
 
@@ -13,7 +13,10 @@ def preprocess_state(state: np.ndarray) -> torch.Tensor:
         torch.Tensor: The preprocessed state of the maze.
     """
     # Convert the NumPy array to a PyTorch tensor
-    torch_state = torch.tensor(state, dtype=torch.float32)
+    if isinstance(state, np.ndarray):
+        torch_state = torch.tensor(state, dtype=torch.float32)
+    else:
+        torch_state = state
 
     # Permute dimensions based on the tensor's shape
     if torch_state.ndim == 1:

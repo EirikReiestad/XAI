@@ -1,7 +1,8 @@
 from typing import Any, Tuple
-from torch.types import Number
 
 import gymnasium as gym
+import torch
+from torch.types import Number
 
 from environments.gymnasium.envs.maze.utils import preprocess_state
 
@@ -12,10 +13,12 @@ class EnvironmentWrapper:
     def __init__(self, env_id: str, render_mode: str = "human"):
         self.env = gym.make(env_id, render_mode=render_mode)
 
-    def reset(self) -> Tuple[Any, dict]:
+    def reset(self) -> Tuple[torch.Tensor, dict]:
         """Reset the environment and return the initial state and info."""
         state, info = self.env.reset()
         state = preprocess_state(state)
+        if not isinstance(state, torch.Tensor):
+            raise ValueError("State must be a PyTorch tensor after preprocessing.")
         return state, info
 
     def step(self, action: Number) -> Tuple[Any, float, bool, bool]:
