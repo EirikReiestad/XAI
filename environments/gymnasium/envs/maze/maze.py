@@ -1,16 +1,13 @@
-"""
-Maze system
-"""
+"""Maze environment for reinforcement learning."""
 
 __credits__ = ["Eirik Reiestad"]
 
 import os
 import logging
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Dict, Any
 
 import numpy as np
 import pygame as pg
-
 import gymnasium as gym
 from gymnasium import spaces
 
@@ -22,7 +19,6 @@ from environments.gymnasium.utils import (
     Direction,
 )
 from environments import settings
-
 from environments.gymnasium.utils import State
 
 logging.basicConfig(level=logging.INFO)
@@ -30,60 +26,33 @@ logging.basicConfig(level=logging.INFO)
 
 class MazeEnv(gym.Env):
     """
-    ## Description
-    This class implements a simple maze environment. The goal is to reach the goal position
+    A maze environment where the agent must reach a goal position.
 
-    ## Action Space
-
-    The action is a ´ndarray´ with ´(1,) which can take values ´{0, 1, 2, 3}´ indicating the direction to move.
-    ## Observation Space
-
-    The observation is a ´ndarray´ with shape ´(height, width)´ with the current state of the maze.
-
-    ## Rewards
-
-    The reward is ´1´ if the agent reaches the goal position, otherwise ´0´.
-
-    ## Starting State
-
-    The starting state is a random position in the maze.
-    The goal is a random position in the maze.
-
-    ## Episode Termination
-
-    The episode ends if any one of the following occurs:
-    1. The agent reaches the goal position.
-    2. The agent reaches the maximum number of steps.
-
-    ## Arguments
-
-    Optional arguments
-    - max_steps: The maximum number of steps.
-    - render_mode: The render mode.
-    - start: The start position.
-    - goal: The goal position.
+    Attributes:
+        metadata (dict): Metadata for rendering.
+        action_space (spaces.Discrete): The action space of the environment.
+        observation_space (spaces.Box): The observation space of the environment.
+        state (State): The current state of the maze.
     """
 
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 50}
 
-    action_space: spaces.Discrete
-    observation_space: spaces.Box
-
-    state: State
-
     def __init__(self, render_mode: Optional[str] = "human"):
+        """
+        Initializes the maze environment.
+
+        Parameters:
+            render_mode (Optional[str]): The render mode for the environment.
+        """
         self.height = settings.MAZE_HEIGHT
         self.width = settings.MAZE_WIDTH
         self.max_steps = (self.height * self.width) * 2
 
-        dir_path = "environments/gymnasium/data/maze/"
-        if not os.path.exists(dir_path):
-            raise FileNotFoundError(f"Directory {dir_path} does not exist.")
-        filename = settings.FILENAME
-        filename = dir_path + filename
-
-        self._init_render(render_mode)
-        self._init_states(filename)
+        self._check_file_existence(
+            "environments/gymnasium/data/maze/", settings.FILENAME
+        )
+        self._init_render(render_mode if render_mode else "human")
+        self._init_states("environments/gymnasium/data/maze/" + settings.FILENAME)
         self._init_spaces()
 
         self.rewards = {
@@ -94,23 +63,24 @@ class MazeEnv(gym.Env):
         }
 
         self.steps = 0
-
         self.steps_beyond_terminated = None
 
-    def step(self, action: int) -> Tuple[np.ndarray, int, bool, bool, dict]:
+    def step(self, action: int) -> Tuple[np.ndarray, int, bool, bool, Dict[str, Any]]:
         """
-        This method is called to take a step in the environment.
+        Takes a step in the environment.
+
         Parameters:
-            action: The action to take.
+            action (int): The action to take.
 
         Returns:
-            np.ndarray: The new state of the environment.
-            int: The reward of the action.
-            bool: A boolean indicating if the episode is terminated.
-            bool: A boolean indicating if the episode is truncated.
-            dict: Additional information.
+            Tuple[np.ndarray, int, bool, bool, Dict[str, Any]]:
+                - np.ndarray: The new state of the environment.
+                - int: The reward for the action.
+                - bool: Whether the episode is terminated.
+                - bool: Whether the episode is truncated.
+                - dict: Additional information.
         """
-        if self.action_space.contains(action) is False:
+        if not self.action_space.contains(action):
             raise ValueError(f"Invalid action {action}")
 
         self.steps += 1
@@ -143,58 +113,30 @@ class MazeEnv(gym.Env):
         return self.state.active_state, reward, terminated, False, {}
 
     def reset(
-        self,
-        *,
-        seed: Optional[int] = None,
-        options: Optional[dict] = None,
-    ) -> Tuple[np.ndarray, dict]:
+        self, *, seed: Optional[int] = None, options: Optional[Dict[str, Any]] = None
+    ) -> Tuple[np.ndarray, Dict[str, Any]]:
         """
-        Reset the environment to the initial state.
+        Resets the environment to the initial state.
 
         Parameters:
-            seed: The seed to use.
-            options: Additional options.
+            seed (Optional[int]): The seed for random number generation.
+            options (Optional[Dict[str, Any]]): Options for resetting the environment.
 
         Returns:
-            np.ndarray: The initial state of the environment.
+            Tuple[np.ndarray, Dict[str, Any]]:
+                - np.ndarray: The initial state of the environment.
+                - dict: Additional information about the state.
         """
+        render_mode = options.get("render_mode") if options else None
+        self.render_mode = render_mode or self.render_mode
 
-        render_mode = options.get("render_mode") if options is not None else None
-
-        self.render_mode = (
-            render_mode
-            if render_mode is not None and render_mode in self.metadata["render_modes"]
-            else self.render_mode
-        )
-
-        if options is not None and "start" in options:
-            self.agent = Position(options["start"])
-            if "goal" in options:
-                self.goal = Position(options["goal"])
-            else:
-                if self.agent is None:
-                    raise ValueError("The agent position is not set.")
-
-                self.goal = generate_random_position(
-                    self.width, self.height, [self.agent]
-                )
-        else:
-            if options is not None and "goal" in options:
-                self.goal = Position(options["goal"])
-                self.agent = self.init_agent
-            else:
-                self.agent = self.init_agent
-                self.goal = self.init_goal
-
+        self._set_initial_positions(options)
         self.steps = 0
 
         self.state.full[self.agent.y, self.agent.x] = TileType.EMPTY.value
         self.state.full[self.goal.y, self.goal.x] = TileType.EMPTY.value
 
-        for agent in np.argwhere(self.state.full == TileType.START.value):
-            self.state.full[agent[0], agent[1]] = TileType.EMPTY.value
-        for goal in np.argwhere(self.state.full == TileType.END.value):
-            self.state.full[goal[0], goal[1]] = TileType.EMPTY.value
+        self._clear_start_goal_positions()
 
         self.state.full[self.init_agent.y, self.init_agent.x] = TileType.START.value
         self.state.full[self.init_goal.y, self.init_goal.x] = TileType.END.value
@@ -205,18 +147,20 @@ class MazeEnv(gym.Env):
 
         return self.state.active_state, {"state_type": settings.STATE_TYPE.value}
 
-    def render(self, _render_mode: Optional[str] = None) -> np.ndarray | None:
-        render_mode = _render_mode if _render_mode is not None else self.render_mode
+    def render(self, _render_mode: Optional[str] = None) -> Optional[np.ndarray]:
+        """
+        Renders the current state of the environment.
+
+        Parameters:
+            _render_mode (Optional[str]): The render mode.
+
+        Returns:
+            Optional[np.ndarray]: The rendered image or None.
+        """
+        render_mode = _render_mode or self.render_mode
 
         color_matrix = np.full((self.height, self.width, 3), Color.WHITE.value)
-
-        obstacle_mask = self.state.full == TileType.OBSTACLE.value
-        agent_mask = self.state.full == TileType.START.value
-        goal_mask = self.state.full == TileType.END.value
-
-        color_matrix[obstacle_mask] = Color.BLACK.value
-        color_matrix[agent_mask] = Color.BLUE.value
-        color_matrix[goal_mask] = Color.GREEN.value
+        self._apply_color_masks(color_matrix)
 
         surf = pg.surfarray.make_surface(color_matrix)
         surf = pg.transform.scale(surf, (self.screen_width, self.screen_height))
@@ -233,20 +177,21 @@ class MazeEnv(gym.Env):
         return None
 
     def close(self):
-        if self.screen is not None:
+        """Closes the environment and the rendering window."""
+        if self.screen:
             pg.display.quit()
             pg.quit()
             self.is_open = False
 
-    def _get_reward(self, collided: bool = False) -> int:
-        """Calculate the reward of the current state.
+    def _get_reward(self, collided: bool) -> int:
+        """
+        Calculates the reward for the current state.
 
         Parameters:
-            colided: bool
-                If the agent collided or not
+            collided (bool): Whether the agent collided.
 
         Returns:
-            int: a reward
+            int: The reward.
         """
         if self.agent == self.goal:
             return self.rewards["goal"]
@@ -255,53 +200,41 @@ class MazeEnv(gym.Env):
         else:
             return self.rewards["move"]
 
-    def _move_agent(self, state: np.ndarray, action: int) -> np.ndarray | None:
+    def _move_agent(self, state: np.ndarray, action: int) -> Optional[np.ndarray]:
         """
-        Move the agent in the maze.
+        Moves the agent in the maze based on the action.
+
         Parameters:
-            state: The current state of the maze.
-            action: The action to take.
+            state (np.ndarray): The current state of the maze.
+            action (int): The action to take.
 
-        Returns
-            The new state of the maze. Return None if the state are the same, meaning the agent collided.
+        Returns:
+            Optional[np.ndarray]: The new state of the maze, or None if the agent collided.
         """
-
-        new_state: np.ndarray = state.copy()
-        new_agent: Position = self.agent + Direction(action).to_tuple()
-        if (
-            new_agent.x >= 0
-            and new_agent.x < self.width
-            and new_agent.y >= 0
-            and new_agent.y < self.height
+        new_state = state.copy()
+        new_agent = self.agent + Direction(action).to_tuple()
+        if self._is_within_bounds(new_agent) and self._is_not_obstacle(
+            new_state, new_agent
         ):
-            if new_state[int(new_agent.y), int(new_agent.y)] == TileType.OBSTACLE.value:
-                return new_state
             new_state[self.agent.y, self.agent.x] = TileType.EMPTY.value
             self.agent = new_agent
             new_state[self.agent.y, self.agent.x] = TileType.START.value
             return new_state
-        else:
-            return None
+        return None
 
-    def _init_states(self, filename):
+    def _init_states(self, filename: str):
+        """Initializes the maze states from the given file."""
         if not os.path.exists(filename):
             logging.info(f"Current working directory: {os.getcwd()}")
             raise FileNotFoundError(f"File {filename} does not exist.")
 
         with open(filename, "r") as f:
-            maze = f.readlines()
-            maze = [list(map(int, list(row.strip()))) for row in maze]
+            maze = [list(map(int, list(row.strip()))) for row in f.readlines()]
+            self._validate_maze(maze)
 
         full_state = np.array(maze, dtype=np.uint8)
-
         partial_state = np.ndarray((7,), dtype=np.uint8)
-
-        color_matrix = np.full((self.height, self.width, 3), Color.WHITE.value)
-        surf = pg.surfarray.make_surface(color_matrix)
-        surf = pg.transform.scale(surf, (self.screen_width, self.screen_height))
-        surf = pg.transform.flip(surf, True, False)
-        self.surface.blit(surf, (0, 0))
-        rgb_state = pg.surfarray.array3d(self.surface)
+        rgb_state = self._create_rgb_state()
 
         self.state = State(
             full=full_state,
@@ -311,61 +244,41 @@ class MazeEnv(gym.Env):
         )
 
         self.init_agent = Position(
-            tuple(map(int, np.argwhere(self.state.full == TileType.START.value)[0]))
+            tuple(np.argwhere(self.state.full == TileType.START.value)[0])
         )
         self.init_goal = Position(
-            tuple(map(int, np.argwhere(self.state.full == TileType.END.value)[0]))
+            tuple(np.argwhere(self.state.full == TileType.END.value)[0])
         )
 
-        if maze in [None, [], ""]:
-            logging.error(f"No data: Failed to read maze from file {filename}.")
-            raise ValueError("No data: Failed to read maze from file.")
-
-        if len(maze) != self.height or len(maze[0]) != self.width:
-            logging.error(
-                f"Invalid maze size. Expected {self.height}x{self.width}, got {len(maze)}x{len(maze[0])}"
-            )
-            raise ValueError("Invalid maze size.")
-
-        flatten_maze = np.array(maze).flatten()
-
-        if np.where(flatten_maze == TileType.END.value)[0].size == 0:
-            logging.error("The goal position is not set.")
-            raise ValueError("The goal position is not set.")
-        if np.where(flatten_maze == TileType.START.value)[0].size == 0:
-            logging.error("The start position is not set.")
-            raise ValueError("The start position is not set.")
-
     def _init_spaces(self):
+        """Initializes the action and observation spaces."""
         if self.state.active_state is None:
-            raise ValueError("The state should be set before the spaces.")
+            raise ValueError("The state should be set before initializing spaces.")
 
         self.action_space = spaces.Discrete(4)
 
-        match settings.STATE_TYPE.value:
-            case "full":
-                self.observation_space: spaces.Box = gym.spaces.Box(
-                    low=0, high=3, shape=self.state.full.shape, dtype=np.uint8
-                )
-            case "partial":
-                self.observation_space: spaces.Box = gym.spaces.Box(
-                    low=0, high=255, shape=self.state.partial.shape, dtype=np.uint8
-                )
-            case "rgb":
-                self.observation_space: spaces.Box = gym.spaces.Box(
-                    low=0, high=255, shape=self.state.rgb.shape, dtype=np.uint8
-                )
-            case _:
-                raise ValueError(f"Invalid state type {settings.STATE_TYPE}")
+        observation_shape = self.state.active_state.shape
+        if settings.STATE_TYPE.value == "full":
+            self.observation_space = spaces.Box(
+                low=0, high=3, shape=observation_shape, dtype=np.uint8
+            )
+        elif settings.STATE_TYPE.value == "partial":
+            self.observation_space = spaces.Box(
+                low=0, high=255, shape=self.state.partial.shape, dtype=np.uint8
+            )
+        elif settings.STATE_TYPE.value == "rgb":
+            self.observation_space = spaces.Box(
+                low=0, high=255, shape=self.state.rgb.shape, dtype=np.uint8
+            )
+        else:
+            raise ValueError(f"Invalid state type {settings.STATE_TYPE.value}")
 
-    def _init_render(self, render_mode: str | None):
-        if render_mode is None:
-            render_mode = "human"
+    def _init_render(self, render_mode: str):
+        """Initializes rendering settings."""
         if render_mode not in self.metadata["render_modes"]:
             raise ValueError(f"Invalid render mode {render_mode}")
 
         self.render_mode = render_mode
-
         self.screen_width = settings.SCREEN_WIDTH
         self.screen_height = settings.SCREEN_HEIGHT
 
@@ -377,15 +290,13 @@ class MazeEnv(gym.Env):
         self.is_open = True
 
     def _update_state(self, new_full_state: np.ndarray):
+        """Updates the environment's state."""
         self.state.full = new_full_state
         self.state.partial = self._create_partial_state()
-        self.state.rgb = (
-            new_rgb_state
-            if (new_rgb_state := self.render("rgb_array")) is not None
-            else self.state.rgb
-        )
+        self.state.rgb = self.render("rgb_array") or self.state.rgb
 
     def _create_partial_state(self) -> np.ndarray:
+        """Creates the partial state representation."""
         agent_position = [self.agent.y, self.agent.x]
         goal_position = [self.goal.y, self.goal.x]
 
@@ -393,22 +304,103 @@ class MazeEnv(gym.Env):
         goal_direction = [goal_distance.y, goal_distance.x]
 
         distance = np.linalg.norm(goal_direction)
-
-        max_distance = np.sqrt(self.height**2 + self.width**2)
-        distance_normalized = distance / max_distance * 255
-        distance_uint8 = np.clip(distance_normalized, 0, 255).astype(np.uint8)
-
-        max_direction = np.sqrt(self.height**2 + self.width**2)
-        direction_offset = (
-            128  # Offset to handle negative values, centered at 128 for uint8 range
+        distance_normalized = np.clip(
+            distance / np.sqrt(self.height**2 + self.width**2) * 255, 0, 255
         )
 
-        direction_normalized = [
-            (val / max_direction) * 127 + direction_offset for val in goal_direction
-        ]
-        direction_uint8 = np.clip(direction_normalized, 0, 255).astype(np.uint8)
+        direction_offset = 128
+        direction_normalized = np.clip(
+            [
+                (val / np.sqrt(self.height**2 + self.width**2)) * 127 + direction_offset
+                for val in goal_direction
+            ],
+            0,
+            255,
+        )
 
         return np.array(
-            [*agent_position, *goal_position, distance_uint8, *direction_uint8],
+            [
+                *agent_position,
+                *goal_position,
+                int(distance_normalized),
+                *map(int, direction_normalized),
+            ],
             dtype=np.uint8,
         )
+
+    def _check_file_existence(self, dir_path: str, filename: str):
+        """Checks if the file exists."""
+        if not os.path.exists(dir_path):
+            raise FileNotFoundError(f"Directory {dir_path} does not exist.")
+        if not os.path.isfile(filename):
+            raise FileNotFoundError(f"File {filename} does not exist.")
+
+    def _set_initial_positions(self, options: Optional[Dict[str, Any]]):
+        """Sets the initial positions of the agent and goal."""
+        if options and "start" in options:
+            self.agent = Position(options["start"])
+            self.goal = Position(
+                options.get(
+                    "goal",
+                    generate_random_position(self.width, self.height, [self.agent]),
+                )
+            )
+        else:
+            self.agent = self.init_agent
+            self.goal = (
+                self.init_goal
+                if options is None or "goal" not in options
+                else Position(options["goal"])
+            )
+
+    def _clear_start_goal_positions(self):
+        """Clears the start and goal positions from the maze."""
+        self.state.full[np.argwhere(self.state.full == TileType.START.value)] = (
+            TileType.EMPTY.value
+        )
+        self.state.full[np.argwhere(self.state.full == TileType.END.value)] = (
+            TileType.EMPTY.value
+        )
+
+    def _apply_color_masks(self, color_matrix: np.ndarray):
+        """Applies color masks to the maze."""
+        color_matrix[self.state.full == TileType.OBSTACLE.value] = Color.BLACK.value
+        color_matrix[self.state.full == TileType.START.value] = Color.BLUE.value
+        color_matrix[self.state.full == TileType.END.value] = Color.GREEN.value
+
+    def _is_within_bounds(self, position: Position) -> bool:
+        """Checks if the position is within maze bounds."""
+        return 0 <= position.x < self.width and 0 <= position.y < self.height
+
+    def _is_not_obstacle(self, state: np.ndarray, position: Position) -> bool:
+        """Checks if the position is not an obstacle."""
+        return state[int(position.y), int(position.x)] != TileType.OBSTACLE.value
+
+    def _create_rgb_state(self) -> np.ndarray:
+        """
+        Creates an RGB representation of the maze state.
+
+        Returns:
+            np.ndarray: The RGB representation of the maze state.
+        """
+        color_matrix = np.full((self.height, self.width, 3), Color.WHITE.value)
+        surf = pg.surfarray.make_surface(color_matrix)
+        surf = pg.transform.scale(surf, (self.screen_width, self.screen_height))
+        surf = pg.transform.flip(surf, True, False)
+        self.surface.blit(surf, (0, 0))
+        rgb_state = pg.surfarray.array3d(self.surface)
+        return rgb_state
+
+    def _validate_maze(self, maze: list[list[int]]):
+        """Validates the maze file's content."""
+        if not maze:
+            raise ValueError("No data: Failed to read maze from file.")
+        if len(maze) != self.height or len(maze[0]) != self.width:
+            raise ValueError(
+                f"Invalid maze size. Expected {self.height}x{self.width}, got {len(maze)}x{len(maze[0])}"
+            )
+        flatten_maze = np.array(maze).flatten()
+        if np.all(flatten_maze != TileType.END.value):
+            raise ValueError("The goal position is not set.")
+        if np.all(flatten_maze != TileType.START.value):
+            raise ValueError("The start position is not set.")
