@@ -1,19 +1,18 @@
-import matplotlib
-import matplotlib.pyplot as plt
-import torch
 import logging
 from itertools import count
-import numpy as np
+
 import gymnasium as gym
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+import torch
 from IPython import display
-from time import sleep
 
-from rl.src.dqn.dqn_module import DQNModule
-from rl.src.common import ConvLayer
-from environments.gymnasium.envs.maze.utils.preprocess_state import preprocess_state
+from demo import settings
 from demo.src.common import EpisodeInformation
-
-from demo.src import settings
+from environments.gymnasium.envs.maze.utils import preprocess_state
+from rl.src.common import ConvLayer
+from rl.src.dqn.dqn_module import DQNModule
 
 gym.register(
     id="Maze-v0",
@@ -22,7 +21,6 @@ gym.register(
 
 # Set up matplotlib
 is_ipython = "inline" in matplotlib.get_backend()
-
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
@@ -48,34 +46,46 @@ class Demo:
         state_type = info.get("state_type") if info else None
 
         conv_layers = None
-        if state_type == "rgb":
+        if state_type == "rgb" or state_type == "full":
             conv_layers = [
                 ConvLayer(
-                    filters=32, kernel_size=2, strides=2, activation="relu", padding=2
+                    filters=32,
+                    kernel_size=2,
+                    strides=2,
+                    activation="relu",
+                    padding="same",
                 ),
                 ConvLayer(
-                    filters=32, kernel_size=2, strides=2, activation="relu", padding=2
+                    filters=32,
+                    kernel_size=2,
+                    strides=2,
+                    activation="relu",
+                    padding="same",
                 ),
                 ConvLayer(
-                    filters=32, kernel_size=2, strides=2, activation="relu", padding=2
+                    filters=32,
+                    kernel_size=2,
+                    strides=2,
+                    activation="relu",
+                    padding="same",
                 ),
             ]
 
-        dqn = DQNModule(state.shape, n_actions, path=model_path, seed=4)
+        dqn = DQNModule(
+            state.shape, n_actions, conv_layers=conv_layers, path=model_path, seed=4
+        )
 
         plt.ion()
 
-        num_episodes = settings.NUM_EPISODES
-        render_every = settings.RENDER_EVERY
         try:
-            for i_episode in range(num_episodes):
+            for i_episode in range(settings.NUM_EPISODES):
                 state, _ = env.reset()
                 state = preprocess_state(state)
 
                 total_reward = 0
 
                 for t in count():
-                    if i_episode % render_every == 0:
+                    if i_episode % settings.RENDER_EVERY == 0:
                         env.render()
 
                     action = dqn.select_action(state)
@@ -117,7 +127,7 @@ class Demo:
         )
         self.ax1.set_xlabel("Episode")
         self.ax1.set_ylabel("Duration", color="tab:orange")
-        self.ax1.tick_params(axis="y", labelcolor="tab:blue")
+        self.ax1.tick_params(axis="y", labelcolor="tab:orange")
 
         plt.title("Training...")
 
@@ -131,11 +141,12 @@ class Demo:
 
         duration_means = durations_t.unfold(0, len_averages, 1).mean(1).view(-1)
         duration_means = torch.cat((torch.zeros(len_averages), duration_means))
-        self.ax1.plot(duration_means.numpy(), color="tab:cyan")
 
         rewards_means = rewards_t.unfold(0, len_averages, 1).mean(1).view(-1)
         rewards_means = torch.cat((torch.zeros(len_averages), rewards_means))
-        self.ax2.plot(rewards_means.numpy(), color="tab:orange")
+
+        self.ax1.plot(duration_means.numpy(), color="tab:orange")
+        self.ax2.plot(rewards_means.numpy(), color="tab:cyan")
 
         self.fig.tight_layout()  # To ensure the right y-label is not slightly clipped
         plt.pause(0.001)  # pause a bit so that plots are updated

@@ -1,9 +1,9 @@
 from collections import namedtuple, deque
+from torch import Tensor
 import random
 import logging
 
-Transition = namedtuple(
-    'Transition', ('state', 'action', 'next_state', 'reward'))
+Transition = namedtuple("Transition", ("state", "action", "next_state", "reward"))
 
 
 class ReplayMemory:
@@ -13,9 +13,17 @@ class ReplayMemory:
 
     def push(self, *args) -> None:
         """Saves a transition."""
-        if len(self.memory) > 0 and Transition(*args).state.shape != self.memory[0].state.shape:
+        for arg in args:
+            if not isinstance(arg, Tensor):
+                raise TypeError(f"Expected type torch.Tensor, but got {type(arg)}")
+
+        if (
+            len(self.memory) > 0
+            and Transition(*args).state.shape != self.memory[0].state.shape
+        ):
             logging.warn(
-                f"Expected state to have shape {self.memory[0].state.shape}, but got {Transition(*args).state.shape}")
+                f"Expected state to have shape {self.memory[0].state.shape}, but got {Transition(*args).state.shape}"
+            )
         self.memory.append(Transition(*args))
 
     def sample(self, batch_size: int) -> list[Transition]:

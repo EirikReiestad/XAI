@@ -41,14 +41,3 @@ class State:
                 case _:
                     raise ValueError("Invalid state type.")
         raise AttributeError(f"'States' object has no attribute '{name}'")
-
-    def update_active_state(self, new_value: np.ndarray):
-        match self.active:
-            case StateType.FULL:
-                self.full = new_value
-            case StateType.PARTIAL:
-                self.partial = new_value
-            case StateType.RGB:
-                self.rgb = new_value
-            case _:
-                raise ValueError("Invalid state type.")

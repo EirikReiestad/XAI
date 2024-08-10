@@ -4,21 +4,21 @@ import logging
 
 @enum.unique
 class StateType(enum.Enum):
-    RGB = "rgb"
     FULL = "full"
     PARTIAL = "partial"
+    RGB = "rgb"
 
     def __str__(self):
         return self.value
 
     @staticmethod
     def from_string(state: str):
-        if state == "rgb":
-            return StateType.RGB
         if state == "full":
             return StateType.FULL
         if state == "partial":
             return StateType.PARTIAL
+        if state == "rgb":
+            return StateType.RGB
         else:
             logging.error("Invalid state type.")
             return None

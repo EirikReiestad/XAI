@@ -14,6 +14,8 @@ def preprocess_state(state: np.ndarray) -> torch.Tensor:
     """
     torch_state = torch.tensor(state, dtype=torch.float32)
     match len(torch_state.shape):
+        case 1:
+            permute_state = torch_state.permute(0)
         case 2:
             permute_state = torch_state.permute(1, 0)
         case 3:

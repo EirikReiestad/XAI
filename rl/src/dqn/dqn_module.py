@@ -13,9 +13,10 @@ import logging
 
 from rl.src.dqn.replay_memory import ReplayMemory, Transition
 from rl.src.dqn.dueling_dqn import DuelingDQN
+from rl.src.dqn.dqn import DQN
 from rl.src.hyperparameters.dqn_hyperparameter import DQNHyperparameter
 
-from rl.src import settings
+from rl import settings
 
 from rl.src.common import ConvLayer
 
@@ -30,7 +31,7 @@ class DQNModule:
         self,
         observation_shape: tuple,
         n_actions: int,
-        hidden_layers: list[int] = [64, 128, 256, 128, 64],
+        hidden_layers: list[int] = [128],
         conv_layers: list[ConvLayer] | None = None,
         path: str | None = None,
         seed: int | None = None,
@@ -43,17 +44,30 @@ class DQNModule:
         self.n_actions = n_actions
         self.observation_shape = observation_shape
 
-        self.hp = DQNHyperparameter()
-        if self.path is not None:
-            hyperparameter_path = self.path + ".hyper"
-            self.hp.load(hyperparameter_path)
+        self.hp = DQNHyperparameter(
+            lr=settings.LR,
+            gamma=settings.GAMMA,
+            eps_start=settings.EPS_START,
+            eps_end=settings.EPS_END,
+            eps_decay=settings.EPS_DECAY,
+            batch_size=settings.BATCH_SIZE,
+            tau=settings.TAU,
+        )
 
-        self.policy_net = DuelingDQN(
-            observation_shape, n_actions, hidden_layers, conv_layers
-        ).to(device)
-        self.target_net = DuelingDQN(
-            observation_shape, n_actions, hidden_layers, conv_layers
-        ).to(device)
+        if settings.DUELING_DQN:
+            self.policy_net = DuelingDQN(
+                observation_shape, n_actions, hidden_layers, conv_layers
+            ).to(device)
+            self.target_net = DuelingDQN(
+                observation_shape, n_actions, hidden_layers, conv_layers
+            ).to(device)
+        else:
+            self.policy_net = DQN(observation_shape, n_actions, hidden_layers).to(
+                device
+            )
+            self.target_net = DQN(observation_shape, n_actions, hidden_layers).to(
+                device
+            )
 
         self.optimizer = AdamW(
             self.policy_net.parameters(), lr=self.hp.lr, amsgrad=True
@@ -147,13 +161,22 @@ class DQNModule:
         next_state_values = torch.zeros(self.hp.batch_size, device=device)
 
         # NOTE: Double DQN
-        with torch.no_grad():
-            next_actions = self.policy_net(non_final_next_states).max(1)[1].unsqueeze(1)
-            next_state_values[non_final_mask] = (
-                self.target_net(non_final_next_states)
-                .gather(1, next_actions)
-                .squeeze(1)
-            )
+        if settings.DOUBLE_DQN:
+            with torch.no_grad():
+                next_actions = (
+                    self.policy_net(non_final_next_states).max(1)[1].unsqueeze(1)
+                )
+                next_state_values[non_final_mask] = (
+                    self.target_net(non_final_next_states)
+                    .gather(1, next_actions)
+                    .squeeze(1)
+                )
+        else:
+            # Standard DQN logic
+            with torch.no_grad():
+                next_state_values[non_final_mask] = self.target_net(
+                    non_final_next_states
+                ).max(1)[0]
 
         # Compute the expected Q values
         expected_state_action_values = (
@@ -171,7 +194,7 @@ class DQNModule:
         torch.nn.utils.clip_grad_value_(self.policy_net.parameters(), 100)
         self.optimizer.step()
 
-        self.save()
+        # self.save()
 
     def train(
         self,
@@ -206,13 +229,13 @@ class DQNModule:
                 f"Expected observation to have shape {self.observation_shape}, but got {observation.shape}"
             )
 
-        reward = torch.tensor([reward], device=device, dtype=torch.float).item()
+        reward_tensor = torch.tensor([reward], device=device, dtype=torch.float)
         done = terminated or truncated
 
-        if terminated:
-            next_state = None
-        else:
-            next_state = observation.clone().detach()
+        if done:
+            return done, state
+
+        next_state = observation.clone().detach()
 
         if next_state is not None and next_state.shape != self.observation_shape:
             raise ValueError(
@@ -220,10 +243,7 @@ class DQNModule:
             )
 
         # Store the transition in memory
-        self.memory.push(state, action, next_state, reward)
-
-        if next_state is None:
-            return done, state
+        self.memory.push(state, action, next_state, reward_tensor)
 
         # Move to the next state
         state = next_state

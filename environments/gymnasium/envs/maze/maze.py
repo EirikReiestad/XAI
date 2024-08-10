@@ -82,8 +82,8 @@ class MazeEnv(gym.Env):
         filename = settings.FILENAME
         filename = dir_path + filename
 
-        self._init_states(filename)
         self._init_render(render_mode)
+        self._init_states(filename)
         self._init_spaces()
 
         self.rewards = {
@@ -122,15 +122,11 @@ class MazeEnv(gym.Env):
         collided = False
 
         if not terminated:
-            new_state = self._move_agent(self.state.full, action)
-            collided = new_state is None
-
+            new_full_state = self._move_agent(self.state.full, action)
+            collided = new_full_state is None
+            if not collided and new_full_state is not None:
+                self._update_state(new_full_state)
             terminated = collided or terminated
-
-            if not collided and new_state is not None:
-                if self.state.active_state == StateType.RGB.value:
-                    new_state = self.render()
-                self.state.update_active_state(new_state)
         elif self.steps_beyond_terminated is None:
             self.steps_beyond_terminated = 0
         else:
@@ -297,8 +293,15 @@ class MazeEnv(gym.Env):
             maze = [list(map(int, list(row.strip()))) for row in maze]
 
         full_state = np.array(maze, dtype=np.uint8)
-        partial_state = full_state.flatten()
-        rgb_state = np.ndarray((self.height, self.width, 3), dtype=np.uint8)
+
+        partial_state = np.ndarray((7,), dtype=np.uint8)
+
+        color_matrix = np.full((self.height, self.width, 3), Color.WHITE.value)
+        surf = pg.surfarray.make_surface(color_matrix)
+        surf = pg.transform.scale(surf, (self.screen_width, self.screen_height))
+        surf = pg.transform.flip(surf, True, False)
+        self.surface.blit(surf, (0, 0))
+        rgb_state = pg.surfarray.array3d(self.surface)
 
         self.state = State(
             full=full_state,
@@ -346,7 +349,7 @@ class MazeEnv(gym.Env):
                 )
             case "partial":
                 self.observation_space: spaces.Box = gym.spaces.Box(
-                    low=0, high=3, shape=self.state.partial.shape, dtype=np.uint8
+                    low=0, high=255, shape=self.state.partial.shape, dtype=np.uint8
                 )
             case "rgb":
                 self.observation_space: spaces.Box = gym.spaces.Box(
@@ -372,3 +375,40 @@ class MazeEnv(gym.Env):
         self.surface = pg.Surface((self.screen_width, self.screen_height))
         self.clock = pg.time.Clock()
         self.is_open = True
+
+    def _update_state(self, new_full_state: np.ndarray):
+        self.state.full = new_full_state
+        self.state.partial = self._create_partial_state()
+        self.state.rgb = (
+            new_rgb_state
+            if (new_rgb_state := self.render("rgb_array")) is not None
+            else self.state.rgb
+        )
+
+    def _create_partial_state(self) -> np.ndarray:
+        agent_position = [self.agent.y, self.agent.x]
+        goal_position = [self.goal.y, self.goal.x]
+
+        goal_distance = self.goal - self.agent
+        goal_direction = [goal_distance.y, goal_distance.x]
+
+        distance = np.linalg.norm(goal_direction)
+
+        max_distance = np.sqrt(self.height**2 + self.width**2)
+        distance_normalized = distance / max_distance * 255
+        distance_uint8 = np.clip(distance_normalized, 0, 255).astype(np.uint8)
+
+        max_direction = np.sqrt(self.height**2 + self.width**2)
+        direction_offset = (
+            128  # Offset to handle negative values, centered at 128 for uint8 range
+        )
+
+        direction_normalized = [
+            (val / max_direction) * 127 + direction_offset for val in goal_direction
+        ]
+        direction_uint8 = np.clip(direction_normalized, 0, 255).astype(np.uint8)
+
+        return np.array(
+            [*agent_position, *goal_position, distance_uint8, *direction_uint8],
+            dtype=np.uint8,
+        )
