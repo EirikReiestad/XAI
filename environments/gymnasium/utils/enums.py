@@ -27,9 +27,9 @@ class StateType(enum.Enum):
 @enum.unique
 class Direction(enum.Enum):
     UP = 0
-    RIGHT = 1
-    DOWN = 2
-    LEFT = 3
+    DOWN = 1
+    LEFT = 2
+    RIGHT = 3
 
     def to_tuple(self) -> tuple[int, int]:
         if self == Direction.UP:
