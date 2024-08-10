@@ -1,82 +1,136 @@
+import numpy as np
 import torch
 from torch import nn
-import numpy as np
+
 from rl.src.common import ConvLayer
 
 
 class DuelingDQN(nn.Module):
+    """Dueling Deep Q-Network (DQN) with convolutional and fully connected layers."""
+
     def __init__(
         self,
-        input_shape: tuple,
+        input_shape: tuple[int, int, int],
         n_actions: int,
-        hidden_layers: list,
+        hidden_layers: list[int],
         conv_layers: list[ConvLayer] | None = None,
-    ):
+    ) -> None:
         """Initialize the Dueling DQN module.
 
-        Parameters:
-            input_shape (tuple): The shape of the input tensor (channels, height, width)
-            n_actions (int): The number of actions in the environment
-            hidden_layers (list): The sizes of the hidden layers
+        Args:
+            input_shape (tuple[int, int, int]): Shape of the input tensor (channels, height, width).
+            n_actions (int): Number of actions in the environment.
+            hidden_layers (list[int]): Sizes of hidden layers in the fully connected network.
+            conv_layers (list[ConvLayer] | None): List of convolutional layer configurations.
         """
         super(DuelingDQN, self).__init__()
 
-        input_channels = input_shape[1]
-        if conv_layers:
-            build_conv_layers = []
-            for layer in conv_layers:
-                build_conv_layers.append(layer.build(input_channels))
-                build_conv_layers.append(layer.build_activation())
-                input_channels = layer.filters
+        # Convolutional layers
+        self.conv = (
+            self._build_conv_layers(conv_layers, input_shape[0])
+            if conv_layers
+            else nn.Sequential()
+        )
 
-            self.conv = nn.Sequential(*build_conv_layers)
-        else:
-            self.conv = nn.Sequential()
-
+        # Determine the output size after convolutional layers
         conv_output_size = self._get_conv_output(input_shape)
-        input_dim = conv_output_size
 
-        # Define the common feature layers
+        # Fully connected feature layers
+        self.feature = self._build_fc_layers(hidden_layers, conv_output_size)
+
+        # Value stream layers
+        self.value_stream = self._build_dueling_stream(hidden_layers, output_dim=1)
+
+        # Advantage stream layers
+        self.advantage_stream = self._build_dueling_stream(
+            hidden_layers, output_dim=n_actions
+        )
+
+    def _build_conv_layers(
+        self, conv_layers: list[ConvLayer], input_channels: int
+    ) -> nn.Sequential:
+        """Build the convolutional layers.
+
+        Args:
+            conv_layers (list[ConvLayer]): List of ConvLayer configurations.
+            input_channels (int): Number of input channels.
+
+        Returns:
+            nn.Sequential: A sequential container of convolutional layers and activations.
+        """
         layers = []
-        input_dim = int(input_dim)
+        for layer in conv_layers:
+            layers.append(layer.build(input_channels))
+            layers.append(layer.build_activation())
+            input_channels = layer.filters
+        return nn.Sequential(*layers)
+
+    def _build_fc_layers(
+        self, hidden_layers: list[int], input_dim: int
+    ) -> nn.Sequential:
+        """Build the fully connected feature layers.
+
+        Args:
+            hidden_layers (list[int]): Sizes of hidden layers.
+            input_dim (int): Dimension of the input to the first hidden layer.
+
+        Returns:
+            nn.Sequential: A sequential container of fully connected layers and activations.
+        """
+        layers = []
         for hidden_dim in hidden_layers:
             layers.append(nn.Linear(input_dim, hidden_dim))
             layers.append(nn.ReLU())
             input_dim = hidden_dim
-        self.feature = nn.Sequential(*layers)
+        return nn.Sequential(*layers)
 
-        # Define the value stream layers
-        value_layers = []
-        input_dim = hidden_layers[-1]  # Last hidden layer size
+    def _build_dueling_stream(
+        self, hidden_layers: list[int], output_dim: int
+    ) -> nn.Sequential:
+        """Build a stream for the dueling architecture (value or advantage).
+
+        Args:
+            hidden_layers (list[int]): Sizes of hidden layers.
+            output_dim (int): Size of the output layer.
+
+        Returns:
+            nn.Sequential: A sequential container of fully connected layers and activations.
+        """
+        layers = []
+        input_dim = hidden_layers[-1]
         for hidden_dim in hidden_layers:
-            value_layers.append(nn.Linear(input_dim, hidden_dim))
-            value_layers.append(nn.ReLU())
+            layers.append(nn.Linear(input_dim, hidden_dim))
+            layers.append(nn.ReLU())
             input_dim = hidden_dim
-        # Output layer for value stream
-        value_layers.append(nn.Linear(hidden_layers[-1], 1))
-        self.value_stream = nn.Sequential(*value_layers)
+        layers.append(nn.Linear(hidden_layers[-1], output_dim))
+        return nn.Sequential(*layers)
 
-        # Define the advantage stream layers
-        advantage_layers = []
-        input_dim = hidden_layers[-1]  # Last hidden layer size
-        for hidden_dim in hidden_layers:
-            advantage_layers.append(nn.Linear(input_dim, hidden_dim))
-            advantage_layers.append(nn.ReLU())
-            input_dim = hidden_dim
-        # Output layer for advantage stream
-        advantage_layers.append(nn.Linear(hidden_layers[-1], n_actions))
-        self.advantage_stream = nn.Sequential(*advantage_layers)
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """Perform the forward pass through the network.
 
-    def forward(self, x: torch.Tensor):
-        x = self.conv(x)  # Apply the convolutional layers
-        x = x.reshape(x.size(0), -1)  # Flatten the output from the conv layers
-        x = self.feature(x)  # Apply the feature layers
+        Args:
+            x (torch.Tensor): Input tensor.
+
+        Returns:
+            torch.Tensor: The output tensor with Q-values.
+        """
+        x = self.conv(x)  # Apply convolutional layers
+        x = x.flatten(start_dim=1)  # Flatten the output from conv layers
+        x = self.feature(x)  # Apply feature layers
         value = self.value_stream(x)
         advantage = self.advantage_stream(x)
         return value + (advantage - advantage.mean(dim=1, keepdim=True))
 
-    def _get_conv_output(self, shape: tuple[int, int, int]):
+    def _get_conv_output(self, shape: tuple[int, int, int]) -> int:
+        """Calculate the output size after convolutional layers.
+
+        Args:
+            shape (tuple[int, int, int]): Shape of the input tensor (channels, height, width).
+
+        Returns:
+            int: Size of the flattened output tensor.
+        """
         with torch.no_grad():
-            dummy = torch.zeros(shape)
-            o = self.conv(dummy)
-        return int(np.prod(o.size()))
+            dummy_input = torch.zeros(1, *shape)
+            output = self.conv(dummy_input)
+        return int(np.prod(output.size()))

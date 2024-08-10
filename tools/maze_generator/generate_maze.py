@@ -3,8 +3,8 @@ We will generate a maze, and store it as a text file for later use.
 """
 
 import logging
-import sys
 import os
+import sys
 
 import pygame as pg
 
@@ -121,7 +121,15 @@ class GenerateMaze:
         )
         for y in range(self.height):
             for x in range(self.width):
-                if self.maze[y][x] in {TileType.START.value, TileType.END.value}:
+                if (
+                    self.placement_mode == DrawMode.START
+                    and self.maze[y][x] == TileType.START.value
+                ):
+                    self.maze[y][x] = TileType.EMPTY.value
+                if (
+                    self.placement_mode == DrawMode.END
+                    and self.maze[y][x] == TileType.END.value
+                ):
                     self.maze[y][x] = TileType.EMPTY.value
         self.maze[self.current_square[1]][self.current_square[0]] = value
 
@@ -131,7 +139,7 @@ class GenerateMaze:
                 if event.key == pg.K_ESCAPE:
                     self._exit_program()
                 if event.key in {pg.K_UP, pg.K_DOWN, pg.K_LEFT, pg.K_RIGHT}:
-                    self.action = Direction(event.key - pg.K_UP)
+                    self.action = Direction(pg.K_UP - event.key)
                 if event.key == pg.K_SPACE:
                     self.draw_mode += 1
                 if event.key == pg.K_s:

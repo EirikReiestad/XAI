@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+
 from torch import nn
 
 
@@ -12,25 +13,32 @@ class ConvLayer:
     activation: str
     padding: str
 
-    def __post_init__(self):
-        """Initialize the layer."""
-        self.filters = int(self.filters)
-        self.kernel_size = int(self.kernel_size)
-        self.strides = int(self.strides)
-
     def build(self, input_channels: int):
-        """Build the convolutional layer.
-        Parameters:
-            input_channels (int): The number of input channels
+        """Construct the convolutional layer followed by the activation.
+
+        Args:
+            input_channels (int): Number of input channels.
+
+        Returns:
+            nn.Sequential: A sequential model containing the convolutional layer and activation.
         """
         return nn.Conv2d(
-            input_channels,
-            self.filters,
+            in_channels=input_channels,
+            out_channels=self.filters,
             kernel_size=self.kernel_size,
             stride=self.strides,
             padding=self.padding,
         )
 
     def build_activation(self):
-        """Build the activation layer."""
-        return nn.ReLU() if self.activation == "relu" else nn.LeakyReLU()
+        """Retrieve the activation function based on the specified type.
+
+        Returns:
+            nn.Module: The appropriate activation layer.
+        """
+        if self.activation == "relu":
+            return nn.ReLU()
+        elif self.activation == "leaky_relu":
+            return nn.LeakyReLU()
+        else:
+            raise ValueError(f"Unsupported activation type: {self.activation}")
