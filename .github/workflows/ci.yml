@@ -12,27 +12,27 @@ jobs:
 
     strategy:
       matrix:
-        folder: [environments, rl]
+        folder: [environments, rl, demo, tools]
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v3
-      with:
-        python-version: '3.11'
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.11"
 
-    - name: Install Poetry
-      run: curl -sSL https://install.python-poetry.org | python3 -
+      - name: Install Poetry
+        run: curl -sSL https://install.python-poetry.org | python3 -
 
-    - name: Install dependencies
-      run: poetry install
+      - name: Install dependencies
+        run: poetry install
 
-    - name: Set up PYTHONPATH
-      run: echo "PYTHONPATH=$(pwd):$(pwd)/src" >> $GITHUB_ENV  # Set PYTHONPATH to include the current directory and src
+      - name: Set up PYTHONPATH
+        run: echo "PYTHONPATH=$(pwd):$(pwd)/src" >> $GITHUB_ENV # Set PYTHONPATH to include the current directory and src
 
-    - name: Run tests
-      run: |
-        cd ${{ matrix.folder }}
-        poetry run python -m unittest discover -s tests
+      - name: Run tests
+        run: |
+          cd ${{ matrix.folder }}
+          poetry run python -m unittest discover -s tests
