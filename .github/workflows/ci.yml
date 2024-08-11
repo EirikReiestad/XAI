@@ -34,5 +34,4 @@ jobs:
 
       - name: Run tests
         run: |
-          cd ${{ matrix.folder }}
           poetry run python -m unittest discover -s tests
