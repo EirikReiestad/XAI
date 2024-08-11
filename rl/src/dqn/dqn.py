@@ -8,7 +8,10 @@ class DQN(nn.Module):
     """Deep Q-Network (DQN) model."""
 
     def __init__(
-        self, n_observations: tuple, n_actions: int, hidden_layers: list[int] = [128]
+        self,
+        n_observations: tuple,
+        n_actions: int,
+        hidden_layers: list[int] = [128, 128],
     ) -> None:
         """Initialize the DQN model.
 
@@ -19,27 +22,30 @@ class DQN(nn.Module):
         """
         super(DQN, self).__init__()
         input_size = int(np.prod(n_observations))
+
+        self.layers = self._build_network(input_size, hidden_layers, n_actions)
+
+    def _build_network(
+        self, input_size: int, hidden_layers: list[int], output_size: int
+    ) -> nn.ModuleList:
+        """Build the neural network.
+        Args:
+            input_size (int): Size of the input layer.
+            hidden_layers (list[int]): List of hidden layer sizes.
+            n_actions (int): Number of possible actions.
+        Returns:
+            nn.ModuleList: List of layers in the network.
+        """
         layers = []
 
-        # Input layer
-        layers.append(nn.Linear(input_size, hidden_layers[0]))
-
-        # Hidden layers
-        if len(hidden_layers) > 1:
+        if len(hidden_layers) > 0:
+            layers.append(nn.Linear(input_size, hidden_layers[0]))
             for in_size, out_size in zip(hidden_layers[:-1], hidden_layers[1:]):
                 layers.append(nn.Linear(in_size, out_size))
-        elif len(hidden_layers) == 1:
-            layers.append(nn.Linear(hidden_layers[0], hidden_layers[0]))
+            layers.append(nn.Linear(hidden_layers[-1], output_size))
         else:
-            raise ValueError("At least one hidden layer is required.")
-
-        # Output layer
-        layers.append(nn.Linear(hidden_layers[-1], n_actions))
-
-        # Register layers as attributes for forward method
-        self.input_layer = layers[0]
-        self.hidden_layers = nn.ModuleList(layers[1:-1])
-        self.output_layer = layers[-1]
+            layers.append(nn.Linear(input_size, output_size))
+        return nn.ModuleList(layers)
 
     def forward(self, x: Tensor) -> Tensor:
         """Forward pass through the network.
@@ -51,8 +57,6 @@ class DQN(nn.Module):
             nn.Tensor: Output tensor representing Q-values for each action.
         """
         x = x.flatten(start_dim=1)
-        x = F.relu(self.input_layer(x))
-        for layer in self.hidden_layers:
+        for layer in self.layers:
             x = F.relu(layer(x))
-        x = self.output_layer(x)
         return x

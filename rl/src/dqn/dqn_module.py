@@ -17,7 +17,8 @@ from rl import settings
 from rl.src.common import ConvLayer
 from rl.src.dqn.dqn import DQN
 from rl.src.dqn.dueling_dqn import DuelingDQN
-from rl.src.dqn.replay_memory import ReplayMemory, Transition
+from rl.src.dqn.replay_memory import ReplayMemory
+from rl.src.dqn.utils import Transition
 from rl.src.hyperparameters.dqn_hyperparameter import DQNHyperparameter
 
 # if gpu is to be used
@@ -31,7 +32,7 @@ class DQNModule:
         self,
         observation_shape: tuple[int, int, int],
         n_actions: int,
-        hidden_layers: list[int] = [128],
+        hidden_layers: list[int] = [128, 128],
         conv_layers: list[ConvLayer] | None = None,
         path: str | None = None,
         seed: int | None = None,

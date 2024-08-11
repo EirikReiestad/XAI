@@ -76,7 +76,7 @@ class QLearning:
         Parameters:
             path (str): File path to save the Q-table.
         """
-        np.save(path, np.array(list(self.q_table.items())))
+        np.save(path, np.array(list(self.q_table)))
 
     def load(self, path: str) -> None:
         """
@@ -85,4 +85,4 @@ class QLearning:
         Parameters:
             path (str): File path to load the Q-table from.
         """
-        self.q_table = np.load(path, allow_pickle=True).item()
+        self.q_table = np.load(path, allow_pickle=True)

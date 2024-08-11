@@ -1,7 +1,7 @@
 import random
-from collections import deque, namedtuple
+from collections import deque
 
-Transition = namedtuple("Transition", ("state", "action", "next_state", "reward"))
+from rl.src.dqn.utils import Transition
 
 
 class ReplayMemory(object):

@@ -25,6 +25,9 @@ class DuelingDQN(nn.Module):
         """
         super(DuelingDQN, self).__init__()
 
+        self._input_shape = input_shape
+        self._n_actions = n_actions
+
         # Convolutional layers
         self.conv = (
             self._build_conv_layers(conv_layers, input_shape[0])
@@ -45,6 +48,16 @@ class DuelingDQN(nn.Module):
         self.advantage_stream = self._build_dueling_stream(
             hidden_layers, output_dim=n_actions
         )
+
+    @property
+    def input_shape(self) -> tuple[int, int, int]:
+        """Shape of the input tensor (channels, height, width)."""
+        return self._input_shape
+
+    @property
+    def n_actions(self) -> int:
+        """Number of actions in the environment."""
+        return self._n_actions
 
     def _build_conv_layers(
         self, conv_layers: list[ConvLayer], input_channels: int
