@@ -34,3 +34,8 @@ class EnvironmentWrapper:
     def close(self):
         """Close the environment."""
         self.env.close()
+
+    @property
+    def action_space(self) -> gym.spaces.Space:
+        """Return the action space of the environment."""
+        return self.env.action_space

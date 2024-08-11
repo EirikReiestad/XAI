@@ -293,7 +293,9 @@ class MazeEnv(gym.Env):
         """Updates the environment's state."""
         self.state.full = new_full_state
         self.state.partial = self._create_partial_state()
-        self.state.rgb = self.render("rgb_array") or self.state.rgb
+        new_rgb_state = self.render("rgb_array")
+        if new_rgb_state is not None:
+            self.state.rgb = new_rgb_state
 
     def _create_partial_state(self) -> np.ndarray:
         """Creates the partial state representation."""
@@ -332,7 +334,7 @@ class MazeEnv(gym.Env):
         """Checks if the file exists."""
         if not os.path.exists(dir_path):
             raise FileNotFoundError(f"Directory {dir_path} does not exist.")
-        if not os.path.isfile(filename):
+        if not os.path.isfile(dir_path + filename):
             raise FileNotFoundError(f"File {filename} does not exist.")
 
     def _set_initial_positions(self, options: Optional[Dict[str, Any]]):

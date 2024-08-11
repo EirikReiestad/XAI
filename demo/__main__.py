@@ -1,4 +1,4 @@
-from demo.src.maze import Demo
+from demo.src.demos.maze import Demo
 
 demo = Demo()
-demo.main()
+demo.run()
