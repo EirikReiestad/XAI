@@ -46,7 +46,7 @@ class MazeEnv(gym.Env):
         """
         self.height = settings.MAZE_HEIGHT
         self.width = settings.MAZE_WIDTH
-        self.max_steps = (self.height * self.width) * 2
+        self.max_steps = self.height * self.width
 
         self._check_file_existence(
             "environments/gymnasium/data/maze/", settings.FILENAME
