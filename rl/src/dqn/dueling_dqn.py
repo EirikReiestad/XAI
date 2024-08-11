@@ -36,7 +36,7 @@ class DuelingDQN(nn.Module):
         conv_output_size = self._get_conv_output(input_shape)
 
         # Fully connected feature layers
-        self.feature = self._build_fc_layers(hidden_layers, conv_output_size)
+        self.fc_feature = self._build_fc_layers(hidden_layers, conv_output_size)
 
         # Value stream layers
         self.value_stream = self._build_dueling_stream(hidden_layers, output_dim=1)
@@ -116,7 +116,7 @@ class DuelingDQN(nn.Module):
         """
         x = self.conv(x)  # Apply convolutional layers
         x = x.flatten(start_dim=1)  # Flatten the output from conv layers
-        x = self.feature(x)  # Apply feature layers
+        x = self.fc_feature(x)  # Apply feature layers
         value = self.value_stream(x)
         advantage = self.advantage_stream(x)
         return value + (advantage - advantage.mean(dim=1, keepdim=True))
