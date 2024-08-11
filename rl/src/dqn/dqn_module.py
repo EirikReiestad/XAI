@@ -105,6 +105,7 @@ class DQNModule:
             target_net = DQN(self.observation_shape, self.n_actions, hidden_layers).to(
                 device
             )
+        target_net.load_state_dict(policy_net.state_dict())
         return policy_net, target_net
 
     def select_action(self, state: torch.Tensor) -> torch.Tensor:
@@ -128,7 +129,7 @@ class DQNModule:
 
         if random.random() > eps_threshold:
             with torch.no_grad():
-                return self.policy_net(state).max(1)[1].view(1, 1)
+                return self.policy_net(state).max(1).indices.view(1, 1)
         else:
             return torch.tensor(
                 [[random.randrange(self.n_actions)]], device=device, dtype=torch.long
@@ -147,15 +148,17 @@ class DQNModule:
         batch = Transition(*zip(*transitions))
 
         non_final_mask = torch.tensor(
-            [s is not None for s in batch.next_state], device=device, dtype=torch.bool
+            tuple(map(lambda s: s is not None, batch.next_state)),
+            device=device,
+            dtype=torch.bool,
         )
         non_final_next_states = torch.cat(
             [s for s in batch.next_state if s is not None]
         )
 
-        state_batch = torch.cat([s for s in batch.state])
-        action_batch = torch.cat([a for a in batch.action])
-        reward_batch = torch.cat([r for r in batch.reward])
+        state_batch = torch.cat(batch.state)
+        action_batch = torch.cat(batch.action)
+        reward_batch = torch.cat(batch.reward)
 
         state_action_values = self.policy_net(state_batch).gather(1, action_batch)
         next_state_values = torch.zeros(self.hp.batch_size, device=device)
@@ -172,15 +175,14 @@ class DQNModule:
                 )
         else:
             with torch.no_grad():
-                next_state_values[non_final_mask] = self.target_net(
-                    non_final_next_states
-                ).max(1)[0]
+                next_state_values[non_final_mask] = (
+                    self.target_net(non_final_next_states).max(1).values
+                )
 
         expected_state_action_values = next_state_values * self.hp.gamma + reward_batch
 
-        loss = nn.SmoothL1Loss()(
-            state_action_values, expected_state_action_values.unsqueeze(1)
-        )
+        criterion = nn.SmoothL1Loss()
+        loss = criterion(state_action_values, expected_state_action_values.unsqueeze(1))
 
         self.optimizer.zero_grad()
         loss.backward()
@@ -195,7 +197,7 @@ class DQNModule:
         reward: float,
         terminated: bool,
         truncated: bool,
-    ) -> tuple[bool, torch.Tensor]:
+    ) -> tuple[bool, torch.Tensor | None]:
         """Store transition and optimize the model.
 
         Args:
@@ -222,23 +224,22 @@ class DQNModule:
         reward_tensor = torch.tensor([reward], device=device, dtype=torch.float)
         done = terminated or truncated
 
-        if done:
-            return done, state
-
         next_state = observation.clone().detach()
         if next_state is not None and next_state.shape != self.observation_shape:
             raise ValueError(
                 f"Expected next_state shape {self.observation_shape}, but got {next_state.shape}"
             )
 
+        if terminated:
+            next_state = None
+
         self.memory.push(state, action, next_state, reward_tensor)
-        state = next_state
 
         self._optimize_model()
 
         self._soft_update_target_net()
 
-        return done, state
+        return done, next_state
 
     def _soft_update_target_net(self) -> None:
         """Soft update the target network parameters."""

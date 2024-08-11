@@ -38,14 +38,16 @@ class Plotter:
         self.ax1.set_ylabel("Duration", color="tab:orange")
         self.ax1.tick_params(axis="y", labelcolor="tab:orange")
 
+        duration_means = self._moving_average(durations_t)
+        rewards_means = self._moving_average(rewards_t)
+
         self.ax2.set_ylabel("Rewards", color="tab:cyan")
         self.ax2.yaxis.set_label_position("right")
         self.ax2.tick_params(axis="y", labelcolor="tab:cyan")
 
-        duration_means = self._moving_average(durations_t)
-        rewards_means = self._moving_average(rewards_t)
-
+        self.ax1.plot(durations_t.numpy(), color="tab:orange", alpha=0.3)
         self.ax1.plot(duration_means.numpy(), color="tab:orange")
+        self.ax2.plot(rewards_t.numpy(), color="tab:cyan", alpha=0.3)
         self.ax2.plot(rewards_means.numpy(), color="tab:cyan")
 
     @staticmethod

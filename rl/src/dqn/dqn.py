@@ -25,8 +25,13 @@ class DQN(nn.Module):
         layers.append(nn.Linear(input_size, hidden_layers[0]))
 
         # Hidden layers
-        for in_size, out_size in zip(hidden_layers[:-1], hidden_layers[1:]):
-            layers.append(nn.Linear(in_size, out_size))
+        if len(hidden_layers) > 1:
+            for in_size, out_size in zip(hidden_layers[:-1], hidden_layers[1:]):
+                layers.append(nn.Linear(in_size, out_size))
+        elif len(hidden_layers) == 1:
+            layers.append(nn.Linear(hidden_layers[0], hidden_layers[0]))
+        else:
+            raise ValueError("At least one hidden layer is required.")
 
         # Output layer
         layers.append(nn.Linear(hidden_layers[-1], n_actions))

@@ -24,11 +24,11 @@ class DQNHyperparameter:
     def default(cls) -> "DQNHyperparameter":
         """Return default hyperparameters."""
         return cls(
-            lr=0.01,
-            gamma=0.999,
+            lr=1e-4,
+            gamma=0.99,
             eps_start=0.9,
             eps_end=0.05,
-            eps_decay=200,
+            eps_decay=1000,
             batch_size=128,
-            tau=0.001,
+            tau=0.005,
         )

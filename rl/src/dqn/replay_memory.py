@@ -2,12 +2,10 @@ import logging
 import random
 from collections import deque, namedtuple
 
-from torch import Tensor
-
 Transition = namedtuple("Transition", ("state", "action", "next_state", "reward"))
 
 
-class ReplayMemory:
+class ReplayMemory(object):
     """A memory buffer to store and sample transitions."""
 
     def __init__(self, capacity: int) -> None:
@@ -19,9 +17,7 @@ class ReplayMemory:
         self.capacity = capacity
         self.memory = deque(maxlen=capacity)
 
-    def push(
-        self, state: Tensor, action: Tensor, next_state: Tensor, reward: Tensor
-    ) -> None:
+    def push(self, *args) -> None:
         """Store a transition in memory.
 
         Args:
@@ -33,16 +29,7 @@ class ReplayMemory:
         Raises:
             TypeError: If any argument is not of type torch.Tensor.
         """
-        for tensor in (state, action, next_state, reward):
-            if not isinstance(tensor, Tensor):
-                raise TypeError(f"Expected torch.Tensor, but got {type(tensor)}")
-
-        if self.memory and state.shape != self.memory[0].state.shape:
-            logging.warning(
-                f"Expected state shape {self.memory[0].state.shape}, but got {state.shape}"
-            )
-
-        self.memory.append(Transition(state, action, next_state, reward))
+        self.memory.append(Transition(*args))
 
     def sample(self, batch_size: int) -> list[Transition]:
         """Randomly sample a batch of transitions from memory.

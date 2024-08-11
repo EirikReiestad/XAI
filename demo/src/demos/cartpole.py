@@ -6,10 +6,9 @@ import matplotlib.pyplot as plt
 import torch
 
 from demo import settings
-from demo.src.common import EpisodeInformation, episode_information
+from demo.src.common import EpisodeInformation
 from demo.src.plotters import Plotter
 from demo.src.wrappers import EnvironmentWrapper
-from environments.gymnasium.envs.maze.utils import preprocess_state
 from rl.src.dqn.dqn_module import DQNModule
 
 # Set up matplotlib
@@ -27,16 +26,14 @@ class CartPoleDemo:
     def run(self):
         env_wrapper = EnvironmentWrapper(env_id="CartPole-v1")
         state, _ = env_wrapper.reset()
-        state = preprocess_state(state)
 
-        dqn = DQNModule(state.shape, env_wrapper.env.action_space.n, seed=4)
+        dqn = DQNModule(state.shape, env_wrapper.env.action_space.n)
 
         plt.ion()
 
         try:
             for i_episode in range(settings.NUM_EPISODES):
                 state, _ = env_wrapper.reset()
-                state = preprocess_state(state)
 
                 total_reward = 0
 
@@ -50,11 +47,12 @@ class CartPoleDemo:
                     )
 
                     total_reward += reward
-                    observation = preprocess_state(observation)
 
-                    done, state = dqn.train(
+                    done, new_state = dqn.train(
                         state, action, observation, reward, terminated, truncated
                     )
+
+                    state = new_state if not done and new_state is not None else state
 
                     if done:
                         self.episode_information.durations.append(t + 1)
