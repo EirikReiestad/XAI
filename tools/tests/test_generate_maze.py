@@ -19,7 +19,7 @@ class TestGenerateMaze(unittest.TestCase):
         self.assertEqual(self.maze.placement_mode, DrawMode.NOTHING)
         self.assertEqual(self.maze.current_square, (0, 0))
 
-    @patch("generate_maze.GenerateMaze._save_maze")
+    @patch("tools.maze_generator.generate_maze.GenerateMaze._save_maze")
     def test_load_maze_new(self, mock_save):
         with patch("os.path.exists", return_value=False):
             self.maze._load_maze(0)
@@ -53,6 +53,12 @@ class TestGenerateMaze(unittest.TestCase):
         self.maze.placement_mode = DrawMode.END
         self.maze._update_placement()
         self.assertEqual(self.maze.maze[1][1], TileType.END.value)
+
+        # Using y, x
+        self.maze.current_square = (1, 0)
+        self.maze.placement_mode = DrawMode.START
+        self.maze._update_placement()
+        self.assertEqual(self.maze.maze[0][1], TileType.START.value)
         self.assertEqual(self.maze.maze[0][0], TileType.EMPTY.value)
 
     def test_move_current_square(self):
