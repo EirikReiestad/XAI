@@ -16,7 +16,6 @@ from torch.optim.adamw import AdamW
 from rl import settings
 from rl.src.common import ConvLayer
 from rl.src.dqn.dqn import DQN
-from rl.src.dqn.dueling_dqn import DuelingDQN
 from rl.src.dqn.replay_memory import ReplayMemory
 from rl.src.dqn.utils import Transition
 from rl.src.hyperparameters.dqn_hyperparameter import DQNHyperparameter
@@ -30,7 +29,7 @@ class DQNModule:
 
     def __init__(
         self,
-        observation_shape: tuple[int, int, int],
+        observation_shape: tuple,
         n_actions: int,
         hidden_layers: list[int] = [128, 128],
         conv_layers: list[ConvLayer] | None = None,
@@ -92,20 +91,20 @@ class DQNModule:
         Returns:
             tuple[nn.Module, nn.Module]: Initialized policy and target networks.
         """
-        if settings.DUELING_DQN:
-            policy_net = DuelingDQN(
-                self.observation_shape, self.n_actions, hidden_layers, conv_layers
-            ).to(device)
-            target_net = DuelingDQN(
-                self.observation_shape, self.n_actions, hidden_layers, conv_layers
-            ).to(device)
-        else:
-            policy_net = DQN(self.observation_shape, self.n_actions, hidden_layers).to(
-                device
-            )
-            target_net = DQN(self.observation_shape, self.n_actions, hidden_layers).to(
-                device
-            )
+        policy_net = DQN(
+            self.observation_shape,
+            self.n_actions,
+            hidden_layers,
+            conv_layers,
+            dueling=settings.DUELING_DQN,
+        ).to(device)
+        target_net = DQN(
+            self.observation_shape,
+            self.n_actions,
+            hidden_layers,
+            conv_layers,
+            dueling=settings.DUELING_DQN,
+        ).to(device)
         target_net.load_state_dict(policy_net.state_dict())
         return policy_net, target_net
 

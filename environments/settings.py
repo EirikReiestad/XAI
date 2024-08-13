@@ -18,4 +18,4 @@ SCREEN_HEIGHT = 400
 FILENAME = "maze-0-10-10.txt"
 
 # State
-STATE_TYPE = StateType.FULL
+STATE_TYPE = StateType.PARTIAL

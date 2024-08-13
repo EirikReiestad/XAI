@@ -12,4 +12,4 @@ TAU = 0.005
 
 # DQN
 DUELING_DQN = True
-DOUBLE_DQN = True
+DOUBLE_DQN = False
