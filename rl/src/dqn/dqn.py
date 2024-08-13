@@ -30,6 +30,13 @@ class DQN(nn.Module):
             logging.info(
                 "Then tensor have a shape of 2. Consider dropping the convolutional network."
             )
+            input_shape = (1, 1, *input_shape)
+        elif len(input_shape) == 3:
+            input_shape = (1, *input_shape)
+        elif len(input_shape) != 4:
+            raise ValueError(
+                f"Invalid input shape: {input_shape}. Expected 2, 3, or 4 dimensions."
+            )
 
         self._input_shape = input_shape
         self._n_actions = n_actions
@@ -38,7 +45,7 @@ class DQN(nn.Module):
 
         # Convolutional layers
         self.conv = (
-            self._build_conv_layers(conv_layers, input_shape[0])
+            self._build_conv_layers(conv_layers, input_shape[1])
             if conv_layers
             else nn.Sequential()
         )
@@ -143,7 +150,7 @@ class DQN(nn.Module):
             int: Size of the flattened output tensor.
         """
         with torch.no_grad():
-            dummy_input = torch.zeros(1, *shape)
+            dummy_input = torch.zeros(*shape)
             output = self.conv(dummy_input)
         return output.numel()
 
