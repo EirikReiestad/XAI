@@ -1,2 +1,2 @@
 from .enums import MazeTileType
-from .generate_maze import GenerateMaze
+from .preprocess_state import preprocess_state

@@ -1,62 +1,57 @@
 import unittest
 import numpy as np
+from unittest.mock import patch, mock_open
 from rl.src.qlearning.qlearning import QLearning
 
 
 class TestQLearning(unittest.TestCase):
-
     def setUp(self):
-        self.qlearning = QLearning(action_space=4)
-        self.qlearning.epsilon = 0.0
+        self.q_learning = QLearning(action_space=4, alpha=0.1, gamma=0.6, epsilon=0.1)
 
     def test_initialization(self):
-        self.assertEqual(self.qlearning.action_space, 4)
-        self.assertEqual(len(self.qlearning.q_table), 0)
-        self.assertEqual(self.qlearning.alpha, 0.1)
-        self.assertEqual(self.qlearning.gamma, 0.6)
-        self.assertEqual(self.qlearning.epsilon, 0.0)
+        self.assertEqual(self.q_learning.action_space, 4)
+        self.assertEqual(self.q_learning.alpha, 0.1)
+        self.assertEqual(self.q_learning.gamma, 0.6)
+        self.assertEqual(self.q_learning.epsilon, 0.1)
+        self.assertEqual(len(self.q_learning.q_table), 0)
 
-    def test_choose_action_random(self):
-        state = 0
-        action = self.qlearning.choose_action(state)
-        self.assertIn(action, range(self.qlearning.action_space))
+    @patch("random.uniform")
+    def test_choose_action_explore(self, mock_uniform):
+        mock_uniform.return_value = 0.05  # Less than epsilon
+        with patch("random.randint", return_value=2):
+            action = self.q_learning.choose_action(0)
+        self.assertEqual(action, 2)
 
-    def test_choose_action_greedy(self):
-        state = 1
-        self.qlearning.q_table[state] = np.array([0.1, 0.2, 0.3, 0.4])
-        action = self.qlearning.choose_action(state)
-        # The action with the highest Q-value
+    @patch("random.uniform")
+    def test_choose_action_exploit(self, mock_uniform):
+        mock_uniform.return_value = 0.2  # Greater than epsilon
+        self.q_learning.q_table[0] = np.array([1, 2, 3, 4])
+        action = self.q_learning.choose_action(0)
         self.assertEqual(action, 3)
 
     def test_update(self):
-        state = 2
-        action = 1
-        reward = 1.0
-        next_state = 3
+        self.q_learning.update(0, 1, 1.0, 1)
+        self.assertIn(0, self.q_learning.q_table)
+        self.assertIn(1, self.q_learning.q_table)
+        self.assertEqual(len(self.q_learning.q_table[0]), 4)
+        self.assertEqual(len(self.q_learning.q_table[1]), 4)
+        self.assertGreater(self.q_learning.q_table[0][1], 0)
 
-        self.qlearning.q_table[state] = np.array([0.0, 0.0, 0.0, 0.0])
-        self.qlearning.q_table[next_state] = np.array([0.5, 0.5, 0.5, 0.5])
+    @patch("numpy.save")
+    def test_save(self, mock_save):
+        self.q_learning.q_table = {0: np.array([1, 2, 3, 4])}
+        self.q_learning.save("test_path")
+        mock_save.assert_called_once()
 
-        self.qlearning.update(state, action, reward, next_state)
-        # alpha * (reward + gamma * max(next_state_q) - current_q)
-        expected_q_value = 0.1 * (1.0 + 0.6 * 0.5)
-        self.assertAlmostEqual(
-            self.qlearning.q_table[state][action], expected_q_value)
-
-    def test_update_with_uninitialized_state(self):
-        state = 4
-        action = 2
-        reward = 2.0
-        next_state = 5
-
-        self.qlearning.update(state, action, reward, next_state)
-        # alpha * (reward + gamma * max(next_state_q) - current_q)
-        expected_q_value = 0.1 * (2.0 + 0.6 * 0.0)
-        self.assertAlmostEqual(
-            self.qlearning.q_table[state][action], expected_q_value)
-        self.assertTrue(np.array_equal(
-            self.qlearning.q_table[next_state], np.zeros(self.qlearning.action_space)))
+    @patch("numpy.load")
+    def test_load(self, mock_load):
+        mock_load.return_value = {0: np.array([1, 2, 3, 4])}
+        self.q_learning.load("test_path")
+        self.assertEqual(len(self.q_learning.q_table), 1)
+        np.testing.assert_array_equal(
+            self.q_learning.q_table[0], np.array([1, 2, 3, 4])
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -1,98 +1,142 @@
-""" DQN Module.
+"""DQN Module.
 
 This module contains the DQN agent that interacts with the environment.
 """
 
+import logging
+import math
 import os
+import random
+
+import numpy as np
 import torch
 import torch.nn as nn
-import torch.optim as optim
-import random
-import math
-import logging
+from torch.optim.adamw import AdamW
 
-from rl.src.dqn.replay_memory import ReplayMemory, Transition
-from rl.src.dqn.dueling_dqn import DuelingDQN
+from rl import settings
+from rl.src.common import ConvLayer
+from rl.src.dqn.dqn import DQN
+from rl.src.dqn.replay_memory import ReplayMemory
+from rl.src.dqn.utils import Transition
 from rl.src.hyperparameters.dqn_hyperparameter import DQNHyperparameter
 
 # if gpu is to be used
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
-class DQNModule():
-    global device
+class DQNModule:
+    """DQN Module for managing the agent, including training and evaluation."""
 
-    def __init__(self, observation_shape: tuple, n_actions: int, hidden_layers: [int] = [64], path: str = None,  seed: int = None):
+    def __init__(
+        self,
+        observation_shape: tuple,
+        n_actions: int,
+        hidden_layers: list[int] = [128, 128],
+        conv_layers: list[ConvLayer] | None = None,
+        path: str | None = None,
+        seed: int | None = None,
+    ) -> None:
+        """Initialize the DQN agent.
+
+        Args:
+            observation_shape (tuple[int, int, int]): Shape of the input observation.
+            n_actions (int): Number of actions in the environment.
+            hidden_layers (list[int]): Sizes of hidden layers.
+            conv_layers (list[ConvLayer] | None): Convolutional layer configurations.
+            path (str | None): Path to save/load the model.
+            seed (int | None): Random seed for reproducibility.
+        """
         if seed is not None:
             torch.manual_seed(seed)
+            random.seed(seed)
+            np.random.seed(seed)
 
         self.path = path
-
         self.n_actions = n_actions
         self.observation_shape = observation_shape
+        self.hp = DQNHyperparameter(
+            lr=settings.LR,
+            gamma=settings.GAMMA,
+            eps_start=settings.EPS_START,
+            eps_end=settings.EPS_END,
+            eps_decay=settings.EPS_DECAY,
+            batch_size=settings.BATCH_SIZE,
+            tau=settings.TAU,
+        )
 
-        if len(self.observation_shape) != 4:
-            logging.warning(
-                f"Using image as the input resulting in 4 dimensions (batch size, color channels, width, height), got {len(self.observation_shape)}")
-            raise ValueError(
-                f"Expected observation_shape to have length 3, but got {len(self.observation_shape)}")
+        self.policy_net, self.target_net = self._initialize_networks(
+            conv_layers, hidden_layers
+        )
+        self.optimizer = AdamW(
+            self.policy_net.parameters(), lr=self.hp.lr, amsgrad=True
+        )
+        self.memory = ReplayMemory(settings.REPLAY_MEMORY_SIZE)
 
-        self.hp = DQNHyperparameter()
-        if self.path is not None:
-            hyperparameter_path = self.path + '.hyper'
-            self.hp.load(hyperparameter_path)
-
-        self.policy_net = DuelingDQN(observation_shape, n_actions,
-                                     hidden_layers).to(device)
-        self.target_net = DuelingDQN(observation_shape, n_actions,
-                                     hidden_layers).to(device)
-
-        self.optimizer = optim.AdamW(
-            self.policy_net.parameters(), lr=self.hp.lr, amsgrad=True)
-        self.memory = ReplayMemory(64)
-
-        if self.path is not None and os.path.exists(self.path):
+        if self.path and os.path.exists(self.path):
             self.load()
 
         self.update_interval = 1
         self.step_count = 0
-
         self.steps_done = 0
 
-    # Called with either one element to determine next action, or a batch
-    # during optimization. Returns tensor([[left0exp,right0exp]...]).
+    def _initialize_networks(
+        self, conv_layers: list[ConvLayer] | None, hidden_layers: list[int]
+    ) -> tuple[nn.Module, nn.Module]:
+        """Initialize the policy and target networks.
 
-    def select_action(self, state: torch.Tensor) -> torch.Tensor:
-        """
-        Parameters:
-            state (torch.Tensor): The current state of the environment
+        Args:
+            conv_layers (list[ConvLayer] | None): Convolutional layer configurations.
+            hidden_layers (list[int]): Sizes of hidden layers.
 
         Returns:
-            torch.Tensor: The action to take in the environment
+            tuple[nn.Module, nn.Module]: Initialized policy and target networks.
         """
+        policy_net = DQN(
+            self.observation_shape,
+            self.n_actions,
+            hidden_layers,
+            conv_layers,
+            dueling=settings.DUELING_DQN,
+        ).to(device)
+        target_net = DQN(
+            self.observation_shape,
+            self.n_actions,
+            hidden_layers,
+            conv_layers,
+            dueling=settings.DUELING_DQN,
+        ).to(device)
+        target_net.load_state_dict(policy_net.state_dict())
+        return policy_net, target_net
 
+    def select_action(self, state: torch.Tensor) -> torch.Tensor:
+        """Select an action based on the current state using an epsilon-greedy policy.
+
+        Args:
+            state (torch.Tensor): The current state of the environment.
+
+        Returns:
+            torch.Tensor: The selected action.
+        """
         if state.shape != self.observation_shape:
             raise ValueError(
-                f"Expected state to have shape {self.observation_shape}, but got {state.shape}")
+                f"Expected state shape {self.observation_shape}, but got {state.shape}"
+            )
 
-        sample = random.random()
-        eps_threshold = self.hp.eps_end + \
-            (self.hp.eps_start - self.hp.eps_end) * \
-            math.exp(-1. * self.steps_done / self.hp.eps_decay)
+        eps_threshold = self.hp.eps_end + (
+            self.hp.eps_start - self.hp.eps_end
+        ) * math.exp(-self.steps_done / self.hp.eps_decay)
         self.steps_done += 1
-        if sample > eps_threshold:
-            with torch.no_grad():
-                # t.max(1) will return largest column value of each row.
-                # second column on max result is index of where max element was
-                # found, so we pick action with the larger expected reward.
-                return self.policy_net(state).max(1)[1].view(1, 1)
-        else:
-            return torch.tensor([[random.randrange(self.n_actions)]], device=device, dtype=torch.long)
 
-    def optimize_model(self):
-        """
-        This function samples a batch from the replay memory and performs a single optimization step
-        """
+        if random.random() > eps_threshold:
+            with torch.no_grad():
+                return self.policy_net(state).max(1).indices.view(1, 1)
+        else:
+            return torch.tensor(
+                [[random.randrange(self.n_actions)]], device=device, dtype=torch.long
+            )
+
+    def _optimize_model(self) -> None:
+        """Perform one optimization step on the policy network."""
         if len(self.memory) < self.hp.batch_size:
             return
 
@@ -101,154 +145,129 @@ class DQNModule():
             return
 
         transitions = self.memory.sample(self.hp.batch_size)
-        # Transpose the batch (see https://stackoverflow.com/a/19343/3343043 for
-        # detailed explanation). This converts batch-array of Transitions
-        # to Transition of batch-arrays.
         batch = Transition(*zip(*transitions))
 
-        # Compute a mask of non-final states and concatenate the batch elements
-        # (a final state would've been the one after which simulation ended)
-        non_final_mask = torch.tensor(tuple(
-            map(lambda s: s is not None, batch.next_state)), device=device, dtype=torch.bool)
+        non_final_mask = torch.tensor(
+            tuple(map(lambda s: s is not None, batch.next_state)),
+            device=device,
+            dtype=torch.bool,
+        )
         non_final_next_states = torch.cat(
-            [s for s in batch.next_state if s is not None])
+            [s for s in batch.next_state if s is not None]
+        )
 
-        # Concatenate states, actions, and rewards
-        state_batch = torch.cat([s for s in batch.state])
-        action_batch = torch.cat([a for a in batch.action])
-        reward_batch = torch.cat([r for r in batch.reward])
+        state_batch = torch.cat(batch.state)
+        action_batch = torch.cat(batch.action)
+        reward_batch = torch.cat(batch.reward)
 
-        # Compute Q(s_t, a) - the model computes Q(s_t), then we select the
-        # columns of actions taken. These are the actions which would've been taken
-        # for each batch state according to policy_net
-        state_action_values = self.policy_net(
-            state_batch).gather(1, action_batch)
-
-        # Compute V(s_{t+1}) for all next states.
-        # Expected values of actions for non_final_next_states are computed based
-        # on the "older" target_net; selecting their best reward with max(1).values
-        # This is merged based on the mask, such that we'll have either the expected
-        # state value or 0 in case the state was final.
+        state_action_values = self.policy_net(state_batch).gather(1, action_batch)
         next_state_values = torch.zeros(self.hp.batch_size, device=device)
 
-        # NOTE: Double DQN
-        with torch.no_grad():
-            next_actions = self.policy_net(non_final_next_states).max(1)[
-                1].unsqueeze(1)
-            next_state_values[non_final_mask] = self.target_net(
-                non_final_next_states).gather(1, next_actions).squeeze(1)
+        if settings.DOUBLE_DQN:
+            with torch.no_grad():
+                next_actions = (
+                    self.policy_net(non_final_next_states).max(1)[1].unsqueeze(1)
+                )
+                next_state_values[non_final_mask] = (
+                    self.target_net(non_final_next_states)
+                    .gather(1, next_actions)
+                    .squeeze(1)
+                )
+        else:
+            with torch.no_grad():
+                next_state_values[non_final_mask] = (
+                    self.target_net(non_final_next_states).max(1).values
+                )
 
-        # Compute the expected Q values
-        expected_state_action_values = (
-            next_state_values * self.hp.gamma) + reward_batch
+        expected_state_action_values = next_state_values * self.hp.gamma + reward_batch
 
-        # Compute Huber loss
         criterion = nn.SmoothL1Loss()
-        loss = criterion(state_action_values,
-                         expected_state_action_values.unsqueeze(1))
+        loss = criterion(state_action_values, expected_state_action_values.unsqueeze(1))
 
-        # Optimize the model
         self.optimizer.zero_grad()
         loss.backward()
-        # In-place gradient clipping
         torch.nn.utils.clip_grad_value_(self.policy_net.parameters(), 100)
         self.optimizer.step()
 
-        self.save()
+    def train(
+        self,
+        state: torch.Tensor,
+        action: torch.Tensor,
+        observation: torch.Tensor,
+        reward: float,
+        terminated: bool,
+        truncated: bool,
+    ) -> tuple[bool, torch.Tensor | None]:
+        """Store transition and optimize the model.
 
-    def train(self, state: torch.Tensor, action: torch.Tensor, observation: torch.Tensor, reward: float, terminated: bool, truncated: bool) -> (bool, torch.Tensor):
-        """
-        Parameters:
-            state (torch.Tensor): The current state of the environment
-            action (torch.Tensor): The action taken in the current state
-            observation (torch.Tensor): The observation from the environment
-            reward (float): The reward from the environment
-            terminated (bool): Whether the environment is terminated
-            truncated (bool): Whether the environment is truncated
+        Args:
+            state (torch.Tensor): Current state of the environment.
+            action (torch.Tensor): Action taken in the current state.
+            observation (torch.Tensor): Observation from the environment.
+            reward (float): Reward from the environment.
+            terminated (bool): Whether the environment is terminated.
+            truncated (bool): Whether the environment is truncated.
 
         Returns:
-            bool: Whether the environment is done
-            state (torch.Tensor): The next state of the environment
+            tuple[bool, torch.Tensor]: Whether the environment is done, and the next state.
         """
-
         if state.shape != self.observation_shape:
             raise ValueError(
-                f"Expected state to have shape {self.observation_shape}, but got {state.shape}")
+                f"Expected state shape {self.observation_shape}, but got {state.shape}"
+            )
 
         if observation.shape != self.observation_shape:
             raise ValueError(
-                f"Expected observation to have shape {self.observation_shape}, but got {observation.shape}")
+                f"Expected observation shape {self.observation_shape}, but got {observation.shape}"
+            )
 
-        reward = torch.tensor([reward], device=device)
+        reward_tensor = torch.tensor([reward], device=device, dtype=torch.float)
         done = terminated or truncated
+
+        next_state = observation.clone().detach()
+        if next_state is not None and next_state.shape != self.observation_shape:
+            raise ValueError(
+                f"Expected next_state shape {self.observation_shape}, but got {next_state.shape}"
+            )
 
         if terminated:
             next_state = None
-        else:
-            next_state = observation.clone().detach()
 
-        if next_state is not None and next_state.shape != self.observation_shape:
-            raise ValueError(
-                f"Expected next_state to have shape (1, {self.observation_shape}), but got {next_state.shape}")
+        self.memory.push(state, action, next_state, reward_tensor)
 
-        # Store the transition in memory
-        self.memory.push(state, action, next_state, reward)
+        self._optimize_model()
 
-        # Move to the next state
-        state = next_state
+        self._soft_update_target_net()
 
-        # Perform one step of the optimization (on the target network)
-        self.optimize_model()
+        return done, next_state
 
-        # Soft update of the target network's weights
-        # θ′ ← τ θ + (1 −τ )θ′
+    def _soft_update_target_net(self) -> None:
+        """Soft update the target network parameters."""
         target_net_state_dict = self.target_net.state_dict()
         policy_net_state_dict = self.policy_net.state_dict()
         for key in policy_net_state_dict:
-            target_net_state_dict[key] = policy_net_state_dict[key] * \
-                self.hp.tau + target_net_state_dict[key]*(1-self.hp.tau)
+            target_net_state_dict[key] = policy_net_state_dict[
+                key
+            ] * self.hp.tau + target_net_state_dict[key] * (1 - self.hp.tau)
         self.target_net.load_state_dict(target_net_state_dict)
 
-        return done, state
-
-    def save(self):
-        """
-        Save the model and memory to the specified path
-        Parameters:
-            path (str): The path to save the model and memory
-        """
-        self._save_model()
-
-    def _save_model(self):
-        """
-        Save the model to the specified path
-        Parameters:
-            path (str): The path to save the model
-        """
+    def save(self) -> None:
+        """Save the policy network to the specified path."""
+        if self.path is None:
+            raise ValueError("Model path is not specified")
         torch.save(self.policy_net.state_dict(), self.path)
 
-    def load(self):
-        """
-        Load the model and memory from the specified path
-        Parameters:
-            path (str): The path to load the model and memory
-        """
-        self._load_model(self.path)
+    def load(self) -> None:
+        """Load the policy network from the specified path."""
+        if self.path is None:
+            raise ValueError("Model path is not specified")
 
-    def _load_model(self):
-        """
-        Load the model from the specified path
-        Parameters:
-            path (str): The path to load the model
-        """
         if not os.path.exists(self.path):
             logging.warning(f"Model not found at {self.path}")
-            self.target_net.load_state_dict(
-                self.policy_net.state_dict())
+            self.target_net.load_state_dict(self.policy_net.state_dict())
+            return
 
-        self.policy_net.load_state_dict(
-            torch.load(self.path, weights_only=True))
-        self.target_net.load_state_dict(
-            torch.load(self.path, weights_only=True))
+        self.policy_net.load_state_dict(torch.load(self.path))
+        self.target_net.load_state_dict(self.policy_net.state_dict())
         self.policy_net.eval()
         self.target_net.eval()

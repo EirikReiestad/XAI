@@ -1,50 +1,94 @@
 from dataclasses import dataclass
+from typing import Tuple, Union
 
 
 @dataclass
 class Position:
-    x: float | int
-    y: float | int
+    x: Union[float, int]
+    y: Union[float, int]
 
-    def __init__(self, x_or_tuple, y=None):
-        if y is None:  # Assume x_or_tuple is a tuple like (x, y)
-            if not isinstance(x_or_tuple, tuple) or len(x_or_tuple) != 2:
+    def __init__(
+        self,
+        x_or_tuple: Union[
+            Tuple[Union[float, int], Union[float, int]], Union[float, int]
+        ],
+        y: Union[float, int] | None = None,
+    ):
+        """
+        Initialize a Position object. Can take either two separate coordinates or a tuple of coordinates.
+
+        Args:
+            x_or_tuple (Union[Tuple[Union[float, int], Union[float, int]], Union[float, int]]): X-coordinate or a tuple containing (x, y).
+            y (Union[float, int], optional): Y-coordinate if x_or_tuple is a single value.
+        """
+        if y is None:
+            if isinstance(x_or_tuple, tuple) and len(x_or_tuple) == 2:
+                x, y = x_or_tuple
+            else:
                 raise ValueError(
-                    "Position should be initialized with two numbers.")
-            x, y = x_or_tuple
+                    "When providing a single argument, it must be a tuple (x, y)."
+                )
         else:
             x = x_or_tuple
-
-        self.x = x
-        self.y = y
+        object.__setattr__(self, "x", x)
+        object.__setattr__(self, "y", y)
 
     def __post_init__(self):
         if not isinstance(self.x, (float, int)) or not isinstance(self.y, (float, int)):
-            raise ValueError(
-                "Position should be initialized with two numbers.")
+            raise ValueError("Coordinates must be either float or int.")
 
-    def __add__(self, other):
-        """Add a tuple(dx, dy) to the Position to move it."""
-        if not isinstance(other, tuple) or len(other) != 2:
-            raise ValueError(
-                "Addition should be performed with a tuple of length 2.")
+    def __add__(
+        self, other: Tuple[Union[float, int], Union[float, int]] | "Position"
+    ) -> "Position":
+        """
+        Add a tuple (dx, dy) to the Position to move it.
 
-        dx, dy = other
+        Args:
+            other (Tuple[Union[float, int], Union[float, int]]): The delta (dx, dy).
+
+        Returns:
+            Position: New Position after addition.
+        """
+        if isinstance(other, tuple):
+            dx, dy = other
+        elif isinstance(other, Position):
+            dx, dy = other.x, other.y
+
         return Position(self.x + dx, self.y + dy)
 
-    def __sub__(self, other):
-        """Subtract a tuple(dx, dy) from the Position to move it."""
-        if not isinstance(other, Position) and (not isinstance(other, tuple) or len(other) != 2):
-            raise ValueError(
-                "Subtraction should be performed with a tuple of length 2.")
+    def __sub__(
+        self, other: Union["Position", Tuple[Union[float, int], Union[float, int]]]
+    ) -> "Position":
+        """
+        Subtract a tuple (dx, dy) or another Position from the Position to move it.
+
+        Args:
+            other (Union[Position, Tuple[Union[float, int], Union[float, int]]]): The delta (dx, dy) or another Position.
+
+        Returns:
+            Position: New Position after subtraction.
+        """
         if isinstance(other, Position):
             dx, dy = other.x, other.y
-        else:
+            return Position(self.x - dx, self.y - dy)
+        elif isinstance(other, tuple) and len(other) == 2:
             dx, dy = other
-        return Position(self.x - dx, self.y - dy)
+            return Position(self.x - dx, self.y - dy)
 
-    def __len__(self):
+    def __len__(self) -> int:
+        """
+        Get the number of coordinates in the Position.
+
+        Returns:
+            int: Always returns 2.
+        """
         return 2
 
-    def to_tuple(self):
+    def to_tuple(self) -> Tuple[Union[float, int], Union[float, int]]:
+        """
+        Convert the Position to a tuple.
+
+        Returns:
+            Tuple[Union[float, int], Union[float, int]]: The (x, y) coordinates.
+        """
         return (self.x, self.y)
