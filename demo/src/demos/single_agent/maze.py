@@ -1,7 +1,6 @@
 import logging
 from itertools import count
 
-import gymnasium as gym
 import matplotlib
 import matplotlib.pyplot as plt
 import torch
@@ -12,12 +11,6 @@ from demo.src.plotters import Plotter
 from demo.src.wrappers import EnvironmentWrapper
 from rl.src.common import ConvLayer
 from rl.src.dqn.dqn_module import DQNModule
-
-# Register Gym environment
-gym.register(
-    id="Maze-v0",
-    entry_point="environments.gymnasium.envs.maze.maze:MazeEnv",
-)
 
 
 class Demo:
@@ -32,7 +25,7 @@ class Demo:
 
     def run(self):
         """Run the demo, interacting with the environment and training the DQN."""
-        env_wrapper = EnvironmentWrapper(env_id="Maze-v0")
+        env_wrapper = EnvironmentWrapper(env_id="MazeEnv-v0")
         state, info = env_wrapper.reset()
         n_actions = env_wrapper.action_space.n
         conv_layers = self._create_conv_layers(info)

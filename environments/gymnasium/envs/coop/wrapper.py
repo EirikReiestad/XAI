@@ -2,11 +2,11 @@ __credits__ = ["Eirik Reiestad"]
 
 import gymnasium as gym
 
-from environments.gymnasium.envs.maze import MazeEnv
+from environments.gymnasium.envs.coop import CoopEnv
 
 
-class MazeEnvWrapper(gym.Wrapper):
+class CoopEnvWrapper(gym.Wrapper):
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 50}
 
-    def __init__(self, env: MazeEnv, render_mode: str = "human"):
+    def __init__(self, env: CoopEnv, render_mode: str = "human"):
         super().__init__(env)

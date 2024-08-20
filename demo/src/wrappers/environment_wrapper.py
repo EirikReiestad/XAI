@@ -37,6 +37,7 @@ class EnvironmentWrapper:
 
     def concat_state(self, states: list[torch.Tensor]) -> torch.Tensor:
         """Return the concatenated state of the environment."""
+        print(self.env, hasattr(self.env, "_concat_state"))
         if hasattr(self.env, "_concat_state"):
             numpy_states = [state.numpy() for state in states]
             state = self.env._concat_state(numpy_states)

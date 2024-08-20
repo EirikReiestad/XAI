@@ -1,30 +1,31 @@
-"""Coop environment for reinforcement learning."""
+"""Maze environment for reinforcement learning."""
 
 __credits__ = ["Eirik Reiestad"]
 
-import os
 import logging
-from typing import Optional, Tuple, Dict, Any
+import os
+from typing import Any, Dict, Optional, Tuple
 
+import gymnasium as gym
 import numpy as np
 import pygame as pg
-import gymnasium as gym
 from gymnasium import spaces
 
-from environments.gymnasium.envs.coop.utils import MazeTileType as TileType
+from environments import settings
 from environments.gymnasium.utils import (
     Color,
-    Position,
-    generate_random_position,
     Direction,
+    Position,
+    State,
+    generate_random_position,
 )
-from environments import settings
-from environments.gymnasium.utils import State
+
+from .utils import MazeTileType as TileType
 
 logging.basicConfig(level=logging.INFO)
 
 
-class CoopyEnv(gym.Env):
+class CoopEnv(gym.Env):
     """
     A maze environment where the agent must reach a goal position.
 
@@ -48,10 +49,13 @@ class CoopyEnv(gym.Env):
         self.width = settings.MAZE_WIDTH
         self.max_steps = self.height * self.width
 
+        self.screen_width = settings.SCREEN_WIDTH
+        self.screen_height = settings.SCREEN_HEIGHT
+
         self._check_file_existence(
             "environments/gymnasium/data/maze/", settings.FILENAME
         )
-        self._init_render(render_mode if render_mode else "human")
+        self._init_render_mode(render_mode)
         self._init_states("environments/gymnasium/data/maze/" + settings.FILENAME)
         self._init_spaces()
 
@@ -65,7 +69,11 @@ class CoopyEnv(gym.Env):
         self.steps = 0
         self.steps_beyond_terminated = None
 
-    def step(self, action: int) -> Tuple[np.ndarray, int, bool, bool, Dict[str, Any]]:
+    def __post_init__(self):
+        """Post-initialization method."""
+        self._init_render()
+
+    def step(self, action: int) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
         """
         Takes a step in the environment.
 
@@ -75,7 +83,7 @@ class CoopyEnv(gym.Env):
         Returns:
             Tuple[np.ndarray, int, bool, bool, Dict[str, Any]]:
                 - np.ndarray: The new state of the environment.
-                - int: The reward for the action.
+                - float: The reward for the action.
                 - bool: Whether the episode is terminated.
                 - bool: Whether the episode is truncated.
                 - dict: Additional information.
@@ -127,6 +135,7 @@ class CoopyEnv(gym.Env):
                 - np.ndarray: The initial state of the environment.
                 - dict: Additional information about the state.
         """
+        super().reset(seed=seed)
         render_mode = options.get("render_mode") if options else None
         self.render_mode = render_mode or self.render_mode
 
@@ -166,6 +175,13 @@ class CoopyEnv(gym.Env):
         surf = pg.transform.scale(surf, (self.screen_width, self.screen_height))
         surf = pg.transform.flip(surf, True, False)
 
+        if (
+            not hasattr(self, "screen")
+            or hasattr(self, "surface")
+            or hasattr(self, "clock")
+        ):
+            return None
+
         if render_mode == "rgb_array":
             self.surface.blit(surf, (0, 0))
             return pg.surfarray.array3d(self.surface)
@@ -178,12 +194,12 @@ class CoopyEnv(gym.Env):
 
     def close(self):
         """Closes the environment and the rendering window."""
-        if self.screen:
+        if hasattr(self, "screen") and self.screen:
             pg.display.quit()
             pg.quit()
             self.is_open = False
 
-    def _get_reward(self, collided: bool) -> int:
+    def _get_reward(self, collided: bool) -> float:
         """
         Calculates the reward for the current state.
 
@@ -273,19 +289,24 @@ class CoopyEnv(gym.Env):
         else:
             raise ValueError(f"Invalid state type {settings.STATE_TYPE.value}")
 
-    def _init_render(self, render_mode: str):
-        """Initializes rendering settings."""
-        if render_mode not in self.metadata["render_modes"]:
-            raise ValueError(f"Invalid render mode {render_mode}")
-
+    def _init_render_mode(self, render_mode: Optional[str]):
+        """Initializes the render mode."""
+        if render_mode and render_mode not in self.metadata["render_modes"]:
+            raise ValueError(
+                f"Invalid render mode {render_mode}. "
+                f"Available modes: {self.metadata['render_modes']}"
+            )
         self.render_mode = render_mode
+
+    def _init_render(self):
+        """Initializes rendering settings."""
         self.screen_width = settings.SCREEN_WIDTH
         self.screen_height = settings.SCREEN_HEIGHT
 
         pg.init()
         pg.display.init()
-        self.screen = pg.display.set_mode((self.screen_width, self.screen_height))
         self.surface = pg.Surface((self.screen_width, self.screen_height))
+        self.screen = pg.display.set_mode((self.screen_width, self.screen_height))
         self.clock = pg.time.Clock()
         self.is_open = True
 
@@ -293,9 +314,9 @@ class CoopyEnv(gym.Env):
         """Updates the environment's state."""
         self.state.full = new_full_state
         self.state.partial = self._create_partial_state()
-        new_rgb_state = self.render("rgb_array")
-        if new_rgb_state is not None:
-            self.state.rgb = new_rgb_state
+        self.state.rgb = np.ndarray(
+            (settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT, 3), dtype=np.uint8
+        )
 
     def _create_partial_state(self) -> np.ndarray:
         """Creates the partial state representation."""
@@ -385,13 +406,9 @@ class CoopyEnv(gym.Env):
         Returns:
             np.ndarray: The RGB representation of the maze state.
         """
-        color_matrix = np.full((self.height, self.width, 3), Color.WHITE.value)
-        surf = pg.surfarray.make_surface(color_matrix)
-        surf = pg.transform.scale(surf, (self.screen_width, self.screen_height))
-        surf = pg.transform.flip(surf, True, False)
-        self.surface.blit(surf, (0, 0))
-        rgb_state = pg.surfarray.array3d(self.surface)
-        return rgb_state
+        return np.full(
+            (settings.SCREEN_HEIGHT, settings.SCREEN_WIDTH, 3), Color.WHITE.value
+        )
 
     def _validate_maze(self, maze: list[list[int]]):
         """Validates the maze file's content."""
@@ -406,7 +423,3 @@ class CoopyEnv(gym.Env):
             raise ValueError("The goal position is not set.")
         if np.all(flatten_maze != TileType.START.value):
             raise ValueError("The start position is not set.")
-
-    def _concat_state(self, states: list[np.ndarray]) -> np.ndarray:
-        """Concatenates the states of the environment."""
-        return np.concatenate(states)
