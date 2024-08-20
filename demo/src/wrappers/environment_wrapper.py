@@ -35,6 +35,17 @@ class EnvironmentWrapper:
         """Close the environment."""
         self.env.close()
 
+    def concat_state(self, states: list[torch.Tensor]) -> torch.Tensor:
+        """Return the concatenated state of the environment."""
+        if hasattr(self.env, "_concat_state"):
+            numpy_states = [state.numpy() for state in states]
+            state = self.env._concat_state(numpy_states)
+            return state
+        else:
+            raise AttributeError(
+                "The method '_concat_state' does not exist in the environment."
+            )
+
     @property
     def action_space(self) -> gym.spaces.Space:
         """Return the action space of the environment."""

@@ -1,18 +1,17 @@
 import logging
 from itertools import count
+
 import gymnasium as gym
 import matplotlib
 import matplotlib.pyplot as plt
-import numpy as np
 import torch
 
-from demo import settings
-from demo.src.common import EpisodeInformation, episode_information
-from environments.gymnasium.envs.maze.utils import preprocess_state
-from rl.src.common import ConvLayer
-from rl.src.dqn.dqn_module import DQNModule
+from demo import network, settings
+from demo.src.common import EpisodeInformation
 from demo.src.plotters import Plotter
 from demo.src.wrappers import EnvironmentWrapper
+from rl.src.common import ConvLayer
+from rl.src.dqn.dqn_module import DQNModule
 
 # Register Gym environment
 gym.register(
@@ -83,29 +82,7 @@ class Demo:
         """Create convolutional layers based on the state type."""
         state_type = info.get("state_type") if info else None
         if state_type in {"rgb", "full"}:
-            return [
-                ConvLayer(
-                    filters=32,
-                    kernel_size=2,
-                    strides=2,
-                    activation="relu",
-                    padding="same",
-                ),
-                ConvLayer(
-                    filters=32,
-                    kernel_size=2,
-                    strides=2,
-                    activation="relu",
-                    padding="same",
-                ),
-                ConvLayer(
-                    filters=32,
-                    kernel_size=2,
-                    strides=2,
-                    activation="relu",
-                    padding="same",
-                ),
-            ]
+            return network.CONV_LAYERS
         return []
 
 

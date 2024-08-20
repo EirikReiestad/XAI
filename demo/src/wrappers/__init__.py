@@ -1,2 +1,1 @@
 from .environment_wrapper import EnvironmentWrapper
-from .multi_agent_wrapper import MultiAgentWrapper

@@ -1,16 +1,18 @@
 import logging
 from itertools import count
+
 import gymnasium as gym
 import matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
 import torch
 
-from demo import settings
-from demo import network
+from demo import network, settings
+from demo.src.common.episode_information import EpisodeInformation
+from demo.src.plotters import Plotter
+from demo.src.wrappers import EnvironmentWrapper
 from rl.src.common import ConvLayer
 from rl.src.dqn.dqn_module import DQNModule
-from demo.src.plotters import Plotter
-from demo.src.wrappers import MultiAgentEnvironmentWrapper
 
 # Register Gym environment
 gym.register(
@@ -24,79 +26,99 @@ class Demo:
 
     def __init__(self):
         """Initialize the Demo class with settings and plotter."""
-        self.episode_information = EpisodeInformation(durations=[], rewards=[])
+        self.num_agents = 1
+
+        self.episode_information = [
+            EpisodeInformation(durations=[], rewards=[])
+        ] * self.num_agents
         self.plotter = Plotter()
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.is_ipython = "inline" in matplotlib.get_backend()
 
-        self.num_agents = 1
+        self.env_wrapper = EnvironmentWrapper(env_id="Coop-v0")
 
     def run(self):
         """Run the demo, interacting with the environment and training the DQN."""
-        env_wrapper = MultiAgentEnvironmentWrapper(env_id="Coop-v0")
-        state, info = env_wrapper.reset()
-        n_actions = env_wrapper.action_space.n
+        state, info = self.env_wrapper.reset()
+        n_actions = self.env_wrapper.action_space.n
         conv_layers = self._get_conv_layers(info)
 
         dqn = DQNModule(state.shape, n_actions, conv_layers=conv_layers)
-
-        dqns = [dqn] * self.num_agents
+        self.dqns = [dqn] * self.num_agents
 
         plt.ion()
 
         try:
             for i_episode in range(settings.NUM_EPISODES):
-                state, _ = env_wrapper.reset()
-                total_reward = 0
-
-                for t in count():
-                    if i_episode % settings.RENDER_EVERY == 0:
-                        env_wrapper.render()
-
-                    actions = [dqn.select_action(state) for dqn in dqns]
-
-                    observations, rewards, terminated, truncated = env_wrapper.step(
-                        actions.item()
-                    )
-
-                    reward = float(rewards)
-
-                    total_reward += reward
-
-                    dones, new_states = zip(
-                        *[
-                            dqn.train(
-                                state,
-                                action,
-                                observation,
-                                reward,
-                                terminated,
-                                truncated,
-                            )
-                            for dqn, action, observation, terminated, truncated in zip(
-                                dqns, actions, observations, terminated, truncated
-                            )
-                        ]
-                    )
-
-                    state = self._concatenate_states(new_states)
-
-                    done = any(dones)
-
-                    if done:
-                        self.episode_information.durations.append(t + 1)
-                        self.episode_information.rewards.append(total_reward)
-                        self.plotter.update(self.episode_information)
-                        break
-
+                self._run_episode(i_episode, state, info)
         except Exception as e:
             logging.exception(e)
         finally:
-            env_wrapper.close()
+            self.env_wrapper.close()
             logging.info("Complete")
-            self.plotter.update(self.episode_information, show_result=True)
+            self.plotter.update(self.episode_information[0], show_result=True)
             plt.ioff()
             plt.show()
+
+    def _run_episode(self, i_episode: int, state: torch.Tensor, info: dict):
+        """Handle the episode by interacting with the environment and training the DQN."""
+        state, _ = self.env_wrapper.reset()
+        total_rewards = np.zeros(self.num_agents)
+
+        dones = [False] * self.num_agents
+        new_states = []
+
+        for t in count():
+            if i_episode % settings.RENDER_EVERY == 0:
+                self.env_wrapper.render()
+
+            new_states, rewards, dones = self._run_step(state)
+
+            total_rewards += rewards
+
+            state = self.env_wrapper.concat_state(new_states)
+
+            done = any(dones)
+
+            if done:
+                for agent in range(self.num_agents):
+                    self.episode_information[agent].durations.append(t + 1)
+                    self.episode_information[agent].rewards.append(total_rewards[agent])
+                self.plotter.update(self.episode_information[0])
+                break
+
+    def _run_step(
+        self, state: torch.Tensor
+    ) -> tuple[list[torch.Tensor], list[float], list[bool]]:
+        """Run a step in the environment and train the DQN."""
+        total_reward = [0.0] * self.num_agents
+        new_states = [torch.empty(0)] * self.num_agents
+        dones = [False] * self.num_agents
+
+        for agent in range(self.num_agents):
+            action = self.dqns[agent].select_action(state)
+
+            observation, reward, terminated, truncated = self.env_wrapper.step(
+                action.item()
+            )
+
+            reward = float(reward)
+            total_reward[agent] += reward
+
+            done, new_state = self.dqns[agent].train(
+                state,
+                action,
+                observation,
+                reward,
+                terminated,
+                truncated,
+            )
+
+            if new_state is not None:
+                new_states[agent] = new_state
+            dones[agent] = done
+
+        return new_states, total_reward, dones
 
     def _concatenate_states(self, states):
         """Concatenate states from multiple agents into a single state."""
