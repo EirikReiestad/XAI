@@ -2,27 +2,27 @@ import enum
 
 
 @enum.unique
-class MazeTileType(enum.Enum):
+class TileType(enum.Enum):
     EMPTY = 0
     OBSTACLE = 1
-    START = 2
-    END = 3
+    AGENT0 = 2
+    AGENT1 = 3
 
     def __str__(self) -> str:
-        if self == MazeTileType.EMPTY:
+        if self == TileType.EMPTY:
             return "Empty"
-        if self == MazeTileType.OBSTACLE:
+        if self == TileType.OBSTACLE:
             return "Obstacle"
-        if self == MazeTileType.START:
-            return "Start"
-        if self == MazeTileType.END:
-            return "End"
+        if self == TileType.AGENT0:
+            return "Agent1"
+        if self == TileType.AGENT1:
+            return "Agent2"
         return "Unknown"
 
     def __add__(self, other):
-        new_value = (self.value + other) % len(MazeTileType)
-        return MazeTileType(new_value)
+        new_value = (self.value + other) % len(TileType)
+        return TileType(new_value)
 
     def __iadd__(self, other):
-        new_value = (self.value + other) % len(MazeTileType)
-        return MazeTileType(new_value)
+        new_value = (self.value + other) % len(TileType)
+        return TileType(new_value)

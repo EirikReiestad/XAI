@@ -58,6 +58,7 @@ class MazeEnv(gym.Env):
         self._init_render_mode(render_mode)
         self._init_states("environments/gymnasium/data/maze/" + settings.FILENAME)
         self._init_spaces()
+        self._init_render()
 
         self.rewards = {
             "goal": settings.GOAL_REWARD,
@@ -68,10 +69,6 @@ class MazeEnv(gym.Env):
 
         self.steps = 0
         self.steps_beyond_terminated = None
-
-    def __post_init__(self):
-        """Post-initialization method."""
-        self._init_render()
 
     def step(self, action: int) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
         """
@@ -175,13 +172,6 @@ class MazeEnv(gym.Env):
         surf = pg.transform.scale(surf, (self.screen_width, self.screen_height))
         surf = pg.transform.flip(surf, True, False)
 
-        if (
-            not hasattr(self, "screen")
-            or hasattr(self, "surface")
-            or hasattr(self, "clock")
-        ):
-            return None
-
         if render_mode == "rgb_array":
             self.surface.blit(surf, (0, 0))
             return pg.surfarray.array3d(self.surface)
@@ -190,7 +180,9 @@ class MazeEnv(gym.Env):
             pg.event.pump()
             self.clock.tick(self.metadata["render_fps"])
             pg.display.flip()
-        return None
+            return None
+        else:
+            raise ValueError(f"Invalid render mode {render_mode}")
 
     def close(self):
         """Closes the environment and the rendering window."""

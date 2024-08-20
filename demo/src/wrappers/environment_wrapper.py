@@ -4,7 +4,7 @@ import gymnasium as gym
 import torch
 from torch.types import Number
 
-from environments.gymnasium.envs.maze.utils import preprocess_state
+from environments.gymnasium.utils import preprocess_state
 
 
 class EnvironmentWrapper:
@@ -37,15 +37,10 @@ class EnvironmentWrapper:
 
     def concat_state(self, states: list[torch.Tensor]) -> torch.Tensor:
         """Return the concatenated state of the environment."""
-        print(self.env, hasattr(self.env, "_concat_state"))
-        if hasattr(self.env, "_concat_state"):
-            numpy_states = [state.numpy() for state in states]
-            state = self.env._concat_state(numpy_states)
-            return state
-        else:
-            raise AttributeError(
-                "The method '_concat_state' does not exist in the environment."
-            )
+        numpy_states = [state.numpy() for state in states]
+        state = self.env.unwrapped.concat_state(numpy_states)
+        tensor_state = torch.tensor(state)
+        return tensor_state
 
     @property
     def action_space(self) -> gym.spaces.Space:

@@ -17,12 +17,16 @@ from environments.gymnasium.utils import (
     Direction,
     Position,
     State,
-    generate_random_position,
 )
 
-from .utils import MazeTileType as TileType
+from .utils import TileType as TileType
 
 logging.basicConfig(level=logging.INFO)
+
+AGENT_TILE_TYPE = {
+    "agent0": TileType.AGENT0.value,
+    "agent1": TileType.AGENT1.value,
+}
 
 
 class CoopEnv(gym.Env):
@@ -58,6 +62,7 @@ class CoopEnv(gym.Env):
         self._init_render_mode(render_mode)
         self._init_states("environments/gymnasium/data/maze/" + settings.FILENAME)
         self._init_spaces()
+        self._init_render()
 
         self.rewards = {
             "goal": settings.GOAL_REWARD,
@@ -68,10 +73,6 @@ class CoopEnv(gym.Env):
 
         self.steps = 0
         self.steps_beyond_terminated = None
-
-    def __post_init__(self):
-        """Post-initialization method."""
-        self._init_render()
 
     def step(self, action: int) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
         """
@@ -96,7 +97,7 @@ class CoopEnv(gym.Env):
         if self.steps >= self.max_steps:
             return self.state.active_state, self.rewards["truncated"], True, True, {}
 
-        terminated = self.agent == self.goal
+        terminated = self.agents["agent0"] == self.agents["agent1"]
         collided = False
 
         if not terminated:
@@ -139,20 +140,25 @@ class CoopEnv(gym.Env):
         render_mode = options.get("render_mode") if options else None
         self.render_mode = render_mode or self.render_mode
 
-        self._set_initial_positions(options)
         self.steps = 0
+        self._set_initial_positions(options)
 
-        self.state.full[self.agent.y, self.agent.x] = TileType.EMPTY.value
-        self.state.full[self.goal.y, self.goal.x] = TileType.EMPTY.value
+        self.state.full[self.agents["agent0"].y, self.agents["agent0"].x] = (
+            TileType.EMPTY.value
+        )
+        self.state.full[self.agents["agent1"].y, self.agents["agent1"].x] = (
+            TileType.EMPTY.value
+        )
 
         self._clear_start_goal_positions()
 
-        self.state.full[self.init_agent.y, self.init_agent.x] = TileType.START.value
-        self.state.full[self.init_goal.y, self.init_goal.x] = TileType.END.value
+        self.state.full[self.init_agents["agent0"].y, self.init_agents["agent0"].x] = (
+            TileType.AGENT0.value
+        )
+        self.state.full[self.init_agents["agent1"].y, self.init_agents["agent1"].x] = (
+            TileType.AGENT1.value
+        )
         self.steps_beyond_terminated = None
-
-        if np.where(self.state.full == TileType.END.value)[0].size == 0:
-            raise ValueError("The goal position is not set.")
 
         return self.state.active_state, {"state_type": settings.STATE_TYPE.value}
 
@@ -199,6 +205,10 @@ class CoopEnv(gym.Env):
             pg.quit()
             self.is_open = False
 
+    def concat_state(self, states: list[np.ndarray]) -> np.ndarray:
+        """Concatenates states from multiple agents into a single state."""
+        return states[0]
+
     def _get_reward(self, collided: bool) -> float:
         """
         Calculates the reward for the current state.
@@ -209,32 +219,40 @@ class CoopEnv(gym.Env):
         Returns:
             int: The reward.
         """
-        if self.agent == self.goal:
+        if self.agents["agent0"] == self.agents["agent1"]:
             return self.rewards["goal"]
         elif collided:
             return self.rewards["terminated"]
         else:
             return self.rewards["move"]
 
-    def _move_agent(self, state: np.ndarray, action: int) -> Optional[np.ndarray]:
+    def _move_agent(
+        self, state: np.ndarray, action: int, agent: str
+    ) -> Optional[np.ndarray]:
         """
         Moves the agent in the maze based on the action.
 
         Parameters:
             state (np.ndarray): The current state of the maze.
             action (int): The action to take.
+            agent (str): The agent to move.
 
         Returns:
-            Optional[np.ndarray]: The new state of the maze, or None if the agent collided.
+            Optional[np.ndarray]: The new state of the env, or None if the agent collided.
         """
+        if agent not in self.agents:
+            raise ValueError(f"Agent {agent} not found.")
+
         new_state = state.copy()
-        new_agent = self.agent + Direction(action).to_tuple()
+        new_agent = self.agents[agent] + Direction(action).to_tuple()
         if self._is_within_bounds(new_agent) and self._is_not_obstacle(
             new_state, new_agent
         ):
-            new_state[self.agent.y, self.agent.x] = TileType.EMPTY.value
-            self.agent = new_agent
-            new_state[self.agent.y, self.agent.x] = TileType.START.value
+            new_state[self.agents[agent].y, self.agents[agent].x] = TileType.EMPTY.value
+            self.agents[agent] = new_agent
+            new_state[self.agents[agent].y, self.agents[agent].x] = AGENT_TILE_TYPE[
+                agent
+            ]
             return new_state
         return None
 
@@ -259,12 +277,14 @@ class CoopEnv(gym.Env):
             active=settings.STATE_TYPE,
         )
 
-        self.init_agent = Position(
-            tuple(np.argwhere(self.state.full == TileType.START.value)[0])
-        )
-        self.init_goal = Position(
-            tuple(np.argwhere(self.state.full == TileType.END.value)[0])
-        )
+        self.init_agents = {
+            "agent0": Position(
+                tuple(np.argwhere(self.state.full == AGENT_TILE_TYPE["agent0"])[0])
+            ),
+            "agent1": Position(
+                tuple(np.argwhere(self.state.full == AGENT_TILE_TYPE["agent1"])[0])
+            ),
+        }
 
     def _init_spaces(self):
         """Initializes the action and observation spaces."""
@@ -320,33 +340,21 @@ class CoopEnv(gym.Env):
 
     def _create_partial_state(self) -> np.ndarray:
         """Creates the partial state representation."""
-        agent_position = [self.agent.y, self.agent.x]
-        goal_position = [self.goal.y, self.goal.x]
+        agent0_position = self.agents["agent0"].to_tuple()
+        agent1_position = self.agents["agent1"].to_tuple()
 
-        goal_distance = self.goal - self.agent
-        goal_direction = [goal_distance.y, goal_distance.x]
+        agent_distance = agent0_position - agent1_position
 
-        distance = np.linalg.norm(goal_direction)
+        distance = np.linalg.norm(agent_distance)
         distance_normalized = np.clip(
             distance / np.sqrt(self.height**2 + self.width**2) * 255, 0, 255
         )
 
-        direction_offset = 128
-        direction_normalized = np.clip(
-            [
-                (val / np.sqrt(self.height**2 + self.width**2)) * 127 + direction_offset
-                for val in goal_direction
-            ],
-            0,
-            255,
-        )
-
         return np.array(
             [
-                *agent_position,
-                *goal_position,
+                *agent0_position,
+                *agent1_position,
                 int(distance_normalized),
-                *map(int, direction_normalized),
             ],
             dtype=np.uint8,
         )
@@ -360,36 +368,26 @@ class CoopEnv(gym.Env):
 
     def _set_initial_positions(self, options: Optional[Dict[str, Any]]):
         """Sets the initial positions of the agent and goal."""
-        if options and "start" in options:
-            self.agent = Position(options["start"])
-            self.goal = Position(
-                options.get(
-                    "goal",
-                    generate_random_position(self.width, self.height, [self.agent]),
-                )
-            )
-        else:
-            self.agent = self.init_agent
-            self.goal = (
-                self.init_goal
-                if options is None or "goal" not in options
-                else Position(options["goal"])
-            )
+        if options and "agent0" in options:
+            self.agents = {}
+            if "agent1" not in options:
+                raise ValueError("The second agent's position is not set.")
+            self.agents["agent0"] = Position(options["agent0"])
 
     def _clear_start_goal_positions(self):
         """Clears the start and goal positions from the maze."""
-        self.state.full[np.argwhere(self.state.full == TileType.START.value)] = (
+        self.state.full[np.argwhere(self.state.full == TileType.AGENT0.value)] = (
             TileType.EMPTY.value
         )
-        self.state.full[np.argwhere(self.state.full == TileType.END.value)] = (
+        self.state.full[np.argwhere(self.state.full == TileType.AGENT1.value)] = (
             TileType.EMPTY.value
         )
 
     def _apply_color_masks(self, color_matrix: np.ndarray):
         """Applies color masks to the maze."""
         color_matrix[self.state.full == TileType.OBSTACLE.value] = Color.BLACK.value
-        color_matrix[self.state.full == TileType.START.value] = Color.BLUE.value
-        color_matrix[self.state.full == TileType.END.value] = Color.GREEN.value
+        color_matrix[self.state.full == TileType.AGENT0.value] = Color.BLUE.value
+        color_matrix[self.state.full == TileType.AGENT1.value] = Color.GREEN.value
 
     def _is_within_bounds(self, position: Position) -> bool:
         """Checks if the position is within maze bounds."""
@@ -419,7 +417,7 @@ class CoopEnv(gym.Env):
                 f"Invalid maze size. Expected {self.height}x{self.width}, got {len(maze)}x{len(maze[0])}"
             )
         flatten_maze = np.array(maze).flatten()
-        if np.all(flatten_maze != TileType.END.value):
-            raise ValueError("The goal position is not set.")
-        if np.all(flatten_maze != TileType.START.value):
-            raise ValueError("The start position is not set.")
+        if np.all(flatten_maze != TileType.AGENT0.value):
+            raise ValueError("The agent0 position is not set.")
+        if np.all(flatten_maze != TileType.AGENT1.value):
+            raise ValueError("The agent1 position is not set.")
