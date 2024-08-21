@@ -73,13 +73,9 @@ class Demo:
                 self.env_wrapper.render()
 
             new_states, rewards, dones = self._run_step(state)
-
             total_rewards += rewards
-
             state = self.env_wrapper.concat_state(new_states)
-
             done = any(dones)
-
             if done:
                 for agent in range(self.num_agents):
                     self.episode_information[agent].durations.append(t + 1)
