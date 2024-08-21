@@ -26,7 +26,9 @@ class Demo:
 
     def __init__(self):
         """Initialize the Demo class with settings and plotter."""
-        self.num_agents = 1
+        self.env_wrapper = EnvironmentWrapper(env_id="Coop-v0")
+
+        self.num_agents = self.env_wrapper.env.num_agents
 
         self.episode_information = [
             EpisodeInformation(durations=[], rewards=[])
@@ -34,8 +36,6 @@ class Demo:
         self.plotter = Plotter()
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.is_ipython = "inline" in matplotlib.get_backend()
-
-        self.env_wrapper = EnvironmentWrapper(env_id="Coop-v0")
 
     def run(self):
         """Run the demo, interacting with the environment and training the DQN."""

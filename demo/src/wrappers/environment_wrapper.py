@@ -42,6 +42,10 @@ class EnvironmentWrapper:
         tensor_state = torch.tensor(state)
         return tensor_state
 
+    def num_agents(self) -> int:
+        """Return the number of agents in the environment."""
+        return self.env.num_agents
+
     @property
     def action_space(self) -> gym.spaces.Space:
         """Return the action space of the environment."""

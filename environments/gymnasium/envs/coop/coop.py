@@ -439,3 +439,8 @@ class CoopEnv(gym.Env):
             raise ValueError("The agent0 position is not set.")
         if np.all(flatten_maze != TileType.AGENT1.value):
             raise ValueError("The agent1 position is not set.")
+
+    @property
+    def num_agents(self) -> int:
+        """Returns the number of agents in the environment."""
+        return 2
