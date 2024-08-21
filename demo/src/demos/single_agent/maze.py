@@ -43,7 +43,7 @@ class Demo:
                         env_wrapper.render()
 
                     action = dqn.select_action(state)
-                    observation, reward, terminated, truncated = env_wrapper.step(
+                    observation, reward, terminated, truncated, _ = env_wrapper.step(
                         action.item()
                     )
                     reward = float(reward)

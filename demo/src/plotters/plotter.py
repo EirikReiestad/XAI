@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import torch
 from IPython import display
-
 from demo.src.common import EpisodeInformation
 
 
@@ -13,15 +12,33 @@ class Plotter:
         self.ax2 = self.ax1.twinx()
         self.is_ipython = "inline" in plt.get_backend()
 
-    def update(self, episode_information: EpisodeInformation, show_result=False):
-        """Update the plot with the latest data."""
+    def update(
+        self,
+        episodes_information: list[EpisodeInformation] | EpisodeInformation,
+        labels: list[str] | str = [],
+        show_result=False,
+    ):
+        """Update the plot with data from multiple episodes."""
+        self.ax1.clear()
+
+        if isinstance(episodes_information, EpisodeInformation):
+            episodes_information = [episodes_information]
+
         self.ax1.clear()
         self.ax2.clear()
 
-        durations_t = torch.tensor(episode_information.durations, dtype=torch.float)
-        rewards_t = torch.tensor(episode_information.rewards, dtype=torch.float)
+        if len(labels) == 0:
+            labels = [f"Agent {i}" for i in range(len(episodes_information))]
 
-        self._plot_metrics(durations_t, rewards_t)
+        colors = plt.cm.get_cmap("tab10", len(episodes_information))
+
+        self._set_axis()
+
+        for i, episode_info in enumerate(episodes_information):
+            durations_t = torch.tensor(episode_info.durations, dtype=torch.float)
+            rewards_t = torch.tensor(episode_info.rewards, dtype=torch.float)
+            self._plot_metrics(durations_t, rewards_t, label=labels[i], color=colors(i))
+
         self.fig.tight_layout()
         plt.pause(0.001)
 
@@ -32,23 +49,42 @@ class Plotter:
             else:
                 display.display(self.fig)
 
-    def _plot_metrics(self, durations_t: torch.Tensor, rewards_t: torch.Tensor):
-        """Plot metrics such as duration and rewards."""
+    def _set_axis(self):
         self.ax1.set_xlabel("Episode")
-        self.ax1.set_ylabel("Duration", color="tab:orange")
-        self.ax1.tick_params(axis="y", labelcolor="tab:orange")
+        self.ax1.set_ylabel("Duration")
+        self.ax1.tick_params(axis="y")
 
+        self.ax2.set_ylabel("Rewards")
+        self.ax2.yaxis.set_label_position("right")
+        self.ax2.tick_params(axis="y")
+
+    def _plot_metrics(
+        self,
+        durations_t: torch.Tensor,
+        rewards_t: torch.Tensor,
+        label: str,
+        color,
+    ):
+        """Plot metrics such as duration and rewards."""
         duration_means = self._moving_average(durations_t)
         rewards_means = self._moving_average(rewards_t)
 
-        self.ax2.set_ylabel("Rewards", color="tab:cyan")
-        self.ax2.yaxis.set_label_position("right")
-        self.ax2.tick_params(axis="y", labelcolor="tab:cyan")
-
-        self.ax1.plot(durations_t.numpy(), color="tab:orange", alpha=0.3)
-        self.ax1.plot(duration_means.numpy(), color="tab:orange")
-        self.ax2.plot(rewards_t.numpy(), color="tab:cyan", alpha=0.3)
-        self.ax2.plot(rewards_means.numpy(), color="tab:cyan")
+        self.ax1.plot(
+            durations_t.numpy(), color="orange", alpha=0.3, label=f"{label} Duration"
+        )
+        self.ax1.plot(
+            duration_means.numpy(),
+            color="orange",
+        )
+        self.ax1.legend(loc="upper left")
+        self.ax2.plot(
+            rewards_t.numpy(),
+            color=color,
+            alpha=0.3,
+            label=f"{label} Rewards",
+        )
+        self.ax2.plot(rewards_means.numpy(), color=color)
+        self.ax2.legend(loc="upper right")
 
     @staticmethod
     def _moving_average(tensor: torch.Tensor, window_size: int = 100):

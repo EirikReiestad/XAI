@@ -10,5 +10,4 @@ gym.register(
 gym.register(
     id="CoopEnv-v0",
     entry_point="environments.gymnasium.envs.coop.coop:CoopEnv",
-    kwargs={"env": CoopEnv()},
 )

@@ -1,5 +1,6 @@
 import logging
 from itertools import count
+from time import sleep
 
 import gymnasium as gym
 import matplotlib
@@ -22,17 +23,18 @@ gym.register(
 
 
 class Demo:
-    """Class for running the Maze demo with DQN and plotting results."""
+    """Class for running the Coop demo with DQN and plotting results."""
 
     def __init__(self):
         """Initialize the Demo class with settings and plotter."""
         self.env_wrapper = EnvironmentWrapper(env_id="Coop-v0")
 
-        self.num_agents = self.env_wrapper.env.num_agents
+        self.num_agents = self.env_wrapper.num_agents
 
-        self.episode_information = [
-            EpisodeInformation(durations=[], rewards=[])
-        ] * self.num_agents
+        self.episode_informations = []
+        for _ in range(self.num_agents):
+            self.episode_informations.append(EpisodeInformation([], []))
+
         self.plotter = Plotter()
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.is_ipython = "inline" in matplotlib.get_backend()
@@ -56,7 +58,7 @@ class Demo:
         finally:
             self.env_wrapper.close()
             logging.info("Complete")
-            self.plotter.update(self.episode_information[0], show_result=True)
+            self.plotter.update(self.episode_informations, show_result=True)
             plt.ioff()
             plt.show()
 
@@ -66,37 +68,52 @@ class Demo:
         total_rewards = np.zeros(self.num_agents)
 
         dones = [False] * self.num_agents
-        new_states = []
 
         for t in count():
             if i_episode % settings.RENDER_EVERY == 0:
                 self.env_wrapper.render()
 
-            new_states, rewards, dones = self._run_step(state)
+            _, rewards, dones, full_states = self._run_step(state)
             total_rewards += rewards
-            state = self.env_wrapper.concat_state(new_states)
+
             done = any(dones)
+            if not done:
+                full_state, reward, done = self.env_wrapper.concat_state(full_states)
+                state = self.env_wrapper.update_state(full_state[0].numpy())
+                for agent in range(self.num_agents):
+                    total_rewards[agent] += reward
+
             if done:
                 for agent in range(self.num_agents):
-                    self.episode_information[agent].durations.append(t + 1)
-                    self.episode_information[agent].rewards.append(total_rewards[agent])
-                self.plotter.update(self.episode_information[0])
+                    self.episode_informations[agent].durations.append(t + 1)
+                    self.episode_informations[agent].rewards.append(
+                        total_rewards[agent]
+                    )
+                self.plotter.update(self.episode_informations)
                 break
 
     def _run_step(
         self, state: torch.Tensor
-    ) -> tuple[list[torch.Tensor], list[float], list[bool]]:
+    ) -> tuple[list[torch.Tensor], list[float], list[bool], list[np.ndarray]]:
         """Run a step in the environment and train the DQN."""
         total_reward = [0.0] * self.num_agents
         new_states = [torch.empty(0)] * self.num_agents
+        full_states = []
         dones = [False] * self.num_agents
 
         for agent in range(self.num_agents):
             action = self.dqns[agent].select_action(state)
 
-            observation, reward, terminated, truncated = self.env_wrapper.step(
+            self.env_wrapper.set_active_agent(agent)
+            observation, reward, terminated, truncated, info = self.env_wrapper.step(
                 action.item()
             )
+
+            full_state = info.get("full_state")
+            if full_state is None:
+                raise ValueError("Full state must be returned from the environment.")
+
+            full_states.append(full_state)
 
             reward = float(reward)
             total_reward[agent] += reward
@@ -114,11 +131,10 @@ class Demo:
                 new_states[agent] = new_state
             dones[agent] = done
 
-        return new_states, total_reward, dones
+        if any(new_state is None for new_state in new_states):
+            raise ValueError("New state must be returned from the DQN.")
 
-    def _concatenate_states(self, states):
-        """Concatenate states from multiple agents into a single state."""
-        return torch.cat(states, dim=1)
+        return new_states, total_reward, dones, full_states
 
     def _get_conv_layers(self, info) -> list[ConvLayer]:
         """Create convolutional layers based on the state type."""
