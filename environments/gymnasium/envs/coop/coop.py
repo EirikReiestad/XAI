@@ -1,7 +1,6 @@
 """Maze environment for reinforcement learning."""
 
 __credits__ = ["Eirik Reiestad"]
-
 import logging
 import os
 from typing import Any, Dict, Optional, Tuple
@@ -61,7 +60,6 @@ class CoopEnv(gym.Env):
         self._init_render_mode(render_mode)
         self._init_states("environments/gymnasium/data/maze/" + settings.FILENAME)
         self._init_spaces()
-        self._init_render()
 
         self.rewards = {
             "goal": settings.GOAL_REWARD,
@@ -72,6 +70,12 @@ class CoopEnv(gym.Env):
 
         self.steps = 0
         self.steps_beyond_terminated = None
+
+        self.__post_init__()
+
+    def __post_init__(self):
+        """Post-initialization steps."""
+        self.post_init = False
 
     def step(self, action: int) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
         """
@@ -135,6 +139,10 @@ class CoopEnv(gym.Env):
                 - np.ndarray: The initial state of the environment.
                 - dict: Additional information about the state.
         """
+        if not self.post_init:
+            self._init_render()
+            self.post_init = True
+
         super().reset(seed=seed)
         render_mode = options.get("render_mode") if options else None
         self.render_mode = render_mode or self.render_mode
@@ -327,8 +335,8 @@ class CoopEnv(gym.Env):
 
         pg.init()
         pg.display.init()
-        self.surface = pg.Surface((self.screen_width, self.screen_height))
         self.screen = pg.display.set_mode((self.screen_width, self.screen_height))
+        self.surface = pg.Surface((self.screen_width, self.screen_height))
         self.clock = pg.time.Clock()
         self.is_open = True
 
@@ -375,6 +383,12 @@ class CoopEnv(gym.Env):
             self.agents = Agents(
                 agent0=Agent(Position(options["agent0"])),
                 agent1=Agent(Position(options["agent1"])),
+                active_agent=AgentType.AGENT0,
+            )
+        else:
+            self.agents = Agents(
+                agent0=Agent(self.init_agents.agent0.position),
+                agent1=Agent(self.init_agents.agent1.position),
                 active_agent=AgentType.AGENT0,
             )
 
