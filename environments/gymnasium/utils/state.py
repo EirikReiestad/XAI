@@ -1,8 +1,6 @@
 from dataclasses import dataclass
-
 import numpy as np
-
-from environments.gymnasium.utils import StateType
+from environments.gymnasium.utils.state_type import StateType
 
 
 @dataclass

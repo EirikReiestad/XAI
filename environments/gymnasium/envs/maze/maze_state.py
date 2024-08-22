@@ -13,7 +13,6 @@ class MazeState:
     def __init__(self, height: int, width: int, filename: str):
         self.height = height
         self.width = width
-        self.init_full_state = None
         self.init_states(filename)
 
     def init_states(self, filename: str):
@@ -31,15 +30,30 @@ class MazeState:
             active=settings.STATE_TYPE,
         )
 
-    def update(self, new_full_state: np.ndarray):
-        self.state.full = new_full_state
-        self.state.partial = self._create_partial_state(full_state=new_full_state)
+    def reset(self):
+        self.state.full = self.init_full_state
+        agent_position = FullStateDataExtractor.get_agent_position(self.init_full_state)
+        goal_position = FullStateDataExtractor.get_goal_position(self.init_full_state)
+        self.state.partial = self._create_partial_state(
+            agent_position=agent_position, goal_position=goal_position
+        )
         self.state.rgb = self._create_rgb_state()
 
-    def _create_partial_state(self, full_state: np.ndarray) -> np.ndarray:
-        agent_position = FullStateDataExtractor.get_agent_position(full_state)
-        goal_position = FullStateDataExtractor.get_goal_position(full_state)
+    def update(
+        self,
+        new_full_state: np.ndarray,
+        agent_position: Position,
+        goal_position: Position,
+    ):
+        self.state.full = new_full_state
+        self.state.partial = self._create_partial_state(
+            agent_position=agent_position, goal_position=goal_position
+        )
+        self.state.rgb = self._create_rgb_state()
 
+    def _create_partial_state(
+        self, agent_position: Position, goal_position: Position
+    ) -> np.ndarray:
         goal_distance = goal_position - agent_position
         goal_direction = [goal_distance.x, goal_distance.y]
 

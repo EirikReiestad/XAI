@@ -27,6 +27,8 @@ logging.basicConfig(level=logging.INFO)
 
 
 class MazeEnv(gym.Env):
+    metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 50}
+
     def __init__(self, render_mode: Optional[str] = "human"):
         self.height = settings.ENV_HEIGHT
         self.width = settings.ENV_WIDTH
@@ -72,7 +74,7 @@ class MazeEnv(gym.Env):
             new_full_state = self._move_agent(self.state.full, action)
             collided = new_full_state is None
             if not collided and new_full_state is not None:
-                self.state.update(new_full_state)
+                self.state.update(new_full_state, self.agent, self.goal)
             terminated = collided or terminated
         elif self.steps_beyond_terminated is None:
             self.steps_beyond_terminated = 0
@@ -97,6 +99,7 @@ class MazeEnv(gym.Env):
         self.render_mode = render_mode or self.render_mode
 
         self._set_initial_positions(options)
+        self.state.reset()
 
         self.steps = 0
         self.steps_beyond_terminated = None
