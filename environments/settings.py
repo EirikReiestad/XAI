@@ -12,7 +12,7 @@ TRUNCATED_REWARD = -1
 
 # Screen settings
 SCREEN_WIDTH = 600
-SCREEN_HEIGHT = 400
+SCREEN_HEIGHT = 600
 
 # Path: environments
 FILENAME = "maze-0-10-10.txt"

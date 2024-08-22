@@ -10,6 +10,7 @@ import gymnasium as gym
 import numpy as np
 import pygame as pg
 from gymnasium import spaces
+from pygame.surfarray import array3d
 
 from environments import settings
 from environments.gymnasium.utils import (
@@ -139,13 +140,8 @@ class MazeEnv(gym.Env):
         self._set_initial_positions(options)
         self.steps = 0
 
-        self.state.full[self.agent.y, self.agent.x] = TileType.EMPTY.value
-        self.state.full[self.goal.y, self.goal.x] = TileType.EMPTY.value
+        self._init_states()
 
-        self._clear_start_goal_positions()
-
-        self.state.full[self.init_agent.y, self.init_agent.x] = TileType.START.value
-        self.state.full[self.init_goal.y, self.init_goal.x] = TileType.END.value
         self.steps_beyond_terminated = None
 
         if np.where(self.state.full == TileType.END.value)[0].size == 0:
@@ -169,12 +165,14 @@ class MazeEnv(gym.Env):
         self._apply_color_masks(color_matrix)
 
         surf = pg.surfarray.make_surface(color_matrix)
-        surf = pg.transform.scale(surf, (self.screen_width, self.screen_height))
+        surf = pg.transform.scale(surf, (self.screen_height, self.screen_width))
         surf = pg.transform.flip(surf, True, False)
+        surf = pg.transform.rotate(surf, 90)
 
         if render_mode == "rgb_array":
             self.surface.blit(surf, (0, 0))
-            return pg.surfarray.array3d(self.surface)
+            surf_array3d = pg.surfarray.array3d(self.surface)
+            return surf_array3d
         elif render_mode == "human":
             self.screen.blit(surf, (0, 0))
             pg.event.pump()
@@ -224,23 +222,28 @@ class MazeEnv(gym.Env):
         if self._is_within_bounds(new_agent) and self._is_not_obstacle(
             new_state, new_agent
         ):
-            new_state[self.agent.y, self.agent.x] = TileType.EMPTY.value
+            new_state[self.agent.x, self.agent.y] = TileType.EMPTY.value
             self.agent = new_agent
-            new_state[self.agent.y, self.agent.x] = TileType.START.value
+            new_state[self.agent.x, self.agent.y] = TileType.START.value
             return new_state
         return None
 
-    def _init_states(self, filename: str):
+    def _init_states(self, filename: str | None = None):
         """Initializes the maze states from the given file."""
-        if not os.path.exists(filename):
-            logging.info(f"Current working directory: {os.getcwd()}")
-            raise FileNotFoundError(f"File {filename} does not exist.")
+        if not hasattr(self, "init_full_state") or self.init_full_state is None:
+            if filename is None:
+                raise ValueError("The maze file should be provided.")
+            if not os.path.exists(filename):
+                logging.info(f"Current working directory: {os.getcwd()}")
+                raise FileNotFoundError(f"File {filename} does not exist.")
 
-        with open(filename, "r") as f:
-            maze = [list(map(int, list(row.strip()))) for row in f.readlines()]
-            self._validate_maze(maze)
+            with open(filename, "r") as f:
+                maze = [list(map(int, list(row.strip()))) for row in f.readlines()]
+                self._validate_maze(maze)
 
-        full_state = np.array(maze, dtype=np.uint8)
+            self.init_full_state = np.array(maze, dtype=np.uint8)
+
+        full_state = self.init_full_state
         partial_state = np.ndarray((7,), dtype=np.uint8)
         rgb_state = self._create_rgb_state()
 
@@ -254,6 +257,7 @@ class MazeEnv(gym.Env):
         self.init_agent = Position(
             tuple(np.argwhere(self.state.full == TileType.START.value)[0])
         )
+
         self.init_goal = Position(
             tuple(np.argwhere(self.state.full == TileType.END.value)[0])
         )
@@ -389,7 +393,7 @@ class MazeEnv(gym.Env):
 
     def _is_not_obstacle(self, state: np.ndarray, position: Position) -> bool:
         """Checks if the position is not an obstacle."""
-        return state[int(position.y), int(position.x)] != TileType.OBSTACLE.value
+        return state[int(position.x), int(position.y)] != TileType.OBSTACLE.value
 
     def _create_rgb_state(self) -> np.ndarray:
         """
