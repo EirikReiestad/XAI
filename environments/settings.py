@@ -1,8 +1,8 @@
 from environments.gymnasium.utils.enums import StateType
 
-# Maze settings
-MAZE_HEIGHT = 10
-MAZE_WIDTH = 10
+# Env settings
+ENV_HEIGHT = 10
+ENV_WIDTH = 10
 
 # Reward settings
 GOAL_REWARD = 10

@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from environments.gymnasium.utils.enums import StateType
+from environments.gymnasium.utils import StateType
 
 
 @dataclass

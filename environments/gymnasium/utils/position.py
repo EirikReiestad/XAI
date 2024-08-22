@@ -9,9 +9,7 @@ class Position:
 
     def __init__(
         self,
-        x_or_tuple: Union[
-            Tuple[Union[float, int], Union[float, int]], Union[float, int]
-        ],
+        x: Union[Tuple[Union[float, int], Union[float, int]], Union[float, int]],
         y: Union[float, int] | None = None,
     ):
         """
@@ -22,14 +20,12 @@ class Position:
             y (Union[float, int], optional): Y-coordinate if x_or_tuple is a single value.
         """
         if y is None:
-            if isinstance(x_or_tuple, tuple) and len(x_or_tuple) == 2:
-                x, y = x_or_tuple
+            if isinstance(x, tuple) and len(x) == 2:
+                x, y = x
             else:
                 raise ValueError(
                     "When providing a single argument, it must be a tuple (x, y)."
                 )
-        else:
-            x = x_or_tuple
         object.__setattr__(self, "x", x)
         object.__setattr__(self, "y", y)
 
@@ -83,6 +79,15 @@ class Position:
             int: Always returns 2.
         """
         return 2
+
+    def __iter__(self):
+        """
+        Iterate over the coordinates.
+        Yields:
+            Union[float, int]: The x and y coordinates.
+        """
+        yield self.x
+        yield self.y
 
     def to_tuple(self) -> Tuple[Union[float, int], Union[float, int]]:
         """
