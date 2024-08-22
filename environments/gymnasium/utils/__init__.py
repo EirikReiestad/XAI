@@ -1,14 +1,19 @@
-from .enums import Color, Direction
+from .color import Color
+from .direction import Direction
+from .file_handler import FileHandler
 from .position import Position
-from .utils import generate_random_position
-from .state import State
+from .position_generator import generate_random_position
 from .preprocess_state import preprocess_state
+from .state import State
+from .state_type import StateType
 
 __all__ = [
     "Color",
     "Direction",
+    "FileHandler",
     "Position",
-    "State",
     "generate_random_position",
     "preprocess_state",
+    "State",
+    "StateType",
 ]
