@@ -34,7 +34,8 @@ class MazeEnv(gym.Env):
         self.width = settings.ENV_WIDTH
         self.max_steps = self.height * self.width
 
-        FileHandler.file_exist("environments/gymnasium/data/maze/", settings.FILENAME)
+        folder_name = "environments/gymnasium/data/maze/"
+        FileHandler.file_exist(folder_name, settings.FILENAME)
 
         self.maze_renderer = MazeRenderer(
             settings.ENV_HEIGHT,
@@ -44,7 +45,7 @@ class MazeEnv(gym.Env):
         )
         self.maze_renderer.init_render_mode(render_mode)
 
-        filename = "environments/gymnasium/data/maze/" + settings.FILENAME
+        filename = folder_name + settings.FILENAME
         self.state = MazeState(self.height, self.width, filename)
         self._init_spaces()
         self.maze_rewards = MazeRewards()
