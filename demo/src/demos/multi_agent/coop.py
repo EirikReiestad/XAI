@@ -1,6 +1,5 @@
 import logging
 from itertools import count
-from time import sleep
 
 import gymnasium as gym
 import matplotlib
@@ -70,9 +69,6 @@ class Demo:
         dones = [False] * self.num_agents
 
         for t in count():
-            if i_episode % settings.RENDER_EVERY == 0:
-                self.env_wrapper.render()
-
             _, rewards, dones, full_states = self._run_step(state)
             total_rewards += rewards
 
@@ -82,6 +78,9 @@ class Demo:
                 state = self.env_wrapper.update_state(full_state[0].numpy())
                 for agent in range(self.num_agents):
                     total_rewards[agent] += reward
+
+            if i_episode % settings.RENDER_EVERY == 0:
+                self.env_wrapper.render()
 
             if done:
                 for agent in range(self.num_agents):
@@ -102,6 +101,8 @@ class Demo:
         dones = [False] * self.num_agents
 
         for agent in range(self.num_agents):
+            if agent == 1:
+                continue
             action = self.dqns[agent].select_action(state)
 
             self.env_wrapper.set_active_agent(agent)

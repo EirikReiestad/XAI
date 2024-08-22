@@ -51,8 +51,8 @@ class Plotter:
 
     def _set_axis(self):
         self.ax1.set_xlabel("Episode")
-        self.ax1.set_ylabel("Duration")
-        self.ax1.tick_params(axis="y")
+        self.ax1.set_ylabel("Duration", color="orange")
+        self.ax1.tick_params(axis="y", labelcolor="orange")
 
         self.ax2.set_ylabel("Rewards")
         self.ax2.yaxis.set_label_position("right")
@@ -69,14 +69,11 @@ class Plotter:
         duration_means = self._moving_average(durations_t)
         rewards_means = self._moving_average(rewards_t)
 
-        self.ax1.plot(
-            durations_t.numpy(), color="orange", alpha=0.3, label=f"{label} Duration"
-        )
+        self.ax1.plot(durations_t.numpy(), color="orange", alpha=0.3)
         self.ax1.plot(
             duration_means.numpy(),
             color="orange",
         )
-        self.ax1.legend(loc="upper left")
         self.ax2.plot(
             rewards_t.numpy(),
             color=color,
@@ -84,7 +81,7 @@ class Plotter:
             label=f"{label} Rewards",
         )
         self.ax2.plot(rewards_means.numpy(), color=color)
-        self.ax2.legend(loc="upper right")
+        self.ax2.legend(loc="upper left")
 
     @staticmethod
     def _moving_average(tensor: torch.Tensor, window_size: int = 100):

@@ -316,11 +316,11 @@ class MazeEnv(gym.Env):
 
     def _create_partial_state(self) -> np.ndarray:
         """Creates the partial state representation."""
-        agent_position = [self.agent.y, self.agent.x]
-        goal_position = [self.goal.y, self.goal.x]
+        agent_position = [self.agent.x, self.agent.y]
+        goal_position = [self.goal.x, self.goal.y]
 
         goal_distance = self.goal - self.agent
-        goal_direction = [goal_distance.y, goal_distance.x]
+        goal_direction = [goal_distance.x, goal_distance.y]
 
         distance = np.linalg.norm(goal_direction)
         distance_normalized = np.clip(
