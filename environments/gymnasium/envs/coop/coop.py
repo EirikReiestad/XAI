@@ -1,7 +1,6 @@
 """Maze environment for reinforcement learning."""
 
 __credits__ = ["Eirik Reiestad"]
-
 import logging
 import os
 from typing import Any, Dict, Optional, Tuple
@@ -17,15 +16,18 @@ from environments.gymnasium.utils import (
     Direction,
     Position,
     State,
-    generate_random_position,
 )
-
-from .utils import MazeTileType as TileType
+from .utils import TileType as TileType, Agents, Agent, AgentType
 
 logging.basicConfig(level=logging.INFO)
 
+AGENT_TILE_TYPE = {
+    AgentType.AGENT0: TileType.AGENT0.value,
+    AgentType.AGENT1: TileType.AGENT1.value,
+}
 
-class MazeEnv(gym.Env):
+
+class CoopEnv(gym.Env):
     """
     A maze environment where the agent must reach a goal position.
 
@@ -53,12 +55,11 @@ class MazeEnv(gym.Env):
         self.screen_height = settings.SCREEN_HEIGHT
 
         self._check_file_existence(
-            "environments/gymnasium/data/maze/", settings.FILENAME
+            "environments/gymnasium/data/coop/", settings.FILENAME
         )
         self._init_render_mode(render_mode)
-        self._init_states("environments/gymnasium/data/maze/" + settings.FILENAME)
+        self._init_states("environments/gymnasium/data/coop/" + settings.FILENAME)
         self._init_spaces()
-        self._init_render()
 
         self.rewards = {
             "goal": settings.GOAL_REWARD,
@@ -69,6 +70,12 @@ class MazeEnv(gym.Env):
 
         self.steps = 0
         self.steps_beyond_terminated = None
+
+        self.__post_init__()
+
+    def __post_init__(self):
+        """Post-initialization steps."""
+        self.post_init = False
 
     def step(self, action: int) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
         """
@@ -91,16 +98,22 @@ class MazeEnv(gym.Env):
         self.steps += 1
 
         if self.steps >= self.max_steps:
-            return self.state.active_state, self.rewards["truncated"], True, True, {}
+            return (
+                self.state.active_state,
+                self.rewards["truncated"],
+                True,
+                True,
+                {"full_state": self.state.full},
+            )
 
-        terminated = self.agent == self.goal
+        terminated = self.agents.agent0 == self.agents.agent1
         collided = False
 
         if not terminated:
             new_full_state = self._move_agent(self.state.full, action)
             collided = new_full_state is None
             if not collided and new_full_state is not None:
-                self._update_state(new_full_state)
+                self.update_state(new_full_state)
             terminated = collided or terminated
         elif self.steps_beyond_terminated is None:
             self.steps_beyond_terminated = 0
@@ -115,7 +128,13 @@ class MazeEnv(gym.Env):
             self.steps_beyond_terminated += 1
 
         reward = self._get_reward(collided)
-        return self.state.active_state, reward, terminated, False, {}
+        return (
+            self.state.active_state,
+            reward,
+            terminated,
+            False,
+            {"full_state": self.state.full},
+        )
 
     def reset(
         self, *, seed: Optional[int] = None, options: Optional[Dict[str, Any]] = None
@@ -132,24 +151,33 @@ class MazeEnv(gym.Env):
                 - np.ndarray: The initial state of the environment.
                 - dict: Additional information about the state.
         """
+        if not self.post_init:
+            self._init_render()
+            self.post_init = True
+
         super().reset(seed=seed)
         render_mode = options.get("render_mode") if options else None
         self.render_mode = render_mode or self.render_mode
 
-        self._set_initial_positions(options)
         self.steps = 0
+        self._set_initial_positions(options)
 
-        self.state.full[self.agent.y, self.agent.x] = TileType.EMPTY.value
-        self.state.full[self.goal.y, self.goal.x] = TileType.EMPTY.value
+        self.state.full[
+            self.agents.agent0.position.y, self.agents.agent0.position.x
+        ] = TileType.EMPTY.value
+        self.state.full[
+            self.agents.agent1.position.y, self.agents.agent1.position.x
+        ] = TileType.EMPTY.value
 
         self._clear_start_goal_positions()
 
-        self.state.full[self.init_agent.y, self.init_agent.x] = TileType.START.value
-        self.state.full[self.init_goal.y, self.init_goal.x] = TileType.END.value
+        self.state.full[
+            self.init_agents.agent0.position.y, self.init_agents.agent0.position.x
+        ] = TileType.AGENT0.value
+        self.state.full[
+            self.init_agents.agent1.position.y, self.init_agents.agent1.position.x
+        ] = TileType.AGENT1.value
         self.steps_beyond_terminated = None
-
-        if np.where(self.state.full == TileType.END.value)[0].size == 0:
-            raise ValueError("The goal position is not set.")
 
         return self.state.active_state, {"state_type": settings.STATE_TYPE.value}
 
@@ -180,9 +208,7 @@ class MazeEnv(gym.Env):
             pg.event.pump()
             self.clock.tick(self.metadata["render_fps"])
             pg.display.flip()
-            return None
-        else:
-            raise ValueError(f"Invalid render mode {render_mode}")
+        return None
 
     def close(self):
         """Closes the environment and the rendering window."""
@@ -190,6 +216,44 @@ class MazeEnv(gym.Env):
             pg.display.quit()
             pg.quit()
             self.is_open = False
+
+    def concat_state(self, states: list[np.ndarray]) -> tuple[np.ndarray, float, bool]:
+        """Concatenates states from multiple agents into a single state."""
+        agent0_state: np.ndarray = states[0]
+        agent1_state: np.ndarray = states[1]
+
+        agent0_position = np.where(agent0_state == AGENT_TILE_TYPE[AgentType.AGENT0])
+        agent1_position = np.where(agent1_state == AGENT_TILE_TYPE[AgentType.AGENT1])
+        obstacle_positions = np.where(agent0_state == TileType.OBSTACLE.value)
+
+        agent0_position = int(agent0_position[0]), int(agent0_position[1])
+        agent1_position = int(agent1_position[0]), int(agent1_position[1])
+
+        state = np.zeros((self.height, self.width), dtype=np.float32)
+        state[agent0_position[1], agent0_position[0]] = AGENT_TILE_TYPE[
+            AgentType.AGENT0
+        ]
+        state[agent1_position[1], agent1_position[0]] = AGENT_TILE_TYPE[
+            AgentType.AGENT1
+        ]
+
+        for x, y in zip(obstacle_positions[0], obstacle_positions[1]):
+            state[y, x] = TileType.OBSTACLE.value
+
+        if agent0_position == agent1_position:
+            return state, self.rewards["goal"], True
+
+        return state, 0.0, False
+
+    def set_active_agent(self, agent: int):
+        """Sets the active agent."""
+        match agent:
+            case 0:
+                self.agents.active_agent = AgentType.AGENT0
+            case 1:
+                self.agents.active_agent = AgentType.AGENT1
+            case _:
+                raise ValueError(f"Invalid agent {agent}")
 
     def _get_reward(self, collided: bool) -> float:
         """
@@ -201,9 +265,7 @@ class MazeEnv(gym.Env):
         Returns:
             int: The reward.
         """
-        if self.agent == self.goal:
-            return self.rewards["goal"]
-        elif collided:
+        if collided:
             return self.rewards["terminated"]
         else:
             return self.rewards["move"]
@@ -215,18 +277,23 @@ class MazeEnv(gym.Env):
         Parameters:
             state (np.ndarray): The current state of the maze.
             action (int): The action to take.
+            agent (str): The agent to move.
 
         Returns:
-            Optional[np.ndarray]: The new state of the maze, or None if the agent collided.
+            Optional[np.ndarray]: The new state of the env, or None if the agent collided.
         """
         new_state = state.copy()
-        new_agent = self.agent + Direction(action).to_tuple()
-        if self._is_within_bounds(new_agent) and self._is_not_obstacle(
-            new_state, new_agent
+        new_agent_position = self.agents.active.position + Direction(action).to_tuple()
+        if self._is_within_bounds(new_agent_position) and self._is_not_obstacle(
+            new_state, new_agent_position
         ):
-            new_state[self.agent.y, self.agent.x] = TileType.EMPTY.value
-            self.agent = new_agent
-            new_state[self.agent.y, self.agent.x] = TileType.START.value
+            new_state[self.agents.active.position.y, self.agents.active.position.x] = (
+                TileType.EMPTY.value
+            )
+            self.agents.active.position = new_agent_position
+            new_state[self.agents.active.position.y, self.agents.active.position.x] = (
+                AGENT_TILE_TYPE[self.agents.active_agent]
+            )
             return new_state
         return None
 
@@ -251,11 +318,22 @@ class MazeEnv(gym.Env):
             active=settings.STATE_TYPE,
         )
 
-        self.init_agent = Position(
-            tuple(np.argwhere(self.state.full == TileType.START.value)[0])
-        )
-        self.init_goal = Position(
-            tuple(np.argwhere(self.state.full == TileType.END.value)[0])
+        self.init_agents = Agents(
+            agent0=Agent(
+                Position(
+                    tuple(
+                        np.argwhere(full_state == AGENT_TILE_TYPE[AgentType.AGENT0])[0]
+                    )
+                )
+            ),
+            agent1=Agent(
+                Position(
+                    tuple(
+                        np.argwhere(full_state == AGENT_TILE_TYPE[AgentType.AGENT1])[0]
+                    )
+                )
+            ),
+            active_agent=AgentType.AGENT0,
         )
 
     def _init_spaces(self):
@@ -297,14 +375,18 @@ class MazeEnv(gym.Env):
 
         pg.init()
         pg.display.init()
-        self.surface = pg.Surface((self.screen_width, self.screen_height))
         self.screen = pg.display.set_mode((self.screen_width, self.screen_height))
+        self.surface = pg.Surface((self.screen_width, self.screen_height))
         self.clock = pg.time.Clock()
         self.is_open = True
 
-    def _update_state(self, new_full_state: np.ndarray):
+    def update_state(self, full_state: np.ndarray):
         """Updates the environment's state."""
-        self.state.full = new_full_state
+        if full_state.shape != self.state.full.shape:
+            raise ValueError(
+                f"Invalid state shape. Expected {self.state.full.shape}, got {full_state.shape}"
+            )
+        self.state.full = full_state
         self.state.partial = self._create_partial_state()
         self.state.rgb = np.ndarray(
             (settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT, 3), dtype=np.uint8
@@ -312,13 +394,18 @@ class MazeEnv(gym.Env):
 
     def _create_partial_state(self) -> np.ndarray:
         """Creates the partial state representation."""
-        agent_position = [self.agent.y, self.agent.x]
-        goal_position = [self.goal.y, self.goal.x]
+        if self.agents.active_agent == AgentType.AGENT0:
+            agent_position = self.agents.agent0.position
+            goal_position = self.agents.agent1.position
+        else:
+            agent_position = self.agents.agent1.position
+            goal_position = self.agents.agent0.position
 
-        goal_distance = self.goal - self.agent
-        goal_direction = [goal_distance.y, goal_distance.x]
+        agent_distance = (goal_position - agent_position).to_tuple()
+        goal_direction = goal_position - agent_position
+        goal_direction = [goal_direction.y, goal_direction.x]
 
-        distance = np.linalg.norm(goal_direction)
+        distance = np.linalg.norm(agent_distance)
         distance_normalized = np.clip(
             distance / np.sqrt(self.height**2 + self.width**2) * 255, 0, 255
         )
@@ -335,10 +422,10 @@ class MazeEnv(gym.Env):
 
         return np.array(
             [
-                *agent_position,
-                *goal_position,
+                *agent_position.to_tuple(),
+                *goal_position.to_tuple(),
                 int(distance_normalized),
-                *map(int, direction_normalized),
+                *direction_normalized,
             ],
             dtype=np.uint8,
         )
@@ -352,36 +439,35 @@ class MazeEnv(gym.Env):
 
     def _set_initial_positions(self, options: Optional[Dict[str, Any]]):
         """Sets the initial positions of the agent and goal."""
-        if options and "start" in options:
-            self.agent = Position(options["start"])
-            self.goal = Position(
-                options.get(
-                    "goal",
-                    generate_random_position(self.width, self.height, [self.agent]),
-                )
+        if options and "agent0" in options:
+            if "agent1" not in options:
+                raise ValueError("The second agent's position is not set.")
+            self.agents = Agents(
+                agent0=Agent(Position(options["agent0"])),
+                agent1=Agent(Position(options["agent1"])),
+                active_agent=AgentType.AGENT0,
             )
         else:
-            self.agent = self.init_agent
-            self.goal = (
-                self.init_goal
-                if options is None or "goal" not in options
-                else Position(options["goal"])
+            self.agents = Agents(
+                agent0=Agent(self.init_agents.agent0.position),
+                agent1=Agent(self.init_agents.agent1.position),
+                active_agent=AgentType.AGENT0,
             )
 
     def _clear_start_goal_positions(self):
         """Clears the start and goal positions from the maze."""
-        self.state.full[np.argwhere(self.state.full == TileType.START.value)] = (
+        self.state.full[np.argwhere(self.state.full == TileType.AGENT0.value)] = (
             TileType.EMPTY.value
         )
-        self.state.full[np.argwhere(self.state.full == TileType.END.value)] = (
+        self.state.full[np.argwhere(self.state.full == TileType.AGENT1.value)] = (
             TileType.EMPTY.value
         )
 
     def _apply_color_masks(self, color_matrix: np.ndarray):
         """Applies color masks to the maze."""
         color_matrix[self.state.full == TileType.OBSTACLE.value] = Color.BLACK.value
-        color_matrix[self.state.full == TileType.START.value] = Color.BLUE.value
-        color_matrix[self.state.full == TileType.END.value] = Color.GREEN.value
+        color_matrix[self.state.full == TileType.AGENT0.value] = Color.BLUE.value
+        color_matrix[self.state.full == TileType.AGENT1.value] = Color.GREEN.value
 
     def _is_within_bounds(self, position: Position) -> bool:
         """Checks if the position is within maze bounds."""
@@ -411,7 +497,16 @@ class MazeEnv(gym.Env):
                 f"Invalid maze size. Expected {self.height}x{self.width}, got {len(maze)}x{len(maze[0])}"
             )
         flatten_maze = np.array(maze).flatten()
-        if np.all(flatten_maze != TileType.END.value):
-            raise ValueError("The goal position is not set.")
-        if np.all(flatten_maze != TileType.START.value):
-            raise ValueError("The start position is not set.")
+        if np.all(flatten_maze != TileType.AGENT0.value):
+            raise ValueError("The agent0 position is not set.")
+        if np.all(flatten_maze != TileType.AGENT1.value):
+            raise ValueError("The agent1 position is not set.")
+
+    def get_active_state(self) -> np.ndarray:
+        """Returns the active state of the environment."""
+        return self.state.active_state
+
+    @property
+    def num_agents(self) -> int:
+        """Returns the number of agents in the environment."""
+        return 2
