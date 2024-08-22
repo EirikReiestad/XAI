@@ -15,7 +15,7 @@ SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 600
 
 # Path: environments
-FILENAME = "clean-env-0-10-10.txt"
+FILENAME = "env-0-10-10.txt"
 
 # State
 STATE_TYPE = StateType.FULL
