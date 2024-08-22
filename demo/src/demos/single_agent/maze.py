@@ -40,13 +40,14 @@ class Demo:
                 total_reward = 0
 
                 for t in count():
-                    if i_episode % settings.RENDER_EVERY == 0:
-                        env_wrapper.render()
-
                     action = dqn.select_action(state)
                     observation, reward, terminated, truncated, _ = env_wrapper.step(
                         action.item()
                     )
+
+                    if i_episode % settings.RENDER_EVERY == 0:
+                        env_wrapper.render()
+
                     reward = float(reward)
 
                     total_reward += reward

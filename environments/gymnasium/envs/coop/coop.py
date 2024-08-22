@@ -218,7 +218,10 @@ class CoopEnv(gym.Env):
         obstacle_positions = np.where(agent0_state == TileType.OBSTACLE.value)
 
         agent0_position = int(agent0_position[0]), int(agent0_position[1])
-        agent1_position = int(agent1_position[0]), int(agent1_position[1])
+        if len(agent1_position[0]) == 0:
+            agent1_position = agent0_position
+        else:
+            agent1_position = int(agent1_position[0]), int(agent1_position[1])
 
         state = np.zeros((self.height, self.width), dtype=np.float32)
         state[agent0_position[1], agent0_position[0]] = AGENT_TILE_TYPE[
@@ -249,7 +252,7 @@ class CoopEnv(gym.Env):
         self,
         pos0: tuple[int | float, int | float],
         pos1: tuple[int | float, int | float],
-        radius: int = 1,
+        radius: int = 0,
     ) -> bool:
         """Checks if the agents are side by side."""
         distance = abs(pos0[0] - pos1[0]) + abs(pos0[1] - pos1[1])
@@ -290,8 +293,10 @@ class CoopEnv(gym.Env):
         new_state = state.copy()
         new_agent_position = self.agents.active.position + Direction(action).to_tuple()
 
+        """
         if new_agent_position == other_agent_position:
             return None
+        """
 
         if self._is_within_bounds(new_agent_position) and self._is_not_obstacle(
             new_state, new_agent_position
