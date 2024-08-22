@@ -159,10 +159,10 @@ class CoopEnv(gym.Env):
         render_mode = options.get("render_mode") if options else None
         self.render_mode = render_mode or self.render_mode
 
+        self._set_initial_positions(options)
         self.steps = 0
 
         self._init_states()
-        self._set_initial_positions(options)
 
         self.steps_beyond_terminated = None
 
@@ -206,7 +206,7 @@ class CoopEnv(gym.Env):
             self.is_open = False
 
     def concat_state(self, states: list[np.ndarray]) -> tuple[np.ndarray, float, bool]:
-        """Concatenates states from multiple agents into a single state."""
+        """Concatenates the states of the agents."""
         agent0_state: np.ndarray = states[0]
         if len(states) == 1:
             agent1_state = agent0_state.copy()
@@ -217,24 +217,29 @@ class CoopEnv(gym.Env):
         agent1_position = np.where(agent1_state == AGENT_TILE_TYPE[AgentType.AGENT1])
         obstacle_positions = np.where(agent0_state == TileType.OBSTACLE.value)
 
-        agent0_position = int(agent0_position[0]), int(agent0_position[1])
+        print(agent0_position, agent1_position)
+        if len(agent0_position[0]) == 0:
+            agent0_position = agent1_position
+        else:
+            agent0_position = int(agent0_position[0]), int(agent0_position[1])
+
         if len(agent1_position[0]) == 0:
             agent1_position = agent0_position
         else:
             agent1_position = int(agent1_position[0]), int(agent1_position[1])
 
-        state = np.zeros((self.height, self.width), dtype=np.float32)
-        state[agent0_position[1], agent0_position[0]] = AGENT_TILE_TYPE[
+        state = np.zeros((self.width, self.height), dtype=np.float32)
+        state[agent0_position[0], agent0_position[1]] = AGENT_TILE_TYPE[
             AgentType.AGENT0
         ]
-        state[agent1_position[1], agent1_position[0]] = AGENT_TILE_TYPE[
+        state[agent1_position[0], agent1_position[1]] = AGENT_TILE_TYPE[
             AgentType.AGENT1
         ]
 
         for x, y in zip(obstacle_positions[0], obstacle_positions[1]):
             state[y, x] = TileType.OBSTACLE.value
 
-        if self._side_by_side(agent0_position, agent1_position):
+        if self._is_close(agent0_position, agent1_position):
             return state, self.rewards["goal"], True
         return state, 0.0, False
 
@@ -248,7 +253,7 @@ class CoopEnv(gym.Env):
             case _:
                 raise ValueError(f"Invalid agent {agent}")
 
-    def _side_by_side(
+    def _is_close(
         self,
         pos0: tuple[int | float, int | float],
         pos1: tuple[int | float, int | float],
@@ -285,18 +290,8 @@ class CoopEnv(gym.Env):
         Returns:
             Optional[np.ndarray]: The new state of the env, or None if the agent collided.
         """
-        if self.agents.active_agent == AgentType.AGENT0:
-            other_agent_position = self.agents.agent1.position
-        else:
-            other_agent_position = self.agents.agent0.position
-
         new_state = state.copy()
         new_agent_position = self.agents.active.position + Direction(action).to_tuple()
-
-        """
-        if new_agent_position == other_agent_position:
-            return None
-        """
 
         if self._is_within_bounds(new_agent_position) and self._is_not_obstacle(
             new_state, new_agent_position
