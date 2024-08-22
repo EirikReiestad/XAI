@@ -1,13 +1,12 @@
-from environments.gymnasium.utils.enums import StateType
 from environments import settings
 
 # Check settings
 
 # Maze settings
-assert settings.MAZE_HEIGHT > 0, "MAZE_HEIGHT must be greater than 0"
-assert isinstance(settings.MAZE_HEIGHT, int), "MAZE_HEIGHT must be an integer"
-assert settings.MAZE_WIDTH > 0, "MAZE_WIDTH must be greater than 0"
-assert isinstance(settings.MAZE_WIDTH, int), "MAZE_WIDTH must be an integer"
+assert settings.ENV_HEIGHT > 0, "ENV_HEIGHT must be greater than 0"
+assert isinstance(settings.ENV_HEIGHT, int), "MAZE_HEIGHT must be an integer"
+assert settings.ENV_WIDTH > 0, "MAZE_WIDTH must be greater than 0"
+assert isinstance(settings.ENV_WIDTH, int), "MAZE_WIDTH must be an integer"
 
 # Reward settings
 rewards = [
