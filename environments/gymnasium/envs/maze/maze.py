@@ -115,7 +115,7 @@ class MazeEnv(gym.Env):
 
     def _move_agent(self, state: np.ndarray, action: int) -> Optional[np.ndarray]:
         new_state = state.copy()
-        new_agent = self.agent + Direction(action).to_tuple()
+        new_agent = self.agent + Direction(action).tuple
         if MazeUtils.is_within_bounds(
             new_state, new_agent.x, new_agent.y
         ) and MazeUtils.is_not_obstacle(new_state, int(new_agent.x), int(new_agent.y)):

@@ -11,13 +11,15 @@ class CoopRewards:
             "truncated": settings.TRUNCATED_REWARD,
         }
 
-    def get_reward(self, agent: Position, goal: Position, collided: bool):
-        if agent == goal:
-            return self.rewards["goal"]
-        elif collided:
-            return self.rewards["terminated"]
+    def get_reward(
+        self, agent: Position, other_agent: Position, collided: bool, radius: float = 1
+    ) -> tuple[float, bool]:
+        if collided:
+            return self.terminated_reward, True
+        elif agent.distance_to(other_agent) < radius:
+            return self.goal_reward, True
         else:
-            return self.rewards["move"]
+            return self.move_reward, False
 
     @property
     def goal_reward(self):

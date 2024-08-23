@@ -37,9 +37,14 @@ class DualAgents:
         return self.agent0 == self.agent1
 
     @property
-    def active_agent(self):
+    def active_agent(self) -> AgentType:
         return self._active_agent
 
     @active_agent.setter
-    def active_agent(self, agent: AgentType):
+    def active_agent(self, agent: AgentType | int):
+        if isinstance(agent, int):
+            agent = AgentType(agent)
+        if agent not in AgentType:
+            raise ValueError(f"Invalid agent type {agent}")
+
         self._active_agent = agent

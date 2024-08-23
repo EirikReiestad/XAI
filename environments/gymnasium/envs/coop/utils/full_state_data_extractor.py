@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import numpy as np
 from environments.gymnasium.envs.coop.utils import AgentType
+from environments.gymnasium.envs.coop.utils.tile_type import TileType
 from environments.gymnasium.envs.coop.utils.agent_tile_type import AGENT_TILE_TYPE
 from environments.gymnasium.utils import Position
 
@@ -19,3 +20,11 @@ class FullStateDataExtractor:
             raise ValueError("No agent found in the state.")
         agent_position = Position(x=agent_position[0][0], y=agent_position[1][0])
         return agent_position
+
+    @staticmethod
+    def get_obstacle_positions(state: np.ndarray) -> list[Position]:
+        obstacle_positions = np.where(state == TileType.OBSTACLE.value)
+        return [
+            Position(x=x, y=y)
+            for x, y in zip(obstacle_positions[0], obstacle_positions[1])
+        ]

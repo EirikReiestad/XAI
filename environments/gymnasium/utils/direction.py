@@ -9,7 +9,8 @@ class Direction(enum.Enum):
     LEFT = 2
     RIGHT = 3
 
-    def to_tuple(self) -> tuple[int, int]:
+    @property
+    def tuple(self) -> tuple[int, int]:
         """
         Convert the direction to a (dx, dy) tuple.
 

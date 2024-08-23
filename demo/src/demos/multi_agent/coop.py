@@ -10,7 +10,7 @@ import torch
 from demo import network, settings
 from demo.src.common.episode_information import EpisodeInformation
 from demo.src.plotters import Plotter
-from demo.src.wrappers import EnvironmentWrapper
+from demo.src.wrappers import MultiAgentEnvironmentWrapper
 from rl.src.common import ConvLayer
 from rl.src.dqn.dqn_module import DQNModule
 
@@ -26,7 +26,7 @@ class Demo:
 
     def __init__(self):
         """Initialize the Demo class with settings and plotter."""
-        self.env_wrapper = EnvironmentWrapper(env_id="Coop-v0")
+        self.env_wrapper = MultiAgentEnvironmentWrapper(env_id="Coop-v0")
 
         self.num_agents = self.env_wrapper.num_agents
 
@@ -34,7 +34,7 @@ class Demo:
         for _ in range(self.num_agents):
             self.episode_informations.append(EpisodeInformation([], []))
 
-        self.plotter = Plotter()
+        self.plotter = Plotter() if settings.PLOTTING else None
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.is_ipython = "inline" in matplotlib.get_backend()
 
@@ -57,9 +57,10 @@ class Demo:
         finally:
             self.env_wrapper.close()
             logging.info("Complete")
-            self.plotter.update(self.episode_informations, show_result=True)
-            plt.ioff()
-            plt.show()
+            if self.plotter:
+                self.plotter.update(self.episode_informations, show_result=True)
+                plt.ioff()
+                plt.show()
 
     def _run_episode(self, i_episode: int, state: torch.Tensor, info: dict):
         """Handle the episode by interacting with the environment and training the DQN."""
@@ -68,13 +69,17 @@ class Demo:
 
         dones = [False] * self.num_agents
 
+        self.tmp_full_state = None
+
         for t in count():
             _, rewards, dones, full_states = self._run_step(state)
             total_rewards += rewards
 
             done = any(dones)
             if not done:
-                full_state, reward, done = self.env_wrapper.concat_state(full_states)
+                full_state, reward, done = self.env_wrapper.concatenate_states(
+                    full_states
+                )
                 state = self.env_wrapper.update_state(full_state[0].numpy())
                 for agent in range(self.num_agents):
                     total_rewards[agent] += reward
@@ -88,7 +93,8 @@ class Demo:
                     self.episode_informations[agent].rewards.append(
                         total_rewards[agent]
                     )
-                self.plotter.update(self.episode_informations)
+                if self.plotter:
+                    self.plotter.update(self.episode_informations)
                 break
 
     def _run_step(
@@ -102,7 +108,10 @@ class Demo:
 
         for agent in range(self.num_agents):
             if agent == 1:
+                full_states.append(self.tmp_full_state)
+                new_states[agent] = new_states[0]
                 continue
+
             action = self.dqns[agent].select_action(state)
 
             self.env_wrapper.set_active_agent(agent)
@@ -113,6 +122,9 @@ class Demo:
             full_state = info.get("full_state")
             if full_state is None:
                 raise ValueError("Full state must be returned from the environment.")
+
+            if self.tmp_full_state is None:
+                self.tmp_full_state = full_state
 
             full_states.append(full_state)
 
