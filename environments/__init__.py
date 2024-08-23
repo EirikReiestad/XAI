@@ -1,4 +1,5 @@
 from environments import settings
+from environments.gymnasium.utils.state_type import StateType
 
 # Check settings
 
@@ -28,3 +29,9 @@ assert isinstance(settings.SCREEN_HEIGHT, int), "SCREEN_HEIGHT must be an intege
 
 # Path: environments
 assert isinstance(settings.FILENAME, str), "FILENAME must be a string"
+
+# State
+assert settings.STATE_TYPE in StateType, "STATE_TYPE must be a StateType"
+
+# Coop
+assert settings.COOP_RADIUS >= 0, "COOP_RADIUS must be greater or equal to 0"
