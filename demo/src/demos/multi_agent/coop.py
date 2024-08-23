@@ -70,7 +70,7 @@ class Demo:
         dones = [False] * self.num_agents
 
         for t in count():
-            _, rewards, dones, full_states = self._run_step(state)
+            _, rewards, dones, full_states = self._run_step(state, t)
             total_rewards += rewards
 
             done = any(dones)
@@ -79,7 +79,10 @@ class Demo:
                     full_states
                 )
                 state = self.env_wrapper.update_state(full_state[0].numpy())
+
                 for agent in range(self.num_agents):
+                    if reward == 0:
+                        break
                     total_rewards[agent] += reward
 
             if i_episode % settings.RENDER_EVERY == 0:
@@ -96,7 +99,7 @@ class Demo:
                 break
 
     def _run_step(
-        self, state: torch.Tensor
+        self, state: torch.Tensor, step: int
     ) -> tuple[list[torch.Tensor], list[float], list[bool], list[np.ndarray]]:
         """Run a step in the environment and train the DQN."""
         total_reward = [0.0] * self.num_agents
@@ -105,6 +108,11 @@ class Demo:
         dones = [False] * self.num_agents
 
         for agent in range(self.num_agents):
+            if step % settings.SLOWING_FACTOR == 0:
+                if agent == 1:
+                    continue
+
+            self.env_wrapper.render()
             action = self.dqns[agent].select_action(state)
 
             self.env_wrapper.set_active_agent(agent)

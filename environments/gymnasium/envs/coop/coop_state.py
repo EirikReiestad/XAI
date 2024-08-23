@@ -72,10 +72,31 @@ class CoopState:
             raise ValueError("Initial full state is not set yet.")
         return FullStateDataExtractor.get_agent_position(self.init_full_state, agent)
 
-    def concatenate_states(self, states: list[np.ndarray]) -> np.ndarray:
-        if len(states) != 2:
+    def concatenate_states(self, states: list[np.ndarray]) -> tuple[np.ndarray, bool]:
+        if len(states) == 1:
+            return self._concatenate_single_state(states[0])
+        elif len(states) == 2:
+            return self._concatenate_double_state(states)
+        else:
             raise ValueError("Two states are required to concatenate.")
 
+    def _concatenate_single_state(self, state: np.ndarray) -> tuple[np.ndarray, bool]:
+        agent0_exists = FullStateDataExtractor.agent_exist(state, AgentType.AGENT0)
+        agent1_exists = FullStateDataExtractor.agent_exist(state, AgentType.AGENT1)
+
+        if agent0_exists and agent1_exists:
+            agent_0_position = FullStateDataExtractor.get_agent_position(
+                state, AgentType.AGENT0
+            )
+            agent_1_position = FullStateDataExtractor.get_agent_position(
+                state, AgentType.AGENT1
+            )
+            return state, agent_0_position == agent_1_position
+        return state, False
+
+    def _concatenate_double_state(
+        self, states: list[np.ndarray]
+    ) -> tuple[np.ndarray, bool]:
         agent0_state = states[0]
         agent1_state = states[1]
 
@@ -95,8 +116,11 @@ class CoopState:
         for obstacle_position in obstacle_positions:
             state[*obstacle_position] = TileType.OBSTACLE.value
 
+        if agent0_position == agent1_position:
+            return state, True
+
         self._validate_state(state)
-        return state
+        return state, False
 
     def _validate_state(self, state: np.ndarray):
         FullStateDataExtractor.get_agent_position(state, AgentType.AGENT0)

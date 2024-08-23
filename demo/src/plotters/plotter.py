@@ -30,8 +30,6 @@ class Plotter:
 
         colormap: Colormap = cm.get_cmap("tab10")
 
-        print(mcolors.CSS4_COLORS)
-
         def validate_and_convert_color(color):
             if not isinstance(color, str):
                 raise ValueError("colors must be a list of strings")

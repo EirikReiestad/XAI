@@ -100,7 +100,8 @@ class Position:
         Returns:
             float: The Euclidean distance between the two positions.
         """
-        return sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2)
+        distance = sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2)
+        return distance
 
     @property
     def tuple(self) -> Tuple[Union[float, int], Union[float, int]]:
