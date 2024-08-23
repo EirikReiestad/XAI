@@ -2,6 +2,9 @@ import matplotlib.pyplot as plt
 import torch
 from IPython import display
 from demo.src.common import EpisodeInformation
+from matplotlib.pyplot import cm
+from matplotlib.colors import Colormap
+from matplotlib import colors as mcolors
 
 
 class Plotter:
@@ -15,6 +18,7 @@ class Plotter:
     def update(
         self,
         episodes_information: list[EpisodeInformation] | EpisodeInformation,
+        colors: list[str] = ["blue", "lightgreen"],
         labels: list[str] | str = [],
         show_result=False,
     ):
@@ -24,20 +28,42 @@ class Plotter:
         if isinstance(episodes_information, EpisodeInformation):
             episodes_information = [episodes_information]
 
+        colormap: Colormap = cm.get_cmap("tab10")
+
+        print(mcolors.CSS4_COLORS)
+
+        def validate_and_convert_color(color):
+            if not isinstance(color, str):
+                raise ValueError("colors must be a list of strings")
+            if color in mcolors.CSS4_COLORS:
+                return mcolors.CSS4_COLORS[color]  # Convert named color to hex
+            if not color.startswith("#"):
+                raise ValueError(
+                    f"Invalid color: {color}. Must be a valid color name or hex code."
+                )
+            return color
+
+        if len(colors) < len(episodes_information):
+            valid_colors = [
+                validate_and_convert_color(colormap(i)) for i in range(colormap.N)
+            ]
+        else:
+            valid_colors = [validate_and_convert_color(color) for color in colors]
+
         self.ax1.clear()
         self.ax2.clear()
 
         if len(labels) == 0:
             labels = [f"Agent {i}" for i in range(len(episodes_information))]
 
-        colors = plt.cm.get_cmap("tab10", len(episodes_information))
-
         self._set_axis()
 
         for i, episode_info in enumerate(episodes_information):
             durations_t = torch.tensor(episode_info.durations, dtype=torch.float)
             rewards_t = torch.tensor(episode_info.rewards, dtype=torch.float)
-            self._plot_metrics(durations_t, rewards_t, label=labels[i], color=colors(i))
+            self._plot_metrics(
+                durations_t, rewards_t, label=labels[i], color=valid_colors[i]
+            )
 
         self.fig.tight_layout()
         plt.pause(0.001)
