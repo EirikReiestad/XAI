@@ -164,7 +164,7 @@ class CoopEnv(gym.Env):
         agent_tile_type = AGENT_TILE_TYPE.get(self.agents.active_agent)
         if agent_tile_type is None:
             raise ValueError(f"Invalid agent type {self.agents.active_agent}")
-        state[*self.agents.active.position] = agent_tile_type
+        state[*self.agents.active.position.row_major_order] = agent_tile_type
         return state
 
     def _init_spaces(self):

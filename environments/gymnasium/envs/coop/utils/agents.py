@@ -12,10 +12,18 @@ class AgentType(Enum):
 
 @dataclass
 class Agent:
-    position: Position
+    _position: Position
 
     def __eq__(self, other):
         return self.position == other.position
+
+    @property
+    def position(self) -> Position:
+        return self._position
+
+    @position.setter
+    def position(self, position: Position):
+        self._position = position
 
 
 @dataclass

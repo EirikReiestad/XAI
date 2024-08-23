@@ -22,7 +22,7 @@ def preprocess_state(state: torch.Tensor | np.ndarray) -> torch.Tensor:
     if torch_state.ndim == 1:
         permute_state = torch_state
     elif torch_state.ndim == 2:
-        permute_state = torch_state.permute(1, 0)
+        permute_state = torch_state.permute(0, 1)
     elif torch_state.ndim == 3:
         permute_state = torch_state.permute(2, 0, 1)
     else:
