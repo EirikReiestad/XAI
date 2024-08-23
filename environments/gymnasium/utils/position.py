@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from math import sqrt
 from typing import Tuple, Union
 
 
@@ -89,7 +90,20 @@ class Position:
         yield self.x
         yield self.y
 
-    def to_tuple(self) -> Tuple[Union[float, int], Union[float, int]]:
+    def distance_to(self, other: "Position") -> float:
+        """
+        Calculate the Euclidean distance between this Position and another.
+
+        Args:
+            other (Position): The other position to calculate the distance to.
+
+        Returns:
+            float: The Euclidean distance between the two positions.
+        """
+        return sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2)
+
+    @property
+    def tuple(self) -> Tuple[Union[float, int], Union[float, int]]:
         """
         Convert the Position to a tuple.
 
@@ -97,3 +111,12 @@ class Position:
             Tuple[Union[float, int], Union[float, int]]: The (x, y) coordinates.
         """
         return (self.x, self.y)
+
+    @property
+    def row_major_order(self) -> Tuple[int, int]:
+        """
+        Get the coordinates in row-major order.
+        Returns:
+            Tuple[int, int]: The coordinates in row-major order.
+        """
+        return (int(self.y), int(self.x))

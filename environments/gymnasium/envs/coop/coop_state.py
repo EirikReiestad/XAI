@@ -5,7 +5,11 @@ import numpy as np
 
 from environments import settings
 from environments.gymnasium.utils import State, Color
-from environments.gymnasium.envs.coop.utils import FullStateDataExtractor, AgentType
+from environments.gymnasium.envs.coop.utils import (
+    FullStateDataExtractor,
+    AgentType,
+    TileType,
+)
 from environments.gymnasium.utils import Position
 
 
@@ -60,6 +64,44 @@ class CoopState:
         )
         self.state.rgb = self._create_rgb_state()
 
+    def get_agent_position(self, agent: AgentType) -> Position:
+        return FullStateDataExtractor.get_agent_position(self.state.full, agent)
+
+    def get_initial_agent_position(self, agent: AgentType) -> Position:
+        if self.init_full_state is None:
+            raise ValueError("Initial full state is not set yet.")
+        return FullStateDataExtractor.get_agent_position(self.init_full_state, agent)
+
+    def concatenate_states(self, states: list[np.ndarray]) -> np.ndarray:
+        if len(states) != 2:
+            raise ValueError("Two states are required to concatenate.")
+
+        agent0_state = states[0]
+        agent1_state = states[1]
+
+        agent0_position = FullStateDataExtractor.get_agent_position(
+            agent0_state, AgentType.AGENT0
+        )
+        agent1_position = FullStateDataExtractor.get_agent_position(
+            agent1_state, AgentType.AGENT1
+        )
+        obstacle_positions = FullStateDataExtractor.get_obstacle_positions(agent0_state)
+
+        obstacle_positions = []
+
+        state = np.zeros((self.height, self.width), dtype=np.float32)
+        state[*agent0_position] = TileType.AGENT0.value
+        state[*agent1_position] = TileType.AGENT1.value
+        for obstacle_position in obstacle_positions:
+            state[*obstacle_position] = TileType.OBSTACLE.value
+
+        self._validate_state(state)
+        return state
+
+    def _validate_state(self, state: np.ndarray):
+        FullStateDataExtractor.get_agent_position(state, AgentType.AGENT0)
+        FullStateDataExtractor.get_agent_position(state, AgentType.AGENT1)
+
     def _create_partial_state(
         self, active_agent_position: Position, other_agent_position: Position
     ) -> np.ndarray:
@@ -105,14 +147,6 @@ class CoopState:
             env = [list(map(int, list(row.strip()))) for row in f.readlines()]
 
         return np.array(env, dtype=np.uint8)
-
-    def get_agent_position(self, agent: AgentType) -> Position:
-        return FullStateDataExtractor.get_agent_position(self.state.full, agent)
-
-    def get_initial_agent_position(self, agent: AgentType) -> Position:
-        if self.init_full_state is None:
-            raise ValueError("Initial full state is not set yet.")
-        return FullStateDataExtractor.get_agent_position(self.init_full_state, agent)
 
     @property
     def active_state(self) -> np.ndarray:

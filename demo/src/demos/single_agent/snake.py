@@ -9,12 +9,12 @@ from rl.src.dqn.dqn_module import DQNModule
 
 
 gym.register(
-    id='Snake-v0',
-    entry_point='environments.gymnasium.envs.atari2d.snake:SnakeEnv',
+    id="Snake-v0",
+    entry_point="environments.gymnasium.envs.atari2d.snake:SnakeEnv",
 )
 
 # Set up matplotlib
-is_ipython = 'inline' in matplotlib.get_backend()
+is_ipython = "inline" in matplotlib.get_backend()
 if is_ipython:
     from IPython import display
 
@@ -24,15 +24,14 @@ snake_lengths = []
 
 
 def main():
-    env = gym.make('Snake-v0', render_mode='human')
+    env = gym.make("Snake-v0", render_mode="human")
 
     state, info = env.reset()
     n_observation = len(state)
 
     hidden_layers = [128, 128]
 
-    dqn = DQNModule(n_observation, env.action_space.n,
-                    hidden_layers=hidden_layers)
+    dqn = DQNModule(n_observation, env.action_space.n, hidden_layers=hidden_layers)
 
     plt.ion()
 
@@ -41,8 +40,7 @@ def main():
 
     for i_episode in range(num_episodes):
         state, info = env.reset()
-        state = torch.tensor(state, dtype=torch.float32,
-                             device=device)
+        state = torch.tensor(state, dtype=torch.float32, device=device)
 
         for t in count():
             if i_episode % render_every == 0:
@@ -50,14 +48,17 @@ def main():
 
             state = state.flatten().unsqueeze(0)
             action = dqn.select_action(state)
-            observation, reward, terminated, truncated, _ = env.step(
-                action.item())
+            observation, reward, terminated, truncated, _ = env.step(action.item())
 
-            observation = torch.tensor(
-                observation, dtype=torch.float32, device=device).flatten().unsqueeze(0)
+            observation = (
+                torch.tensor(observation, dtype=torch.float32, device=device)
+                .flatten()
+                .unsqueeze(0)
+            )
 
-            done, state = dqn.train(state, action, observation,
-                                    reward, terminated, truncated)
+            done, state = dqn.train(
+                state, action, observation, reward, terminated, truncated
+            )
 
             if done:
                 episode_durations.append(t + 1)
@@ -67,7 +68,7 @@ def main():
 
     env.close()
 
-    logging.info('Complete')
+    logging.info("Complete")
     plot_durations(show_result=True)
     plt.ioff()
     plt.show()
@@ -76,15 +77,14 @@ def main():
 def plot_durations(show_result=False):
     plt.figure(1)
     durations_t = torch.tensor(episode_durations, dtype=torch.float)
-    snake_lengths_t = torch.tensor(
-        snake_lengths, dtype=torch.float)
+    snake_lengths_t = torch.tensor(snake_lengths, dtype=torch.float)
     if show_result:
-        plt.title('Result')
+        plt.title("Result")
     else:
         plt.clf()
-        plt.title('Training...')
-    plt.xlabel('Episode')
-    plt.ylabel('Snake length')
+        plt.title("Training...")
+    plt.xlabel("Episode")
+    plt.ylabel("Snake length")
     plt.plot(snake_lengths_t.numpy())
     # Take 100 episode averages and plot them too
     if len(snake_lengths_t) >= 100:

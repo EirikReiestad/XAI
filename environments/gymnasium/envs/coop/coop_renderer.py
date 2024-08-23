@@ -71,5 +71,5 @@ class CoopRenderer:
     def apply_color_masks(self, color_matrix, full_state):
         """Applies color masks to the coop."""
         color_matrix[full_state == TileType.OBSTACLE.value] = Color.BLACK.value
-        color_matrix[full_state == TileType.START.value] = Color.BLUE.value
-        color_matrix[full_state == TileType.END.value] = Color.GREEN.value
+        color_matrix[full_state == TileType.AGENT0.value] = Color.BLUE.value
+        color_matrix[full_state == TileType.AGENT1.value] = Color.GREEN.value
