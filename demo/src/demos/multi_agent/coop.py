@@ -108,11 +108,10 @@ class Demo:
         dones = [False] * self.num_agents
 
         for agent in range(self.num_agents):
-            if step % settings.SLOWING_FACTOR == 0:
-                if agent == 1:
+            if agent == 1:
+                if step % settings.SLOWING_FACTOR != 0:
                     continue
 
-            self.env_wrapper.render()
             action = self.dqns[agent].select_action(state)
 
             self.env_wrapper.set_active_agent(agent)
@@ -141,6 +140,8 @@ class Demo:
             if new_state is not None:
                 new_states[agent] = new_state
             dones[agent] = done
+
+            self.env_wrapper.render()
 
         if any(new_state is None for new_state in new_states):
             raise ValueError("New state must be returned from the DQN.")
