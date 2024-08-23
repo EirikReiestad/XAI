@@ -18,7 +18,7 @@ class FullStateDataExtractor:
             raise ValueError("More than one agent found in the state.")
         if len(agent_position[0]) == 0 or len(agent_position[1]) == 0:
             raise ValueError("No agent found in the state.")
-        agent_position = Position(x=agent_position[0][0], y=agent_position[1][0])
+        agent_position = Position(x=agent_position[1][0], y=agent_position[0][0])
         return agent_position
 
     @staticmethod
@@ -36,5 +36,5 @@ class FullStateDataExtractor:
         obstacle_positions = np.where(state == TileType.OBSTACLE.value)
         return [
             Position(x=x, y=y)
-            for x, y in zip(obstacle_positions[0], obstacle_positions[1])
+            for x, y in zip(obstacle_positions[1], obstacle_positions[0])
         ]

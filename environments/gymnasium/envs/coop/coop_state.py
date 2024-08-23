@@ -85,13 +85,13 @@ class CoopState:
         agent1_exists = FullStateDataExtractor.agent_exist(state, AgentType.AGENT1)
 
         if agent0_exists and agent1_exists:
-            agent_0_position = FullStateDataExtractor.get_agent_position(
+            agent0_position = FullStateDataExtractor.get_agent_position(
                 state, AgentType.AGENT0
             )
-            agent_1_position = FullStateDataExtractor.get_agent_position(
+            agent1_position = FullStateDataExtractor.get_agent_position(
                 state, AgentType.AGENT1
             )
-            return state, agent_0_position == agent_1_position
+            return state, agent0_position == agent1_position
         return state, False
 
     def _concatenate_double_state(
@@ -106,15 +106,15 @@ class CoopState:
         agent1_position = FullStateDataExtractor.get_agent_position(
             agent1_state, AgentType.AGENT1
         )
-        obstacle_positions = FullStateDataExtractor.get_obstacle_positions(agent0_state)
 
+        obstacle_positions = FullStateDataExtractor.get_obstacle_positions(agent0_state)
         obstacle_positions = []
 
         state = np.zeros((self.height, self.width), dtype=np.float32)
-        state[*agent0_position] = TileType.AGENT0.value
-        state[*agent1_position] = TileType.AGENT1.value
+        state[*agent0_position.row_major_order] = TileType.AGENT0.value
+        state[*agent1_position.row_major_order] = TileType.AGENT1.value
         for obstacle_position in obstacle_positions:
-            state[*obstacle_position] = TileType.OBSTACLE.value
+            state[*obstacle_position.row_major_order] = TileType.OBSTACLE.value
 
         if agent0_position == agent1_position:
             return state, True
