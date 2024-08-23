@@ -141,8 +141,6 @@ class Demo:
                 new_states[agent] = new_state
             dones[agent] = done
 
-            self.env_wrapper.render()
-
         if any(new_state is None for new_state in new_states):
             raise ValueError("New state must be returned from the DQN.")
 

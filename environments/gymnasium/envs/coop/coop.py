@@ -132,7 +132,9 @@ class CoopEnv(gym.Env):
     ) -> tuple[np.ndarray, float, bool]:
         state, _ = self.state.concatenate_states(states)
         reward, terminated = self.coop_rewards.get_cooperative_reward(
-            self.agents.active.position, self.agents.inactive.position
+            self.agents.active.position,
+            self.agents.inactive.position,
+            settings.COOP_RADIUS,
         )
         return state, reward, terminated
 

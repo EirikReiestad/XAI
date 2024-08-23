@@ -18,4 +18,7 @@ SCREEN_HEIGHT = 600
 FILENAME = "env-0-10-10.txt"
 
 # State
-STATE_TYPE = StateType.FULL
+STATE_TYPE = StateType.PARTIAL
+
+# Coop
+COOP_RADIUS = 1

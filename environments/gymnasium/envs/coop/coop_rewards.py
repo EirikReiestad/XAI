@@ -18,9 +18,9 @@ class CoopRewards:
             return self.move_reward
 
     def get_cooperative_reward(
-        self, agent: Position, other_agent: Position, radius: float = 2
+        self, agent: Position, other_agent: Position, radius: float = 1
     ) -> tuple[float, bool]:
-        if agent.distance_to(other_agent) < radius:
+        if agent.distance_to(other_agent) <= radius:
             return self.goal_reward, True
         return 0, False
 
