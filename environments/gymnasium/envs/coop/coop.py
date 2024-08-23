@@ -93,10 +93,8 @@ class CoopEnv(gym.Env):
                 )
             self.steps_beyond_terminated += 1
 
-        reward, reward_terminated = self.coop_rewards.get_reward(
-            self.agents.active.position, self.agents.inactive.position, collided
-        )
-        terminated = terminated or reward_terminated
+        reward = self.coop_rewards.get_individual_reward(collided)
+
         return (
             self.state.active_state,
             reward,
@@ -132,9 +130,9 @@ class CoopEnv(gym.Env):
     def concatenate_states(
         self, states: list[np.ndarray]
     ) -> tuple[np.ndarray, float, bool]:
-        state = self.state.concatenate_states(states)
-        reward, terminated = self.coop_rewards.get_reward(
-            self.agents.active.position, self.agents.inactive.position, False
+        state, _ = self.state.concatenate_states(states)
+        reward, terminated = self.coop_rewards.get_cooperative_reward(
+            self.agents.active.position, self.agents.inactive.position
         )
         return state, reward, terminated
 

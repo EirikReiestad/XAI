@@ -22,6 +22,16 @@ class FullStateDataExtractor:
         return agent_position
 
     @staticmethod
+    def agent_exist(state: np.ndarray, agent: AgentType) -> bool:
+        agent_tile_type = AGENT_TILE_TYPE.get(agent)
+        if agent_tile_type is None:
+            raise ValueError(f"Agent type {agent} is not supported.")
+        agent_position = np.where(state == agent_tile_type)
+        if len(agent_position[0]) > 1 or len(agent_position[1]) > 1:
+            raise ValueError("More than one agent found in the state.")
+        return len(agent_position[0]) == 1 and len(agent_position[1]) == 1
+
+    @staticmethod
     def get_obstacle_positions(state: np.ndarray) -> list[Position]:
         obstacle_positions = np.where(state == TileType.OBSTACLE.value)
         return [
