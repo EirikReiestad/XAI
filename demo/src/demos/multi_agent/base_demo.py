@@ -43,6 +43,9 @@ class BaseDemo(ABC):
         try:
             for i_episode in range(settings.NUM_EPISODES):
                 self._run_episode(i_episode, state, info)
+                if i_episode % settings.SAVE_EVERY == 0:
+                    self._save_models()
+                    self._save_plot()
         except Exception as e:
             logging.exception(e)
         finally:
@@ -81,3 +84,10 @@ class BaseDemo(ABC):
         if state_type in {"rgb", "full"}:
             return network.CONV_LAYERS
         return []
+
+    def _save_plot(self):
+        """Save the plot of the episode information."""
+        if self.plotter is not None:
+            self.model_handler.save_plot(self.plotter.fig, "plot")
+        else:
+            logging.warning("Plotter is not initialized. Cannot save plot.")

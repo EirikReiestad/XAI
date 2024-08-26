@@ -1,6 +1,5 @@
 import logging
 from abc import ABC, abstractmethod
-from itertools import count
 
 import matplotlib.pyplot as plt
 import torch
@@ -22,7 +21,7 @@ class BaseDemo(ABC):
     def __init__(self):
         """Initialize the base demo class with common settings."""
         self.episode_information = EpisodeInformation(durations=[], rewards=[])
-        self.plotter = Plotter()
+        self.plotter = Plotter() if settings.PLOTTING else None
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.is_ipython = "inline" in plt.get_backend()
         self.env_wrapper = self._create_environment_wrapper()
@@ -40,15 +39,19 @@ class BaseDemo(ABC):
 
         try:
             for i_episode in range(settings.NUM_EPISODES):
+                if i_episode % settings.SAVE_EVERY == 0:
+                    self._save_models()
+                    self._save_plot()
                 self._run_episode(i_episode, state, info)
         except Exception as e:
             logging.exception(e)
         finally:
             self.env_wrapper.close()
             logging.info("Complete")
-            self.plotter.update(self.episode_information, show_result=True)
-            plt.ioff()
-            plt.show()
+            if self.plotter:
+                self.plotter.update(self.episode_information, show_result=True)
+                plt.ioff()
+                plt.show()
 
     @abstractmethod
     def _run_episode(self, i_episode: int, state: torch.Tensor, info: dict):
@@ -79,3 +82,10 @@ class BaseDemo(ABC):
         """Save the DQN models for each agent."""
         model_name = settings.MODEL_NAME
         self.model_handler.save(self.dqn, model_name)
+
+    def _save_plot(self):
+        """Save the plot of the episode information."""
+        if self.plotter is not None:
+            self.model_handler.save_plot(self.plotter.fig, "plot")
+        else:
+            logging.warning("Plotter not initialized. Cannot save plot.")

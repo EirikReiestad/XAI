@@ -1,6 +1,6 @@
 from demo.src.demos.demo_type import DemoType
 
-DEMO = DemoType.MAZE
+DEMO = DemoType.COOP
 
 NUM_EPISODES = 10000
 RENDER_EVERY = 50
