@@ -10,7 +10,7 @@ from demo.src.plotters import Plotter
 from demo.src.wrappers.single_agent_environment_wrapper import (
     SingleAgentEnvironmentWrapper,
 )
-from models import ModelHandler
+from history import ModelHandler
 from rl.src.common import ConvLayer
 from rl.src.dqn.dqn_module import DQNModule
 
