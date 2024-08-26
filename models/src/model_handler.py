@@ -11,10 +11,11 @@ class ModelHandler:
     def __init__(self):
         dt = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         folder_name = self._get_folder_name()
-        self.save_folder = self._create_folder(folder_name, dt)
+        self.save_folder = self._save_folder(folder_name, dt)
+        self.load_folder = self._load_folder(folder_name)
 
     def load(self, model: DQNModule, name: str):
-        path = os.path.join(self.save_folder, name)
+        path = os.path.join(self.load_folder, name)
         model.load(path)
 
     def save(self, model: DQNModule, name: str):
@@ -32,7 +33,7 @@ class ModelHandler:
         else:
             raise ValueError("Invalid demo type")
 
-    def _create_folder(self, foldername: str, timestamp: str):
+    def _save_folder(self, foldername: str, timestamp: str):
         base_path = os.path.join("models", "models", foldername)
         if not os.path.exists(base_path):
             raise OSError(f"Folder {base_path} does not exist")
@@ -41,3 +42,9 @@ class ModelHandler:
         os.makedirs(save_folder, exist_ok=True)
 
         return save_folder
+
+    def _load_folder(self, foldername: str):
+        base_path = os.path.join("models", "models", foldername)
+        if not os.path.exists(base_path):
+            raise OSError(f"Folder {base_path} does not exist")
+        return base_path

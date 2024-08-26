@@ -19,8 +19,15 @@ assert isinstance(settings.LOAD_MODEL_NAME, str), "LOAD_MODEL_NAME must be a str
 assert settings.LOAD_MODEL_NAME != "", "LOAD_MODEL_NAME cannot be empty"
 
 if settings.PRETRAINED:
-    assert os.path.exists(
-        os.path.join("models", "models", settings.LOAD_MODEL_NAME)
-    ), "Model file does not exist"
+    if settings.DEMO == DemoType.MAZE:
+        assert os.path.exists(
+            os.path.join("models", "models", "maze", settings.LOAD_MODEL_NAME + ".pt")
+        ), "Model file does not exist"
+    elif settings.DEMO == DemoType.COOP:
+        assert os.path.exists(
+            os.path.join(
+                "models", "models", "coop", settings.LOAD_MODEL_NAME + "_agent0.pt"
+            )
+        ), "Model file does not exist"
 
 __all__ = ["DemoType", "settings"]
