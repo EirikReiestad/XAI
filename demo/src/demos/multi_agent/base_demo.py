@@ -43,8 +43,8 @@ class BaseDemo(ABC):
         try:
             for i_episode in range(settings.NUM_EPISODES):
                 self._run_episode(i_episode, state, info)
-                if i_episode % settings.SAVE_EVERY == 0:
-                    self._save_models()
+                if i_episode % settings.SAVE_EVERY == 0 and i_episode > 0:
+                    self._save_models(i_episode)
                     self._save_plot()
         except Exception as e:
             logging.exception(e)
@@ -55,23 +55,6 @@ class BaseDemo(ABC):
                 self.plotter.update(self.episode_informations, show_result=True)
                 plt.ioff()
                 plt.show()
-
-    def _load_models(
-        self, observation_shape: tuple, n_actions: int, conv_layers: list[ConvLayer]
-    ):
-        """Initialize the DQN models for each agent."""
-        dqn = DQNModule(observation_shape, n_actions, conv_layers=conv_layers)
-        self.dqns = [dqn] * self.num_agents
-
-        if settings.PRETRAINED:
-            for i, dqn in enumerate(self.dqns):
-                self.model_handler.load(dqn, f"{settings.MODEL_NAME}_agent{i}")
-
-    def _save_models(self):
-        """Save the DQN models for each agent."""
-        model_name = settings.MODEL_NAME
-        for i, dqn in enumerate(self.dqns):
-            self.model_handler.save(dqn, f"{model_name}_agent{i}")
 
     @abstractmethod
     def _run_episode(self, i_episode: int, state: torch.Tensor, info: dict):
@@ -91,3 +74,20 @@ class BaseDemo(ABC):
             self.model_handler.save_plot(self.plotter.fig, "plot")
         else:
             logging.warning("Plotter is not initialized. Cannot save plot.")
+
+    def _load_models(
+        self, observation_shape: tuple, n_actions: int, conv_layers: list[ConvLayer]
+    ):
+        """Initialize the DQN models for each agent."""
+        dqn = DQNModule(observation_shape, n_actions, conv_layers=conv_layers)
+        self.dqns = [dqn] * self.num_agents
+
+        if settings.PRETRAINED:
+            for i, dqn in enumerate(self.dqns):
+                self.model_handler.load(dqn, f"{settings.MODEL_NAME}_agent{i}")
+
+    def _save_models(self, iteration: int):
+        """Save the DQN models for each agent."""
+        model_name = settings.MODEL_NAME + f"_{iteration}"
+        for i, dqn in enumerate(self.dqns):
+            self.model_handler.save(dqn, f"{model_name}_agent{i}")
