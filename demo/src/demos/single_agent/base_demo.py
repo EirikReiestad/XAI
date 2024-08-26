@@ -1,5 +1,5 @@
-from abc import ABC, abstractmethod
 import logging
+from abc import ABC, abstractmethod
 from itertools import count
 
 import matplotlib.pyplot as plt
@@ -8,11 +8,12 @@ import torch
 from demo import network, settings
 from demo.src.common import EpisodeInformation
 from demo.src.plotters import Plotter
-from rl.src.common import ConvLayer
-from rl.src.dqn.dqn_module import DQNModule
 from demo.src.wrappers.single_agent_environment_wrapper import (
     SingleAgentEnvironmentWrapper,
 )
+from models import ModelHandler
+from rl.src.common import ConvLayer
+from rl.src.dqn.dqn_module import DQNModule
 
 
 class BaseDemo(ABC):
@@ -24,8 +25,8 @@ class BaseDemo(ABC):
         self.plotter = Plotter()
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.is_ipython = "inline" in plt.get_backend()
-
         self.env_wrapper = self._create_environment_wrapper()
+        self.model_handler = ModelHandler()
 
     def run(self):
         """Run the demo, interacting with the environment and training the DQN."""
@@ -33,7 +34,7 @@ class BaseDemo(ABC):
         n_actions = self.env_wrapper.action_space.n
         conv_layers = self._create_conv_layers(info)
 
-        self.dqn = DQNModule(state.shape, n_actions, conv_layers=conv_layers)
+        self._load_models(state.shape, n_actions, conv_layers)
 
         plt.ion()
 
@@ -64,3 +65,17 @@ class BaseDemo(ABC):
         if state_type in {"rgb", "full"}:
             return network.CONV_LAYERS
         return []
+
+    def _load_models(
+        self, observation_shape: tuple, n_actions: int, conv_layers: list[ConvLayer]
+    ):
+        """Initialize the DQN models for each agent."""
+        self.dqn = DQNModule(observation_shape, n_actions, conv_layers=conv_layers)
+
+        if settings.PRETRAINED:
+            self.model_handler.load(self.dqn, settings.MODEL_NAME)
+
+    def _save_models(self):
+        """Save the DQN models for each agent."""
+        model_name = settings.MODEL_NAME
+        self.model_handler.save(self.dqn, model_name)

@@ -65,8 +65,7 @@ class CoopDemo(BaseDemo):
             action = self.dqns[agent].select_action(state)
 
             self.env_wrapper.set_active_agent(agent)
-            observation, reward, terminated, truncated, info = self.env_wrapper.step(
-                action.item()
+            observation, reward, terminated, truncated, info = self.env_wrapper.step( action.item()
             )
 
             full_state = info.get("full_state")
@@ -97,11 +96,6 @@ class CoopDemo(BaseDemo):
         return new_states, total_reward, dones, full_states
 
     def _get_conv_layers(self, info) -> list[ConvLayer]:
-        """Create convolutional layers based on the state type."""
-        state_type = info.get("state_type") if info else None
-        if state_type in {"rgb", "full"}:
-            return network.CONV_LAYERS
-        return []
 
 
 if __name__ == "__main__":

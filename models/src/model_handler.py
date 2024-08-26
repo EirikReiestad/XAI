@@ -16,12 +16,6 @@ class ModelHandler:
     def load(self, model: DQNModule, name: str):
         model.load(name)
 
-    def load_models(self, models: list[DQNModule], names: list):
-        if len(models) != len(names):
-            raise ValueError("Number of models and names must match")
-        for model, name in zip(models, names):
-            self.load(model, name)
-
     def save(self, model: DQNModule, name: str):
         model.save(name)
 
