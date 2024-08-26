@@ -8,9 +8,7 @@ import sys
 
 import pygame as pg
 
-from environments.gymnasium.envs.maze.utils import (
-    MazeTileType as TileType,
-)
+from environments.gymnasium.envs.maze.utils import TileType
 from environments.gymnasium.utils import Direction
 from tools.maze_generator.utils import MazeDrawMode as DrawMode
 
