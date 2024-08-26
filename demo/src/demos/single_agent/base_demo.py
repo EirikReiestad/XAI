@@ -39,7 +39,11 @@ class BaseDemo(ABC):
 
         try:
             for i_episode in range(settings.NUM_EPISODES):
-                if i_episode % settings.SAVE_EVERY == 0 and i_episode > 0:
+                if (
+                    settings.SAVE_MODEL
+                    and i_episode % settings.SAVE_EVERY == 0
+                    and i_episode > 0
+                ):
                     self._save_models(i_episode)
                     self._save_plot()
                 self._run_episode(i_episode, state, info)
