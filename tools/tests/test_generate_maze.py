@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import patch, mock_open
 from tools.maze_generator.utils import MazeDrawMode as DrawMode
 from tools.maze_generator.generate_maze import GenerateMaze
-from environments.gymnasium.envs.maze.utils import MazeTileType as TileType
+from environments.gymnasium.envs.maze.utils import TileType
 from environments.gymnasium.utils import Direction
 
 
