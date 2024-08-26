@@ -76,11 +76,11 @@ class BaseDemo(ABC):
         self.dqn = DQNModule(observation_shape, n_actions, conv_layers=conv_layers)
 
         if settings.PRETRAINED:
-            self.model_handler.load(self.dqn, settings.MODEL_NAME)
+            self.model_handler.load(self.dqn, settings.LOAD_MODEL_NAME)
 
     def _save_models(self, iteration: int):
         """Save the DQN models for each agent."""
-        model_name = settings.MODEL_NAME + f"_{iteration}"
+        model_name = settings.SAVE_MODEL_NAME + f"_{iteration}"
         self.model_handler.save(self.dqn, model_name)
 
     def _save_plot(self):

@@ -84,10 +84,10 @@ class BaseDemo(ABC):
 
         if settings.PRETRAINED:
             for i, dqn in enumerate(self.dqns):
-                self.model_handler.load(dqn, f"{settings.MODEL_NAME}_agent{i}")
+                self.model_handler.load(dqn, f"{settings.LOAD_MODEL_NAME}_agent{i}")
 
     def _save_models(self, iteration: int):
         """Save the DQN models for each agent."""
-        model_name = settings.MODEL_NAME + f"_{iteration}"
+        model_name = settings.SAVE_MODEL_NAME + f"_{iteration}"
         for i, dqn in enumerate(self.dqns):
             self.model_handler.save(dqn, f"{model_name}_agent{i}")
