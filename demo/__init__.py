@@ -13,12 +13,14 @@ assert isinstance(settings.SAVE_MODEL, bool), "SAVE_MODEL must be a boolean"
 assert settings.SAVE_EVERY > 0, "SAVE_EVERY must be greater than 0"
 
 assert isinstance(settings.PRETRAINED, bool), "USE_MODEL must be a boolean"
-assert isinstance(settings.MODEL_NAME, str), "MODEL_NAME must be a string"
-assert settings.MODEL_NAME != "", "MODEL_NAME cannot be empty"
+assert isinstance(settings.SAVE_MODEL_NAME, str), "SAVE_MODEL_NAME must be a string"
+assert settings.SAVE_MODEL_NAME != "", "MODEL_NAME cannot be empty"
+assert isinstance(settings.LOAD_MODEL_NAME, str), "LOAD_MODEL_NAME must be a string"
+assert settings.LOAD_MODEL_NAME != "", "LOAD_MODEL_NAME cannot be empty"
 
 if settings.PRETRAINED:
     assert os.path.exists(
-        os.path.join("models", "models", settings.MODEL_NAME)
+        os.path.join("models", "models", settings.LOAD_MODEL_NAME)
     ), "Model file does not exist"
 
 __all__ = ["DemoType", "settings"]
