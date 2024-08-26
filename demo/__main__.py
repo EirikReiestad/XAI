@@ -1,5 +1,12 @@
-from demo.src.demos.multi_agent.coop import Demo
-# from demo.src.demos.single_agent.maze import Demo
+from demo import settings, DemoType
+
+match settings.DEMO:
+    case DemoType.MAZE:
+        from demo.src.demos.single_agent.maze import MazeDemo as Demo
+    case DemoType.COOP:
+        from demo.src.demos.multi_agent.coop import CoopDemo as Demo
+    case _:
+        raise ValueError("Invalid demo type")
 
 demo = Demo()
 demo.run()
