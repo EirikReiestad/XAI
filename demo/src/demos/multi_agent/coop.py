@@ -1,8 +1,7 @@
 from demo.src.demos.multi_agent.base_demo import BaseDemo
 import torch
-from demo import network, settings
+from demo import settings
 from itertools import count
-from rl.src.common import ConvLayer
 import numpy as np
 
 
@@ -11,7 +10,7 @@ class CoopDemo(BaseDemo):
 
     def __init__(self):
         """Initialize the Coop demo."""
-        super().__init__(env_id="Coop-v0")
+        super().__init__(env_id="CoopEnv-v0")
 
     def _run_episode(self, i_episode: int, state: torch.Tensor, info: dict):
         """Handle the episode by interacting with the environment and training the DQN."""
@@ -65,7 +64,8 @@ class CoopDemo(BaseDemo):
             action = self.dqns[agent].select_action(state)
 
             self.env_wrapper.set_active_agent(agent)
-            observation, reward, terminated, truncated, info = self.env_wrapper.step( action.item()
+            observation, reward, terminated, truncated, info = self.env_wrapper.step(
+                action.item()
             )
 
             full_state = info.get("full_state")
@@ -94,8 +94,6 @@ class CoopDemo(BaseDemo):
             raise ValueError("New state must be returned from the DQN.")
 
         return new_states, total_reward, dones, full_states
-
-    def _get_conv_layers(self, info) -> list[ConvLayer]:
 
 
 if __name__ == "__main__":
