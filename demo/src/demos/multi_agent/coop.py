@@ -11,6 +11,7 @@ from demo import network, settings
 from demo.src.common.episode_information import EpisodeInformation
 from demo.src.plotters import Plotter
 from demo.src.wrappers import MultiAgentEnvironmentWrapper
+from models import ModelHandler
 from rl.src.common import ConvLayer
 from rl.src.dqn.dqn_module import DQNModule
 
@@ -21,7 +22,7 @@ gym.register(
 )
 
 
-class Demo:
+class CoopDemo:
     """Class for running the Coop demo with DQN and plotting results."""
 
     def __init__(self):
@@ -38,11 +39,18 @@ class Demo:
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.is_ipython = "inline" in matplotlib.get_backend()
 
+        self.model_handler = ModelHandler()
+
     def run(self):
         """Run the demo, interacting with the environment and training the DQN."""
         state, info = self.env_wrapper.reset()
         n_actions = self.env_wrapper.action_space.n
         conv_layers = self._get_conv_layers(info)
+
+        if settings.USE_MODEL:
+            dqn = DQNModule(state.shape, n_actions, conv_layers=conv_layers)
+            dqn = self.model_handler.load(dqn, settings.MODEL_NAME)
+            self.dqns = [dqn] * self.num_agents
 
         dqn = DQNModule(state.shape, n_actions, conv_layers=conv_layers)
         self.dqns = [dqn] * self.num_agents
@@ -152,6 +160,9 @@ class Demo:
         if state_type in {"rgb", "full"}:
             network.CONV_LAYERS
         return []
+
+    def _load_model(self):
+        pass
 
 
 if __name__ == "__main__":
