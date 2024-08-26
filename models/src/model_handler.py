@@ -14,10 +14,12 @@ class ModelHandler:
         self.save_folder = self._create_folder(folder_name, dt)
 
     def load(self, model: DQNModule, name: str):
-        model.load(name)
+        path = os.path.join(self.save_folder, name)
+        model.load(path)
 
     def save(self, model: DQNModule, name: str):
-        model.save(name)
+        path = os.path.join(self.save_folder, name)
+        model.save(path)
 
     def save_plot(self, plot: Figure, filename: str = "plot.png"):
         plot.savefig(os.path.join(self.save_folder, filename))

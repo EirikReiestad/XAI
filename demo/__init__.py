@@ -14,6 +14,7 @@ assert settings.SAVE_EVERY > 0, "SAVE_EVERY must be greater than 0"
 
 assert isinstance(settings.PRETRAINED, bool), "USE_MODEL must be a boolean"
 assert isinstance(settings.MODEL_NAME, str), "MODEL_NAME must be a string"
+assert settings.MODEL_NAME != "", "MODEL_NAME cannot be empty"
 
 if settings.PRETRAINED:
     assert os.path.exists(

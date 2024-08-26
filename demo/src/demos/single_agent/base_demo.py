@@ -39,8 +39,8 @@ class BaseDemo(ABC):
 
         try:
             for i_episode in range(settings.NUM_EPISODES):
-                if i_episode % settings.SAVE_EVERY == 0:
-                    self._save_models()
+                if i_episode % settings.SAVE_EVERY == 0 and i_episode > 0:
+                    self._save_models(i_episode)
                     self._save_plot()
                 self._run_episode(i_episode, state, info)
         except Exception as e:
@@ -78,9 +78,9 @@ class BaseDemo(ABC):
         if settings.PRETRAINED:
             self.model_handler.load(self.dqn, settings.MODEL_NAME)
 
-    def _save_models(self):
+    def _save_models(self, iteration: int):
         """Save the DQN models for each agent."""
-        model_name = settings.MODEL_NAME
+        model_name = settings.MODEL_NAME + f"_{iteration}"
         self.model_handler.save(self.dqn, model_name)
 
     def _save_plot(self):

@@ -1,3 +1,6 @@
+models/models/coop/*
+models/models/maze/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
