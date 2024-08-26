@@ -246,10 +246,14 @@ class DQNModule:
 
     def save(self, path: str) -> None:
         """Save the policy network to the specified path."""
+        if not path.endswith(".pt"):
+            path += ".pt"
         torch.save(self.policy_net.state_dict(), path)
 
     def load(self, path: str) -> None:
         """Load the policy network from the specified path."""
+        if not path.endswith(".pt"):
+            path += ".pt"
         self.policy_net.load_state_dict(torch.load(path))
         self.target_net.load_state_dict(self.policy_net.state_dict())
         self.policy_net.eval()
