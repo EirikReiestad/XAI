@@ -1,7 +1,5 @@
 import gymnasium as gym
 
-from environments.gymnasium.envs.coop import CoopEnv
-
 gym.register(
     id="MazeEnv-v0",
     entry_point="environments.gymnasium.envs.maze.maze:MazeEnv",

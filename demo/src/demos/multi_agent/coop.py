@@ -1,80 +1,22 @@
-import logging
-from itertools import count
-
-import gymnasium as gym
-import matplotlib
-import matplotlib.pyplot as plt
-import numpy as np
+from demo.src.demos.multi_agent.base_demo import BaseDemo
 import torch
-
 from demo import network, settings
-from demo.src.common.episode_information import EpisodeInformation
-from demo.src.plotters import Plotter
-from demo.src.wrappers import MultiAgentEnvironmentWrapper
-from models import ModelHandler
+from itertools import count
 from rl.src.common import ConvLayer
-from rl.src.dqn.dqn_module import DQNModule
-
-# Register Gym environment
-gym.register(
-    id="Coop-v0",
-    entry_point="environments.gymnasium.envs.coop.coop:CoopEnv",
-)
+import numpy as np
 
 
-class CoopDemo:
+class CoopDemo(BaseDemo):
     """Class for running the Coop demo with DQN and plotting results."""
 
     def __init__(self):
-        """Initialize the Demo class with settings and plotter."""
-        self.env_wrapper = MultiAgentEnvironmentWrapper(env_id="Coop-v0")
-
-        self.num_agents = self.env_wrapper.num_agents
-
-        self.episode_informations = []
-        for _ in range(self.num_agents):
-            self.episode_informations.append(EpisodeInformation([], []))
-
-        self.plotter = Plotter() if settings.PLOTTING else None
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.is_ipython = "inline" in matplotlib.get_backend()
-
-        self.model_handler = ModelHandler()
-
-    def run(self):
-        """Run the demo, interacting with the environment and training the DQN."""
-        state, info = self.env_wrapper.reset()
-        n_actions = self.env_wrapper.action_space.n
-        conv_layers = self._get_conv_layers(info)
-
-        if settings.USE_MODEL:
-            dqn = DQNModule(state.shape, n_actions, conv_layers=conv_layers)
-            dqn = self.model_handler.load(dqn, settings.MODEL_NAME)
-            self.dqns = [dqn] * self.num_agents
-
-        dqn = DQNModule(state.shape, n_actions, conv_layers=conv_layers)
-        self.dqns = [dqn] * self.num_agents
-
-        plt.ion()
-
-        try:
-            for i_episode in range(settings.NUM_EPISODES):
-                self._run_episode(i_episode, state, info)
-        except Exception as e:
-            logging.exception(e)
-        finally:
-            self.env_wrapper.close()
-            logging.info("Complete")
-            if self.plotter:
-                self.plotter.update(self.episode_informations, show_result=True)
-                plt.ioff()
-                plt.show()
+        """Initialize the Coop demo."""
+        super().__init__(env_id="CoopEnv-v0")
 
     def _run_episode(self, i_episode: int, state: torch.Tensor, info: dict):
         """Handle the episode by interacting with the environment and training the DQN."""
         state, _ = self.env_wrapper.reset()
         total_rewards = np.zeros(self.num_agents)
-
         dones = [False] * self.num_agents
 
         for t in count():
@@ -158,13 +100,10 @@ class CoopDemo:
         """Create convolutional layers based on the state type."""
         state_type = info.get("state_type") if info else None
         if state_type in {"rgb", "full"}:
-            network.CONV_LAYERS
+            return network.CONV_LAYERS
         return []
-
-    def _load_model(self):
-        pass
 
 
 if __name__ == "__main__":
-    demo = Demo()
+    demo = CoopDemo()
     demo.run()
