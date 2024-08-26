@@ -15,7 +15,7 @@ assert settings.SAVE_EVERY > 0, "SAVE_EVERY must be greater than 0"
 assert isinstance(settings.PRETRAINED, bool), "USE_MODEL must be a boolean"
 assert isinstance(settings.MODEL_NAME, str), "MODEL_NAME must be a string"
 
-if settings.PRETAINED:
+if settings.PRETRAINED:
     assert os.path.exists(
         os.path.join("models", "models", settings.MODEL_NAME)
     ), "Model file does not exist"

@@ -1,13 +1,11 @@
 import logging
-import os
 from abc import ABC, abstractmethod
 
 import matplotlib
 import matplotlib.pyplot as plt
-import numpy as np
 import torch
 
-from demo import settings
+from demo import network, settings
 from demo.src.common.episode_information import EpisodeInformation
 from demo.src.plotters import Plotter
 from demo.src.wrappers import MultiAgentEnvironmentWrapper
@@ -38,7 +36,7 @@ class BaseDemo(ABC):
         n_actions = self.env_wrapper.action_space.n
         conv_layers = self._get_conv_layers(info)
 
-        self._init_models(state.shape, n_actions, conv_layers)
+        self._load_models(state.shape, n_actions, conv_layers)
 
         plt.ion()
 
@@ -55,7 +53,7 @@ class BaseDemo(ABC):
                 plt.ioff()
                 plt.show()
 
-    def _init_models(
+    def _load_models(
         self, observation_shape: tuple, n_actions: int, conv_layers: list[ConvLayer]
     ):
         """Initialize the DQN models for each agent."""
@@ -63,14 +61,10 @@ class BaseDemo(ABC):
         self.dqns = [dqn] * self.num_agents
 
         if settings.PRETRAINED:
-            model_name_agent0 = os.path.join(settings.MODEL_NAME, "_agent0")
-            model_name_agent1 = os.path.join(settings.MODEL_NAME, "_agent1")
+            for i, dqn in enumerate(self.dqns):
+                self.model_handler.load(dqn, f"{settings.MODEL_NAME}_agent{i}")
 
-            self.model_handler.load_models(
-                self.dqns, [model_name_agent0, model_name_agent1]
-            )
-
-    def save_models(self):
+    def _save_models(self):
         """Save the DQN models for each agent."""
         model_name = settings.MODEL_NAME
         for i, dqn in enumerate(self.dqns):
@@ -81,7 +75,9 @@ class BaseDemo(ABC):
         """Abstract method to handle running an episode. Must be implemented by subclasses."""
         pass
 
-    @abstractmethod
     def _get_conv_layers(self, info) -> list[ConvLayer]:
-        """Abstract method to get convolutional layers. Must be implemented by subclasses."""
-        pass
+        """Create convolutional layers based on the state type."""
+        state_type = info.get("state_type") if info else None
+        if state_type in {"rgb", "full"}:
+            return network.CONV_LAYERS
+        return []
