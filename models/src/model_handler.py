@@ -1,10 +1,10 @@
 import os
 from datetime import datetime
 
-import torch
 from matplotlib.figure import Figure
 
 from demo import DemoType, settings
+from rl.src.dqn.dqn_module import DQNModule
 
 
 class ModelHandler:
@@ -13,12 +13,17 @@ class ModelHandler:
         folder_name = self._get_folder_name()
         self.save_folder = self._create_folder(folder_name, dt)
 
-    def load(self, model: torch.nn.Module, name: str):
-        model.load_state_dict(torch.load(os.path.join(self.save_folder, name)))
-        return model
+    def load(self, model: DQNModule, name: str):
+        model.load(name)
 
-    def save(self, model: torch.nn.Module, name: str):
-        torch.save(model.state_dict(), os.path.join(self.save_folder, name))
+    def load_models(self, models: list[DQNModule], names: list):
+        if len(models) != len(names):
+            raise ValueError("Number of models and names must match")
+        for model, name in zip(models, names):
+            self.load(model, name)
+
+    def save(self, model: DQNModule, name: str):
+        model.save(name)
 
     def save_plot(self, plot: Figure, filename: str = "plot.png"):
         plot.savefig(os.path.join(self.save_folder, filename))

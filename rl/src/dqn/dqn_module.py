@@ -3,9 +3,7 @@
 This module contains the DQN agent that interacts with the environment.
 """
 
-import logging
 import math
-import os
 import random
 
 import numpy as np
@@ -33,7 +31,6 @@ class DQNModule:
         n_actions: int,
         hidden_layers: list[int] = [128, 128],
         conv_layers: list[ConvLayer] | None = None,
-        path: str | None = None,
         seed: int | None = None,
     ) -> None:
         """Initialize the DQN agent.
@@ -51,7 +48,6 @@ class DQNModule:
             random.seed(seed)
             np.random.seed(seed)
 
-        self.path = path
         self.n_actions = n_actions
         self.observation_shape = observation_shape
         self.hp = DQNHyperparameter(
@@ -71,9 +67,6 @@ class DQNModule:
             self.policy_net.parameters(), lr=self.hp.lr, amsgrad=True
         )
         self.memory = ReplayMemory(settings.REPLAY_MEMORY_SIZE)
-
-        if self.path and os.path.exists(self.path):
-            self.load()
 
         self.update_interval = 1
         self.step_count = 0
@@ -251,23 +244,13 @@ class DQNModule:
             ] * self.hp.tau + target_net_state_dict[key] * (1 - self.hp.tau)
         self.target_net.load_state_dict(target_net_state_dict)
 
-    def save(self) -> None:
+    def save(self, path: str) -> None:
         """Save the policy network to the specified path."""
-        if self.path is None:
-            raise ValueError("Model path is not specified")
-        torch.save(self.policy_net.state_dict(), self.path)
+        torch.save(self.policy_net.state_dict(), path)
 
-    def load(self) -> None:
+    def load(self, path: str) -> None:
         """Load the policy network from the specified path."""
-        if self.path is None:
-            raise ValueError("Model path is not specified")
-
-        if not os.path.exists(self.path):
-            logging.warning(f"Model not found at {self.path}")
-            self.target_net.load_state_dict(self.policy_net.state_dict())
-            return
-
-        self.policy_net.load_state_dict(torch.load(self.path))
+        self.policy_net.load_state_dict(torch.load(path))
         self.target_net.load_state_dict(self.policy_net.state_dict())
         self.policy_net.eval()
         self.target_net.eval()
