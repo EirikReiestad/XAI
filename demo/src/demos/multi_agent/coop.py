@@ -11,7 +11,7 @@ class CoopDemo(BaseDemo):
 
     def __init__(self):
         """Initialize the Coop demo."""
-        super().__init__(env_id="CoopEnv-v0")
+        super().__init__(env_id="Coop-v0")
 
     def _run_episode(self, i_episode: int, state: torch.Tensor, info: dict):
         """Handle the episode by interacting with the environment and training the DQN."""
