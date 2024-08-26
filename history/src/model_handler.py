@@ -34,7 +34,7 @@ class ModelHandler:
             raise ValueError("Invalid demo type")
 
     def _save_folder(self, foldername: str, timestamp: str):
-        base_path = os.path.join("models", "models", foldername)
+        base_path = os.path.join("history", "models", foldername)
         if not os.path.exists(base_path):
             raise OSError(f"Folder {base_path} does not exist")
 
@@ -44,7 +44,7 @@ class ModelHandler:
         return save_folder
 
     def _load_folder(self, foldername: str):
-        base_path = os.path.join("models", "models", foldername)
+        base_path = os.path.join("history", "models", foldername)
         if not os.path.exists(base_path):
             raise OSError(f"Folder {base_path} does not exist")
         return base_path

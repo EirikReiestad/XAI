@@ -3,6 +3,7 @@
 This module contains the DQN agent that interacts with the environment.
 """
 
+import json
 import math
 import random
 
@@ -250,6 +251,13 @@ class DQNModule:
             path += ".pt"
         torch.save(self.policy_net.state_dict(), path)
 
+        meta_data = {
+            "steps_done": self.steps_done,
+            "step_count": self.step_count,
+        }
+        meta_data_path = path.replace(".pt", "_meta_data.json")
+        json.dump(meta_data, open(meta_data_path, "w"))
+
     def load(self, path: str) -> None:
         """Load the policy network from the specified path."""
         if not path.endswith(".pt"):
@@ -258,3 +266,8 @@ class DQNModule:
         self.target_net.load_state_dict(self.policy_net.state_dict())
         self.policy_net.eval()
         self.target_net.eval()
+
+        meta_data_path = path.replace(".pt", "_meta_data.json")
+        meta_data = json.load(open(meta_data_path, "r"))
+        self.steps_done = meta_data["steps_done"]
+        self.step_count = meta_data["step_count"]

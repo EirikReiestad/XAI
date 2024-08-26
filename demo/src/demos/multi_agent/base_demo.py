@@ -9,7 +9,7 @@ from demo import network, settings
 from demo.src.common.episode_information import EpisodeInformation
 from demo.src.plotters import Plotter
 from demo.src.wrappers import MultiAgentEnvironmentWrapper
-from models import ModelHandler
+from history import ModelHandler
 from rl.src.common import ConvLayer
 from rl.src.dqn.dqn_module import DQNModule
 
