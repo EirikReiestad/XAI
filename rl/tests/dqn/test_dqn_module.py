@@ -20,7 +20,6 @@ class TestDQNModule(unittest.TestCase):
             n_actions=self.n_actions,
             hidden_layers=[128, 128],
             conv_layers=None,
-            path=None,
             seed=42,
         )
 
@@ -65,24 +64,6 @@ class TestDQNModule(unittest.TestCase):
         if next_state is None:
             raise AssertionError("next_state is None")
         self.assertEqual(next_state.shape, self.observation_shape)
-
-    @unittest.skip("Not implemented")
-    @patch("torch.save")
-    def test_save(self, mock_save):
-        """Test saving the model."""
-        self.dqn_module.path = "test_model.pth"
-        self.dqn_module.save()
-        mock_save.assert_called_once()
-
-    @unittest.skip("Not implemented")
-    @patch("torch.load")
-    @patch("torch.save")
-    def test_load(self, mock_save, mock_load):
-        """Test loading the model."""
-        self.dqn_module.path = "test_model.pth"
-        mock_load.return_value = {}  # Simulate an empty model state_dict
-        self.dqn_module.load()
-        mock_load.assert_called_once_with(self.dqn_module.path)
 
     def test_invalid_state_shape(self):
         """Test invalid state shape."""
