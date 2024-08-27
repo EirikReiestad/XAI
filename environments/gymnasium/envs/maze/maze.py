@@ -95,6 +95,12 @@ class MazeEnv(gym.Env):
     def reset(
         self, *, seed: Optional[int] = None, options: Optional[Dict[str, Any]] = None
     ) -> Tuple[np.ndarray, Dict[str, Any]]:
+        if options is not None and options.get("all_possible_states"):
+            return self.state.active_state, {
+                "state_type": settings.STATE_TYPE.value,
+                "all_possible_states": self._get_all_possible_states(),
+            }
+
         super().reset(seed=seed)
         render_mode = options.get("render_mode") if options else None
         self.render_mode = render_mode or self.render_mode
@@ -107,11 +113,29 @@ class MazeEnv(gym.Env):
 
         return self.state.active_state, {"state_type": settings.STATE_TYPE.value}
 
-    def render(self, _render_mode: Optional[str] = None) -> Optional[np.ndarray]:
-        self.maze_renderer.render(self.state.full, _render_mode)
+    def render(self, info: Optional[dict[str, Any]] = None) -> Optional[np.ndarray]:
+        self.maze_renderer.render(self.state.full, info)
 
     def close(self):
         self.maze_renderer.close()
+
+    def _get_all_possible_states(self) -> list[np.ndarray]:
+        state = self.state.full.copy()
+        agent_position = self.agent
+        state[*agent_position] = TileType.EMPTY.value
+
+        empty_state = np.full_like(state, TileType.EMPTY.value)
+
+        states = []
+        for x in range(self.state.full.shape[0]):
+            for y in range(self.state.full.shape[1]):
+                new_state = state.copy()
+                if new_state[x, y] == TileType.EMPTY.value:
+                    new_state[x, y] = TileType.START.value
+                    states.append(new_state)
+                else:
+                    states.append(empty_state)
+        return states
 
     def _move_agent(self, state: np.ndarray, action: int) -> Optional[np.ndarray]:
         new_state = state.copy()
