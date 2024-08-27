@@ -2,6 +2,7 @@ import logging
 from abc import ABC, abstractmethod
 
 import matplotlib.pyplot as plt
+import numpy as np
 import torch
 
 from demo import network, settings
@@ -75,7 +76,10 @@ class BaseDemo(ABC):
 
     def _plot_q_values(self):
         if settings.QVALUES and self.plotter is not None:
-            self.plotter.plot_q_values(self.dqn.q_values)
+            states = self.env_wrapper.get_all_possible_states()
+            q_values = self.dqn.get_q_values(states)
+            info = {"render_mode": "human", "q_values": q_values}
+            self.env_wrapper.render(info)
 
     def _load_models(
         self, observation_shape: tuple, n_actions: int, conv_layers: list[ConvLayer]

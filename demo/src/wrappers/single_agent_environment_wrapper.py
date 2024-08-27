@@ -1,4 +1,4 @@
-from typing import Any, Tuple
+from typing import Any, Optional, Tuple
 
 import gymnasium as gym
 import torch
@@ -27,13 +27,25 @@ class SingleAgentEnvironmentWrapper:
         observation = preprocess_state(observation)
         return observation, float(reward), terminated, truncated, info
 
-    def render(self):
+    def render(self, info: Optional[dict[str, Any]] = None):
         """Render the environment."""
         self.env.render()
 
     def close(self):
         """Close the environment."""
         self.env.close()
+
+    def get_all_possible_states(self) -> list[torch.Tensor]:
+        """Get all possible states for the agent in the environment."""
+        options = {
+            "all_possible_states": True,
+        }
+        _, info = self.env.reset(options=options)
+        all_possible_states = info.get("all_possible_states")
+        if not all_possible_states:
+            raise ValueError("No possible states found.")
+        states = [preprocess_state(state) for state in all_possible_states]
+        return states
 
     @property
     def action_space(self) -> gym.spaces.Space:
