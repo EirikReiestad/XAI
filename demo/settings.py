@@ -1,9 +1,9 @@
 from demo.src.demos.demo_type import DemoType
 
-DEMO = DemoType.MAZE
+DEMO = DemoType.COOP
 
 NUM_EPISODES = 10000
-RENDER_EVERY = 50
+RENDER_EVERY = 1
 
 SLOWING_FACTOR = 10
 
@@ -13,5 +13,5 @@ SAVE_MODEL = False
 SAVE_EVERY = 200
 SAVE_MODEL_NAME = "model"
 
-PRETRAINED = True
-LOAD_MODEL_NAME = "2024-08-26_13-13-03/model_400"
+PRETRAINED = False
+LOAD_MODEL_NAME = "2024-08-26_13-36-53/model_600"
