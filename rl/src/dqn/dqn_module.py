@@ -245,6 +245,21 @@ class DQNModule:
             ] * self.hp.tau + target_net_state_dict[key] * (1 - self.hp.tau)
         self.target_net.load_state_dict(target_net_state_dict)
 
+    @property
+    def q_values(self) -> np.ndarray:
+        """Calculate the Q-values for each action in the environment.
+        Returns:
+            np.ndarray: Array of Q-values for each action.
+        """
+        q_values = np.zeros(
+            (self.observation_shape[0], self.observation_shape[1], self.n_actions)
+        )
+        for i in range(self.observation_shape[0]):
+            for j in range(self.observation_shape[1]):
+                state = torch.tensor([[i, j]], device=device, dtype=torch.float)
+                q_values[i, j] = self.policy_net(state).cpu().detach().numpy().flatten()
+        return q_values
+
     def save(self, path: str) -> None:
         """Save the policy network to the specified path."""
         if not path.endswith(".pt"):

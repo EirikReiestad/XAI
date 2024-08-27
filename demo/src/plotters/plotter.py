@@ -1,10 +1,12 @@
 import matplotlib.pyplot as plt
+import numpy as np
 import torch
 from IPython import display
-from demo.src.common import EpisodeInformation
-from matplotlib.pyplot import cm
-from matplotlib.colors import Colormap
 from matplotlib import colors as mcolors
+from matplotlib.colors import Colormap
+from matplotlib.pyplot import cm
+
+from demo.src.common import EpisodeInformation
 
 
 class Plotter:
@@ -106,6 +108,14 @@ class Plotter:
         )
         self.ax2.plot(rewards_means.numpy(), color=color)
         self.ax2.legend(loc="upper left")
+
+    def plot_q_values(self, q_values: np.ndarray):
+        """Plot the Q-values of the DQN."""
+        plt.figure()
+        for i in range(q_values.shape[1]):
+            plt.plot(q_values[:, i], label=f"Q-value {i}")
+        plt.legend()
+        plt.show()
 
     @staticmethod
     def _moving_average(tensor: torch.Tensor, window_size: int = 100):

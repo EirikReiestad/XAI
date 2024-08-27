@@ -38,5 +38,7 @@ class MazeDemo(BaseDemo):
             if done:
                 self.episode_information.durations.append(t + 1)
                 self.episode_information.rewards.append(total_reward)
-                self.plotter.update(self.episode_information)
+                if self.plotter is not None:
+                    self.plotter.update(self.episode_information)
+                    self._plot_q_values()
                 break
