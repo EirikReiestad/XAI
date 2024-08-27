@@ -73,6 +73,10 @@ class BaseDemo(ABC):
             return network.CONV_LAYERS
         return []
 
+    def _plot_q_values(self):
+        if settings.QVALUES and self.plotter is not None:
+            self.plotter.plot_q_values(self.dqn.q_values)
+
     def _load_models(
         self, observation_shape: tuple, n_actions: int, conv_layers: list[ConvLayer]
     ):
