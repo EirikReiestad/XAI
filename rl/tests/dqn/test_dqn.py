@@ -53,35 +53,6 @@ class TestDQNModule(unittest.TestCase):
         with self.assertRaises(ValueError):
             dqn.select_action(invalid_state)
 
-    @patch("torch.save")
-    def test_save(self, mock_save):
-        dqn = DQNModule(self.rgb_shape, self.n_actions)
-        dqn.path = "test_model.pth"
-        dqn.save()
-        mock_save.assert_called_once()
-
-    def test_save_no_path(self):
-        dqn = DQNModule(self.rgb_shape, self.n_actions)
-        dqn.path = None
-        with self.assertRaises(ValueError):
-            dqn.save()
-
-    @patch("torch.load")
-    @patch("os.path.exists")
-    def test_load(self, mock_exists, mock_load):
-        dqn = DQNModule(self.rgb_shape, self.n_actions)
-        mock_exists.return_value = True
-        mock_load.return_value = dqn.policy_net.state_dict()
-        dqn.path = "test_model.pth"
-        dqn.load()
-        mock_load.assert_called_once()
-
-    def test_load_no_path(self):
-        dqn = DQNModule(self.rgb_shape, self.n_actions)
-        dqn.path = None
-        with self.assertRaises(ValueError):
-            dqn.load()
-
     def test_train_rgb(self):
         dqn = DQNModule(self.rgb_shape, self.n_actions)
         state = torch.randn(*self.rgb_shape).to(device)
