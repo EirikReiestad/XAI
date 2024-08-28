@@ -24,7 +24,11 @@ class MazeDemo(BaseDemo):
             )
 
             if i_episode % settings.RENDER_EVERY == 0:
-                self.env_wrapper.render()
+                # self.env_wrapper.render()
+                if settings.QVALUES:
+                    self._render_q_values()
+                else:
+                    self.env_wrapper.render()
 
             reward = float(reward)
             total_reward += reward
@@ -40,5 +44,4 @@ class MazeDemo(BaseDemo):
                 self.episode_information.rewards.append(total_reward)
                 if self.plotter is not None:
                     self.plotter.update(self.episode_information)
-                    self._plot_q_values()
                 break

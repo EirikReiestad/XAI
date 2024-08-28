@@ -114,27 +114,27 @@ class MazeEnv(gym.Env):
         return self.state.active_state, {"state_type": settings.STATE_TYPE.value}
 
     def render(self, info: Optional[dict[str, Any]] = None) -> Optional[np.ndarray]:
-        self.maze_renderer.render(self.state.full, info)
+        return self.maze_renderer.render(self.state.full, info)
 
     def close(self):
         self.maze_renderer.close()
 
-    def _get_all_possible_states(self) -> list[np.ndarray]:
+    def _get_all_possible_states(self) -> np.ndarray:
         state = self.state.full.copy()
         agent_position = self.agent
         state[*agent_position] = TileType.EMPTY.value
 
         empty_state = np.full_like(state, TileType.EMPTY.value)
 
-        states = []
+        states = np.zeros(state.shape, dtype=np.ndarray)
         for x in range(self.state.full.shape[0]):
             for y in range(self.state.full.shape[1]):
                 new_state = state.copy()
                 if new_state[x, y] == TileType.EMPTY.value:
                     new_state[x, y] = TileType.START.value
-                    states.append(new_state)
+                    states[x, y] = new_state
                 else:
-                    states.append(empty_state)
+                    states[x, y] = empty_state
         return states
 
     def _move_agent(self, state: np.ndarray, action: int) -> Optional[np.ndarray]:
@@ -194,3 +194,6 @@ class MazeEnv(gym.Env):
                 if options is None or "goal" not in options
                 else Position(options["goal"])
             )
+
+    def render_q_values(self, q_values: np.ndarray):
+        self.render({"q_values": q_values})
