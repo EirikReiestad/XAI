@@ -35,6 +35,14 @@ class MazeRenderer:
             )
         self.render_mode = render_mode
 
+    def init_render_q_values(self, q_values: np.ndarray | None):
+        if q_values is None:
+            return
+        if q_values.shape[0] != self.height or q_values.shape[1] != self.width:
+            raise ValueError(
+                f"Q-values must have shape ({self.height}, {self.width}), got {q_values.shape}"
+            )
+
     def render(
         self, state: np.ndarray, info: Optional[dict[str, Any]] = None
     ) -> Optional[np.ndarray]:
@@ -44,7 +52,12 @@ class MazeRenderer:
             render_mode = info.get("render_mode")
             q_values = info.get("q_values")
 
-        render_mode = render_mode or self.render_mode
+        if q_values is not None:
+            if q_values.shape[0] != self.height or q_values.shape[1] != self.width:
+                raise ValueError(
+                    f"Q-values must have shape ({self.height}, {self.width}), got {q_values.shape}"
+                )
+
         self.init_render_mode(render_mode)
 
         color_matrix = np.full((self.height, self.width, 3), Color.WHITE.value)
@@ -108,16 +121,31 @@ class MazeRenderer:
         color_matrix[full_state == TileType.START.value] = Color.BLUE.value
         color_matrix[full_state == TileType.END.value] = Color.GREEN.value
 
-        if q_values is not None:
-            min_q = np.nanmin(q_values)
-            max_q = np.nanmax(q_values)
-            for i in range(self.height):
-                for j in range(self.width):
-                    if full_state[i, j] not in [
-                        TileType.OBSTACLE.value,
-                        TileType.START.value,
-                        TileType.END.value,
-                    ]:
-                        color_matrix[i, j] = self._q_value_to_color(
-                            q_values[i, j], min_q, max_q
-                        )
+        if q_values is None:
+            return
+
+        sum_q_values = np.zeros((self.height, self.width), dtype=float)
+
+        for y in range(self.height):
+            for x in range(self.width):
+                up, down, left, right = q_values[x, y]  # Same order as in Direction
+                if x > 0:
+                    sum_q_values[y, x - 1] += left
+                if x < self.height - 1:
+                    sum_q_values[y, x + 1] += right
+                if y > 0:
+                    sum_q_values[y - 1, x] += down
+                if y < self.width - 1:
+                    sum_q_values[y + 1, x] += up
+
+        normalized_q_values = sum_q_values / np.max(sum_q_values)
+        min_q: float = float(np.min(normalized_q_values))
+        max_q: float = float(np.max(normalized_q_values))
+
+        for x in range(self.height):
+            for y in range(self.width):
+                if full_state[x, y] != TileType.EMPTY.value:
+                    continue
+                color_matrix[x, y] = self._q_value_to_color(
+                    normalized_q_values[x, y], min_q, max_q
+                )

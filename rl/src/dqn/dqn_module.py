@@ -245,15 +245,25 @@ class DQNModule:
             ] * self.hp.tau + target_net_state_dict[key] * (1 - self.hp.tau)
         self.target_net.load_state_dict(target_net_state_dict)
 
-    def get_q_values(self, states: list[torch.Tensor]) -> np.ndarray:
+    def get_q_values(self, states: np.ndarray) -> np.ndarray:
         """Calculate the Q-values for each action in the environment.
         Returns:
             np.ndarray: Array of Q-values for each action.
         """
-        q_values = np.ndarray((len(states), self.n_actions), dtype=np.float32)
-        for i, state in enumerate(states):
-            with torch.no_grad():
-                q_values[i] = self.policy_net(state).cpu()
+        for row_state in states:
+            for state in row_state:
+                if type(state) is not torch.Tensor:
+                    raise ValueError("All states must be PyTorch tensors.")
+        if states.shape != self.observation_shape[1:]:
+            raise ValueError(
+                f"Expected state shape {self.observation_shape}, but got {states.shape}"
+            )
+
+        q_values = np.ndarray((*states.shape, self.n_actions), dtype=np.float32)
+        for x in range(states.shape[0]):
+            for y in range(states.shape[1]):
+                with torch.no_grad():
+                    q_values[x, y] = self.policy_net(states[x, y]).cpu()
         return q_values
 
     def save(self, path: str) -> None:

@@ -74,12 +74,10 @@ class BaseDemo(ABC):
             return network.CONV_LAYERS
         return []
 
-    def _plot_q_values(self):
-        if settings.QVALUES and self.plotter is not None:
-            states = self.env_wrapper.get_all_possible_states()
-            q_values = self.dqn.get_q_values(states)
-            info = {"render_mode": "human", "q_values": q_values}
-            self.env_wrapper.render(info)
+    def _render_q_values(self):
+        states = self.env_wrapper.get_all_possible_states()
+        q_values = self.dqn.get_q_values(states)
+        self.env_wrapper.render_q_values(q_values)
 
     def _load_models(
         self, observation_shape: tuple, n_actions: int, conv_layers: list[ConvLayer]
