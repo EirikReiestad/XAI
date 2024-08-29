@@ -98,7 +98,7 @@ class MazeEnv(gym.Env):
         if options is not None and options.get("all_possible_states"):
             return self.state.active_state, {
                 "state_type": settings.STATE_TYPE.value,
-                "all_possible_states": self._get_all_possible_states(),
+                "all_possible_states": self.state.get_all_possible_states(),
             }
 
         super().reset(seed=seed)
@@ -113,12 +113,13 @@ class MazeEnv(gym.Env):
 
         return self.state.active_state, {"state_type": settings.STATE_TYPE.value}
 
-    def render(self, info: Optional[dict[str, Any]] = None) -> Optional[np.ndarray]:
-        return self.maze_renderer.render(self.state.full, info)
+    def render(self, render_mode: Optional[str] = None) -> Optional[np.ndarray]:
+        return self.maze_renderer.render(self.state.full, render_mode)
 
     def close(self):
         self.maze_renderer.close()
 
+    # TODO: Fix, its spaghetti code
     def _get_all_possible_states(self) -> np.ndarray:
         state = self.state.full.copy()
         agent_position = self.agent
@@ -126,15 +127,39 @@ class MazeEnv(gym.Env):
 
         empty_state = np.full_like(state, TileType.EMPTY.value)
 
-        states = np.zeros(state.shape, dtype=np.ndarray)
+        if settings.STATE_TYPE.value == "full":
+            states = np.zeros(state.shape, dtype=np.ndarray)
+        elif settings.STATE_TYPE.value == "partial":
+            states = np.zeros((state.shape[0], state.shape[1], 7), dtype=np.uint8)
+        else:
+            raise NotImplementedError(f"Invalid state type {settings.STATE_TYPE.value}")
+
         for x in range(self.state.full.shape[0]):
             for y in range(self.state.full.shape[1]):
                 new_state = state.copy()
                 if new_state[x, y] == TileType.EMPTY.value:
                     new_state[x, y] = TileType.START.value
-                    states[x, y] = new_state
+                    if settings.STATE_TYPE.value == "partial":
+                        agent_position = np.where(state == TileType.START.value)
+                        agent_position = Position(
+                            x=agent_position[0][0], y=agent_position[1][0]
+                        )
+                        goal_position = np.where(state == TileType.END.value)
+                        if len(goal_position[0]) == 0 or len(goal_position[1]) == 0:
+                            new_state = empty_state
+                            continue
+                        goal_position = Position(
+                            x=goal_position[0][0], y=goal_position[1][0]
+                        )
+
+                        new_state = self.state._create_partial_state(
+                            agent_position=agent_position, goal_position=goal_position
+                        )
                 else:
-                    states[x, y] = empty_state
+                    new_state = empty_state
+                    if settings.STATE_TYPE.value == "partial":
+                        new_state = np.ndarray((7,), dtype=np.uint8)
+                states[x, y] = new_state
         return states
 
     def _move_agent(self, state: np.ndarray, action: int) -> Optional[np.ndarray]:
@@ -194,6 +219,3 @@ class MazeEnv(gym.Env):
                 if options is None or "goal" not in options
                 else Position(options["goal"])
             )
-
-    def render_q_values(self, q_values: np.ndarray):
-        self.render({"q_values": q_values})

@@ -25,3 +25,7 @@ class FullStateDataExtractor:
             raise ValueError("No goal found in the state.")
         goal_position = Position(x=goal_position[0][0], y=goal_position[1][0])
         return goal_position
+
+    @staticmethod
+    def is_empty_tile(state: np.ndarray, position: Position) -> bool:
+        return state[int(position.x), int(position.y)] == TileType.EMPTY.value
