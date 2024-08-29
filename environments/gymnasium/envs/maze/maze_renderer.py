@@ -16,16 +16,29 @@ class MazeRenderer:
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.render_mode = None
-        self.init_render()
 
-    def init_render(self):
+        self._init_render()
+        self.post_init_screen = False
+        self.post_init_surface = False
+
+    def _init_render(self):
         """Initializes rendering settings."""
         pg.init()
-        pg.display.init()
-        self.surface = pg.Surface((self.screen_width, self.screen_height))
-        self.screen = pg.display.set_mode((self.screen_width, self.screen_height))
         self.clock = pg.time.Clock()
         self.is_open = True
+
+    def _init_surface(self):
+        if self.post_init_surface:
+            return
+        self.surface = pg.Surface((self.screen_width, self.screen_height))
+        self.post_init_surface = True
+
+    def _init_screen(self):
+        if self.post_init_screen:
+            return
+        pg.display.init()
+        self.screen = pg.display.set_mode((self.screen_width, self.screen_height))
+        self.post_init_screen = True
 
     def init_render_mode(self, render_mode: Optional[str] = "human"):
         if render_mode is None:
@@ -59,10 +72,12 @@ class MazeRenderer:
         surf = pg.transform.rotate(surf, 90)
 
         if self.render_mode == "rgb_array":
+            self._init_surface()
             self.surface.blit(surf, (0, 0))
             surf_array3d = pg.surfarray.array3d(self.surface)
             return surf_array3d
         elif self.render_mode == "human":
+            self._init_screen()
             self.screen.blit(surf, (0, 0))
             pg.event.pump()
             self.clock.tick(self.metadata["render_fps"])

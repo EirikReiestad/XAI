@@ -166,17 +166,17 @@ class MazeEnv(gym.Env):
         new_state = state.copy()
         new_agent = self.agent + Direction(action).tuple
         if MazeUtils.is_within_bounds(
-            new_state, new_agent.x, new_agent.y
-        ) and MazeUtils.is_not_obstacle(new_state, int(new_agent.x), int(new_agent.y)):
+            new_state, new_agent
+        ) and MazeUtils.is_not_obstacle(new_state, new_agent):
             return self._move_agent_within_bounds(new_state, new_agent)
         return None
 
     def _move_agent_within_bounds(
         self, state: np.ndarray, agent
     ) -> Optional[np.ndarray]:
-        state[self.agent.x, self.agent.y] = TileType.EMPTY.value
+        state[self.agent.row_major_order] = TileType.EMPTY.value
         self.agent = agent
-        state[self.agent.x, self.agent.y] = TileType.START.value
+        state[self.agent.row_major_order] = TileType.START.value
         return state
 
     def _init_spaces(self):

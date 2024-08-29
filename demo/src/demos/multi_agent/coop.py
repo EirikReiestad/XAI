@@ -35,7 +35,7 @@ class CoopDemo(BaseDemo):
                     total_rewards[agent] += reward
 
             if i_episode % settings.RENDER_EVERY == 0:
-                self.env_wrapper.render()
+                self.render()
 
             if done:
                 for agent in range(self.num_agents):
@@ -92,6 +92,8 @@ class CoopDemo(BaseDemo):
 
         if any(new_state is None for new_state in new_states):
             raise ValueError("New state must be returned from the DQN.")
+
+        self.env_wrapper.set_active_agent(0)
 
         return new_states, total_reward, dones, full_states
 

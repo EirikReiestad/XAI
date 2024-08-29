@@ -116,7 +116,7 @@ class MazeState:
         clean_agent_state = self.init_full_state.copy()
         clean_agent_state = FullStateDataModifier.remove_agent(clean_agent_state)
         states = np.ndarray(
-            (self.height, self.width, *self.partial_state_size), dtype=np.uint8
+            (self.height, self.width, *self.full_state_size), dtype=np.uint8
         )
         for y in range(self.height):
             for x in range(self.width):
@@ -128,7 +128,7 @@ class MazeState:
                     state = FullStateDataModifier.place_agent(state, agent_position)
                 else:
                     state = self._create_empty_full_state()
-                states[y, x] = state
+                states[agent_position.row_major_order] = state
         return states
 
     def _get_all_possible_partial_states(self) -> np.ndarray:
@@ -149,7 +149,7 @@ class MazeState:
                     )
                 else:
                     state = self._create_empty_partial_state()
-                states[y, x] = state
+                states[agent_position.row_major_order] = state
         return states
 
     def _create_empty_partial_state(self):
@@ -189,3 +189,7 @@ class MazeState:
     @property
     def partial_state_size(self) -> np.ndarray:
         return np.array([7], dtype=np.uint8)
+
+    @property
+    def full_state_size(self) -> np.ndarray:
+        return np.array([self.height, self.width], dtype=np.uint8)
