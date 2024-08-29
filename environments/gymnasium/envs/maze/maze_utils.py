@@ -25,3 +25,7 @@ class MazeUtils:
             raise ValueError("The goal position is not set.")
         if np.all(flatten_maze != TileType.START.value):
             raise ValueError("The start position is not set.")
+
+    @staticmethod
+    def is_not_goal(env: np.ndarray, x: int, y: int):
+        return env[x, y] != TileType.END.value

@@ -4,9 +4,12 @@ import os
 import numpy as np
 
 from environments import settings
-from environments.gymnasium.utils import State, Color
-from environments.gymnasium.envs.maze.utils import FullStateDataExtractor
-from environments.gymnasium.utils import Position
+from environments.gymnasium.envs.maze.utils import (
+    FullStateDataExtractor,
+    FullStateDataModifier,
+)
+from environments.gymnasium.utils import Position, State, StateType
+from utils import Color
 
 
 class MazeState:
@@ -19,7 +22,7 @@ class MazeState:
         self.init_full_state = self._load_env_from_file(filename)
 
         full_state = self.init_full_state
-        partial_state = np.ndarray((7,), dtype=np.uint8)
+        partial_state = self._create_empty_partial_state()
         # partial_state = self._create_partial_state()
         rgb_state = self._create_rgb_state()
 
@@ -100,6 +103,61 @@ class MazeState:
     def get_agent_position(self) -> Position:
         return FullStateDataExtractor.get_agent_position(self.state.full)
 
+    def get_all_possible_states(self) -> np.ndarray:
+        if settings.STATE_TYPE == StateType.FULL:
+            return self._get_all_possible_full_states()
+        elif settings.STATE_TYPE == StateType.PARTIAL:
+            return self._get_all_possible_partial_states()
+        elif settings.STATE_TYPE == StateType.RGB:
+            raise NotImplementedError("RGB state type not implemented yet.")
+        raise ValueError(f"Unknown state type: {settings.STATE_TYPE}")
+
+    def _get_all_possible_full_states(self) -> np.ndarray:
+        clean_agent_state = self.init_full_state.copy()
+        clean_agent_state = FullStateDataModifier.remove_agent(clean_agent_state)
+        states = np.ndarray(
+            (self.height, self.width, *self.partial_state_size), dtype=np.uint8
+        )
+        for y in range(self.height):
+            for x in range(self.width):
+                state = clean_agent_state.copy()
+                agent_position = Position(x, y)
+                if FullStateDataExtractor.is_empty_tile(
+                    clean_agent_state, agent_position
+                ):
+                    state = FullStateDataModifier.place_agent(state, agent_position)
+                else:
+                    state = self._create_empty_full_state()
+                states[y, x] = state
+        return states
+
+    def _get_all_possible_partial_states(self) -> np.ndarray:
+        clean_agent_state = self.init_full_state.copy()
+        clean_agent_state = FullStateDataModifier.remove_agent(clean_agent_state)
+        goal_position = FullStateDataExtractor.get_goal_position(self.init_full_state)
+        states = np.ndarray(
+            (self.height, self.width, *self.partial_state_size), dtype=np.uint8
+        )
+        for y in range(self.height):
+            for x in range(self.width):
+                agent_position = Position(x, y)
+                if FullStateDataExtractor.is_empty_tile(
+                    clean_agent_state, agent_position
+                ):
+                    state = self.state.partial = self._create_partial_state(
+                        agent_position=agent_position, goal_position=goal_position
+                    )
+                else:
+                    state = self._create_empty_partial_state()
+                states[y, x] = state
+        return states
+
+    def _create_empty_partial_state(self):
+        return np.ndarray(self.partial_state_size, dtype=np.uint8)
+
+    def _create_empty_full_state(self):
+        return np.zeros((self.height, self.width), dtype=np.uint8)
+
     @property
     def active_state(self) -> np.ndarray:
         return self.state.active_state
@@ -127,3 +185,7 @@ class MazeState:
         if self.init_full_state is None:
             raise ValueError("Initial full state is not set yet.")
         return FullStateDataExtractor.get_goal_position(self.init_full_state)
+
+    @property
+    def partial_state_size(self) -> np.ndarray:
+        return np.array([7], dtype=np.uint8)

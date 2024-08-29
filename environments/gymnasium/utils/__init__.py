@@ -1,4 +1,3 @@
-from .color import Color
 from .direction import Direction
 from .file_handler import FileHandler
 from .position import Position
@@ -8,7 +7,6 @@ from .state import State
 from .state_type import StateType
 
 __all__ = [
-    "Color",
     "Direction",
     "FileHandler",
     "Position",

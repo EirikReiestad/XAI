@@ -254,10 +254,6 @@ class DQNModule:
             for state in row_state:
                 if type(state) is not torch.Tensor:
                     raise ValueError("All states must be PyTorch tensors.")
-        if states.shape != self.observation_shape[1:]:
-            raise ValueError(
-                f"Expected state shape {self.observation_shape}, but got {states.shape}"
-            )
 
         q_values = np.ndarray((*states.shape, self.n_actions), dtype=np.float32)
         for x in range(states.shape[0]):
@@ -265,6 +261,41 @@ class DQNModule:
                 with torch.no_grad():
                     q_values[x, y] = self.policy_net(states[x, y]).cpu()
         return q_values
+
+    def get_q_values_map(self, states: np.ndarray) -> np.ndarray:
+        q_values = self.get_q_values(states)
+
+        if states.shape[:2] != q_values.shape[:2]:
+            raise ValueError(
+                f"States shape {states.shape[:2]} does not match Q-values shape {q_values.shape[:2]}"
+            )
+
+        adjusted_q_values = q_values + np.abs(np.min(q_values))
+        normalized_q_values = (adjusted_q_values - np.min(adjusted_q_values)) / np.ptp(
+            adjusted_q_values
+        )
+        cumulated_q_values = np.zeros(
+            (states.shape[0], states.shape[1]), dtype=np.float32
+        )
+
+        height, width = states.shape[:2]
+        for y in range(height):
+            for x in range(width):
+                # We use the following order: up, down, left, right
+                if x > 0:
+                    cumulated_q_values[y, x - 1] += normalized_q_values[y, x, 2]
+                if x < height - 1:
+                    cumulated_q_values[y, x + 1] += normalized_q_values[y, x, 3]
+                if y > 0:
+                    cumulated_q_values[y - 1, x] += normalized_q_values[y, x, 0]
+                if y < width - 1:
+                    cumulated_q_values[y + 1, x] += normalized_q_values[y, x, 1]
+
+        normalized_cumulated_q_values = (
+            cumulated_q_values - np.min(cumulated_q_values)
+        ) / np.ptp(cumulated_q_values)
+
+        return normalized_cumulated_q_values
 
     def save(self, path: str) -> None:
         """Save the policy network to the specified path."""

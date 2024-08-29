@@ -10,7 +10,7 @@ import pygame as pg
 
 from environments.gymnasium.envs.coop.utils import TileType
 from environments.gymnasium.utils import Direction
-from tools.coop_generator.utils import DrawMode
+from utils.src.coop_generator.utils import DrawMode
 
 logging.basicConfig(level=logging.INFO)
 
@@ -210,8 +210,8 @@ class GenerateEnv:
         self.placement_mode = DrawMode.NOTHING
 
         new_square = (
-            self.current_square[0] + self.action.to_tuple()[0],
-            self.current_square[1] + self.action.to_tuple()[1],
+            self.current_square[0] + self.action.tuple[0],
+            self.current_square[1] + self.action.tuple[1],
         )
         if (
             new_square[0] >= 0
