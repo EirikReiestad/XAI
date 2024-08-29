@@ -4,13 +4,14 @@ import os
 import numpy as np
 
 from environments import settings
-from environments.gymnasium.utils import State, Color
 from environments.gymnasium.envs.coop.utils import (
-    FullStateDataExtractor,
     AgentType,
+    FullStateDataExtractor,
+    FullStateDataModifier,
     TileType,
 )
-from environments.gymnasium.utils import Position
+from environments.gymnasium.utils import Position, State, StateType
+from utils import Color
 
 
 class CoopState:
@@ -23,7 +24,7 @@ class CoopState:
         self.init_full_state = self._load_env_from_file(filename)
 
         full_state = self.init_full_state
-        partial_state = np.ndarray((7,), dtype=np.uint8)
+        partial_state = np.ndarray(self.partial_state_size, dtype=np.uint8)
         # partial_state = self._create_partial_state()
         rgb_state = self._create_rgb_state()
 
@@ -187,3 +188,79 @@ class CoopState:
     @property
     def rgb(self) -> np.ndarray:
         return self.state.rgb
+
+    def get_all_possible_states(
+        self, active_agent: AgentType, inactive_agent: AgentType
+    ) -> np.ndarray:
+        if settings.STATE_TYPE == StateType.FULL:
+            return self._get_all_possible_full_states(active_agent)
+        elif settings.STATE_TYPE == StateType.PARTIAL:
+            return self._get_all_possible_partial_states(active_agent, inactive_agent)
+        elif settings.STATE_TYPE == StateType.RGB:
+            raise NotImplementedError("RGB state type not implemented yet.")
+        raise ValueError(f"Unknown state type: {settings.STATE_TYPE}")
+
+    def _get_all_possible_full_states(self, active_agent: AgentType) -> np.ndarray:
+        clean_agent_state = self.state.full.copy()
+        clean_agent_state = FullStateDataModifier.remove_agent(
+            clean_agent_state, active_agent
+        )
+        states = np.ndarray(
+            (self.height, self.width, *self.full_state_size), dtype=np.uint8
+        )
+        for y in range(self.height):
+            for x in range(self.width):
+                state = clean_agent_state.copy()
+                agent_position = Position(x, y)
+                if FullStateDataExtractor.is_empty_tile(
+                    clean_agent_state, agent_position
+                ):
+                    state = FullStateDataModifier.place_agent(
+                        state, agent_position, active_agent
+                    )
+                else:
+                    state = self._create_empty_full_state()
+                states[agent_position.row_major_order] = state
+        return states
+
+    def _get_all_possible_partial_states(
+        self, active_agent: AgentType, inactive_agent: AgentType
+    ) -> np.ndarray:
+        clean_agent_state = self.init_full_state.copy()
+        clean_agent_state = FullStateDataModifier.remove_agent(
+            clean_agent_state, active_agent
+        )
+        inactive_agent_position = FullStateDataExtractor.get_agent_position(
+            self.init_full_state, inactive_agent
+        )
+        states = np.ndarray(
+            (self.height, self.width, *self.partial_state_size), dtype=np.uint8
+        )
+        for y in range(self.height):
+            for x in range(self.width):
+                active_agent_position = Position(x, y)
+                if FullStateDataExtractor.is_empty_tile(
+                    clean_agent_state, active_agent_position
+                ):
+                    state = self.state.partial = self._create_partial_state(
+                        active_agent_position,
+                        inactive_agent_position,
+                    )
+                else:
+                    state = self._create_empty_partial_state()
+                states[active_agent_position.row_major_order] = state
+        return states
+
+    @property
+    def full_state_size(self) -> tuple[int, int]:
+        return self.init_full_state.shape[0], self.init_full_state.shape[1]
+
+    @property
+    def partial_state_size(self) -> np.ndarray:
+        return np.array([7], dtype=np.uint8)
+
+    def _create_empty_full_state(self):
+        return np.zeros((self.height, self.width), dtype=np.uint8)
+
+    def _create_empty_partial_state(self):
+        return np.ndarray(self.partial_state_size, dtype=np.uint8)

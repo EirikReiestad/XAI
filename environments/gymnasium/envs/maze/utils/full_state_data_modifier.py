@@ -10,11 +10,14 @@ class FullStateDataModifier:
     def remove_agent(state: np.ndarray) -> np.ndarray:
         new_state = state.copy()
         agent_position = FullStateDataExtractor.get_agent_position(state)
-        new_state[agent_position.x, agent_position.y] = TileType.EMPTY.value
+        if new_state[agent_position.row_major_order] == TileType.EMPTY.value:
+            print(new_state)
+            raise ValueError("Agent already removed")
+        new_state[agent_position.row_major_order] = TileType.EMPTY.value
         return new_state
 
     @staticmethod
     def place_agent(state: np.ndarray, position: Position) -> np.ndarray:
         new_state = state.copy()
-        new_state[position.x, position.y] = TileType.START.value
+        new_state[position.row_major_order] = TileType.START.value
         return new_state

@@ -1,4 +1,4 @@
-from typing import Any, Tuple
+from typing import Any, Tuple, Optional
 
 import gymnasium as gym
 import numpy as np
@@ -28,9 +28,18 @@ class MultiAgentEnvironmentWrapper:
         observation = preprocess_state(observation)
         return observation, float(reward), terminated, truncated, info
 
-    def render(self):
+    def render(self) -> Optional[np.ndarray]:
         """Render the environment."""
-        self.env.render()
+        result = self.env.render()
+        if isinstance(result, list):
+            if len(result) == 0:
+                return result[0]
+            else:
+                raise ValueError("Rendering must return a single NumPy array.")
+        elif isinstance(result, np.ndarray) or result is None:
+            return result
+        else:
+            raise TypeError("Unexpected return type from env.render().")
 
     def close(self):
         """Close the environment."""
@@ -63,3 +72,28 @@ class MultiAgentEnvironmentWrapper:
     def action_space(self) -> gym.spaces.Space:
         """Return the action space of the environment."""
         return self.env.action_space
+
+    def get_all_possible_states(self) -> np.ndarray:
+        """Get all possible states for the agent in the environment."""
+        options = {
+            "all_possible_states": True,
+        }
+        _, info = self.env.reset(options=options)
+        all_possible_states = info.get("all_possible_states")
+
+        if (
+            all_possible_states is None
+            or any([state is None for state in all_possible_states]) is None
+        ):
+            raise ValueError("All possible states must not contain any None values.")
+        if not isinstance(all_possible_states, np.ndarray):
+            raise ValueError(
+                f"All possible states must be a NumPy array, not {type(all_possible_states)}"
+            )
+
+        states = np.ndarray(all_possible_states.shape[:2], dtype=torch.Tensor)
+        for y, row_state in enumerate(all_possible_states):
+            for x, state in enumerate(row_state):
+                torch_state = preprocess_state(state)
+                states[y, x] = torch_state
+        return states

@@ -106,6 +106,13 @@ class CoopEnv(gym.Env):
     def reset(
         self, *, seed: Optional[int] = None, options: Optional[Dict[str, Any]] = None
     ) -> Tuple[np.ndarray, Dict[str, Any]]:
+        if options is not None and options.get("all_possible_states"):
+            return self.state.active_state, {
+                "state_type": settings.STATE_TYPE.value,
+                "all_possible_states": self.state.get_all_possible_states(
+                    self.agents.active_agent, self.agents.inactive_agent
+                ),
+            }
         super().reset(seed=seed)
         render_mode = options.get("render_mode") if options else None
         self.render_mode = render_mode or self.render_mode
@@ -118,8 +125,8 @@ class CoopEnv(gym.Env):
 
         return self.state.active_state, {"state_type": settings.STATE_TYPE.value}
 
-    def render(self, _render_mode: Optional[str] = None) -> Optional[np.ndarray]:
-        self.coop_renderer.render(self.state.full, _render_mode)
+    def render(self, render_mode: Optional[str] = None) -> Optional[np.ndarray]:
+        return self.coop_renderer.render(self.state.full, render_mode)
 
     def close(self):
         self.coop_renderer.close()
@@ -151,10 +158,8 @@ class CoopEnv(gym.Env):
         new_state = state.copy()
         new_agent_position = self.agents.active.position + Direction(action).tuple
         if EnvUtils.is_within_bounds(
-            new_state, new_agent_position.x, new_agent_position.y
-        ) and EnvUtils.is_not_obstacle(
-            new_state, int(new_agent_position.x), int(new_agent_position.y)
-        ):
+            new_state, new_agent_position
+        ) and EnvUtils.is_not_obstacle(new_state, new_agent_position):
             return self._move_agent_within_bounds(new_state, new_agent_position)
         return None
 

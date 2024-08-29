@@ -55,4 +55,13 @@ class DualAgents:
         if agent not in AgentType:
             raise ValueError(f"Invalid agent type {agent}")
 
+        inactive_agent = (
+            AgentType.AGENT0 if agent == AgentType.AGENT1 else AgentType.AGENT1
+        )
+
         self._active_agent = agent
+        self._inactive_agent = inactive_agent
+
+    @property
+    def inactive_agent(self) -> AgentType:
+        return self._inactive_agent

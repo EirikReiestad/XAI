@@ -13,7 +13,7 @@ class FullStateDataExtractor:
             raise ValueError("More than one agent found in the state.")
         if len(agent_position[0]) == 0 or len(agent_position[1]) == 0:
             raise ValueError("No agent found in the state.")
-        agent_position = Position(x=agent_position[0][0], y=agent_position[1][0])
+        agent_position = Position(x=agent_position[1][0], y=agent_position[0][0])
         return agent_position
 
     @staticmethod
@@ -23,9 +23,9 @@ class FullStateDataExtractor:
             raise ValueError("More than one goal found in the state.")
         if len(goal_position[0]) == 0 or len(goal_position[1]) == 0:
             raise ValueError("No goal found in the state.")
-        goal_position = Position(x=goal_position[0][0], y=goal_position[1][0])
+        goal_position = Position(x=goal_position[1][0], y=goal_position[0][0])
         return goal_position
 
     @staticmethod
     def is_empty_tile(state: np.ndarray, position: Position) -> bool:
-        return state[int(position.x), int(position.y)] == TileType.EMPTY.value
+        return state[position.row_major_order] == TileType.EMPTY.value

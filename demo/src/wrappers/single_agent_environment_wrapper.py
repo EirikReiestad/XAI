@@ -63,11 +63,11 @@ class SingleAgentEnvironmentWrapper:
                 f"All possible states must be a NumPy array, not {type(all_possible_states)}"
             )
 
-        states = np.ndarray(all_possible_states.shape[:-1], dtype=torch.Tensor)
+        states = np.ndarray(all_possible_states.shape[:2], dtype=torch.Tensor)
         for y, row_state in enumerate(all_possible_states):
             for x, state in enumerate(row_state):
                 torch_state = preprocess_state(state)
-                states[x, y] = torch_state
+                states[y, x] = torch_state
         return states
 
     @property

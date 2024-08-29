@@ -9,7 +9,9 @@ from demo import network, settings
 from demo.src.common.episode_information import EpisodeInformation
 from demo.src.plotters import Plotter
 from demo.src.wrappers import MultiAgentEnvironmentWrapper
+from environments import settings as env_settings
 from history import ModelHandler
+from renderer import Renderer
 from rl.src.common import ConvLayer
 from rl.src.dqn.dqn_module import DQNModule
 
@@ -19,7 +21,10 @@ class BaseDemo(ABC):
 
     def __init__(self, env_id: str):
         """Initialize the base demo class with common settings."""
-        self.env_wrapper = MultiAgentEnvironmentWrapper(env_id=env_id)
+        render_mode = "rgb_array" if settings.RENDER_Q_VALUES else "human"
+        self.env_wrapper = MultiAgentEnvironmentWrapper(
+            env_id=env_id, render_mode=render_mode
+        )
         self.num_agents = self.env_wrapper.num_agents
         self.episode_informations = [
             EpisodeInformation([], []) for _ in range(self.num_agents)
@@ -29,6 +34,9 @@ class BaseDemo(ABC):
         self.is_ipython = "inline" in matplotlib.get_backend()
 
         self.model_handler = ModelHandler()
+        self.extern_renderer = self._create_extern_renderer()
+
+        self.q_value_renderer_agent_id = 0
 
     def run(self):
         """Run the demo, interacting with the environment and training the DQN."""
@@ -60,10 +68,38 @@ class BaseDemo(ABC):
                 plt.ioff()
                 plt.show()
 
+    def render(self):
+        """Render the environment."""
+        if settings.RENDER_Q_VALUES:
+            self._render_q_values()
+        else:
+            self.env_wrapper.render()
+
     @abstractmethod
     def _run_episode(self, i_episode: int, state: torch.Tensor, info: dict):
         """Abstract method to handle running an episode. Must be implemented by subclasses."""
         pass
+
+    def _render_q_values(self):
+        if self.extern_renderer is None:
+            raise ValueError("External renderer not initialized")
+        rgb_array = self.env_wrapper.render()
+        if rgb_array is None:
+            raise ValueError("rgb array should not be None")
+        states = self.env_wrapper.get_all_possible_states()
+        q_values = self.dqns[self.q_value_renderer_agent_id].get_q_values_map(states)
+        self.extern_renderer.render(background=rgb_array, q_values=q_values)
+
+    def _create_extern_renderer(self) -> Renderer | None:
+        env_height = env_settings.ENV_HEIGHT
+        env_width = env_settings.ENV_WIDTH
+        screen_width = env_settings.SCREEN_WIDTH
+        screen_height = env_settings.SCREEN_HEIGHT
+        return (
+            Renderer(env_height, env_width, screen_width, screen_height)
+            if settings.RENDER_Q_VALUES
+            else None
+        )
 
     def _get_conv_layers(self, info) -> list[ConvLayer]:
         """Create convolutional layers based on the state type."""

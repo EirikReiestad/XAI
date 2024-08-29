@@ -38,3 +38,7 @@ class FullStateDataExtractor:
             Position(x=x, y=y)
             for x, y in zip(obstacle_positions[1], obstacle_positions[0])
         ]
+
+    @staticmethod
+    def is_empty_tile(state: np.ndarray, position: Position) -> bool:
+        return state[position.row_major_order] == TileType.EMPTY.value
