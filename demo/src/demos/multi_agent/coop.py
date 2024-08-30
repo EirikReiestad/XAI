@@ -24,15 +24,12 @@ class CoopDemo(BaseDemo):
 
             done = any(dones)
             if not done:
-                full_state, reward, done = self.env_wrapper.concatenate_states(
+                full_state, agent_rewards, done = self.env_wrapper.concatenate_states(
                     full_states
                 )
                 state = self.env_wrapper.update_state(full_state[0].numpy())
 
-                for agent in range(self.num_agents):
-                    if reward == 0:
-                        break
-                    total_rewards[agent] += reward
+                total_rewards += agent_rewards
 
             if i_episode % settings.RENDER_EVERY == 0:
                 self.render()

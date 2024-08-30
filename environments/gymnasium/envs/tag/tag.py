@@ -136,14 +136,14 @@ class TagEnv(gym.Env):
 
     def concatenate_states(
         self, states: list[np.ndarray]
-    ) -> tuple[np.ndarray, float, bool]:
+    ) -> tuple[np.ndarray, tuple[float, float], bool]:
         state, _ = self.state.concatenate_states(states)
-        reward, terminated = self.tag_rewards.get_cooperative_reward(
+        rewards, terminated = self.tag_rewards.get_tag_reward(
             self.agents.active.position,
             self.agents.inactive.position,
             settings.TAG_RADIUS,
         )
-        return state, reward, terminated
+        return state, rewards, terminated
 
     def update_state(self, state: np.ndarray) -> np.ndarray:
         self.state.update(

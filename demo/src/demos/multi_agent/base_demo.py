@@ -119,7 +119,12 @@ class BaseDemo(ABC):
         self, observation_shape: tuple, n_actions: int, conv_layers: list[ConvLayer]
     ):
         """Initialize the DQN models for each agent."""
-        dqn = DQNModule(observation_shape, n_actions, conv_layers=conv_layers)
+        dqn = DQNModule(
+            observation_shape,
+            n_actions,
+            hidden_layers=network.HIDDEN_LAYERS,
+            conv_layers=conv_layers,
+        )
         self.dqns = [dqn] * self.num_agents
 
         if settings.PRETRAINED:

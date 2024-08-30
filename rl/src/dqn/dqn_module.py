@@ -273,6 +273,7 @@ class DQNModule:
             )
 
         adjusted_q_values = q_values + np.abs(np.min(q_values))
+
         normalized_q_values = (adjusted_q_values - np.min(adjusted_q_values)) / np.ptp(
             adjusted_q_values
         )
