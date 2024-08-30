@@ -37,8 +37,13 @@ class MazeState:
         self.state.full = self.init_full_state
         agent_position = FullStateDataExtractor.get_agent_position(self.init_full_state)
         goal_position = FullStateDataExtractor.get_goal_position(self.init_full_state)
+        obstacle_positions = FullStateDataExtractor.get_obstacle_positions(
+            self.init_full_state
+        )
         self.state.partial = self._create_partial_state(
-            agent_position=agent_position, goal_position=goal_position
+            agent_position=agent_position,
+            goal_position=goal_position,
+            obstacle_positions=obstacle_positions,
         )
         self.state.rgb = self._create_rgb_state()
 
@@ -49,13 +54,21 @@ class MazeState:
         goal_position: Position,
     ):
         self.state.full = new_full_state
+        obstacle_positions = FullStateDataExtractor.get_obstacle_positions(
+            self.state.full
+        )
         self.state.partial = self._create_partial_state(
-            agent_position=agent_position, goal_position=goal_position
+            agent_position=agent_position,
+            goal_position=goal_position,
+            obstacle_positions=obstacle_positions,
         )
         self.state.rgb = self._create_rgb_state()
 
     def _create_partial_state(
-        self, agent_position: Position, goal_position: Position
+        self,
+        agent_position: Position,
+        goal_position: Position,
+        obstacle_positions: list[Position],
     ) -> np.ndarray:
         goal_distance = goal_position - agent_position
         goal_direction = [goal_distance.x, goal_distance.y]
@@ -75,12 +88,17 @@ class MazeState:
             255,
         )
 
+        obstacle_int_positions = []
+        for obstacle_position in obstacle_positions:
+            obstacle_int_positions.extend([*obstacle_position])
+
         return np.array(
             [
                 *agent_position,
                 *goal_position,
                 int(distance_normalized),
                 *map(int, direction_normalized),
+                *obstacle_int_positions,
             ],
             dtype=np.uint8,
         )
@@ -135,6 +153,9 @@ class MazeState:
         clean_agent_state = self.init_full_state.copy()
         clean_agent_state = FullStateDataModifier.remove_agent(clean_agent_state)
         goal_position = FullStateDataExtractor.get_goal_position(self.init_full_state)
+        obstacle_positions = FullStateDataExtractor.get_obstacle_positions(
+            self.init_full_state
+        )
         states = np.ndarray(
             (self.height, self.width, *self.partial_state_size), dtype=np.uint8
         )
@@ -145,7 +166,9 @@ class MazeState:
                     clean_agent_state, agent_position
                 ):
                     state = self.state.partial = self._create_partial_state(
-                        agent_position=agent_position, goal_position=goal_position
+                        agent_position=agent_position,
+                        goal_position=goal_position,
+                        obstacle_positions=obstacle_positions,
                     )
                 else:
                     state = self._create_empty_partial_state()
@@ -188,7 +211,17 @@ class MazeState:
 
     @property
     def partial_state_size(self) -> np.ndarray:
-        return np.array([7], dtype=np.uint8)
+        agent_position = 2
+        goal_position = 2
+        distance = 1
+        direction = 2
+        obstacle_positions = 2 * len(
+            FullStateDataExtractor.get_obstacle_positions(self.init_full_state)
+        )
+        partial_state_size = (
+            agent_position + goal_position + distance + direction + obstacle_positions
+        )
+        return np.array([partial_state_size], dtype=np.uint8)
 
     @property
     def full_state_size(self) -> np.ndarray:
