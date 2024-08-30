@@ -19,7 +19,7 @@ class TestGenerateMaze(unittest.TestCase):
         self.assertEqual(self.maze.placement_mode, DrawMode.NOTHING)
         self.assertEqual(self.maze.current_square, (0, 0))
 
-    @patch("tools.maze_generator.generate_maze.GenerateMaze._save_maze")
+    @patch("utils.src.maze_generator.generate_maze.GenerateMaze._save_maze")
     def test_load_maze_new(self, mock_save):
         with patch("os.path.exists", return_value=False):
             self.maze._load_maze(0)
