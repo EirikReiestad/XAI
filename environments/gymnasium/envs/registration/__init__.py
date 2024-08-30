@@ -9,3 +9,8 @@ gym.register(
     id="CoopEnv-v0",
     entry_point="environments.gymnasium.envs.coop.coop:CoopEnv",
 )
+
+gym.register(
+    id="TagEnv-v0",
+    entry_point="environments.gymnasium.envs.tag.tag:TagEnv",
+)

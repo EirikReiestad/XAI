@@ -9,16 +9,18 @@ from rl.src.dqn.dqn_module import DQNModule
 
 class ModelHandler:
     def __init__(self):
-        dt = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        folder_name = self._get_folder_name()
-        self.save_folder = self._save_folder(folder_name, dt)
-        self.load_folder = self._load_folder(folder_name)
+        self.dt = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        self.folder_name = self._get_folder_name()
 
     def load(self, model: DQNModule, name: str):
+        if not hasattr(self, "load_folder"):
+            self.load_folder = self._load_folder(self.folder_name)
         path = os.path.join(self.load_folder, name)
         model.load(path)
 
     def save(self, model: DQNModule, name: str):
+        if not hasattr(self, "save_folder"):
+            self.save_folder = self._save_folder(self.folder_name, self.dt)
         path = os.path.join(self.save_folder, name)
         model.save(path)
 
@@ -30,6 +32,8 @@ class ModelHandler:
             return "maze"
         elif settings.DEMO == DemoType.COOP:
             return "coop"
+        elif settings.DEMO == DemoType.TAG:
+            return "tag"
         else:
             raise ValueError("Invalid demo type")
 
