@@ -46,9 +46,13 @@ class CoopState:
         other_agent_position = FullStateDataExtractor.get_agent_position(
             self.init_full_state, other_agent
         )
+        obstacle_positions = FullStateDataExtractor.get_obstacle_positions(
+            self.init_full_state
+        )
         self.state.partial = self._create_partial_state(
             active_agent_position=active_agent_position,
             other_agent_position=other_agent_position,
+            obstacle_positions=obstacle_positions,
         )
         self.state.rgb = self._create_rgb_state()
 
@@ -59,9 +63,13 @@ class CoopState:
         other_agent_position: Position,
     ):
         self.state.full = new_full_state
+        obstacle_positions = FullStateDataExtractor.get_obstacle_positions(
+            self.state.full
+        )
         self.state.partial = self._create_partial_state(
             active_agent_position=active_agent_position,
             other_agent_position=other_agent_position,
+            obstacle_positions=obstacle_positions,
         )
         self.state.rgb = self._create_rgb_state()
 
@@ -128,7 +136,10 @@ class CoopState:
         FullStateDataExtractor.get_agent_position(state, AgentType.AGENT1)
 
     def _create_partial_state(
-        self, active_agent_position: Position, other_agent_position: Position
+        self,
+        active_agent_position: Position,
+        other_agent_position: Position,
+        obstacle_positions: list[Position],
     ) -> np.ndarray:
         goal_distance = active_agent_position - other_agent_position
         goal_direction = [goal_distance.x, goal_distance.y]
@@ -148,12 +159,17 @@ class CoopState:
             255,
         )
 
+        obstacle_int_positions = []
+        for obstacle_position in obstacle_positions:
+            obstacle_int_positions.extend([*obstacle_position])
+
         return np.array(
             [
                 *active_agent_position,
                 *other_agent_position,
                 int(distance_normalized),
                 *map(int, direction_normalized),
+                *obstacle_int_positions,
             ],
             dtype=np.uint8,
         )
@@ -233,6 +249,9 @@ class CoopState:
         inactive_agent_position = FullStateDataExtractor.get_agent_position(
             self.init_full_state, inactive_agent
         )
+        obstacle_positions = FullStateDataExtractor.get_obstacle_positions(
+            self.init_full_state
+        )
         states = np.ndarray(
             (self.height, self.width, *self.partial_state_size), dtype=np.uint8
         )
@@ -245,6 +264,7 @@ class CoopState:
                     state = self.state.partial = self._create_partial_state(
                         active_agent_position,
                         inactive_agent_position,
+                        obstacle_positions,
                     )
                 else:
                     state = self._create_empty_partial_state()
@@ -257,7 +277,21 @@ class CoopState:
 
     @property
     def partial_state_size(self) -> np.ndarray:
-        return np.array([7], dtype=np.uint8)
+        active_agent_position = 2
+        inactive_agent_position = 2
+        distance = 1
+        direction = 2
+        obstacle_positions = 2 * len(
+            FullStateDataExtractor.get_obstacle_positions(self.init_full_state)
+        )
+        partial_state_size = (
+            active_agent_position
+            + inactive_agent_position
+            + distance
+            + direction
+            + obstacle_positions
+        )
+        return np.array([partial_state_size], dtype=np.uint8)
 
     def _create_empty_full_state(self):
         return np.zeros((self.height, self.width), dtype=np.uint8)
