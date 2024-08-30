@@ -47,7 +47,7 @@ class MultiAgentEnvironmentWrapper:
 
     def concatenate_states(
         self, states: list[np.ndarray]
-    ) -> tuple[torch.Tensor, float, bool]:
+    ) -> tuple[torch.Tensor, list[float], bool]:
         """Return the concatenated state of the environment."""
         state, reward, done = self.env.unwrapped.concatenate_states(states)
         tensor_state = preprocess_state(state)

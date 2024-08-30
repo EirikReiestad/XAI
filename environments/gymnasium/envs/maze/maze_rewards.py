@@ -1,14 +1,14 @@
-from environments import settings
+from environments.gymnasium.envs.maze import rewards
 from environments.gymnasium.utils import Position
 
 
 class MazeRewards:
     def __init__(self):
         self.rewards = {
-            "goal": settings.GOAL_REWARD,
-            "move": settings.MOVE_REWARD,
-            "terminated": settings.TERMINATED_REWARD,
-            "truncated": settings.TRUNCATED_REWARD,
+            "goal": rewards.GOAL_REWARD,
+            "move": rewards.MOVE_REWARD,
+            "terminated": rewards.TERMINATED_REWARD,
+            "truncated": rewards.TRUNCATED_REWARD,
         }
 
     def get_reward(self, agent: Position, goal: Position, collided: bool):

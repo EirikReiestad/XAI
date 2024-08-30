@@ -1,5 +1,6 @@
-models/models/coop/*
-models/models/maze/*
+history/models/coop/*
+history/models/maze/*
+history/models/tag/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

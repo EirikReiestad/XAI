@@ -11,7 +11,6 @@ class FullStateDataModifier:
         new_state = state.copy()
         agent_position = FullStateDataExtractor.get_agent_position(state)
         if new_state[agent_position.row_major_order] == TileType.EMPTY.value:
-            print(new_state)
             raise ValueError("Agent already removed")
         new_state[agent_position.row_major_order] = TileType.EMPTY.value
         return new_state

@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 import numpy as np
-from environments.gymnasium.envs.coop.utils import (
+from environments.gymnasium.envs.tag.utils import (
     FullStateDataExtractor,
     AgentType,
     AGENT_TILE_TYPE,
 )
-from environments.gymnasium.envs.coop.utils.tile_type import TileType
+from environments.gymnasium.envs.tag.utils.tile_type import TileType
 from environments.gymnasium.utils import Position
 
 
