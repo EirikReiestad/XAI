@@ -22,3 +22,6 @@ STATE_TYPE = StateType.PARTIAL
 
 # Coop
 COOP_RADIUS = 1
+
+# Tag
+TAG_RADIUS = 1
