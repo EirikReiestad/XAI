@@ -34,10 +34,11 @@ class FullStateDataExtractor:
     @staticmethod
     def get_obstacle_positions(state: np.ndarray) -> list[Position]:
         obstacle_positions = np.where(state == TileType.OBSTACLE.value)
-        return [
+        obstacle_positions = [
             Position(x=x, y=y)
             for x, y in zip(obstacle_positions[1], obstacle_positions[0])
         ]
+        return obstacle_positions
 
     @staticmethod
     def is_empty_tile(state: np.ndarray, position: Position) -> bool:
