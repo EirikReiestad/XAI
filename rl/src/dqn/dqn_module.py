@@ -1,5 +1,4 @@
 """DQN Module.
-
 This module contains the DQN agent that interacts with the environment.
 """
 
@@ -185,55 +184,39 @@ class DQNModule:
 
     def train(
         self,
-        state: torch.Tensor,
-        action: torch.Tensor,
-        observation: torch.Tensor,
-        reward: float,
-        terminated: bool,
-        truncated: bool,
-    ) -> tuple[bool, torch.Tensor | None]:
-        """Store transition and optimize the model.
-
-        Args:
-            state (torch.Tensor): Current state of the environment.
-            action (torch.Tensor): Action taken in the current state.
-            observation (torch.Tensor): Observation from the environment.
-            reward (float): Reward from the environment.
-            terminated (bool): Whether the environment is terminated.
-            truncated (bool): Whether the environment is truncated.
-
-        Returns:
-            tuple[bool, torch.Tensor]: Whether the environment is done, and the next state.
-        """
-        if state.shape != self.observation_shape:
+        states: list[torch.Tensor],
+        actions: list[torch.Tensor],
+        observations: list[torch.Tensor],
+        rewards: list[torch.Tensor],
+        terminated: list[bool],
+        truncated: list[bool],
+    ):
+        """Store transition and optimize the model."""
+        if not all(state.shape == self.observation_shape for state in states):
             raise ValueError(
-                f"Expected state shape {self.observation_shape}, but got {state.shape}"
+                f"All states must have shape {self.observation_shape}, but found a mismatch."
             )
 
-        if observation.shape != self.observation_shape:
+        if not all(
+            observation.shape == self.observation_shape for observation in observations
+        ):
             raise ValueError(
-                f"Expected observation shape {self.observation_shape}, but got {observation.shape}"
+                f"All states must have shape {self.observation_shape}, but found a mismatch."
             )
 
-        reward_tensor = torch.tensor([reward], device=device, dtype=torch.float)
-        done = terminated or truncated
+        next_states = [
+            obs.clone().detach() if not (term or trunc) else None
+            for obs, term, trunc in zip(observations, terminated, truncated)
+        ]
 
-        next_state = observation.clone().detach()
-        if next_state is not None and next_state.shape != self.observation_shape:
-            raise ValueError(
-                f"Expected next_state shape {self.observation_shape}, but got {next_state.shape}"
-            )
-
-        if terminated:
-            next_state = None
-
-        self.memory.push(state, action, next_state, reward_tensor)
+        for state, action, next_state, reward in zip(
+            states, actions, next_states, rewards
+        ):
+            self.memory.push(state, action, next_state, reward)
 
         self._optimize_model()
 
         self._soft_update_target_net()
-
-        return done, next_state
 
     def _soft_update_target_net(self) -> None:
         """Soft update the target network parameters."""

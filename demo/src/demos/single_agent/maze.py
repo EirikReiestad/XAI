@@ -1,7 +1,10 @@
-import torch
-from typing import Optional
 from itertools import count
+from typing import Optional
+
+import torch
+
 from demo import settings
+from demo.src.common import Batch, Transition
 from demo.src.demos.single_agent import BaseDemo
 from demo.src.wrappers.single_agent_environment_wrapper import (
     SingleAgentEnvironmentWrapper,
@@ -19,9 +22,19 @@ class MazeDemo(BaseDemo):
             env_id="MazeEnv-v0", render_mode=render_mode
         )
 
-    def _run_episode(self, i_episode: int, state: torch.Tensor, info: dict):
+    def _run_episode(self, i_episode: int, state: torch.Tensor, info: dict) -> Batch:
         state, _ = self.env_wrapper.reset()
         total_reward = 0
+
+        batch = Batch(
+            states=[],
+            actions=[],
+            observations=[],
+            rewards=[],
+            terminated=[],
+            truncated=[],
+        )
+
         for t in count():
             action = self.dqn.select_action(state)
             observation, reward, terminated, truncated, _ = self.env_wrapper.step(
@@ -31,14 +44,20 @@ class MazeDemo(BaseDemo):
             reward = float(reward)
             total_reward += reward
 
-            done, new_state = self.dqn.train(
-                state, action, observation, reward, terminated, truncated
+            done = terminated or truncated
+
+            transition = Transition(
+                state=state,
+                action=action,
+                observation=observation,
+                reward=torch.tensor([reward], dtype=torch.float32),
+                terminated=terminated,
+                truncated=truncated,
             )
+            batch.append(transition)
 
             if i_episode % settings.RENDER_EVERY == 0:
                 self.render()
-
-            state = new_state if not done and new_state is not None else state
 
             if done:
                 self.episode_information.durations.append(t + 1)
@@ -46,3 +65,5 @@ class MazeDemo(BaseDemo):
                 if self.plotter is not None:
                     self.plotter.update(self.episode_information)
                 break
+
+        return batch

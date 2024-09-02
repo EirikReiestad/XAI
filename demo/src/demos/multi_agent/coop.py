@@ -3,6 +3,7 @@ import torch
 from demo import settings
 from itertools import count
 import numpy as np
+from demo.src.common import Batch, Transition
 
 
 class CoopDemo(BaseDemo):
@@ -16,23 +17,46 @@ class CoopDemo(BaseDemo):
         """Handle the episode by interacting with the environment and training the DQN."""
         state, _ = self.env_wrapper.reset()
         total_rewards = np.zeros(self.num_agents)
-        dones = [False] * self.num_agents
+
+        agent0_batch = Batch(
+            states=[],
+            actions=[],
+            observations=[],
+            rewards=[],
+            terminated=[],
+            truncated=[],
+        )
+        agent1_batch = Batch(
+            states=[],
+            actions=[],
+            observations=[],
+            rewards=[],
+            terminated=[],
+            truncated=[],
+        )
+        agent_batches = [agent0_batch, agent1_batch]
 
         for t in count():
-            _, rewards, dones, full_states = self._run_step(state, t)
-            total_rewards += rewards
+            done = False
+            full_states, transitions = self._run_step(state, t)
+            for agent, transition in enumerate(transitions):
+                total_rewards[agent] += transition.reward.item()
+                done = done or transition.terminated or transition.truncated
 
-            done = any(dones)
             if not done:
                 full_state, agent_rewards, done = self.env_wrapper.concatenate_states(
                     full_states
                 )
                 state = self.env_wrapper.update_state(full_state[0].numpy())
 
-                total_rewards += agent_rewards
+                for agent, transition in enumerate(transitions):
+                    transition.reward += agent_rewards[agent]
 
             if i_episode % settings.RENDER_EVERY == 0:
                 self.render()
+
+            for agent, transition in enumerate(transitions):
+                agent_batches[agent].append(transition)
 
             if done:
                 for agent in range(self.num_agents):
@@ -44,14 +68,15 @@ class CoopDemo(BaseDemo):
                     self.plotter.update(self.episode_informations)
                 break
 
+        for agent in range(self.num_agents):
+            self._train_batch(agent_batches[agent], agent)
+
     def _run_step(
         self, state: torch.Tensor, step: int
-    ) -> tuple[list[torch.Tensor], list[float], list[bool], list[np.ndarray]]:
+    ) -> tuple[list[np.ndarray], list[Transition]]:
         """Run a step in the environment and train the DQN."""
-        total_reward = [0.0] * self.num_agents
-        new_states = [torch.empty(0)] * self.num_agents
         full_states = []
-        dones = [False] * self.num_agents
+        agent_transitions = []
 
         for agent in range(self.num_agents):
             if agent == 1:
@@ -72,27 +97,21 @@ class CoopDemo(BaseDemo):
             full_states.append(full_state)
 
             reward = float(reward)
-            total_reward[agent] += reward
 
-            done, new_state = self.dqns[agent].train(
-                state,
-                action,
-                observation,
-                reward,
-                terminated,
-                truncated,
+            transition = Transition(
+                state=state,
+                action=action,
+                observation=observation,
+                reward=torch.tensor([reward], dtype=torch.float32),
+                terminated=terminated,
+                truncated=truncated,
             )
 
-            if new_state is not None:
-                new_states[agent] = new_state
-            dones[agent] = done
-
-        if any(new_state is None for new_state in new_states):
-            raise ValueError("New state must be returned from the DQN.")
+            agent_transitions.append(transition)
 
         self.env_wrapper.set_active_agent(0)
 
-        return new_states, total_reward, dones, full_states
+        return full_states, agent_transitions
 
 
 if __name__ == "__main__":
