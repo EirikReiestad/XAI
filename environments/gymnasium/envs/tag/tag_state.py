@@ -41,7 +41,7 @@ class TagState:
             self.init_full_state, active_agent
         )
         other_agent = (
-            AgentType.AGENT1 if active_agent == AgentType.AGENT0 else AgentType.AGENT0
+            AgentType.HIDER if active_agent == AgentType.SEEKER else AgentType.SEEKER
         )
         other_agent_position = FullStateDataExtractor.get_agent_position(
             self.init_full_state, other_agent
@@ -90,50 +90,50 @@ class TagState:
             raise ValueError("Two states are required to concatenate.")
 
     def _concatenate_single_state(self, state: np.ndarray) -> tuple[np.ndarray, bool]:
-        agent0_exists = FullStateDataExtractor.agent_exist(state, AgentType.AGENT0)
-        agent1_exists = FullStateDataExtractor.agent_exist(state, AgentType.AGENT1)
+        seeker_exists = FullStateDataExtractor.agent_exist(state, AgentType.SEEKER)
+        hider_exists = FullStateDataExtractor.agent_exist(state, AgentType.HIDER)
 
-        if agent0_exists and agent1_exists:
-            agent0_position = FullStateDataExtractor.get_agent_position(
-                state, AgentType.AGENT0
+        if seeker_exists and hider_exists:
+            seeker_position = FullStateDataExtractor.get_agent_position(
+                state, AgentType.SEEKER
             )
-            agent1_position = FullStateDataExtractor.get_agent_position(
-                state, AgentType.AGENT1
+            hider_position = FullStateDataExtractor.get_agent_position(
+                state, AgentType.HIDER
             )
-            return state, agent0_position == agent1_position
+            return state, seeker_position == hider_position
         return state, False
 
     def _concatenate_double_state(
         self, states: list[np.ndarray]
     ) -> tuple[np.ndarray, bool]:
-        agent0_state = states[0]
-        agent1_state = states[1]
+        seeker_state = states[0]
+        hider_state = states[1]
 
-        agent0_position = FullStateDataExtractor.get_agent_position(
-            agent0_state, AgentType.AGENT0
+        seeker_position = FullStateDataExtractor.get_agent_position(
+            seeker_state, AgentType.SEEKER
         )
-        agent1_position = FullStateDataExtractor.get_agent_position(
-            agent1_state, AgentType.AGENT1
+        hider_position = FullStateDataExtractor.get_agent_position(
+            hider_state, AgentType.HIDER
         )
 
-        obstacle_positions = FullStateDataExtractor.get_obstacle_positions(agent0_state)
+        obstacle_positions = FullStateDataExtractor.get_obstacle_positions(seeker_state)
         obstacle_positions = []
 
         state = np.zeros((self.height, self.width), dtype=np.float32)
-        state[*agent0_position.row_major_order] = TileType.AGENT0.value
-        state[*agent1_position.row_major_order] = TileType.AGENT1.value
+        state[*seeker_position.row_major_order] = TileType.SEEKER.value
+        state[*hider_position.row_major_order] = TileType.HIDER.value
         for obstacle_position in obstacle_positions:
             state[*obstacle_position.row_major_order] = TileType.OBSTACLE.value
 
-        if agent0_position == agent1_position:
+        if seeker_position == hider_position:
             return state, True
 
         self._validate_state(state)
         return state, False
 
     def _validate_state(self, state: np.ndarray):
-        FullStateDataExtractor.get_agent_position(state, AgentType.AGENT0)
-        FullStateDataExtractor.get_agent_position(state, AgentType.AGENT1)
+        FullStateDataExtractor.get_agent_position(state, AgentType.SEEKER)
+        FullStateDataExtractor.get_agent_position(state, AgentType.HIDER)
 
     def _create_partial_state(
         self,

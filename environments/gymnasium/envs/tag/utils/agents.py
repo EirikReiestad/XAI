@@ -6,8 +6,8 @@ from enum import Enum
 class AgentType(Enum):
     """Enum for the type of agent."""
 
-    AGENT0 = 0
-    AGENT1 = 1
+    SEEKER = 0
+    HIDER = 1
 
 
 @dataclass
@@ -28,21 +28,21 @@ class Agent:
 
 @dataclass
 class DualAgents:
-    agent0: Agent
-    agent1: Agent
+    seeker: Agent
+    hider: Agent
     _active_agent: AgentType
 
     @property
     def active(self):
-        return self.agent0 if self.active_agent == AgentType.AGENT0 else self.agent1
+        return self.seeker if self.active_agent == AgentType.SEEKER else self.hider
 
     @property
     def inactive(self):
-        return self.agent1 if self.active_agent == AgentType.AGENT0 else self.agent0
+        return self.hider if self.active_agent == AgentType.SEEKER else self.seeker
 
     @property
     def colliding(self):
-        return self.agent0 == self.agent1
+        return self.seeker == self.hider
 
     @property
     def active_agent(self) -> AgentType:
@@ -56,7 +56,7 @@ class DualAgents:
             raise ValueError(f"Invalid agent type {agent}")
 
         inactive_agent = (
-            AgentType.AGENT0 if agent == AgentType.AGENT1 else AgentType.AGENT1
+            AgentType.SEEKER if agent == AgentType.HIDER else AgentType.HIDER
         )
 
         self._active_agent = agent

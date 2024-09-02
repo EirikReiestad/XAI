@@ -17,7 +17,7 @@ class TagDemo(BaseDemo):
         """Handle the episode by interacting with the environment and training the DQN."""
         state, _ = self.env_wrapper.reset()
 
-        agent0_batch = Batch(
+        seeker_batch = Batch(
             states=[],
             actions=[],
             observations=[],
@@ -25,7 +25,7 @@ class TagDemo(BaseDemo):
             terminated=[],
             truncated=[],
         )
-        agent1_batch = Batch(
+        hider_batch = Batch(
             states=[],
             actions=[],
             observations=[],
@@ -33,7 +33,7 @@ class TagDemo(BaseDemo):
             terminated=[],
             truncated=[],
         )
-        agent_batches = [agent0_batch, agent1_batch]
+        agent_batches = [seeker_batch, hider_batch]
 
         for t in count():
             done = False

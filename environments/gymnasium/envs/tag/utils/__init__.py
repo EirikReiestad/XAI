@@ -1,3 +1,4 @@
+from .action_type import ActionType
 from .agent_tile_type import AGENT_TILE_TYPE
 from .agents import Agent, AgentType, DualAgents
 from .full_state_data_extractor import FullStateDataExtractor
@@ -12,4 +13,5 @@ __all__ = [
     "AgentType",
     "Agent",
     "DualAgents",
+    "ActionType",
 ]

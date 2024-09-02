@@ -21,7 +21,7 @@ from .tag_renderer import TagRenderer
 from .tag_rewards import TagRewards
 from .tag_state import TagState
 from .env_utils import EnvUtils
-from .utils import AGENT_TILE_TYPE, Agent, AgentType, DualAgents, TileType
+from .utils import AGENT_TILE_TYPE, Agent, AgentType, DualAgents, TileType, ActionType
 
 logging.basicConfig(level=logging.INFO)
 
@@ -154,7 +154,9 @@ class TagEnv(gym.Env):
     def get_active_state(self) -> np.ndarray:
         return self.state.active_state
 
-    def _move_agent(self, state: np.ndarray, action: int) -> Optional[np.ndarray]:
+    def _move_agent(
+        self, state: np.ndarray, action: ActionType
+    ) -> Optional[np.ndarray]:
         new_state = state.copy()
         new_agent_position = self.agents.active.position + Direction(action).tuple
         if EnvUtils.is_within_bounds(
@@ -179,7 +181,7 @@ class TagEnv(gym.Env):
         if self.state.active_state is None:
             raise ValueError("The state should be set before initializing spaces.")
 
-        self.action_space = spaces.Discrete(4)
+        self.action_space = spaces.Discrete(self.num_actions)
 
         observation_shape = self.state.active_state.shape
         if settings.STATE_TYPE.value == "full":
@@ -199,27 +201,31 @@ class TagEnv(gym.Env):
 
     def _set_initial_positions(self, options: Optional[Dict[str, Any]]):
         """Sets the initial positions of the agent and goal."""
-        if options and "agent0" in options:
-            agent0_position = Position(options["agent0"])
-            agent1_position = Position(
+        if options and "seeker" in options:
+            seeker_position = Position(options["hider"])
+            hider_position = Position(
                 options.get(
-                    "agent1",
+                    "hider",
                     generate_random_position(
-                        self.width, self.height, [agent0_position]
+                        self.width, self.height, [seeker_position]
                     ),
                 )
             )
         else:
-            agent0_position = self.state.get_agent_position(AgentType.AGENT0)
-            agent1_position = (
-                self.state.get_agent_position(AgentType.AGENT1)
-                if options is None or "agent1" not in options
-                else Position(options["agent1"])
+            seeker_position = self.state.get_agent_position(AgentType.SEEKER)
+            hider_position = (
+                self.state.get_agent_position(AgentType.HIDER)
+                if options is None or "hider" not in options
+                else Position(options["hider"])
             )
-        agent0 = Agent(agent0_position)
-        agent1 = Agent(agent1_position)
-        self.agents = DualAgents(agent0, agent1, AgentType.AGENT0)
+        agent0 = Agent(seeker_position)
+        agent1 = Agent(hider_position)
+        self.agents = DualAgents(agent0, agent1, AgentType.SEEKER)
 
     @property
     def num_agents(self) -> int:
         return 2
+
+    @property
+    def num_actions(self) -> int:
+        return 4
