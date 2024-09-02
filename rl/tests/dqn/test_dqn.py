@@ -55,80 +55,76 @@ class TestDQNModule(unittest.TestCase):
 
     def test_train_rgb(self):
         dqn = DQNModule(self.rgb_shape, self.n_actions)
-        state = torch.randn(*self.rgb_shape).to(device)
-        action = torch.tensor([[0]], device=device)
-        observation = torch.randn(*self.rgb_shape).to(device)
-        reward = 1.0
-        terminated = False
-        truncated = False
+        state = [torch.randn(*self.rgb_shape).to(device)]
+        action = [torch.tensor([[0]], device=device)]
+        observation = [torch.randn(*self.rgb_shape).to(device)]
+        reward = [torch.tensor(1.0, device=device, dtype=torch.float32)]
+        terminated = [False]
+        truncated = [False]
 
-        done, next_state = dqn.train(
-            state, action, observation, reward, terminated, truncated
-        )
-        state = next_state if not done and next_state is not None else state
+        dqn.train(state, action, observation, reward, terminated, truncated)
 
-        self.assertFalse(done)
-        self.assertTrue(torch.equal(state, observation))
+        self.assertTrue(torch.equal(state[0], observation[0]))
         self.assertEqual(len(dqn.memory), 1)
 
     def test_train_grayscale(self):
         dqn = DQNModule(self.grayscale_shape, self.n_actions)
-        state = torch.randn(*self.grayscale_shape).to(device)
-        action = torch.tensor([[0]], device=device)
-        observation = torch.randn(*self.grayscale_shape).to(device)
-        reward = 1.0
-        terminated = False
-        truncated = False
+        state = [torch.randn(*self.grayscale_shape).to(device)]
+        action = [torch.tensor([[0]], device=device)]
+        observation = [torch.randn(*self.grayscale_shape).to(device)]
+        reward = [torch.tensor(1.0, device=device, dtype=torch.float32)]
+        terminated = [False]
+        truncated = [False]
 
-        done, next_state = dqn.train(
-            state, action, observation, reward, terminated, truncated
-        )
-        state = next_state if not done and next_state is not None else state
+        dqn.train(state, action, observation, reward, terminated, truncated)
 
-        self.assertFalse(done)
-        self.assertTrue(torch.equal(state, observation))
+        self.assertTrue(torch.equal(state[0], observation[0]))
         self.assertEqual(len(dqn.memory), 1)
 
     def test_train_flat(self):
         dqn = DQNModule(self.flat_shape, self.n_actions)
-        state = torch.randn(*self.flat_shape).to(device)
-        action = torch.tensor([[0]], device=device)
-        observation = torch.randn(*self.flat_shape).to(device)
-        reward = 1.0
-        terminated = False
-        truncated = False
+        state = [torch.randn(*self.flat_shape).to(device)]
+        action = [torch.tensor([[0]], device=device)]
+        observation = [torch.randn(*self.flat_shape).to(device)]
+        reward = [torch.tensor(1.0, device=device, dtype=torch.float32)]
+        terminated = [False]
+        truncated = [False]
 
-        done, next_state = dqn.train(
-            state, action, observation, reward, terminated, truncated
-        )
-        state = next_state if not done and next_state is not None else state
+        dqn.train(state, action, observation, reward, terminated, truncated)
 
-        self.assertFalse(done)
-        self.assertTrue(torch.equal(state, observation))
+        self.assertTrue(torch.equal(state[0], observation[0]))
         self.assertEqual(len(dqn.memory), 1)
 
     def test_train_invalid_shapes(self):
         dqn = DQNModule(self.rgb_shape, self.n_actions)
-        invalid_state = torch.randn(1, 4, 84, 84).to(device)
-        action = torch.tensor([[0]], device=device)
-        observation = torch.randn(1, *self.rgb_shape).to(device)
+        invalid_state = [torch.randn(1, 4, 84, 84).to(device)]
+        action = [torch.tensor([[0]], device=device)]
+        observation = [torch.randn(1, *self.rgb_shape).to(device)]
+        reward = [torch.tensor(1.0, device=device, dtype=torch.float32)]
+        terminated = [False]
+        truncated = [False]
 
         with self.assertRaises(ValueError):
-            dqn.train(invalid_state, action, observation, 1.0, False, False)
+            dqn.train(invalid_state, action, observation, reward, terminated, truncated)
 
-        invalid_observation = torch.randn(1, 4, 84, 84).to(device)
+        invalid_observation = [torch.randn(1, 4, 84, 84).to(device)]
         with self.assertRaises(ValueError):
-            dqn.train(observation, action, invalid_observation, 1.0, False, False)
+            dqn.train(
+                observation, action, invalid_observation, reward, terminated, truncated
+            )
 
     @patch.object(DQNModule, "_optimize_model")
     @patch.object(DQNModule, "_soft_update_target_net")
     def test_train_calls_optimize_and_update(self, mock_update, mock_optimize):
         dqn = DQNModule(self.rgb_shape, self.n_actions)
-        state = torch.randn(*self.rgb_shape).to(device)
-        action = torch.tensor([[0]], device=device)
-        observation = torch.randn(*self.rgb_shape).to(device)
+        state = [torch.randn(*self.rgb_shape).to(device)]
+        action = [torch.tensor([[0]], device=device)]
+        observation = [torch.randn(*self.rgb_shape).to(device)]
+        reward = [torch.tensor(1.0, device=device, dtype=torch.float32)]
+        terminated = [False]
+        truncated = [False]
 
-        dqn.train(state, action, observation, 1.0, False, False)
+        dqn.train(state, action, observation, reward, terminated, truncated)
 
         mock_optimize.assert_called_once()
         mock_update.assert_called_once()
