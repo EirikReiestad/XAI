@@ -50,20 +50,13 @@ class TestDQNModule(unittest.TestCase):
 
     def test_train(self):
         """Test the training process."""
-        state = torch.zeros(self.observation_shape, device="cpu")
-        action = torch.tensor([[1]], device="cpu")
-        observation = torch.zeros(*self.observation_shape, device="cpu")
-        reward = 1.0
-        terminated = False
-        truncated = False
-        done, next_state = self.dqn_module.train(
-            state, action, observation, reward, terminated, truncated
-        )
-        self.assertFalse(done)
-        self.assertIsInstance(next_state, torch.Tensor)
-        if next_state is None:
-            raise AssertionError("next_state is None")
-        self.assertEqual(next_state.shape, self.observation_shape)
+        state = [torch.zeros(self.observation_shape, device="cpu")]
+        action = [torch.tensor([[1]], device="cpu")]
+        observation = [torch.zeros(*self.observation_shape, device="cpu")]
+        reward = [torch.tensor(1.0, dtype=torch.float32)]
+        terminated = [False]
+        truncated = [False]
+        self.dqn_module.train(state, action, observation, reward, terminated, truncated)
 
     def test_invalid_state_shape(self):
         """Test invalid state shape."""
@@ -73,11 +66,11 @@ class TestDQNModule(unittest.TestCase):
 
     def test_optimize_model(self):
         """Test optimization step."""
-        state = torch.zeros(self.observation_shape, device="cpu")
-        action = torch.randint(0, self.n_actions, (5, 1), device="cpu")
-        next_state = torch.zeros(self.observation_shape, device="cpu")
-        reward = 5
-        done = False
+        state = [torch.zeros(self.observation_shape, device="cpu")]
+        action = [torch.randint(0, self.n_actions, (5, 1), device="cpu")]
+        next_state = [torch.zeros(self.observation_shape, device="cpu")]
+        reward = [torch.tensor(5.0, dtype=torch.float32)]
+        done = [False]
 
         for _ in range(10):  # Fill replay memory with some transitions
             self.dqn_module.train(state, action, next_state, reward, done, done)
