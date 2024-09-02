@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import torch
 
 from demo import network, settings
-from demo.src.common import EpisodeInformation
+from demo.src.common import Batch, EpisodeInformation
 from demo.src.plotters import Plotter
 from demo.src.wrappers.single_agent_environment_wrapper import (
     SingleAgentEnvironmentWrapper,
@@ -51,7 +51,8 @@ class BaseDemo(ABC):
                 ):
                     self._save_models(i_episode)
                     self._save_plot()
-                self._run_episode(i_episode, state, info)
+                episode_batch = self._run_episode(i_episode, state, info)
+                self._train_batch(episode_batch)
         except Exception as e:
             logging.exception(e)
         finally:
@@ -79,8 +80,19 @@ class BaseDemo(ABC):
             else None
         )
 
+    def _train_batch(self, batch: Batch):
+        """Train the DQN with a batch of transitions."""
+        self.dqn.train(
+            batch.states,
+            batch.actions,
+            batch.observations,
+            batch.rewards,
+            batch.terminated,
+            batch.truncated,
+        )
+
     @abstractmethod
-    def _run_episode(self, i_episode: int, state: torch.Tensor, info: dict):
+    def _run_episode(self, i_episode: int, state: torch.Tensor, info: dict) -> Batch:
         pass
 
     @abstractmethod

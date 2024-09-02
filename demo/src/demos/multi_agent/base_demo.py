@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import torch
 
 from demo import network, settings
+from demo.src.common import Batch
 from demo.src.common.episode_information import EpisodeInformation
 from demo.src.plotters import Plotter
 from demo.src.wrappers import MultiAgentEnvironmentWrapper
@@ -74,6 +75,17 @@ class BaseDemo(ABC):
             self._render_q_values()
         else:
             self.env_wrapper.render()
+
+    def _train_batch(self, batch: Batch, agent_id: int):
+        """Train the DQN with a batch of transitions."""
+        self.dqns[agent_id].train(
+            batch.states,
+            batch.actions,
+            batch.observations,
+            batch.rewards,
+            batch.terminated,
+            batch.truncated,
+        )
 
     @abstractmethod
     def _run_episode(self, i_episode: int, state: torch.Tensor, info: dict):

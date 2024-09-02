@@ -116,7 +116,7 @@ class DQN(nn.Module):
             layers.append(nn.ReLU())
             input_dim = hidden_dim
 
-        layers.append(nn.Dropout(settings.DROPOUT_RATE))
+        # layers.append(nn.Dropout(settings.DROPOUT_RATE))
         if output_dim is not None:
             layers.append(nn.Linear(hidden_layers[-1], output_dim))
         return nn.Sequential(*layers)
