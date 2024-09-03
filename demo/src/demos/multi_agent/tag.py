@@ -37,7 +37,8 @@ class TagDemo(BaseDemo):
 
         for t in count():
             done = False
-            full_states, transitions = self._run_step(state, t)
+            full_states, transitions, info = self._run_step(state, t)
+
             for agent, transition in enumerate(transitions):
                 done = done or transition.terminated or transition.truncated
 
@@ -61,6 +62,14 @@ class TagDemo(BaseDemo):
                 total_rewards[agent] += transitions[agent].reward.item()
 
             if done:
+                object_moved_distance = info.get("object_moved_distance")
+                if object_moved_distance is None:
+                    raise ValueError(
+                        "Object moved distance must be returned from the environment."
+                    )
+                self.episode_informations[1].object_moved_distance.append(
+                    object_moved_distance
+                )
                 for agent in range(self.num_agents):
                     self.episode_informations[agent].durations.append(t + 1)
                     self.episode_informations[agent].rewards.append(
@@ -75,10 +84,12 @@ class TagDemo(BaseDemo):
 
     def _run_step(
         self, state: torch.Tensor, step: int
-    ) -> tuple[list[np.ndarray], list[Transition]]:
+    ) -> tuple[list[np.ndarray], list[Transition], dict]:
         """Run a step in the environment and train the DQN."""
         full_states = []
         transitions = []
+
+        object_moved_distance = 0
 
         for agent in range(self.num_agents):
             if agent == 1:
@@ -93,6 +104,10 @@ class TagDemo(BaseDemo):
             )
 
             full_state = info.get("full_state")
+            new_object_moved_distance = info.get("object_moved_distance")
+            if new_object_moved_distance is not None:
+                object_moved_distance += new_object_moved_distance
+
             if full_state is None:
                 raise ValueError("Full state must be returned from the environment.")
 
@@ -112,7 +127,11 @@ class TagDemo(BaseDemo):
 
         self.env_wrapper.set_active_agent(0)
 
-        return full_states, transitions
+        return (
+            full_states,
+            transitions,
+            {"object_moved_distance": object_moved_distance},
+        )
 
 
 if __name__ == "__main__":

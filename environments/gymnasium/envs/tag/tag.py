@@ -188,11 +188,11 @@ class TagEnv(gym.Env):
 
     def _grab_entity(self) -> float:
         for obj in self.objects.boxes:
-            if self.agents.active.position.distance_to(obj.position) == 1:
-                obj.grabbed = True
-                obj.next_position = self.agents.active.position
+            if self.agents.active.position.distance_to(obj.position) <= 1:
                 can_grab = obj.grab(self.agents.active_agent)
                 if can_grab:
+                    obj.grabbed = True
+                    obj.next_position = self.agents.active.position
                     self.agents.active.grab(obj)
                     return 0
                 return self.tag_rewards.wrong_grab_reward
