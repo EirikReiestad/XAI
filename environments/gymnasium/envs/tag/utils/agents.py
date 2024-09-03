@@ -1,21 +1,38 @@
 from dataclasses import dataclass
 from environments.gymnasium.utils import Position
-from enum import Enum
-
-
-class AgentType(Enum):
-    """Enum for the type of agent."""
-
-    SEEKER = 0
-    HIDER = 1
+from .object import Object
+from .agent_type import AgentType
 
 
 @dataclass
 class Agent:
-    _position: Position
+    def __init__(self, position: Position):
+        self._position = position
+        self._grabbed_object = None
 
     def __eq__(self, other):
         return self.position == other.position
+
+    @property
+    def grabbing(self) -> Object | None:
+        return self._grabbed_object
+
+    @grabbing.setter
+    def grabbing(self, obj: Object | None):
+        self._grabbed_object = obj
+
+    @property
+    def grabbed_object(self) -> Object | None:
+        return self._grabbed_object
+
+    def grab(self, obj: Object):
+        self.grabbing = obj
+
+    def release(self) -> bool:
+        if self.grabbing is not None:
+            self.grabbing = None
+            return True
+        return False
 
     @property
     def position(self) -> Position:

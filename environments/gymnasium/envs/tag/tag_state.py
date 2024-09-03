@@ -54,7 +54,6 @@ class TagState:
         box_positions = FullStateDataExtractor.get_positions(
             self.init_full_state, TileType.BOX
         )
-
         obstacles = [
             Object(ObjectType.OBSTACLE, position, False)
             for position in obstacle_positions
@@ -122,17 +121,20 @@ class TagState:
         hider_position = FullStateDataExtractor.get_agent_position(
             hider_state, AgentType.HIDER
         )
-
         obstacle_positions = FullStateDataExtractor.get_positions(
             seeker_state, TileType.OBSTACLE
         )
-        obstacle_positions = []
+        hider_box_positions = FullStateDataExtractor.get_positions(
+            hider_state, TileType.BOX
+        )
 
         state = np.zeros((self.height, self.width), dtype=np.float32)
         state[*seeker_position.row_major_order] = TileType.SEEKER.value
         state[*hider_position.row_major_order] = TileType.HIDER.value
         for obstacle_position in obstacle_positions:
             state[*obstacle_position.row_major_order] = TileType.OBSTACLE.value
+        for box_position in hider_box_positions:
+            state[*box_position.row_major_order] = TileType.BOX.value
 
         if seeker_position == hider_position:
             return state, True
