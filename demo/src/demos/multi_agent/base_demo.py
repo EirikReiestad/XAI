@@ -28,7 +28,7 @@ class BaseDemo(ABC):
         )
         self.num_agents = self.env_wrapper.num_agents
         self.episode_informations = [
-            EpisodeInformation([], []) for _ in range(self.num_agents)
+            EpisodeInformation([], [], []) for _ in range(self.num_agents)
         ]
         self.plotter = Plotter() if settings.PLOTTING else None
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
