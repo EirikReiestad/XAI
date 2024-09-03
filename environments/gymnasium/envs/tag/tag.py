@@ -11,7 +11,6 @@ from gymnasium import spaces
 
 from environments import settings
 from environments.gymnasium.utils import (
-    Direction,
     FileHandler,
     Position,
     generate_random_position,
@@ -21,7 +20,15 @@ from .tag_renderer import TagRenderer
 from .tag_rewards import TagRewards
 from .tag_state import TagState
 from .env_utils import EnvUtils
-from .utils import AGENT_TILE_TYPE, Agent, AgentType, DualAgents, TileType, ActionType
+from .utils import (
+    AGENT_TILE_TYPE,
+    Agent,
+    AgentType,
+    DualAgents,
+    TileType,
+    ActionType,
+    Objects,
+)
 
 logging.basicConfig(level=logging.INFO)
 
@@ -72,7 +79,8 @@ class TagEnv(gym.Env):
         terminated = False
 
         if not terminated:
-            new_full_state = self._move_agent(self.state.full, action)
+            action_type = ActionType(action)
+            new_full_state = self._do_action(action_type)
             collided = new_full_state is None
             if not collided and new_full_state is not None:
                 self.state.update(
@@ -154,11 +162,25 @@ class TagEnv(gym.Env):
     def get_active_state(self) -> np.ndarray:
         return self.state.active_state
 
+    def _do_action(self, action: ActionType) -> Optional[np.ndarray]:
+        if action == ActionType.GRAB:
+            self._grab_entity()
+        if action == ActionType.RELEASE:
+            self._release_entity()
+        new_full_state = self._move_agent(self.state.full, action)
+        return new_full_state
+
+    def _grab_entity(self):
+        pass
+
+    def _release_entity(self):
+        pass
+
     def _move_agent(
         self, state: np.ndarray, action: ActionType
     ) -> Optional[np.ndarray]:
         new_state = state.copy()
-        new_agent_position = self.agents.active.position + Direction(action).tuple
+        new_agent_position = self.agents.active.position + action.direction.tuple
         if EnvUtils.is_within_bounds(
             new_state, new_agent_position
         ) and EnvUtils.is_not_obstacle(new_state, new_agent_position):
@@ -221,6 +243,11 @@ class TagEnv(gym.Env):
         agent0 = Agent(seeker_position)
         agent1 = Agent(hider_position)
         self.agents = DualAgents(agent0, agent1, AgentType.SEEKER)
+
+    def _set_object_positions(self):
+        box_positions = self.state.get_box_positions()
+        print(box_positions)
+        self.objects = Objects()
 
     @property
     def num_agents(self) -> int:

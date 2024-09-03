@@ -5,9 +5,10 @@ import enum
 class DrawMode(enum.Enum):
     NOTHING = 0
     OBSTACLE = 1
-    ERASE = 2
-    AGENT0 = 3
-    AGENT1 = 4
+    BOX = 2
+    ERASE = 3
+    SEEKER = 4
+    HIDER = 5
 
     def __str__(self) -> str:
         if self == DrawMode.NOTHING:

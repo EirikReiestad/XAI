@@ -46,8 +46,8 @@ class TagState:
         other_agent_position = FullStateDataExtractor.get_agent_position(
             self.init_full_state, other_agent
         )
-        obstacle_positions = FullStateDataExtractor.get_obstacle_positions(
-            self.init_full_state
+        obstacle_positions = FullStateDataExtractor.get_positions(
+            self.init_full_state, TileType.OBSTACLE
         )
         self.state.partial = self._create_partial_state(
             active_agent_position=active_agent_position,
@@ -63,8 +63,8 @@ class TagState:
         other_agent_position: Position,
     ):
         self.state.full = new_full_state
-        obstacle_positions = FullStateDataExtractor.get_obstacle_positions(
-            self.state.full
+        obstacle_positions = FullStateDataExtractor.get_positions(
+            self.state.full, TileType.OBSTACLE
         )
         self.state.partial = self._create_partial_state(
             active_agent_position=active_agent_position,
@@ -116,7 +116,9 @@ class TagState:
             hider_state, AgentType.HIDER
         )
 
-        obstacle_positions = FullStateDataExtractor.get_obstacle_positions(seeker_state)
+        obstacle_positions = FullStateDataExtractor.get_positions(
+            seeker_state, TileType.OBSTACLE
+        )
         obstacle_positions = []
 
         state = np.zeros((self.height, self.width), dtype=np.float32)
@@ -130,6 +132,9 @@ class TagState:
 
         self._validate_state(state)
         return state, False
+
+    def get_box_positions(self) -> list[Position]:
+        return FullStateDataExtractor.get_positions(self.full, TileType.BOX)
 
     def _validate_state(self, state: np.ndarray):
         FullStateDataExtractor.get_agent_position(state, AgentType.SEEKER)
@@ -249,8 +254,8 @@ class TagState:
         inactive_agent_position = FullStateDataExtractor.get_agent_position(
             self.init_full_state, inactive_agent
         )
-        obstacle_positions = FullStateDataExtractor.get_obstacle_positions(
-            self.init_full_state
+        obstacle_positions = FullStateDataExtractor.get_positions(
+            self.init_full_state, TileType.OBSTACLE
         )
         states = np.ndarray(
             (self.height, self.width, *self.partial_state_size), dtype=np.uint8
@@ -282,7 +287,9 @@ class TagState:
         distance = 1
         direction = 2
         obstacle_positions = 2 * len(
-            FullStateDataExtractor.get_obstacle_positions(self.init_full_state)
+            FullStateDataExtractor.get_positions(
+                self.init_full_state, TileType.OBSTACLE
+            )
         )
         partial_state_size = (
             active_agent_position
