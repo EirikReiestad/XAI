@@ -2,13 +2,11 @@ from environments.gymnasium.utils import Position
 from enum import Enum
 
 
-class EntityType(Enum):
-    OBSTACLE = 0
+class ObjectType(Enum):
     BOX = 1
-    AGENT = 2
 
 
-class Entity:
+class Object:
     _position: Position
     _grabable: bool
 
@@ -30,3 +28,7 @@ class Entity:
     @position.setter
     def position(self, position: Position):
         self._position = position
+
+
+class Objects:
+    boxes: list[Object]

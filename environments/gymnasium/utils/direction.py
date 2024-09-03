@@ -8,6 +8,7 @@ class Direction(enum.Enum):
     DOWN = 1
     LEFT = 2
     RIGHT = 3
+    NONE = 4
 
     @property
     def tuple(self) -> tuple[int, int]:
@@ -25,6 +26,7 @@ class Direction(enum.Enum):
             Direction.RIGHT: (1, 0),
             Direction.DOWN: (0, 1),
             Direction.LEFT: (-1, 0),
+            Direction.NONE: (0, 0),
         }
 
         direction_tuple = direction_map.get(self)

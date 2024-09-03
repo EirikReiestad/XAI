@@ -32,13 +32,10 @@ class FullStateDataExtractor:
         return len(agent_position[0]) == 1 and len(agent_position[1]) == 1
 
     @staticmethod
-    def get_obstacle_positions(state: np.ndarray) -> list[Position]:
-        obstacle_positions = np.where(state == TileType.OBSTACLE.value)
-        obstacle_positions = [
-            Position(x=x, y=y)
-            for x, y in zip(obstacle_positions[1], obstacle_positions[0])
-        ]
-        return obstacle_positions
+    def get_positions(state: np.ndarray, tile_type: TileType):
+        positions = np.where(state == tile_type.value)
+        positions = [Position(x=x, y=y) for x, y in zip(positions[1], positions[0])]
+        return positions
 
     @staticmethod
     def is_empty_tile(state: np.ndarray, position: Position) -> bool:
