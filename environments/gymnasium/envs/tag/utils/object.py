@@ -1,5 +1,6 @@
 from environments.gymnasium.utils import Position
 from enum import Enum
+from .agent_type import AgentType
 
 
 class ObjectType(Enum):
@@ -19,9 +20,17 @@ class Object:
         self._position = position
         self._grabable = grabable
         self._grabbed = False
+        self._next_position = position
 
     def __eq__(self, other):
         return self.position == other.position
+
+    def grab(self, agent: AgentType) -> bool:
+        if self.grabable and not self.grabbed:
+            if agent == AgentType.HIDER:
+                self.grabbed = True
+                return True
+        return False
 
     @property
     def grabbed(self):
@@ -46,6 +55,14 @@ class Object:
     @position.setter
     def position(self, position: Position):
         self._position = position
+
+    @property
+    def next_position(self) -> Position:
+        return self._next_position
+
+    @next_position.setter
+    def next_position(self, next_position: Position):
+        self._next_position = next_position
 
     @property
     def state(self) -> list:

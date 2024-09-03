@@ -63,6 +63,10 @@ class TagEnv(gym.Env):
         self.steps_beyond_terminated = None
         self._set_initial_positions(None)
 
+        self.info = {
+            "object_moved_distance": 0,
+        }
+
     def step(self, action: int) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
         if not self.action_space.contains(action):
             raise ValueError(f"Invalid action {action}")
@@ -79,10 +83,11 @@ class TagEnv(gym.Env):
 
         collided = False
         terminated = False
+        reward = 0
 
         if not terminated:
             action_type = ActionType(action)
-            new_full_state = self._do_action(action_type)
+            new_full_state, reward = self._do_action(action_type)
             collided = new_full_state is None
             if not collided and new_full_state is not None:
                 self.state.update(
@@ -104,15 +109,12 @@ class TagEnv(gym.Env):
                 )
             self.steps_beyond_terminated += 1
 
-        reward = self.tag_rewards.get_individual_reward(collided)
+        return_info = {
+            "full_state": self.state.full,
+            "object_moved_distance": self.info["object_moved_distance"],
+        }
 
-        return (
-            self.state.active_state,
-            reward,
-            terminated,
-            False,
-            {"full_state": self.state.full},
-        )
+        return (self.state.active_state, reward, terminated, False, return_info)
 
     def reset(
         self, *, seed: Optional[int] = None, options: Optional[Dict[str, Any]] = None
@@ -127,6 +129,8 @@ class TagEnv(gym.Env):
         super().reset(seed=seed)
         render_mode = options.get("render_mode") if options else None
         self.render_mode = render_mode or self.render_mode
+
+        self.info["object_moved_distance"] = 0
 
         self.state.reset(self.agents.active_agent)
         self._set_initial_positions(options)
@@ -169,30 +173,72 @@ class TagEnv(gym.Env):
     def get_active_state(self) -> np.ndarray:
         return self.state.active_state
 
-    def _do_action(self, action: ActionType) -> Optional[np.ndarray]:
+    def _do_action(self, action: ActionType) -> tuple[Optional[np.ndarray], float]:
+        reward = 0
         if action == ActionType.GRAB:
-            self._grab_entity()
+            reward += self._grab_entity()
         if action == ActionType.RELEASE:
-            self._release_entity()
-        new_full_state = self._move_agent(self.state.full, action)
-        return new_full_state
+            reward += self._release_entity()
+        new_full_state, move_reward = self._move_agent(self.state.full, action)
+        reward += move_reward
+        if new_full_state is None:
+            return None, reward
+        new_full_state = self._move_grabbed_object(new_full_state)
+        return new_full_state, reward
 
-    def _grab_entity(self):
-        pass
+    def _grab_entity(self) -> float:
+        for obj in self.objects.boxes:
+            if self.agents.active.position.distance_to(obj.position) == 1:
+                obj.grabbed = True
+                obj.next_position = self.agents.active.position
+                can_grab = obj.grab(self.agents.active_agent)
+                if can_grab:
+                    self.agents.active.grab(obj)
+                    return 0
+                return self.tag_rewards.wrong_grab_reward
+        return self.tag_rewards.wrong_grab_reward
 
     def _release_entity(self):
-        pass
+        ok = self.agents.active.release()
+        return 0 if ok else self.tag_rewards.wrong_release_reward
+
+    def _move_grabbed_object(self, state: np.ndarray) -> Optional[np.ndarray]:
+        obj = self.agents.active.grabbed_object
+        if obj is not None:
+            if obj.next_position is None:
+                raise ValueError("The object should have a next position.")
+            next_position = self.agents.active.position
+            if obj.next_position == next_position:
+                return state
+
+            new_obj_position = obj.next_position
+            if EnvUtils.is_within_bounds(state, new_obj_position):
+                state[*obj.position.row_major_order] = TileType.EMPTY.value
+                obj.position = new_obj_position
+                obj.next_position = self.agents.active.position
+                state[*obj.position.row_major_order] = TileType.BOX.value
+                self.info["object_moved_distance"] += 1
+            else:
+                logging.warning(
+                    f"Object {obj.position} is outside the bounds of the environment."
+                )
+                return None
+        return state
 
     def _move_agent(
         self, state: np.ndarray, action: ActionType
-    ) -> Optional[np.ndarray]:
+    ) -> tuple[Optional[np.ndarray], float]:
         new_state = state.copy()
         new_agent_position = self.agents.active.position + action.direction.tuple
-        if EnvUtils.is_within_bounds(
-            new_state, new_agent_position
-        ) and EnvUtils.is_not_obstacle(new_state, new_agent_position):
-            return self._move_agent_within_bounds(new_state, new_agent_position)
-        return None
+        if EnvUtils.is_within_bounds(new_state, new_agent_position):
+            if not EnvUtils.is_object(new_state, new_agent_position):
+                return self._move_agent_within_bounds(
+                    new_state, new_agent_position
+                ), self.tag_rewards.move_reward
+            else:
+                return state, self.tag_rewards.collision_reward
+        else:
+            return None, self.tag_rewards.terminated_reward
 
     def _move_agent_within_bounds(
         self, state: np.ndarray, agent_position: Position
@@ -247,9 +293,9 @@ class TagEnv(gym.Env):
                 if options is None or "hider" not in options
                 else Position(options["hider"])
             )
-        agent0 = Agent(seeker_position)
-        agent1 = Agent(hider_position)
-        self.agents = DualAgents(agent0, agent1, AgentType.SEEKER)
+        seeker = Agent(seeker_position)
+        hider = Agent(hider_position)
+        self.agents = DualAgents(seeker, hider, AgentType.SEEKER)
 
     def _set_object_positions(self):
         obstacle_positions = self.state.get_obstacle_positions()
@@ -283,4 +329,4 @@ class TagEnv(gym.Env):
 
     @property
     def num_actions(self) -> int:
-        return 4
+        return 6

@@ -9,5 +9,7 @@ class EnvUtils:
         return 0 <= position.x < env.shape[0] and 0 <= position.y < env.shape[1]
 
     @staticmethod
-    def is_not_obstacle(env: np.ndarray, position: Position):
-        return env[position.row_major_order] != TileType.OBSTACLE.value
+    def is_object(env: np.ndarray, position: Position):
+        is_obstacle = env[position.row_major_order] == TileType.OBSTACLE.value
+        is_box = env[position.row_major_order] == TileType.BOX.value
+        return is_obstacle or is_box

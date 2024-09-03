@@ -10,13 +10,10 @@ class TagRewards:
             "move": rewards.MOVE_REWARD,
             "terminated": rewards.TERMINATED_REWARD,
             "truncated": rewards.TRUNCATED_REWARD,
+            "collision": rewards.COLLISION_REWARD,
+            "wrong_grab": rewards.WRONG_GRAB_REWARD,
+            "wrong_release": rewards.WRONG_RELEASE_REWARD,
         }
-
-    def get_individual_reward(self, collided: bool):
-        if collided:
-            return self.terminated_reward
-        else:
-            return self.move_reward
 
     def get_tag_reward(
         self, agent: Position, other_agent: Position, radius: float = 1
@@ -38,9 +35,21 @@ class TagRewards:
         return self.rewards["move"]
 
     @property
+    def collision_reward(self):
+        return self.rewards["collision"]
+
+    @property
     def terminated_reward(self):
         return self.rewards["terminated"]
 
     @property
     def truncated_reward(self):
         return self.rewards["truncated"]
+
+    @property
+    def wrong_grab_reward(self):
+        return self.rewards["wrong_grab"]
+
+    @property
+    def wrong_release_reward(self):
+        return self.rewards["wrong_release"]
