@@ -9,6 +9,9 @@ from environments.gymnasium.envs.tag.utils import (
     FullStateDataExtractor,
     FullStateDataModifier,
     TileType,
+    Objects,
+    Object,
+    ObjectType,
 )
 from environments.gymnasium.utils import Position, State, StateType
 from utils import Color
@@ -25,7 +28,6 @@ class TagState:
 
         full_state = self.init_full_state
         partial_state = np.ndarray(self.partial_state_size, dtype=np.uint8)
-        # partial_state = self._create_partial_state()
         rgb_state = self._create_rgb_state()
 
         self.state = State(
@@ -49,10 +51,19 @@ class TagState:
         obstacle_positions = FullStateDataExtractor.get_positions(
             self.init_full_state, TileType.OBSTACLE
         )
+        box_positions = FullStateDataExtractor.get_positions(
+            self.init_full_state, TileType.BOX
+        )
+
+        obstacles = [
+            Object(ObjectType.OBSTACLE, position, False)
+            for position in obstacle_positions
+        ]
+        boxes = [Object(ObjectType.BOX, position, True) for position in box_positions]
+        objects = Objects(obstacles, boxes)
+
         self.state.partial = self._create_partial_state(
-            active_agent_position=active_agent_position,
-            other_agent_position=other_agent_position,
-            obstacle_positions=obstacle_positions,
+            active_agent_position, other_agent_position, objects
         )
         self.state.rgb = self._create_rgb_state()
 
@@ -61,15 +72,11 @@ class TagState:
         new_full_state: np.ndarray,
         active_agent_position: Position,
         other_agent_position: Position,
+        objects: Objects,
     ):
         self.state.full = new_full_state
-        obstacle_positions = FullStateDataExtractor.get_positions(
-            self.state.full, TileType.OBSTACLE
-        )
         self.state.partial = self._create_partial_state(
-            active_agent_position=active_agent_position,
-            other_agent_position=other_agent_position,
-            obstacle_positions=obstacle_positions,
+            active_agent_position, other_agent_position, objects
         )
         self.state.rgb = self._create_rgb_state()
 
@@ -133,6 +140,9 @@ class TagState:
         self._validate_state(state)
         return state, False
 
+    def get_obstacle_positions(self) -> list[Position]:
+        return FullStateDataExtractor.get_positions(self.full, TileType.OBSTACLE)
+
     def get_box_positions(self) -> list[Position]:
         return FullStateDataExtractor.get_positions(self.full, TileType.BOX)
 
@@ -144,7 +154,7 @@ class TagState:
         self,
         active_agent_position: Position,
         other_agent_position: Position,
-        obstacle_positions: list[Position],
+        objects: Objects,
     ) -> np.ndarray:
         goal_distance = active_agent_position - other_agent_position
         goal_direction = [goal_distance.x, goal_distance.y]
@@ -164,9 +174,7 @@ class TagState:
             255,
         )
 
-        obstacle_int_positions = []
-        for obstacle_position in obstacle_positions:
-            obstacle_int_positions.extend([*obstacle_position])
+        object_states = objects.state
 
         return np.array(
             [
@@ -174,7 +182,7 @@ class TagState:
                 *other_agent_position,
                 int(distance_normalized),
                 *map(int, direction_normalized),
-                *obstacle_int_positions,
+                *object_states,
             ],
             dtype=np.uint8,
         )
@@ -211,12 +219,14 @@ class TagState:
         return self.state.rgb
 
     def get_all_possible_states(
-        self, active_agent: AgentType, inactive_agent: AgentType
+        self, active_agent: AgentType, inactive_agent: AgentType, objects: Objects
     ) -> np.ndarray:
         if settings.STATE_TYPE == StateType.FULL:
             return self._get_all_possible_full_states(active_agent)
         elif settings.STATE_TYPE == StateType.PARTIAL:
-            return self._get_all_possible_partial_states(active_agent, inactive_agent)
+            return self._get_all_possible_partial_states(
+                active_agent, inactive_agent, objects
+            )
         elif settings.STATE_TYPE == StateType.RGB:
             raise NotImplementedError("RGB state type not implemented yet.")
         raise ValueError(f"Unknown state type: {settings.STATE_TYPE}")
@@ -245,7 +255,7 @@ class TagState:
         return states
 
     def _get_all_possible_partial_states(
-        self, active_agent: AgentType, inactive_agent: AgentType
+        self, active_agent: AgentType, inactive_agent: AgentType, objects: Objects
     ) -> np.ndarray:
         clean_agent_state = self.init_full_state.copy()
         clean_agent_state = FullStateDataModifier.remove_agent(
@@ -254,9 +264,9 @@ class TagState:
         inactive_agent_position = FullStateDataExtractor.get_agent_position(
             self.init_full_state, inactive_agent
         )
-        obstacle_positions = FullStateDataExtractor.get_positions(
-            self.init_full_state, TileType.OBSTACLE
-        )
+        obstacle_positions = [obj.position for obj in objects.obstacles]
+        box_positions = [obj.position for obj in objects.boxes]
+
         states = np.ndarray(
             (self.height, self.width, *self.partial_state_size), dtype=np.uint8
         )
@@ -267,9 +277,7 @@ class TagState:
                     clean_agent_state, active_agent_position
                 ):
                     state = self.state.partial = self._create_partial_state(
-                        active_agent_position,
-                        inactive_agent_position,
-                        obstacle_positions,
+                        active_agent_position, inactive_agent_position, objects
                     )
                 else:
                     state = self._create_empty_partial_state()
@@ -286,17 +294,23 @@ class TagState:
         inactive_agent_position = 2
         distance = 1
         direction = 2
-        obstacle_positions = 2 * len(
+        num_obstacles = len(
             FullStateDataExtractor.get_positions(
                 self.init_full_state, TileType.OBSTACLE
             )
         )
+        num_boxes = len(
+            FullStateDataExtractor.get_positions(self.init_full_state, TileType.BOX)
+        )
+        obstacle_state_size = num_obstacles * Object.state_size_static()
+        box_state_size = num_boxes * Object.state_size_static()
         partial_state_size = (
             active_agent_position
             + inactive_agent_position
             + distance
             + direction
-            + obstacle_positions
+            + obstacle_state_size
+            + box_state_size
         )
         return np.array([partial_state_size], dtype=np.uint8)
 

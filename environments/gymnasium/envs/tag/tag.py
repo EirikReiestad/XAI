@@ -28,6 +28,8 @@ from .utils import (
     TileType,
     ActionType,
     Objects,
+    Object,
+    ObjectType,
 )
 
 logging.basicConfig(level=logging.INFO)
@@ -87,6 +89,7 @@ class TagEnv(gym.Env):
                     new_full_state,
                     self.agents.active.position,
                     self.agents.inactive.position,
+                    self.objects,
                 )
             terminated = collided or terminated
         elif self.steps_beyond_terminated is None:
@@ -118,7 +121,7 @@ class TagEnv(gym.Env):
             return self.state.active_state, {
                 "state_type": settings.STATE_TYPE.value,
                 "all_possible_states": self.state.get_all_possible_states(
-                    self.agents.active_agent, self.agents.inactive_agent
+                    self.agents.active_agent, self.agents.inactive_agent, self.objects
                 ),
             }
         super().reset(seed=seed)
@@ -127,6 +130,7 @@ class TagEnv(gym.Env):
 
         self.state.reset(self.agents.active_agent)
         self._set_initial_positions(options)
+        self._set_object_positions()
 
         self.steps = 0
         self.steps_beyond_terminated = None
@@ -155,7 +159,10 @@ class TagEnv(gym.Env):
 
     def update_state(self, state: np.ndarray) -> np.ndarray:
         self.state.update(
-            state, self.agents.active.position, self.agents.inactive.position
+            state,
+            self.agents.active.position,
+            self.agents.inactive.position,
+            self.objects,
         )
         return self.state.active_state
 
@@ -245,9 +252,30 @@ class TagEnv(gym.Env):
         self.agents = DualAgents(agent0, agent1, AgentType.SEEKER)
 
     def _set_object_positions(self):
+        obstacle_positions = self.state.get_obstacle_positions()
         box_positions = self.state.get_box_positions()
-        print(box_positions)
-        self.objects = Objects()
+
+        obstacle_objects: list[Object] = []
+        box_objects: list[Object] = []
+
+        for position in obstacle_positions:
+            obstacle_objects.append(
+                Object(
+                    object_type=ObjectType.OBSTACLE,
+                    position=position,
+                    grabable=False,
+                )
+            )
+
+        for position in box_positions:
+            box_objects.append(
+                Object(
+                    object_type=ObjectType.BOX,
+                    position=position,
+                    grabable=True,
+                )
+            )
+        self.objects = Objects(obstacle_objects, box_objects)
 
     @property
     def num_agents(self) -> int:
