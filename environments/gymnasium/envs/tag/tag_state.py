@@ -24,7 +24,6 @@ class TagState:
 
     def init_states(self, filename: str):
         self.init_full_state = self._load_env_from_file(filename)
-
         full_state = self.init_full_state
         partial_state = np.ndarray(self.partial_state_size, dtype=np.uint8)
         rgb_state = self._create_rgb_state()
@@ -202,6 +201,29 @@ class TagState:
             env = [list(map(int, list(row.strip()))) for row in f.readlines()]
 
         return np.array(env, dtype=np.uint8)
+
+    @property
+    def init_full_state(self):
+        state = self._init_full_state
+
+        def random_agent_position(state: np.ndarray, agent: AgentType) -> np.ndarray:
+            state = FullStateDataModifier.remove_agent(self._init_full_state, agent)
+            random_position = FullStateDataExtractor.get_random_position(
+                state, TileType.EMPTY
+            )
+            return FullStateDataModifier.place_agent(state, random_position, agent)
+
+        if settings.RANDOM_SEEKER_POSITION:
+            random_agent_position(state, AgentType.SEEKER)
+        if settings.RANDOM_HIDER_POSITION:
+            random_agent_position(state, AgentType.HIDER)
+        FullStateDataExtractor.get_agent_position(state, AgentType.SEEKER)
+        FullStateDataExtractor.get_agent_position(state, AgentType.HIDER)
+        return state
+
+    @init_full_state.setter
+    def init_full_state(self, value: np.ndarray):
+        self._init_full_state = value
 
     @property
     def active_state(self) -> np.ndarray:

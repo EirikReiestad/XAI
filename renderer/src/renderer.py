@@ -26,6 +26,7 @@ class Renderer:
         self.is_open = True
 
     def render(self, background: np.ndarray, **kwargs):
+        self.screen.fill(Color.WHITE.value)
         q_values = kwargs.get("q_values")
         if q_values is not None:
             q_values_surf = self._get_q_values_surf(q_values)
