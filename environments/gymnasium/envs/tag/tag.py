@@ -329,4 +329,4 @@ class TagEnv(gym.Env):
 
     @property
     def num_actions(self) -> int:
-        return 6
+        return 4

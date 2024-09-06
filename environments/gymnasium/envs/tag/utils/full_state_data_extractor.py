@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import numpy as np
+import random
 from environments.gymnasium.envs.tag.utils import AgentType
 from environments.gymnasium.envs.tag.utils.tile_type import TileType
 from environments.gymnasium.envs.tag.utils.agent_tile_type import AGENT_TILE_TYPE
@@ -36,6 +37,11 @@ class FullStateDataExtractor:
         positions = np.where(state == tile_type.value)
         positions = [Position(x=x, y=y) for x, y in zip(positions[1], positions[0])]
         return positions
+
+    @staticmethod
+    def get_random_position(state: np.ndarray, tile_type: TileType) -> Position:
+        positions = FullStateDataExtractor.get_positions(state, tile_type)
+        return random.choice(positions)
 
     @staticmethod
     def is_empty_tile(state: np.ndarray, position: Position) -> bool:

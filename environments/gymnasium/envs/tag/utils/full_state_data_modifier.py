@@ -21,9 +21,17 @@ class FullStateDataModifier:
         return new_state
 
     @staticmethod
+    def remove_agents(state: np.ndarray, agents: list[AgentType]) -> np.ndarray:
+        new_state = state.copy()
+        for agent in agents:
+            new_state = FullStateDataModifier.remove_agent(new_state, agent)
+        return new_state
+
+    @staticmethod
     def place_agent(
         state: np.ndarray, position: Position, agent: AgentType
     ) -> np.ndarray:
         tile_type = AGENT_TILE_TYPE[agent]
-        state.copy()[position.row_major_order] = tile_type
-        return state
+        state_copy = state.copy()
+        state_copy[position.row_major_order] = tile_type
+        return state_copy
