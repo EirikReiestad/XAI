@@ -58,7 +58,7 @@ class TestReplayMemory(unittest.TestCase):
             reward = torch.tensor([float(i % 2)])
             self.memory.push(state, action, next_state, reward)
 
-        sampled_transitions = self.memory.sample(batch_size=3)
+        sampled_transitions, _, _ = self.memory.sample(batch_size=3)
         self.assertEqual(len(sampled_transitions), 3)
         self.assertTrue(all(isinstance(t, Transition) for t in sampled_transitions))
 
