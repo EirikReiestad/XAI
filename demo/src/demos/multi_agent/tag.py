@@ -34,6 +34,7 @@ class TagDemo(BaseDemo):
             truncated=[],
         )
         agent_batches = [seeker_batch, hider_batch]
+        total_rewards = np.zeros(self.num_agents)
 
         for t in count():
             done = False
@@ -57,7 +58,6 @@ class TagDemo(BaseDemo):
             if i_episode % settings.RENDER_EVERY == 0:
                 self.render()
 
-            total_rewards = np.zeros(self.num_agents)
             for agent in range(len(transitions)):
                 total_rewards[agent] += transitions[agent].reward.item()
 

@@ -10,7 +10,7 @@ class Color(enum.Enum):
     PURPLE = (128, 0, 128)
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
-    DARK_GRAY = (169, 169, 169)
+    YELLOW = (255, 255, 0)
 
     def __str__(self):
         return f"Color({self.name}, RGB{self.value})"

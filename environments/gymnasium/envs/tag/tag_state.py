@@ -2,7 +2,6 @@ import logging
 import os
 
 import numpy as np
-
 from environments import settings
 from environments.gymnasium.envs.tag.utils import (
     AgentType,
