@@ -214,9 +214,9 @@ class TagState:
             return FullStateDataModifier.place_agent(state, random_position, agent)
 
         if settings.RANDOM_SEEKER_POSITION:
-            random_agent_position(state, AgentType.SEEKER)
+            state = random_agent_position(state, AgentType.SEEKER)
         if settings.RANDOM_HIDER_POSITION:
-            random_agent_position(state, AgentType.HIDER)
+            state = random_agent_position(state, AgentType.HIDER)
         FullStateDataExtractor.get_agent_position(state, AgentType.SEEKER)
         FullStateDataExtractor.get_agent_position(state, AgentType.HIDER)
         return state
