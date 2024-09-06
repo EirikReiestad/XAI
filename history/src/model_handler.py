@@ -24,8 +24,9 @@ class ModelHandler:
         path = os.path.join(self.save_folder, name)
         model.save(path)
 
-    def save_plot(self, plot: Figure, filename: str = "plot.png"):
-        plot.savefig(os.path.join(self.save_folder, filename))
+    def save_plot(self, plots: list[Figure], filename: str = "plot.png"):
+        for i, plot in enumerate(plots):
+            plot.savefig(os.path.join(self.save_folder, f"{i}_{filename}"))
 
     def _get_folder_name(self):
         if settings.DEMO == DemoType.MAZE:

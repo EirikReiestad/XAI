@@ -1,17 +1,21 @@
 import numpy as np
+from matplotlib.figure import Figure
 
 from demo.src.common import EpisodeInformation
 
 from .agent_plotter import AgentPlotter
 from .object_plotter import ObjectPlotter
+from demo import settings
 
 
 class Plotter:
     """Handles plotting of training progress."""
 
     def __init__(self):
-        self.agent_plotter = AgentPlotter()
-        self.object_plotter = ObjectPlotter()
+        if settings.PLOT_AGENT_REWARD:
+            self.agent_plotter = AgentPlotter()
+        if settings.PLOT_OBJECT_MOVEMENT:
+            self.object_plotter = ObjectPlotter()
 
     def update(
         self,
@@ -21,11 +25,25 @@ class Plotter:
         show_result=False,
     ):
         """Update the plot with data from multiple episodes."""
-        self.agent_plotter.update(
-            episodes_information, colors=colors, labels=labels, show_result=show_result
-        )
-        self.object_plotter.update(episodes_information)
+        if settings.PLOT_AGENT_REWARD:
+            self.agent_plotter.update(
+                episodes_information,
+                colors=colors,
+                labels=labels,
+                show_result=show_result,
+            )
+        if settings.PLOT_OBJECT_MOVEMENT:
+            self.object_plotter.update(episodes_information)
 
     def plot_q_values(self, q_values: np.ndarray):
         """Plot the Q-values of the DQN."""
         self.agent_plotter.plot_q_values(q_values)
+
+    @property
+    def figs(self) -> list[Figure]:
+        figs = []
+        if settings.PLOT_AGENT_REWARD:
+            figs.append(self.agent_plotter.fig)
+        if settings.PLOT_OBJECT_MOVEMENT:
+            figs.append(self.object_plotter.fig)
+        return figs

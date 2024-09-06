@@ -30,7 +30,7 @@ class BaseDemo(ABC):
         self.episode_informations = [
             EpisodeInformation([], [], []) for _ in range(self.num_agents)
         ]
-        self.plotter = Plotter() if settings.PLOTTING else None
+        self.plotter = Plotter()
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.is_ipython = "inline" in matplotlib.get_backend()
 
@@ -64,10 +64,9 @@ class BaseDemo(ABC):
         finally:
             self.env_wrapper.close()
             logging.info("Complete")
-            if self.plotter:
-                self.plotter.update(self.episode_informations, show_result=True)
-                plt.ioff()
-                plt.show()
+            self.plotter.update(self.episode_informations, show_result=True)
+            plt.ioff()
+            plt.show()
 
     def render(self):
         """Render the environment."""
@@ -92,7 +91,9 @@ class BaseDemo(ABC):
         """Abstract method to handle running an episode. Must be implemented by subclasses."""
         pass
 
-    def _render_q_values(self):
+    def _render_q_values(self) -> None:
+        if not settings.RENDER:
+            return None
         if self.extern_renderer is None:
             raise ValueError("External renderer not initialized")
         rgb_array = self.env_wrapper.render()
@@ -103,6 +104,8 @@ class BaseDemo(ABC):
         self.extern_renderer.render(background=rgb_array, q_values=q_values)
 
     def _create_extern_renderer(self) -> Renderer | None:
+        if not settings.RENDER:
+            return None
         env_height = env_settings.ENV_HEIGHT
         env_width = env_settings.ENV_WIDTH
         screen_width = env_settings.SCREEN_WIDTH
@@ -122,10 +125,7 @@ class BaseDemo(ABC):
 
     def _save_plot(self):
         """Save the plot of the episode information."""
-        if self.plotter is not None:
-            self.model_handler.save_plot(self.plotter.fig, "plot")
-        else:
-            logging.warning("Plotter is not initialized. Cannot save plot.")
+        self.model_handler.save_plot(self.plotter.figs, "plot")
 
     def _load_models(
         self, observation_shape: tuple, n_actions: int, conv_layers: list[ConvLayer]

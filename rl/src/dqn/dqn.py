@@ -28,9 +28,10 @@ class DQN(nn.Module):
         """
         super(DQN, self).__init__()
         if len(input_shape) == 2:
-            logging.info(
-                "Then tensor have a shape of 2. Consider dropping the convolutional network."
-            )
+            if conv_layers is not None and len(conv_layers) != 0:
+                logging.info(
+                    "Then tensor have a shape of 2. Consider dropping the convolutional network."
+                )
             input_shape = (1, 1, *input_shape)
         elif len(input_shape) == 3:
             input_shape = (1, *input_shape)

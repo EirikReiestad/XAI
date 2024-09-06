@@ -14,11 +14,10 @@ from torch.optim.adamw import AdamW
 from rl import settings
 from rl.src.common import ConvLayer
 from rl.src.dqn.dqn import DQN
-from rl.src.dqn.replay_memory import ReplayMemory
+from rl.src.dqn.prioritized_replay_memory import PrioritizedReplayMemory
 from rl.src.dqn.utils import Transition
 from rl.src.hyperparameters.dqn_hyperparameter import DQNHyperparameter
 
-# if gpu is to be used
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
@@ -66,7 +65,7 @@ class DQNModule:
         self.optimizer = AdamW(
             self.policy_net.parameters(), lr=self.hp.lr, amsgrad=True
         )
-        self.memory = ReplayMemory(settings.REPLAY_MEMORY_SIZE)
+        self.memory = PrioritizedReplayMemory(settings.REPLAY_MEMORY_SIZE)
 
         self.update_interval = 1
         self.step_count = 0
@@ -137,7 +136,7 @@ class DQNModule:
         if self.step_count % self.update_interval != 0:
             return
 
-        transitions = self.memory.sample(self.hp.batch_size)
+        transitions, indices, weights = self.memory.sample(self.hp.batch_size)
         batch = Transition(*zip(*transitions))
 
         non_final_mask = torch.tensor(
@@ -174,13 +173,24 @@ class DQNModule:
 
         expected_state_action_values = next_state_values * self.hp.gamma + reward_batch
 
-        criterion = nn.SmoothL1Loss()
+        td_errors = expected_state_action_values.unsqueeze(1) - state_action_values
+
+        criterion = nn.SmoothL1Loss(reduction="none")
         loss = criterion(state_action_values, expected_state_action_values.unsqueeze(1))
+        loss = loss * torch.tensor(
+            weights, device=device, dtype=torch.float32
+        ).unsqueeze(1)
+        loss = loss.mean()
 
         self.optimizer.zero_grad()
         loss.backward()
         torch.nn.utils.clip_grad_value_(self.policy_net.parameters(), 100)
         self.optimizer.step()
+
+        if isinstance(self.memory, PrioritizedReplayMemory):
+            self.memory.update_priorities(
+                indices, td_errors.squeeze(1).detach().numpy()
+            )
 
     def train(
         self,

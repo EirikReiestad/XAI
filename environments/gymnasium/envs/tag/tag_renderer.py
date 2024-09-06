@@ -87,6 +87,6 @@ class TagRenderer:
     def apply_color_masks(self, color_matrix, full_state):
         """Applies color masks to the tag."""
         color_matrix[full_state == TileType.OBSTACLE.value] = Color.BLACK.value
-        color_matrix[full_state == TileType.BOX.value] = Color.DARK_GRAY.value
+        color_matrix[full_state == TileType.BOX.value] = Color.YELLOW.value
         color_matrix[full_state == TileType.SEEKER.value] = Color.BLUE.value
         color_matrix[full_state == TileType.HIDER.value] = Color.GREEN.value

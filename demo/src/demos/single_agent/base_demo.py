@@ -23,8 +23,10 @@ class BaseDemo(ABC):
 
     def __init__(self):
         """Initialize the base demo class with common settings."""
-        self.episode_information = EpisodeInformation(durations=[], rewards=[])
-        self.plotter = Plotter() if settings.PLOTTING else None
+        self.episode_information = EpisodeInformation(
+            durations=[], rewards=[], object_moved_distance=[]
+        )
+        self.plotter = Plotter()
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.is_ipython = "inline" in plt.get_backend()
         self.extern_renderer = self._create_extern_renderer()
@@ -70,6 +72,8 @@ class BaseDemo(ABC):
             self.env_wrapper.render()
 
     def _create_extern_renderer(self) -> Renderer | None:
+        if not settings.RENDER:
+            return None
         env_height = env_settings.ENV_HEIGHT
         env_width = env_settings.ENV_WIDTH
         screen_width = env_settings.SCREEN_WIDTH
@@ -110,6 +114,8 @@ class BaseDemo(ABC):
         return []
 
     def _render_q_values(self):
+        if not settings.RENDER:
+            return None
         if self.extern_renderer is None:
             raise ValueError("External renderer not initialized")
         rgb_array = self.env_wrapper.render()
@@ -136,6 +142,6 @@ class BaseDemo(ABC):
     def _save_plot(self):
         """Save the plot of the episode information."""
         if self.plotter is not None:
-            self.model_handler.save_plot(self.plotter.fig, "plot")
+            self.model_handler.save_plot(self.plotter.figs, "plot")
         else:
             logging.warning("Plotter not initialized. Cannot save plot.")
