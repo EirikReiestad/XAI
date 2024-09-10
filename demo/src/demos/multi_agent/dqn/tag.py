@@ -101,8 +101,11 @@ class TagDemo(BaseDemo):
         object_moved_distance = 0
 
         for agent in range(self.num_agents):
-            if agent == 1:
-                if step % settings.SLOWING_FACTOR != 0:
+            if step < settings.WAIT:
+                if agent == 0:
+                    continue
+            else:
+                if agent == 1:
                     continue
 
             action = self.dqns[agent].select_action(state)
