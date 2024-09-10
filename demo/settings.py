@@ -2,9 +2,9 @@ from demo.src.demos.demo_type import DemoType
 from demo.src.demos.rl_type import RLType
 
 DEMO_TYPE = DemoType.TAG
-RL_TYPE = RLType.PPO
+RL_TYPE = RLType.DQN
 
-NUM_EPISODES = 100000
+EPOCHS = 100000
 RENDER = True
 RENDER_EVERY = 50
 

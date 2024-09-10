@@ -3,7 +3,7 @@ import os
 from demo import settings
 from demo.src.demos import DemoType, RLType
 
-assert settings.NUM_EPISODES > 0, "NUM_EPISODES must be greater than 0"
+assert settings.EPOCHS > 0, "NUM_EPISODES must be greater than 0"
 assert isinstance(settings.RENDER, bool), "RENDER must be a boolean"
 assert settings.RENDER_EVERY > 0, "RENDER_EVERY must be greater than 0"
 assert settings.SLOWING_FACTOR > 0, "SLOWING_FACTOR must be greater than 0"

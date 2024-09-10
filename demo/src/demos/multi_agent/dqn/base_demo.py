@@ -50,7 +50,7 @@ class BaseDemo(ABC):
         plt.ion()
 
         try:
-            for i_episode in range(settings.NUM_EPISODES):
+            for i_episode in range(settings.EPOCHS):
                 self._run_episode(i_episode, state, info)
                 if (
                     settings.SAVE_MODEL
