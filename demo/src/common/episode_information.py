@@ -8,8 +8,8 @@ class EpisodeInformation:
     object_moved_distance: list[float]
 
     def last_episode(self, prefix: str = ""):
-        return {
-            f"{prefix}durations": self.durations[-1],
-            f"{prefix}rewards": self.rewards[-1],
-            f"{prefix}object_moved_distance": self.object_moved_distance[-1],
-        }
+        last_episode = {}
+        for key in ["durations", "rewards", "object_moved_distance"]:
+            if getattr(self, key):
+                last_episode[f"{prefix}{key}"] = getattr(self, key)[-1]
+        return last_episode

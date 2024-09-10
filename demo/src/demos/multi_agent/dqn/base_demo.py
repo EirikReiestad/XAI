@@ -5,6 +5,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import torch
 
+import wandb
 from demo import network, settings
 from demo.src.common import Batch
 from demo.src.common.episode_information import EpisodeInformation
@@ -13,6 +14,7 @@ from demo.src.wrappers import MultiAgentEnvironmentWrapper
 from environments import settings as env_settings
 from history import ModelHandler
 from renderer import Renderer
+from rl import settings as rl_settings
 from rl.src.common import ConvLayer
 from rl.src.dqn.dqn_module import DQNModule
 
@@ -38,6 +40,26 @@ class BaseDemo(ABC):
         self.extern_renderer = self._create_extern_renderer()
 
         self.q_value_renderer_agent_id = 0
+
+        if settings.WANDB:
+            wandb.init(
+                project="multi-agent-dqn-tag",
+                config={
+                    "env_id": "TagEnv-v0",
+                    "num_episodes": settings.EPOCHS,
+                    "num_agents": self.num_agents,
+                    "lr": rl_settings.LR,
+                    "gamma": rl_settings.GAMMA,
+                    "epsilon_start": rl_settings.EPS_START,
+                    "epsilon_end": rl_settings.EPS_END,
+                    "epsilon_decay": rl_settings.EPS_DECAY,
+                    "target_update": rl_settings.UPDATE_INTERVAL,
+                    "batch_size": rl_settings.BATCH_SIZE,
+                    "tau": rl_settings.TAU,
+                    "memory_size": rl_settings.REPLAY_MEMORY_SIZE,
+                    "hidden_size": len(network.HIDDEN_LAYERS),
+                },
+            )
 
     def run(self):
         """Run the demo, interacting with the environment and training the DQN."""
