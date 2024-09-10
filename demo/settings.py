@@ -1,6 +1,8 @@
 from demo.src.demos.demo_type import DemoType
+from demo.src.demos.rl_type import RLType
 
-DEMO = DemoType.TAG
+DEMO_TYPE = DemoType.TAG
+RL_TYPE = RLType.DQN
 
 NUM_EPISODES = 100000
 RENDER = True

@@ -1,9 +1,12 @@
-from demo.src.demos.multi_agent.base_demo import BaseDemo
-from demo.src.common import Transition, Batch
-import torch
-from demo import settings
 from itertools import count
+
 import numpy as np
+import torch
+
+from demo import settings
+from demo.src.common import Batch, Transition
+
+from .base_demo import BaseDemo
 
 
 class TagDemo(BaseDemo):
