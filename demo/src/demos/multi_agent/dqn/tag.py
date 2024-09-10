@@ -4,8 +4,7 @@ import numpy as np
 import torch
 
 import wandb
-from demo import settings, network
-from rl import settings as rl_settings
+from demo import settings
 from demo.src.common import Batch, Transition
 
 from .base_demo import BaseDemo
@@ -17,25 +16,6 @@ class TagDemo(BaseDemo):
     def __init__(self):
         """Initialize the Tag demo."""
         super().__init__(env_id="TagEnv-v0")
-
-        wandb.init(
-            project="multi-agent-dqn-tag",
-            config={
-                "env_id": "TagEnv-v0",
-                "num_episodes": settings.EPOCHS,
-                "num_agents": self.num_agents,
-                "lr": rl_settings.LR,
-                "gamma": rl_settings.GAMMA,
-                "epsilon_start": rl_settings.EPS_START,
-                "epsilon_end": rl_settings.EPS_END,
-                "epsilon_decay": rl_settings.EPS_DECAY,
-                "target_update": rl_settings.UPDATE_INTERVAL,
-                "batch_size": rl_settings.BATCH_SIZE,
-                "tau": rl_settings.TAU,
-                "memory_size": rl_settings.REPLAY_MEMORY_SIZE,
-                "hidden_size": len(network.HIDDEN_LAYERS),
-            },
-        )
 
     def _run_episode(self, i_episode: int, state: torch.Tensor, info: dict):
         """Handle the episode by interacting with the environment and training the DQN."""
@@ -100,7 +80,9 @@ class TagDemo(BaseDemo):
                         total_rewards[agent]
                     )
 
-                wandb.log(self.episode_informations[1].last_episode("agent0-"))
+                if settings.WANDB:
+                    wandb.log(self.episode_informations[0].last_episode("agent0-"))
+                    wandb.log(self.episode_informations[1].last_episode("agent0-"))
                 if self.plotter:
                     self.plotter.update(self.episode_informations)
 
