@@ -82,7 +82,7 @@ class TagDemo(BaseDemo):
 
                 if settings.WANDB:
                     wandb.log(self.episode_informations[0].last_episode("agent0-"))
-                    wandb.log(self.episode_informations[1].last_episode("agent0-"))
+                    wandb.log(self.episode_informations[1].last_episode("agent1-"))
                 if self.plotter:
                     self.plotter.update(self.episode_informations)
 
