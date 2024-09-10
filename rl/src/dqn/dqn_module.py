@@ -257,7 +257,7 @@ class DQNModule:
                     q_values[y, x] = self.policy_net(states[y, x]).cpu()
         return q_values
 
-    def get_q_values_map(self, states: np.ndarray) -> np.ndarray:
+    def get_q_values_map(self, states: np.ndarray, **args) -> np.ndarray:
         q_values = self.get_q_values(states)
 
         if states.shape[:2] != q_values.shape[:2]:
@@ -265,8 +265,14 @@ class DQNModule:
                 f"States shape {states.shape[:2]} does not match Q-values shape {q_values.shape[:2]}"
             )
 
-        adjusted_q_values = q_values + np.abs(np.min(q_values))
+        if args.get("max_q_values"):
+            max_q_values = np.max(q_values, axis=2)
+            normalized_max_q_values = (max_q_values - np.min(max_q_values)) / np.ptp(
+                max_q_values
+            )
+            return normalized_max_q_values
 
+        adjusted_q_values = q_values + np.abs(np.min(q_values))
         normalized_q_values = (adjusted_q_values - np.min(adjusted_q_values)) / np.ptp(
             adjusted_q_values
         )
