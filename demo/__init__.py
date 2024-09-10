@@ -1,7 +1,7 @@
 import environments.gymnasium.envs.registration
 import os
 from demo import settings
-from demo.src.demos.demo_type import DemoType
+from demo.src.demos import DemoType, RLType
 
 assert settings.NUM_EPISODES > 0, "NUM_EPISODES must be greater than 0"
 assert isinstance(settings.RENDER, bool), "RENDER must be a boolean"
@@ -25,15 +25,15 @@ assert isinstance(settings.LOAD_MODEL_NAME, str), "LOAD_MODEL_NAME must be a str
 assert settings.LOAD_MODEL_NAME != "", "LOAD_MODEL_NAME cannot be empty"
 
 if settings.PRETRAINED:
-    if settings.DEMO == DemoType.MAZE:
+    if settings.DEMO_TYPE == DemoType.MAZE:
         assert os.path.exists(
             os.path.join("history", "models", "maze", settings.LOAD_MODEL_NAME + ".pt")
         ), "Model file does not exist"
-    elif settings.DEMO == DemoType.COOP:
+    elif settings.DEMO_TYPE == DemoType.COOP:
         assert os.path.exists(
             os.path.join(
                 "history", "models", "coop", settings.LOAD_MODEL_NAME + "_agent0.pt"
             )
         ), "Model file does not exist"
 
-__all__ = ["DemoType", "settings"]
+__all__ = ["DemoType", "settings", "RLType"]

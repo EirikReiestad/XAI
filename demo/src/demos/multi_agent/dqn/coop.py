@@ -1,4 +1,4 @@
-from demo.src.demos.multi_agent.base_demo import BaseDemo
+from .base_demo import BaseDemo
 import torch
 from demo import settings
 from itertools import count

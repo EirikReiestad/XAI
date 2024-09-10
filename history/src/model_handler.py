@@ -29,11 +29,11 @@ class ModelHandler:
             plot.savefig(os.path.join(self.save_folder, f"{i}_{filename}"))
 
     def _get_folder_name(self):
-        if settings.DEMO == DemoType.MAZE:
+        if settings.DEMO_TYPE == DemoType.MAZE:
             return "maze"
-        elif settings.DEMO == DemoType.COOP:
+        elif settings.DEMO_TYPE == DemoType.COOP:
             return "coop"
-        elif settings.DEMO == DemoType.TAG:
+        elif settings.DEMO_TYPE == DemoType.TAG:
             return "tag"
         else:
             raise ValueError("Invalid demo type")
