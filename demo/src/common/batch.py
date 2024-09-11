@@ -22,3 +22,14 @@ class Batch:
         self.rewards.append(transition.reward)
         self.terminated.append(transition.terminated)
         self.truncated.append(transition.truncated)
+
+    def __len__(self) -> int:
+        assert (
+            len(self.states)
+            == len(self.actions)
+            == len(self.observations)
+            == len(self.rewards)
+            == len(self.terminated)
+            == len(self.truncated)
+        )
+        return len(self.states)

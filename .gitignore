@@ -1,4 +1,5 @@
 wandb/run-*
+wandb/offline-run-*
 
 history/models/coop/*
 history/models/maze/*
