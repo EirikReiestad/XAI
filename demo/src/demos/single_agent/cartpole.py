@@ -1,6 +1,7 @@
 import logging
 from itertools import count
 
+import gymnasium as gym
 import matplotlib
 import matplotlib.pyplot as plt
 import torch
@@ -8,8 +9,8 @@ import torch
 from demo import settings
 from demo.src.common import EpisodeInformation
 from demo.src.plotters import Plotter
-from demo.src.wrappers import EnvironmentWrapper
-from rl.src.dqn.dqn_module import DQNModule
+from demo.src.wrappers import SingleAgentEnvironmentWrapper
+from rl.src.dqn import DQN
 
 # Set up matplotlib
 is_ipython = "inline" in matplotlib.get_backend()
@@ -20,19 +21,19 @@ class CartPoleDemo:
     """Demo for the CartPole-v1 environment."""
 
     def __init__(self) -> None:
-        self.episode_information = EpisodeInformation(durations=[], rewards=[])
+        self.episode_information = EpisodeInformation(
+            durations=[], rewards=[], object_moved_distance=[]
+        )
         self.plotter = Plotter()
+        self.env = gym.make("CartPole-v1", render_mode=render_mode)
 
     def run(self):
-        env_wrapper = EnvironmentWrapper(env_id="CartPole-v1")
-        state, _ = env_wrapper.reset()
-
-        dqn = DQNModule(state.shape, env_wrapper.env.action_space.n)
+        dqn = DQN(policy="MlpPolicy", self.env)
 
         plt.ion()
 
         try:
-            for i_episode in range(settings.NUM_EPISODES):
+            for i_episode in range(settings.EPOCHS):
                 state, _ = env_wrapper.reset()
 
                 total_reward = 0
@@ -42,15 +43,11 @@ class CartPoleDemo:
                         env_wrapper.render()
 
                     action = dqn.select_action(state)
-                    observation, reward, terminated, truncated = env_wrapper.step(
+                    observation, reward, terminated, truncated, _ = env_wrapper.step(
                         action.item()
                     )
 
                     total_reward += reward
-
-                    done, new_state = dqn.train(
-                        state, action, observation, reward, terminated, truncated
-                    )
 
                     state = new_state if not done and new_state is not None else state
 

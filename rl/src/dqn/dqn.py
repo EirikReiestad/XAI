@@ -2,6 +2,8 @@
 This module contains the DQN agent that interacts with the environment.
 """
 
+from typing import ClassVar, Dict, Type
+
 import json
 import math
 import random
@@ -10,26 +12,35 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from rl.src.base import RLBase
-from rl.src.common import ConvLayer, check, setter
+from rl.src.base import BaseRL
+from rl.src.common import check, setter
+import gymnasium as gym
 
 from .common.hyperparameter import DQNHyperparameter
 from .components.prioritized_replay_memory import PrioritizedReplayMemory
 from .components.transition import Transition
 from .managers import MemoryManager, NetworkManager, OptimizerManager
+from rl.src.common.policies import BasePolicy, MlpPolicy
+from .policies import DQNPolicy
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
-class DQN(RLBase):
+class DQN(BaseRL):
     """DQN Module for managing the agent, including training and evaluation."""
+
+    policy_aliases: ClassVar[Dict[str, Type[BasePolicy]]] = {
+        "MlpPolicy": MlpPolicy,
+    }
+    policy_net: DQNPolicy
+    target_net: DQNPolicy
 
     def __init__(
         self,
+        policy: str | Type[DQNPolicy],
+        env: gym.Env,
         observation_shape: tuple,
         n_actions: int,
-        hidden_layers: list[int] = [128, 128],
-        conv_layers: list[ConvLayer] | None = None,
         seed: int | None = None,
         dueling: bool = False,
         double: bool = False,
@@ -44,15 +55,13 @@ class DQN(RLBase):
     ) -> None:
         setter.set_seed(seed)
 
+        self.policy = policy
+        self.env = env
         self.n_actions = n_actions
         self.observation_shape = np.array(observation_shape)
         self.hp = DQNHyperparameter(
             lr, gamma, epsilon_start, epsilon_end, epsilon_decay, batch_size, tau
         )
-        networks = NetworkManager(
-            observation_shape, n_actions, conv_layers, hidden_layers, dueling
-        )
-        self.policy_net, self.target_net = networks.initialize()
 
         optimizer = OptimizerManager(self.policy_net, self.hp.lr)
         self.optimizer = optimizer.initialize()
@@ -63,6 +72,17 @@ class DQN(RLBase):
         self.update_interval = 1
         self.step_count = 0
         self.steps_done = 0
+
+    def learn(
+        self,
+        total_timesteps: int,
+    ):
+        while self.steps_done < total_timesteps:
+            self._collect_rollout()
+
+        return super().learn(total_timesteps)
+
+    def _collect_rollout(self):
 
     def select_action(self, state: torch.Tensor) -> torch.Tensor:
         check.raise_if_not_same_shape(
@@ -159,17 +179,12 @@ class DQN(RLBase):
         truncated: list[bool],
     ):
         """Store transition and optimize the model."""
-        if not all(state.shape == self.observation_shape for state in states):
-            raise ValueError(
-                f"All states must have shape {self.observation_shape}, but found a mismatch."
-            )
-
-        if not all(
-            observation.shape == self.observation_shape for observation in observations
-        ):
-            raise ValueError(
-                f"All states must have shape {self.observation_shape}, but found a mismatch."
-            )
+        check.raise_if_not_all_same_shape(
+                    states, self.observation_shape, "states", "observation"
+                            )
+        check.raise_if_not_all_same_shape(
+                    observations, self.observation_shape, "observations", "observation"
+                            )
 
         next_states = [
             obs.clone().detach() if not (term or trunc) else None
