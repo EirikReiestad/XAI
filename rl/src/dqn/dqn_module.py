@@ -17,11 +17,12 @@ from rl.src.dqn.dqn import DQN
 from rl.src.dqn.prioritized_replay_memory import PrioritizedReplayMemory
 from rl.src.dqn.utils import Transition
 from rl.src.hyperparameters.dqn_hyperparameter import DQNHyperparameter
+from rl.src.base import RLBase
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
-class DQNModule:
+class DQNModule(RLBase):
     """DQN Module for managing the agent, including training and evaluation."""
 
     def __init__(
@@ -31,6 +32,16 @@ class DQNModule:
         hidden_layers: list[int] = [128, 128],
         conv_layers: list[ConvLayer] | None = None,
         seed: int | None = None,
+        dueling: bool = False,
+        double: bool = False,
+        memory_size: int = 5000,
+        lr: float = 1e-4,
+        gamma: float = 0.99,
+        epsilon_start: float = 0.9,
+        epsilon_end: float = 0.05,
+        epsilon_decay: int = 5000,
+        batch_size: int = 512,
+        tau: float = 0.005,
     ) -> None:
         """Initialize the DQN agent.
 
@@ -50,29 +61,26 @@ class DQNModule:
         self.n_actions = n_actions
         self.observation_shape = observation_shape
         self.hp = DQNHyperparameter(
-            lr=settings.LR,
-            gamma=settings.GAMMA,
-            eps_start=settings.EPS_START,
-            eps_end=settings.EPS_END,
-            eps_decay=settings.EPS_DECAY,
-            batch_size=settings.BATCH_SIZE,
-            tau=settings.TAU,
+            lr, gamma, epsilon_start, epsilon_end, epsilon_decay, batch_size, tau
         )
-
         self.policy_net, self.target_net = self._initialize_networks(
-            conv_layers, hidden_layers
+            conv_layers, hidden_layers, dueling
         )
         self.optimizer = AdamW(
             self.policy_net.parameters(), lr=self.hp.lr, amsgrad=True
         )
-        self.memory = PrioritizedReplayMemory(settings.REPLAY_MEMORY_SIZE)
+        self.memory = PrioritizedReplayMemory(memory_size)
+        self.double = double
 
         self.update_interval = 1
         self.step_count = 0
         self.steps_done = 0
 
     def _initialize_networks(
-        self, conv_layers: list[ConvLayer] | None, hidden_layers: list[int]
+        self,
+        conv_layers: list[ConvLayer] | None,
+        hidden_layers: list[int],
+        dueling: bool = False,
     ) -> tuple[nn.Module, nn.Module]:
         """Initialize the policy and target networks.
 
@@ -88,14 +96,14 @@ class DQNModule:
             self.n_actions,
             hidden_layers,
             conv_layers,
-            dueling=settings.DUELING_DQN,
+            dueling,
         ).to(device)
         target_net = DQN(
             self.observation_shape,
             self.n_actions,
             hidden_layers,
             conv_layers,
-            dueling=settings.DUELING_DQN,
+            dueling,
         ).to(device)
         target_net.load_state_dict(policy_net.state_dict())
         return policy_net, target_net
@@ -155,7 +163,7 @@ class DQNModule:
         state_action_values = self.policy_net(state_batch).gather(1, action_batch)
         next_state_values = torch.zeros(self.hp.batch_size, device=device)
 
-        if settings.DOUBLE_DQN:
+        if self.double:
             with torch.no_grad():
                 next_actions = (
                     self.policy_net(non_final_next_states).max(1)[1].unsqueeze(1)
@@ -172,9 +180,7 @@ class DQNModule:
                 )
 
         expected_state_action_values = next_state_values * self.hp.gamma + reward_batch
-
         td_errors = expected_state_action_values.unsqueeze(1) - state_action_values
-
         criterion = nn.SmoothL1Loss(reduction="none")
         loss = criterion(state_action_values, expected_state_action_values.unsqueeze(1))
         loss = loss * torch.tensor(
