@@ -7,5 +7,5 @@ class OptimizerManager:
         self.policy_net = policy_net
         self.lr = lr
 
-    def initialize(self) -> None:
-        self.optimizer = AdamW(self.policy_net.parameters(), lr=self.lr, amsgrad=True)
+    def initialize(self) -> AdamW:
+        return AdamW(self.policy_net.parameters(), lr=self.lr, amsgrad=True)

@@ -11,9 +11,9 @@ class RLBase(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def save(self):
+    def save(self, path: str):
         raise NotImplementedError
 
     @abstractmethod
-    def load(self):
+    def load(self, path: str):
         raise NotImplementedError
