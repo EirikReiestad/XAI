@@ -53,18 +53,12 @@ class TagDemo(BaseDemo):
                 )
                 state = self.env_wrapper.update_state(full_state[0].numpy())
 
-                # NOTE: FIX PLEASE FUTURE EIRIK: Ugly hack to append to the correct agent
-                if t < settings.WAIT:
-                    transitions[0].reward += agent_rewards[1]
-                else:
-                    transitions[0].reward += agent_rewards[0]
+                for agent, transition in enumerate(transitions):
+                    transition.reward += agent_rewards[agent]
 
-            if t < settings.WAIT:
-                agent_batches[1].append(transitions[0])
-                total_rewards[1] += transitions[0].reward.item()
-            else:
-                agent_batches[0].append(transitions[0])
-                total_rewards[0] += transitions[0].reward.item()
+            for agent, transition in enumerate(transitions):
+                agent_batches[agent].append(transition)
+                total_rewards[agent] += transition.reward.item()
 
             if i_episode % settings.RENDER_EVERY == 0:
                 self.render()
@@ -106,17 +100,24 @@ class TagDemo(BaseDemo):
 
         object_moved_distance = 0
 
+        mock_transition = Transition(
+            state=state,
+            action=torch.tensor([4], dtype=torch.int32),
+            observation=state,
+            reward=torch.tensor([0], dtype=torch.float32),
+            terminated=False,
+            truncated=False,
+        )
+
         for agent in range(self.num_agents):
-            if agent == 1:
-                continue
-            """
             if step < settings.WAIT:
                 if agent == 0:
+                    transitions.append(mock_transition)
                     continue
             else:
                 if agent == 1:
+                    transitions.append(mock_transition)
                     continue
-            """
 
             action = self.dqns[agent].select_action(state)
 
