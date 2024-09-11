@@ -2,25 +2,24 @@
 This module contains the DQN agent that interacts with the environment.
 """
 
-from typing import ClassVar, Dict, Type
-
 import json
 import math
 import random
+from itertools import count
+from typing import ClassVar, Dict, Type
 
+import gymnasium as gym
 import numpy as np
 import torch
 import torch.nn as nn
 
 from rl.src.base import BaseRL
 from rl.src.common import check, setter
-import gymnasium as gym
 
 from .common.hyperparameter import DQNHyperparameter
-from .components.prioritized_replay_memory import PrioritizedReplayMemory
+from .components.memory.prioritized_replay_memory import PrioritizedReplayMemory
 from .components.transition import Transition
-from .managers import MemoryManager, NetworkManager, OptimizerManager
-from rl.src.common.policies import BasePolicy, MlpPolicy
+from .managers import MemoryManager, OptimizerManager
 from .policies import DQNPolicy
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -29,9 +28,6 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 class DQN(BaseRL):
     """DQN Module for managing the agent, including training and evaluation."""
 
-    policy_aliases: ClassVar[Dict[str, Type[BasePolicy]]] = {
-        "MlpPolicy": MlpPolicy,
-    }
     policy_net: DQNPolicy
     target_net: DQNPolicy
 
@@ -39,8 +35,6 @@ class DQN(BaseRL):
         self,
         policy: str | Type[DQNPolicy],
         env: gym.Env,
-        observation_shape: tuple,
-        n_actions: int,
         seed: int | None = None,
         dueling: bool = False,
         double: bool = False,
@@ -57,8 +51,9 @@ class DQN(BaseRL):
 
         self.policy = policy
         self.env = env
-        self.n_actions = n_actions
-        self.observation_shape = np.array(observation_shape)
+        self.action_space = env.action_space
+        self.observation_space = env.observation_space
+
         self.hp = DQNHyperparameter(
             lr, gamma, epsilon_start, epsilon_end, epsilon_decay, batch_size, tau
         )
@@ -80,13 +75,49 @@ class DQN(BaseRL):
         while self.steps_done < total_timesteps:
             self._collect_rollout()
 
-        return super().learn(total_timesteps)
-
     def _collect_rollout(self):
+        observation, info = self.env.reset()
+        rewards = 0
+
+        for t in count():
+            action = self.select_action(observation)
+            observation, reward, terminated, truncated, info = self.env.step(action)
+            rewards += float(reward)
+
+    def train(
+        self,
+        states: list[torch.Tensor],
+        actions: list[torch.Tensor],
+        observations: list[torch.Tensor],
+        rewards: list[torch.Tensor],
+        terminated: list[bool],
+        truncated: list[bool],
+    ):
+        """Store transition and optimize the model."""
+        check.raise_if_not_all_same_shape(
+            states, self.observation_space.shape, "states", "observation"
+        )
+        check.raise_if_not_all_same_shape(
+            observations, self.observation_space.shape, "observations", "observation"
+        )
+
+        next_states = [
+            obs.clone().detach() if not (term or trunc) else None
+            for obs, term, trunc in zip(observations, terminated, truncated)
+        ]
+
+        for state, action, next_state, reward in zip(
+            states, actions, next_states, rewards
+        ):
+            self.memory.push(state, action, next_state, reward)
+
+        self._optimize_model()
+
+        self._soft_update_target_net()
 
     def select_action(self, state: torch.Tensor) -> torch.Tensor:
         check.raise_if_not_same_shape(
-            state, self.observation_shape, "state", "observation"
+            state, self.observation_space.shape, "state", "observation"
         )
 
         eps_threshold = self.hp.eps_end + (
@@ -99,7 +130,9 @@ class DQN(BaseRL):
                 return self.policy_net(state).max(1).indices.view(1, 1)
         else:
             return torch.tensor(
-                [[random.randrange(self.n_actions)]], device=device, dtype=torch.long
+                [[random.randrange(self.action_space.n)]],
+                device=device,
+                dtype=torch.long,
             )
 
     def _optimize_model(self) -> None:
@@ -168,37 +201,6 @@ class DQN(BaseRL):
         if self.step_count % self.update_interval != 0:
             return True
         return False
-
-    def train(
-        self,
-        states: list[torch.Tensor],
-        actions: list[torch.Tensor],
-        observations: list[torch.Tensor],
-        rewards: list[torch.Tensor],
-        terminated: list[bool],
-        truncated: list[bool],
-    ):
-        """Store transition and optimize the model."""
-        check.raise_if_not_all_same_shape(
-                    states, self.observation_shape, "states", "observation"
-                            )
-        check.raise_if_not_all_same_shape(
-                    observations, self.observation_shape, "observations", "observation"
-                            )
-
-        next_states = [
-            obs.clone().detach() if not (term or trunc) else None
-            for obs, term, trunc in zip(observations, terminated, truncated)
-        ]
-
-        for state, action, next_state, reward in zip(
-            states, actions, next_states, rewards
-        ):
-            self.memory.push(state, action, next_state, reward)
-
-        self._optimize_model()
-
-        self._soft_update_target_net()
 
     def _soft_update_target_net(self) -> None:
         """Soft update the target network parameters."""

@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 class BaseRL(ABC):
     @abstractmethod
-    def learn(self):
+    def learn(self, total_timesteps: int):
         raise NotImplementedError
 
     @abstractmethod

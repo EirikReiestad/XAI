@@ -29,37 +29,32 @@ class CartPoleDemo:
 
     def run(self):
         dqn = DQN(policy="MlpPolicy", self.env)
+        dqn.learn(settings.EPOCHS)
 
         plt.ion()
 
         try:
             for i_episode in range(settings.EPOCHS):
-                state, _ = env_wrapper.reset()
-
-                total_reward = 0
+                state, _ = self.env.reset()
+                rewards = 0
 
                 for t in count():
-                    if i_episode % settings.RENDER_EVERY == 0:
-                        env_wrapper.render()
-
+                    self.env.render()
                     action = dqn.select_action(state)
-                    observation, reward, terminated, truncated, _ = env_wrapper.step(
+                    observation, reward, terminated, truncated, _ = self.env.step(
                         action.item()
                     )
+                    rewards += float(reward)
 
-                    total_reward += reward
-
-                    state = new_state if not done and new_state is not None else state
-
-                    if done:
+                    if terminated or truncated:
                         self.episode_information.durations.append(t + 1)
-                        self.episode_information.rewards.append(total_reward)
+                        self.episode_information.rewards.append(rewards)
                         self.plotter.update(self.episode_information)
                         break
         except Exception as e:
             logging.error(e)
         finally:
-            env_wrapper.close()
+            self.env.close()
             logging.info("Complete")
             self.plotter.update(self.episode_information, show_result=True)
             plt.ioff()
