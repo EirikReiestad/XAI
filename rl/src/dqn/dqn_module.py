@@ -121,10 +121,10 @@ class DQNModule:
 
         if random.random() > eps_threshold:
             with torch.no_grad():
-                return self.policy_net(state).max(1).indices.view(1)
+                return self.policy_net(state).max(1).indices.view(1, 1)
         else:
             return torch.tensor(
-                [random.randrange(self.n_actions)], device=device, dtype=torch.long
+                [[random.randrange(self.n_actions)]], device=device, dtype=torch.long
             )
 
     def _optimize_model(self) -> None:
