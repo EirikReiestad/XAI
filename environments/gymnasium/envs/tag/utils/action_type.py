@@ -8,8 +8,9 @@ class ActionType(enum.Enum):
     DOWN = 1
     LEFT = 2
     RIGHT = 3
-    GRAB = 4
-    RELEASE = 5
+    NONE = 4
+    GRAB = 5
+    RELEASE = 6
 
     @property
     def direction(self) -> Direction:

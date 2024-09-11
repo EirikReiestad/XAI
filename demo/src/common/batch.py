@@ -31,5 +31,5 @@ class Batch:
             == len(self.rewards)
             == len(self.terminated)
             == len(self.truncated)
-        )
+        ), "All lists must have the same length"
         return len(self.states)

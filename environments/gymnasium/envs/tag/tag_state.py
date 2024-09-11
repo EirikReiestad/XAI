@@ -216,7 +216,7 @@ class TagState:
         if settings.RANDOM_SEEKER_POSITION:
             state = random_agent_position(state, AgentType.SEEKER)
         if settings.RANDOM_HIDER_POSITION:
-            state = random_agent_position(state, AgentType.HIDER)
+            random_agent_position(state, AgentType.HIDER)
         FullStateDataExtractor.get_agent_position(state, AgentType.SEEKER)
         FullStateDataExtractor.get_agent_position(state, AgentType.HIDER)
         return state
@@ -287,6 +287,7 @@ class TagState:
         inactive_agent_position = FullStateDataExtractor.get_agent_position(
             self.init_full_state, inactive_agent
         )
+        # TODO: Refactor this to use the objects class
         obstacle_positions = [obj.position for obj in objects.obstacles]
         box_positions = [obj.position for obj in objects.boxes]
 
