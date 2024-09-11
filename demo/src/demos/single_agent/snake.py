@@ -4,8 +4,7 @@ import torch
 import logging
 from itertools import count
 import gymnasium as gym
-
-from rl.src.dqn.dqn_module import DQNModule
+from rl.src.dqn import DQN
 
 
 gym.register(
@@ -31,7 +30,7 @@ def main():
 
     hidden_layers = [128, 128]
 
-    dqn = DQNModule(n_observation, env.action_space.n, hidden_layers=hidden_layers)
+    dqn = DQN(n_observation, env.action_space.n, hidden_layers=hidden_layers)
 
     plt.ion()
 

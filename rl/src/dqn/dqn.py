@@ -6,7 +6,7 @@ import json
 import math
 import random
 from itertools import count
-from typing import ClassVar, Dict, Type
+from typing import Type
 
 import gymnasium as gym
 import numpy as np
@@ -52,11 +52,18 @@ class DQN(BaseRL):
         self.policy = policy
         self.env = env
         self.action_space = env.action_space
+        self.num_actions = env.action_space.n
         self.observation_space = env.observation_space
 
         self.hp = DQNHyperparameter(
             lr, gamma, epsilon_start, epsilon_end, epsilon_decay, batch_size, tau
         )
+        self.policy_net = DQNPolicy(
+            self.observation_space, self.action_space, [32, 16, 8]
+        ).to(device)
+        self.target_net = DQNPolicy(
+            self.observation_space, self.action_space, [32, 16, 8]
+        ).to(device)
 
         optimizer = OptimizerManager(self.policy_net, self.hp.lr)
         self.optimizer = optimizer.initialize()
@@ -80,8 +87,11 @@ class DQN(BaseRL):
         rewards = 0
 
         for t in count():
-            action = self.select_action(observation)
-            observation, reward, terminated, truncated, info = self.env.step(action)
+            torch_observation = torch.tensor(
+                observation, device=device, dtype=torch.float32
+            ).unsqueeze(0)
+            action = self.predict(torch_observation)
+            observation, reward, terminated, truncated, info = self.env.step(0)
             rewards += float(reward)
 
     def train(
@@ -115,7 +125,7 @@ class DQN(BaseRL):
 
         self._soft_update_target_net()
 
-    def select_action(self, state: torch.Tensor) -> torch.Tensor:
+    def predict(self, state: torch.Tensor) -> torch.Tensor:
         check.raise_if_not_same_shape(
             state, self.observation_space.shape, "state", "observation"
         )
@@ -130,7 +140,7 @@ class DQN(BaseRL):
                 return self.policy_net(state).max(1).indices.view(1, 1)
         else:
             return torch.tensor(
-                [[random.randrange(self.action_space.n)]],
+                [[random.randrange(self.num_actions)]],
                 device=device,
                 dtype=torch.long,
             )
@@ -222,7 +232,7 @@ class DQN(BaseRL):
                 if type(state) is not torch.Tensor:
                     raise ValueError("All states must be PyTorch tensors.")
 
-        q_values = np.ndarray((*states.shape, self.n_actions), dtype=np.float32)
+        q_values = np.ndarray((*states.shape, self.num_actions), dtype=np.float32)
         height = states.shape[0]
         width = states.shape[1]
         for y in range(height):

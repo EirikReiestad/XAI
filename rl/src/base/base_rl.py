@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import torch
 
 
 class BaseRL(ABC):
@@ -7,7 +8,7 @@ class BaseRL(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def predict(self):
+    def predict(self, state: torch.Tensor) -> torch.Tensor:
         raise NotImplementedError
 
     @abstractmethod

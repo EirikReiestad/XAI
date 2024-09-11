@@ -25,10 +25,10 @@ class CartPoleDemo:
             durations=[], rewards=[], object_moved_distance=[]
         )
         self.plotter = Plotter()
-        self.env = gym.make("CartPole-v1", render_mode=render_mode)
+        self.env = gym.make("CartPole-v1")
 
     def run(self):
-        dqn = DQN(policy="MlpPolicy", self.env)
+        dqn = DQN("MlpPolicy", self.env)
         dqn.learn(settings.EPOCHS)
 
         plt.ion()
@@ -40,7 +40,7 @@ class CartPoleDemo:
 
                 for t in count():
                     self.env.render()
-                    action = dqn.select_action(state)
+                    action = dqn.predict(state)
                     observation, reward, terminated, truncated, _ = self.env.step(
                         action.item()
                     )

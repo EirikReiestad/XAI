@@ -15,7 +15,7 @@ from environments import settings as env_settings
 from history import ModelHandler
 from renderer import Renderer
 from rl.src.common import ConvLayer
-from rl.src.base import RLBase
+from rl.src.dqn import DQN
 
 
 class BaseDemo(ABC):
@@ -129,7 +129,7 @@ class BaseDemo(ABC):
         self, observation_shape: tuple, n_actions: int, conv_layers: list[ConvLayer]
     ):
         """Initialize the model models for each agent."""
-        self.model = RLBase(observation_shape, n_actions, conv_layers=conv_layers)
+        self.model = DQN(observation_shape, n_actions)
 
         if settings.PRETRAINED:
             self.model_handler.load(self.model, settings.LOAD_MODEL_NAME)
