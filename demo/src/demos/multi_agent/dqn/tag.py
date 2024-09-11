@@ -53,17 +53,21 @@ class TagDemo(BaseDemo):
                 )
                 state = self.env_wrapper.update_state(full_state[0].numpy())
 
-                for agent, transition in enumerate(transitions):
-                    transition.reward += agent_rewards[agent]
+                # NOTE: FIX PLEASE FUTURE EIRIK: Ugly hack to append to the correct agent
+                if t < settings.WAIT:
+                    transitions[0].reward += agent_rewards[1]
+                else:
+                    transitions[0].reward += agent_rewards[0]
 
-            for agent, transition in enumerate(transitions):
-                agent_batches[agent].append(transition)
+            if t < settings.WAIT:
+                agent_batches[1].append(transitions[0])
+                total_rewards[1] += transitions[0].reward.item()
+            else:
+                agent_batches[0].append(transitions[0])
+                total_rewards[0] += transitions[0].reward.item()
 
             if i_episode % settings.RENDER_EVERY == 0:
                 self.render()
-
-            for agent in range(len(transitions)):
-                total_rewards[agent] += transitions[agent].reward.item()
 
             if done:
                 object_moved_distance = info.get("object_moved_distance")
@@ -92,7 +96,9 @@ class TagDemo(BaseDemo):
             self._train_batch(agent_batches[agent], agent)
 
     def _run_step(
-        self, state: torch.Tensor, step: int
+        self,
+        state: torch.Tensor,
+        step: int,
     ) -> tuple[list[np.ndarray], list[Transition], dict]:
         """Run a step in the environment and train the DQN."""
         full_states = []
@@ -101,12 +107,16 @@ class TagDemo(BaseDemo):
         object_moved_distance = 0
 
         for agent in range(self.num_agents):
+            if agent == 1:
+                continue
+            """
             if step < settings.WAIT:
                 if agent == 0:
                     continue
             else:
                 if agent == 1:
                     continue
+            """
 
             action = self.dqns[agent].select_action(state)
 
