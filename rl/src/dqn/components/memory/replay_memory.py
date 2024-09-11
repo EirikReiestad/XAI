@@ -3,7 +3,7 @@ import random
 import numpy as np
 
 from rl.src.dqn.base import ReplayMemoryBase
-from rl.src.dqn.transition import Transition
+from rl.src.dqn.components.transition import Transition
 
 
 class ReplayMemory(ReplayMemoryBase):

@@ -5,6 +5,7 @@ from gymnasium import spaces
 from torch import nn
 
 from rl.src.common.policies import BasePolicy
+from gymnasium.spaces import Box
 
 
 class DQNPolicy(BasePolicy):
@@ -17,21 +18,21 @@ class DQNPolicy(BasePolicy):
     ) -> None:
         super(DQNPolicy, self).__init__(observation_space, action_space)
         self.dueling = dueling
+        observation_size = self._observation_size(observation_space)
+        number_of_actions = action_space.n
 
         if self.dueling:
-            self.fc_feature = self._build_fc_layers(
-                hidden_layers, observation_space.shape
-            )
+            self.fc_feature = self._build_fc_layers(hidden_layers, observation_size)
             # TODO: Consider having separate hidden_layers for value and advantage streams than the hidden_layers used for the feature layers
             # Value stream layers
             input_dim = hidden_layers[-1]
             self.value_stream = self._build_fc_layers(hidden_layers, input_dim, 1)
             self.advantage_stream = self._build_fc_layers(
-                hidden_layers, input_dim, action_space.shape
+                hidden_layers, input_dim, number_of_actions
             )
         else:
             self.fc_feature = self._build_fc_layers(
-                hidden_layers, observation_space.shape, action_space.shape
+                hidden_layers, observation_size, number_of_actions
             )
 
     def _build_fc_layers(
@@ -48,17 +49,7 @@ class DQNPolicy(BasePolicy):
         return nn.Sequential(*layers)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        match len(x.shape):
-            case 2:
-                x = x.unsqueeze(1).unsqueeze(1)
-            case 3:
-                x = x.unsqueeze(1)
-            case 4:
-                pass
-            case _:
-                raise ValueError(f"Invalid input tensor shape: {x.shape}")
-
-        x = x.flatten(start_dim=1)  # Flatten the output from conv layers
+        print(type(x))
         x = self.fc_feature(x)  # Apply feature layers
 
         if self.dueling:
@@ -66,3 +57,16 @@ class DQNPolicy(BasePolicy):
             advantage = self.advantage_stream(x)
             return value + (advantage - advantage.mean())
         return x
+
+    def _observation_size(self, observation_space: spaces.Space) -> int:
+        if observation_space.shape is None:
+            raise ValueError("Invalid input shape: None")
+        if len(observation_space.shape) > 1:
+            raise ValueError(
+                f"Invalid input shape: {observation_space.shape}. DQN only supports 1D input shapes"
+            )
+        if len(observation_space.shape) == 0:
+            raise ValueError(
+                f"Invalid input shape: {observation_space.shape}. DQN only supports 1D input shapes"
+            )
+        return observation_space.shape[0]

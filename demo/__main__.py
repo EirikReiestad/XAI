@@ -1,5 +1,7 @@
 from demo import settings, DemoType, RLType
+from demo.src.demos.single_agent.cartpole import CartPoleDemo as Demo
 
+"""
 match settings.DEMO_TYPE:
     case DemoType.CARTPOLE:
         from demo.src.demos.single_agent.cartpole import CartPoleDemo as Demo
@@ -16,6 +18,7 @@ match settings.DEMO_TYPE:
             raise ValueError("Invalid RL type")
     case _:
         raise ValueError("Invalid demo type")
+"""
 
 demo = Demo()
 demo.run()
