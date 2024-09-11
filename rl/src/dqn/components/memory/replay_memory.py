@@ -2,9 +2,8 @@ import random
 
 import numpy as np
 
-from rl.src.dqn.utils import Transition
-
-from .replay_memory_base import ReplayMemoryBase
+from rl.src.dqn.base import ReplayMemoryBase
+from rl.src.dqn.transition import Transition
 
 
 class ReplayMemory(ReplayMemoryBase):

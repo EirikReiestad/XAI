@@ -1,7 +1,7 @@
 import numpy as np
 
-from .replay_memory_base import ReplayMemoryBase
-from .utils import Transition
+from rl.src.dqn.base import ReplayMemoryBase
+from rl.src.components.transition import Transition
 
 
 class PrioritizedReplayMemory(ReplayMemoryBase):
@@ -41,4 +41,3 @@ class PrioritizedReplayMemory(ReplayMemoryBase):
         priorities = (np.abs(td_errors) + epsilon) ** self.alpha
         for idx, priority in zip(indices, priorities):
             self.priorities[idx] = priority
-

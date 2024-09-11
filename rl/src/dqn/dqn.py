@@ -9,21 +9,20 @@ import random
 import numpy as np
 import torch
 import torch.nn as nn
-from torch.optim.adamw import AdamW
 
 from rl.src.base import RLBase
 from rl.src.common import ConvLayer
 from .prioritized_replay_memory import PrioritizedReplayMemory
-from .q_network import QNetwork
+from .managers import NetworkManager, OptimizerManager
 
 from .hyperparameter import DQNHyperparameter
 from .transition import Transition
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
 
 class DQN(RLBase):
     """DQN Module for managing the agent, including training and evaluation."""
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     def __init__(
         self,
@@ -44,59 +43,32 @@ class DQN(RLBase):
         tau: float = 0.005,
     ) -> None:
         if seed is not None:
-            torch.manual_seed(seed)
-            random.seed(seed)
-            np.random.seed(seed)
+            self._set_seed(seed)
 
         self.n_actions = n_actions
         self.observation_shape = observation_shape
         self.hp = DQNHyperparameter(
             lr, gamma, epsilon_start, epsilon_end, epsilon_decay, batch_size, tau
         )
-        self.policy_net, self.target_net = self._initialize_networks(
-            conv_layers, hidden_layers, dueling
+        networks = NetworkManager(
+            observation_shape, n_actions, conv_layers, hidden_layers, dueling
         )
-        self.optimizer = AdamW(
-            self.policy_net.parameters(), lr=self.hp.lr, amsgrad=True
-        )
-        self.memory = PrioritizedReplayMemory(memory_size)
-        self.double = double
+        self.policy_net, self.target_net = networks.initialize()
 
+        optimizer = OptimizerManager(self.policy_net.parameters(), self.hp.lr)
+        self.optimizer = optimizer.initialize()
+
+        self.memory = PrioritizedReplayMemory(memory_size)
+
+        self.double = double
         self.update_interval = 1
         self.step_count = 0
         self.steps_done = 0
 
-    def _initialize_networks(
-        self,
-        conv_layers: list[ConvLayer] | None,
-        hidden_layers: list[int],
-        dueling: bool = False,
-    ) -> tuple[nn.Module, nn.Module]:
-        """Initialize the policy and target networks.
-
-        Args:
-            conv_layers (list[ConvLayer] | None): Convolutional layer configurations.
-            hidden_layers (list[int]): Sizes of hidden layers.
-
-        Returns:
-            tuple[nn.Module, nn.Module]: Initialized policy and target networks.
-        """
-        policy_net = QNetwork(
-            self.observation_shape,
-            self.n_actions,
-            hidden_layers,
-            conv_layers,
-            dueling,
-        ).to(device)
-        target_net = QNetwork(
-            self.observation_shape,
-            self.n_actions,
-            hidden_layers,
-            conv_layers,
-            dueling,
-        ).to(device)
-        target_net.load_state_dict(policy_net.state_dict())
-        return policy_net, target_net
+    def _set_seed(self, seed: int) -> None:
+        torch.manual_seed(seed)
+        random.seed(seed)
+        np.random.seed(seed)
 
     def select_action(self, state: torch.Tensor) -> torch.Tensor:
         """Select an action based on the current state using an epsilon-greedy policy.

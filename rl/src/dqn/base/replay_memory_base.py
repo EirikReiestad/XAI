@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
-import numpy as np
 from collections import deque
 
-from rl.src.dqn.utils import Transition
+import numpy as np
+
+from rl.src.dqn.transition import Transition
 
 
 class ReplayMemoryBase(ABC):
