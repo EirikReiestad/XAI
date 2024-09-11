@@ -10,19 +10,20 @@ import numpy as np
 import torch
 import torch.nn as nn
 
+from rl.src.common import check
 from rl.src.base import RLBase
 from rl.src.common import ConvLayer
-from .prioritized_replay_memory import PrioritizedReplayMemory
-from .managers import NetworkManager, OptimizerManager
 
-from .hyperparameter import DQNHyperparameter
-from .transition import Transition
+from .common.hyperparameter import DQNHyperparameter
+from .components.transition import Transition
+from .managers import MemoryManager, NetworkManager, OptimizerManager
+
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 class DQN(RLBase):
     """DQN Module for managing the agent, including training and evaluation."""
-
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     def __init__(
         self,
@@ -55,10 +56,11 @@ class DQN(RLBase):
         )
         self.policy_net, self.target_net = networks.initialize()
 
-        optimizer = OptimizerManager(self.policy_net.parameters(), self.hp.lr)
+        optimizer = OptimizerManager(self.policy_net, self.hp.lr)
         self.optimizer = optimizer.initialize()
 
-        self.memory = PrioritizedReplayMemory(memory_size)
+        memory = MemoryManager(memory_size)
+        self.memory = memory.initialize()
 
         self.double = double
         self.update_interval = 1
@@ -71,18 +73,9 @@ class DQN(RLBase):
         np.random.seed(seed)
 
     def select_action(self, state: torch.Tensor) -> torch.Tensor:
-        """Select an action based on the current state using an epsilon-greedy policy.
-
-        Args:
-            state (torch.Tensor): The current state of the environment.
-
-        Returns:
-            torch.Tensor: The selected action.
-        """
-        if state.shape != self.observation_shape:
-            raise ValueError(
-                f"Expected state shape {self.observation_shape}, but got {state.shape}"
-            )
+        check.raise_if_not_same_shape(
+            state, self.observation_shape, "state", "observation"
+        )
 
         eps_threshold = self.hp.eps_end + (
             self.hp.eps_start - self.hp.eps_end
