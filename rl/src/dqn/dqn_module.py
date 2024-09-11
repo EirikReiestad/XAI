@@ -11,7 +11,6 @@ import torch
 import torch.nn as nn
 from torch.optim.adamw import AdamW
 
-from rl import settings
 from rl.src.common import ConvLayer
 from rl.src.dqn.dqn import DQN
 from rl.src.dqn.prioritized_replay_memory import PrioritizedReplayMemory

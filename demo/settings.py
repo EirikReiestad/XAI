@@ -1,7 +1,7 @@
 from demo.src.demos.demo_type import DemoType
 from demo.src.demos.rl_type import RLType
 
-DEMO_TYPE = DemoType.TAG
+DEMO_TYPE = DemoType.MAZE
 RL_TYPE = RLType.DQN
 
 EPOCHS = 100000
@@ -19,6 +19,6 @@ LOAD_MODEL_NAME = "2024-08-30_11-06-27/model_3400"
 
 RENDER_Q_VALUES = True
 
-WANDB = True
-PLOT_AGENT_REWARD = False
+WANDB = False
+PLOT_AGENT_REWARD = True
 PLOT_OBJECT_MOVEMENT = False
