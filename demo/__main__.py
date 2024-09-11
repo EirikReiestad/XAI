@@ -1,6 +1,8 @@
 from demo import settings, DemoType, RLType
 
 match settings.DEMO_TYPE:
+    case DemoType.CARTPOLE:
+        from demo.src.demos.single_agent.cartpole import CartPoleDemo as Demo
     case DemoType.MAZE:
         from demo.src.demos.single_agent.maze import MazeDemo as Demo
     case DemoType.COOP:
