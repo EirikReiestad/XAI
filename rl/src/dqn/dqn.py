@@ -10,14 +10,13 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from rl.src.common import check
 from rl.src.base import RLBase
-from rl.src.common import ConvLayer
+from rl.src.common import ConvLayer, check, setter
 
 from .common.hyperparameter import DQNHyperparameter
+from .components.prioritized_replay_memory import PrioritizedReplayMemory
 from .components.transition import Transition
 from .managers import MemoryManager, NetworkManager, OptimizerManager
-
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -43,11 +42,10 @@ class DQN(RLBase):
         batch_size: int = 512,
         tau: float = 0.005,
     ) -> None:
-        if seed is not None:
-            self._set_seed(seed)
+        setter.set_seed(seed)
 
         self.n_actions = n_actions
-        self.observation_shape = observation_shape
+        self.observation_shape = np.array(observation_shape)
         self.hp = DQNHyperparameter(
             lr, gamma, epsilon_start, epsilon_end, epsilon_decay, batch_size, tau
         )
@@ -59,18 +57,12 @@ class DQN(RLBase):
         optimizer = OptimizerManager(self.policy_net, self.hp.lr)
         self.optimizer = optimizer.initialize()
 
-        memory = MemoryManager(memory_size)
-        self.memory = memory.initialize()
+        self.memory = MemoryManager(memory_size).initialize()
 
         self.double = double
         self.update_interval = 1
         self.step_count = 0
         self.steps_done = 0
-
-    def _set_seed(self, seed: int) -> None:
-        torch.manual_seed(seed)
-        random.seed(seed)
-        np.random.seed(seed)
 
     def select_action(self, state: torch.Tensor) -> torch.Tensor:
         check.raise_if_not_same_shape(
@@ -92,12 +84,9 @@ class DQN(RLBase):
 
     def _optimize_model(self) -> None:
         """Perform one optimization step on the policy network."""
-        if len(self.memory) < self.hp.batch_size:
+        if self._done_optimizing():
             return
-
         self.step_count += 1
-        if self.step_count % self.update_interval != 0:
-            return
 
         transitions, indices, weights = self.memory.sample(self.hp.batch_size)
         batch = Transition(*zip(*transitions))
@@ -152,6 +141,13 @@ class DQN(RLBase):
             self.memory.update_priorities(
                 indices, td_errors.squeeze(1).detach().numpy()
             )
+
+    def _done_optimizing(self) -> bool:
+        if len(self.memory) < self.hp.batch_size:
+            return True
+        if self.step_count % self.update_interval != 0:
+            return True
+        return False
 
     def train(
         self,
