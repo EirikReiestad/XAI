@@ -15,11 +15,11 @@ from environments import settings as env_settings
 from history import ModelHandler
 from renderer import Renderer
 from rl.src.common import ConvLayer
-from rl.src.dqn.dqn_module import DQNModule
+from rl.src.base import RLBase
 
 
 class BaseDemo(ABC):
-    """Abstract base class for running demos with DQN and plotting results."""
+    """Abstract base class for running demos with model and plotting results."""
 
     def __init__(self):
         """Initialize the base demo class with common settings."""
@@ -35,7 +35,7 @@ class BaseDemo(ABC):
         self.model_handler = ModelHandler()
 
     def run(self):
-        """Run the demo, interacting with the environment and training the DQN."""
+        """Run the demo, interacting with the environment and training the model."""
         state, info = self.env_wrapper.reset()
         n_actions = self.env_wrapper.action_space.n
         conv_layers = self._create_conv_layers(info)
@@ -85,8 +85,8 @@ class BaseDemo(ABC):
         )
 
     def _train_batch(self, batch: Batch):
-        """Train the DQN with a batch of transitions."""
-        self.dqn.train(
+        """Train the model with a batch of transitions."""
+        self.model.learn(
             batch.states,
             batch.actions,
             batch.observations,
@@ -122,22 +122,22 @@ class BaseDemo(ABC):
         if rgb_array is None:
             raise ValueError("rgb array should not be None")
         states = self.env_wrapper.get_all_possible_states()
-        q_values = self.dqn.get_q_values_map(states)
+        q_values = self.model.get_q_values_map(states)
         self.extern_renderer.render(background=rgb_array, q_values=q_values)
 
     def _load_models(
         self, observation_shape: tuple, n_actions: int, conv_layers: list[ConvLayer]
     ):
-        """Initialize the DQN models for each agent."""
-        self.dqn = DQNModule(observation_shape, n_actions, conv_layers=conv_layers)
+        """Initialize the model models for each agent."""
+        self.model = RLBase(observation_shape, n_actions, conv_layers=conv_layers)
 
         if settings.PRETRAINED:
-            self.model_handler.load(self.dqn, settings.LOAD_MODEL_NAME)
+            self.model_handler.load(self.model, settings.LOAD_MODEL_NAME)
 
     def _save_models(self, iteration: int):
-        """Save the DQN models for each agent."""
+        """Save the model models for each agent."""
         model_name = settings.SAVE_MODEL_NAME + f"_{iteration}"
-        self.model_handler.save(self.dqn, model_name)
+        self.model_handler.save(self.model, model_name)
 
     def _save_plot(self):
         """Save the plot of the episode information."""

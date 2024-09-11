@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class RLBase(ABC):
+class BaseRL(ABC):
     @abstractmethod
     def learn(self):
         raise NotImplementedError
