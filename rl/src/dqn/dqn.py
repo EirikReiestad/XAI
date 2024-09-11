@@ -3,6 +3,8 @@ import logging
 import torch
 from torch import nn
 
+import gymnasium as gym
+
 from rl.src.common import ConvLayer
 
 
@@ -11,6 +13,7 @@ class DQN(nn.Module):
 
     def __init__(
         self,
+        env: gym.Env,
         input_shape: tuple,
         n_actions: int,
         hidden_layers: list[int],
