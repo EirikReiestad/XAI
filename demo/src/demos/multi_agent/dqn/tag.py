@@ -102,7 +102,7 @@ class TagDemo(BaseDemo):
 
         mock_transition = Transition(
             state=state,
-            action=torch.tensor([4], dtype=torch.int32),
+            action=torch.tensor([[4]], dtype=torch.int32),
             observation=state,
             reward=torch.tensor([0], dtype=torch.float32),
             terminated=False,
