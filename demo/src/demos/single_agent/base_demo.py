@@ -45,7 +45,7 @@ class BaseDemo(ABC):
         plt.ion()
 
         try:
-            for i_episode in range(settings.NUM_EPISODES):
+            for i_episode in range(settings.EPOCHS):
                 if (
                     settings.SAVE_MODEL
                     and i_episode % settings.SAVE_EVERY == 0
