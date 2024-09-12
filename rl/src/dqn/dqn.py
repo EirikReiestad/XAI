@@ -14,11 +14,11 @@ import torch
 import torch.nn as nn
 
 from rl.src.base import BaseRL
-from rl.src.common import check, setter
+from rl.src.common import checker, setter
 
 from .common.hyperparameter import DQNHyperparameter
 from .components.memory.prioritized_replay_memory import PrioritizedReplayMemory
-from .components.transition import Transition
+from .components.types import Transition, RolloutReturn, Rollout
 from .managers import MemoryManager, OptimizerManager
 from .policies import DQNPolicy
 
@@ -28,8 +28,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 class DQN(BaseRL):
     """DQN Module for managing the agent, including training and evaluation."""
 
-    policy_net: DQNPolicy
-    target_net: DQNPolicy
+    policy_net: QNetwork
+    target_net: QNetwork
 
     def __init__(
         self,
@@ -58,6 +58,7 @@ class DQN(BaseRL):
         self.hp = DQNHyperparameter(
             lr, gamma, epsilon_start, epsilon_end, epsilon_decay, batch_size, tau
         )
+
         self.policy_net = DQNPolicy(
             self.observation_space, self.action_space, [32, 16, 8]
         ).to(device)
@@ -80,11 +81,22 @@ class DQN(BaseRL):
         total_timesteps: int,
     ):
         while self.steps_done < total_timesteps:
-            self._collect_rollout()
+            result = self._collect_rollout()
 
-    def _collect_rollout(self):
+            self.train(
+                result.states,
+                result.actions,
+                result.next_states,
+                result.rewards,
+                result.dones,
+                result.truncated,
+            )
+
+    def _collect_rollout(self) -> RolloutReturn:
         observation, info = self.env.reset()
         rewards = 0
+
+        rollout_return = RolloutReturn()
 
         for t in count():
             torch_observation = torch.tensor(
@@ -94,21 +106,42 @@ class DQN(BaseRL):
             observation, reward, terminated, truncated, info = self.env.step(0)
             rewards += float(reward)
 
+            rollout = Rollout(
+                state=torch_observation,
+                action=action,
+                reward=torch.tensor([reward], device=device),
+                next_state=torch.tensor(
+                    observation, device=device, dtype=torch.float32
+                ).unsqueeze(0),
+                done=torch.tensor([terminated], device=device),
+                value=torch.tensor([0.0], device=device),
+                log_prob=torch.tensor([0.0], device=device),
+                advantage=torch.tensor([0.0], device=device),
+                returns=torch.tensor([0.0], device=device),
+                next_value=torch.tensor([0.0], device=device),
+            )
+            rollout_return.append(rollout)
+
+            if terminated or truncated:
+                break
+
+        return rollout_return
+
     def train(
         self,
         states: list[torch.Tensor],
         actions: list[torch.Tensor],
         observations: list[torch.Tensor],
         rewards: list[torch.Tensor],
-        terminated: list[bool],
-        truncated: list[bool],
+        terminated: list[torch.Tensor],
+        truncated: list[torch.Tensor],
     ):
         """Store transition and optimize the model."""
-        check.raise_if_not_all_same_shape(
-            states, self.observation_space.shape, "states", "observation"
+        checker.raise_if_not_all_same_shape_as_observation(
+            states, self.observation_space, "states"
         )
-        check.raise_if_not_all_same_shape(
-            observations, self.observation_space.shape, "observations", "observation"
+        checker.raise_if_not_all_same_shape_as_observation(
+            observations, self.observation_space, "observations"
         )
 
         next_states = [
@@ -126,8 +159,8 @@ class DQN(BaseRL):
         self._soft_update_target_net()
 
     def predict(self, state: torch.Tensor) -> torch.Tensor:
-        check.raise_if_not_same_shape(
-            state, self.observation_space.shape, "state", "observation"
+        checker.raise_if_not_same_shape_as_observation(
+            state, self.observation_space, "state"
         )
 
         eps_threshold = self.hp.eps_end + (

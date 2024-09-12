@@ -9,7 +9,6 @@ import torch
 from demo import settings
 from demo.src.common import EpisodeInformation
 from demo.src.plotters import Plotter
-from demo.src.wrappers import SingleAgentEnvironmentWrapper
 from rl.src.dqn import DQN
 
 # Set up matplotlib
@@ -25,7 +24,7 @@ class CartPoleDemo:
             durations=[], rewards=[], object_moved_distance=[]
         )
         self.plotter = Plotter()
-        self.env = gym.make("CartPole-v1")
+        self.env = gym.make("CartPole-v1", render_mode="human")
 
     def run(self):
         dqn = DQN("MlpPolicy", self.env)
