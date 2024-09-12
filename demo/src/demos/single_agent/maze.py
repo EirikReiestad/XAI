@@ -72,5 +72,5 @@ class MazeDemo:
 
 
 if __name__ == "__main__":
-    demo = CartPoleDemo()
+    demo = MazeDemo()
     demo.run()
