@@ -1,5 +1,5 @@
 from demo import settings, DemoType, RLType
-from demo.src.demos.single_agent.cartpole import CartPoleDemo as Demo
+from demo.src.demos.single_agent.maze import MazeDemo as Demo
 
 """
 match settings.DEMO_TYPE:

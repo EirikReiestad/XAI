@@ -15,6 +15,7 @@ from environments.gymnasium.utils import (
     FileHandler,
     Position,
     generate_random_position,
+    StateType,
 )
 
 from .maze_renderer import MazeRenderer
@@ -29,24 +30,35 @@ logging.basicConfig(level=logging.INFO)
 class MazeEnv(gym.Env):
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 50}
 
-    def __init__(self, render_mode: Optional[str] = "human"):
-        self.height = settings.ENV_HEIGHT
-        self.width = settings.ENV_WIDTH
+    def __init__(
+        self, render_mode: Optional[str] = None, config: Optional[Dict[str, Any]] = None
+    ):
+        self.height = 10
+        self.width = 10
+        screen_width = 600
+        screen_height = 600
+        folder_name = "environments/gymnasium/data/maze/"
+        filename = "clean-env-0-10-10.txt"
+        self.state_type = StateType.PARTIAL
+
         self.max_steps = self.height * self.width
 
-        folder_name = "environments/gymnasium/data/maze/"
-        FileHandler.file_exist(folder_name, settings.FILENAME)
+        FileHandler.file_exist(folder_name, filename)
 
         self.maze_renderer = MazeRenderer(
-            settings.ENV_HEIGHT,
-            settings.ENV_WIDTH,
-            settings.SCREEN_WIDTH,
-            settings.SCREEN_HEIGHT,
+            self.width, self.height, screen_width, screen_height
         )
         self.maze_renderer.init_render_mode(render_mode)
 
-        filename = folder_name + settings.FILENAME
-        self.state = MazeState(self.height, self.width, filename)
+        filename = folder_name + filename
+        self.state = MazeState(
+            self.width,
+            self.height,
+            screen_width,
+            screen_height,
+            self.state_type,
+            filename,
+        )
         self._init_spaces()
         self.maze_rewards = MazeRewards()
 
@@ -90,6 +102,9 @@ class MazeEnv(gym.Env):
             self.steps_beyond_terminated += 1
 
         reward = self.maze_rewards.get_reward(self.agent, self.goal, collided)
+
+        self.render(self.render_mode)
+
         return self.state.active_state, reward, terminated, False, {}
 
     def reset(
@@ -97,7 +112,7 @@ class MazeEnv(gym.Env):
     ) -> Tuple[np.ndarray, Dict[str, Any]]:
         if options is not None and options.get("all_possible_states"):
             return self.state.active_state, {
-                "state_type": settings.STATE_TYPE.value,
+                "state_type": self.state_type.value,
                 "all_possible_states": self.state.get_all_possible_states(),
             }
 
@@ -111,7 +126,7 @@ class MazeEnv(gym.Env):
         self.steps = 0
         self.steps_beyond_terminated = None
 
-        return self.state.active_state, {"state_type": settings.STATE_TYPE.value}
+        return self.state.active_state, {"state_type": self.state_type.value}
 
     def render(self, render_mode: Optional[str] = None) -> Optional[np.ndarray]:
         return self.maze_renderer.render(self.state.full, render_mode)
@@ -119,48 +134,67 @@ class MazeEnv(gym.Env):
     def close(self):
         self.maze_renderer.close()
 
-    # TODO: Fix, its spaghetti code
     def _get_all_possible_states(self) -> np.ndarray:
         state = self.state.full.copy()
         agent_position = self.agent
         state[*agent_position] = TileType.EMPTY.value
 
         empty_state = np.full_like(state, TileType.EMPTY.value)
-
-        if settings.STATE_TYPE.value == "full":
-            states = np.zeros(state.shape, dtype=np.ndarray)
-        elif settings.STATE_TYPE.value == "partial":
-            states = np.zeros((state.shape[0], state.shape[1], 7), dtype=np.uint8)
-        else:
-            raise NotImplementedError(f"Invalid state type {settings.STATE_TYPE.value}")
+        states = self._initialize_states(state)
 
         for x in range(self.state.full.shape[0]):
             for y in range(self.state.full.shape[1]):
+                new_state = self._generate_new_state(x, y, state, empty_state)
                 new_state = state.copy()
-                if new_state[x, y] == TileType.EMPTY.value:
-                    new_state[x, y] = TileType.START.value
-                    if settings.STATE_TYPE.value == "partial":
-                        agent_position = np.where(state == TileType.START.value)
-                        agent_position = Position(
-                            x=agent_position[0][0], y=agent_position[1][0]
-                        )
-                        goal_position = np.where(state == TileType.END.value)
-                        if len(goal_position[0]) == 0 or len(goal_position[1]) == 0:
-                            new_state = empty_state
-                            continue
-                        goal_position = Position(
-                            x=goal_position[0][0], y=goal_position[1][0]
-                        )
-
-                        new_state = self.state._create_partial_state(
-                            agent_position=agent_position, goal_position=goal_position
-                        )
-                else:
-                    new_state = empty_state
-                    if settings.STATE_TYPE.value == "partial":
-                        new_state = np.ndarray((7,), dtype=np.uint8)
                 states[x, y] = new_state
         return states
+
+    def _initialize_states(self, state: np.ndarray) -> np.ndarray:
+        if self.state_type.value == "full":
+            return np.zeros(state.shape, dtype=np.ndarray)
+        elif self.state_type.value == "partial":
+            return np.zeros((self.state.partial.shape), dtype=np.uint8)
+        else:
+            raise NotImplementedError(f"Invalid state type {self.state_type.value}")
+
+    def _generate_new_state(
+        self, x: int, y: int, state: np.ndarray, empty_state: np.ndarray
+    ) -> np.ndarray:
+        if state[x, y] == TileType.EMPTY.value:
+            new_state = self._create_state_with_start(x, y, state, empty_state)
+        else:
+            new_state = (
+                empty_state
+                if self.state_type.value == "full"
+                else np.zeros(self.state.partial.shape, dtype=np.uint8)
+            )
+        return new_state
+
+    def _create_state_with_start(
+        self, x: int, y: int, state: np.ndarray, empty_state: np.ndarray
+    ) -> np.ndarray:
+        new_state = state.copy()
+        new_state[x, y] = TileType.START.value
+
+        if self.state_type.value == "partial":
+            agent_position = self._get_position(state, TileType.START)
+            goal_position = self._get_position(state, TileType.END)
+
+            if not goal_position:
+                return empty_state
+
+            new_state = self.state._create_partial_state(
+                agent_position=agent_position,
+                goal_position=goal_position,
+                obstacle_positions=[],
+            )
+        return new_state
+
+    def _get_position(self, state: np.ndarray, tile_type: TileType) -> Position:
+        positions = np.where(state == tile_type.value)
+        if positions[0].size == 0 or positions[1].size == 0:
+            raise ValueError(f"Could not find {tile_type.name} in state")
+        return Position(x=positions[0][0], y=positions[1][0])
 
     def _move_agent(self, state: np.ndarray, action: int) -> Optional[np.ndarray]:
         new_state = state.copy()
@@ -187,20 +221,20 @@ class MazeEnv(gym.Env):
         self.action_space = spaces.Discrete(4)
 
         observation_shape = self.state.active_state.shape
-        if settings.STATE_TYPE.value == "full":
+        if self.state_type.value == "full":
             self.observation_space = spaces.Box(
                 low=0, high=3, shape=observation_shape, dtype=np.uint8
             )
-        elif settings.STATE_TYPE.value == "partial":
+        elif self.state_type.value == "partial":
             self.observation_space = spaces.Box(
                 low=0, high=255, shape=self.state.partial.shape, dtype=np.uint8
             )
-        elif settings.STATE_TYPE.value == "rgb":
+        elif self.state_type.value == "rgb":
             self.observation_space = spaces.Box(
                 low=0, high=255, shape=self.state.rgb.shape, dtype=np.uint8
             )
         else:
-            raise ValueError(f"Invalid state type {settings.STATE_TYPE.value}")
+            raise ValueError(f"Invalid state type {self.state_type.value}")
 
     def _set_initial_positions(self, options: Optional[Dict[str, Any]]):
         """Sets the initial positions of the agent and goal."""
