@@ -3,6 +3,7 @@ from itertools import count
 import numpy as np
 import torch
 
+import wandb
 from demo import settings
 from demo.src.common import Batch, Transition
 
@@ -57,12 +58,10 @@ class TagDemo(BaseDemo):
 
             for agent, transition in enumerate(transitions):
                 agent_batches[agent].append(transition)
+                total_rewards[agent] += transition.reward.item()
 
             if i_episode % settings.RENDER_EVERY == 0:
                 self.render()
-
-            for agent in range(len(transitions)):
-                total_rewards[agent] += transitions[agent].reward.item()
 
             if done:
                 object_moved_distance = info.get("object_moved_distance")
@@ -78,15 +77,22 @@ class TagDemo(BaseDemo):
                     self.episode_informations[agent].rewards.append(
                         total_rewards[agent]
                     )
+
+                if settings.WANDB:
+                    wandb.log(self.episode_informations[0].last_episode("agent0-"))
+                    wandb.log(self.episode_informations[1].last_episode("agent1-"))
                 if self.plotter:
                     self.plotter.update(self.episode_informations)
+
                 break
 
         for agent in range(self.num_agents):
             self._train_batch(agent_batches[agent], agent)
 
     def _run_step(
-        self, state: torch.Tensor, step: int
+        self,
+        state: torch.Tensor,
+        step: int,
     ) -> tuple[list[np.ndarray], list[Transition], dict]:
         """Run a step in the environment and train the DQN."""
         full_states = []
@@ -94,9 +100,23 @@ class TagDemo(BaseDemo):
 
         object_moved_distance = 0
 
+        mock_transition = Transition(
+            state=state,
+            action=torch.tensor([[4]], dtype=torch.int32),
+            observation=state,
+            reward=torch.tensor([0], dtype=torch.float32),
+            terminated=False,
+            truncated=False,
+        )
+
         for agent in range(self.num_agents):
-            if agent == 1:
-                if step % settings.SLOWING_FACTOR != 0:
+            if step < settings.WAIT:
+                if agent == 0:
+                    transitions.append(mock_transition)
+                    continue
+            else:
+                if agent == 1:
+                    transitions.append(mock_transition)
                     continue
 
             action = self.dqns[agent].select_action(state)
