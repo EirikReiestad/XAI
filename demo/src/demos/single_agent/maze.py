@@ -1,69 +1,76 @@
+import logging
 from itertools import count
-from typing import Optional
 
+import gymnasium as gym
+import matplotlib
+import matplotlib.pyplot as plt
 import torch
 
 from demo import settings
-from demo.src.common import Batch, Transition
-from demo.src.demos.single_agent import BaseDemo
-from demo.src.wrappers.single_agent_environment_wrapper import (
-    SingleAgentEnvironmentWrapper,
-)
+from demo.src.common import EpisodeInformation
+from demo.src.plotters import Plotter
+from rl.src.dqn import DQN
+
+# Set up matplotlib
+is_ipython = "inline" in matplotlib.get_backend()
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
-class MazeDemo(BaseDemo):
-    """Class for running the Maze demo with DQN and plotting results."""
+class MazeDemo:
+    """Demo for the CartPole-v1 environment."""
 
-    def _create_environment_wrapper(
-        self, render_mode: Optional[str] = None
-    ) -> SingleAgentEnvironmentWrapper:
-        """Create and return the environment wrapper specific to the Maze demo."""
-        return SingleAgentEnvironmentWrapper(
-            env_id="MazeEnv-v0", render_mode=render_mode
+    def __init__(self) -> None:
+        self.episode_information = EpisodeInformation(
+            durations=[], rewards=[], object_moved_distance=[]
         )
+        self.plotter = Plotter()
+        self.env = gym.make("MazeEnv-v0")
 
-    def _run_episode(self, i_episode: int, state: torch.Tensor, info: dict) -> Batch:
-        state, _ = self.env_wrapper.reset()
-        total_reward = 0
+    def run(self):
+        dqn = DQN("dqnpolicy", self.env, wandb=True)
+        dqn.learn(settings.EPOCHS)
 
-        batch = Batch(
-            states=[],
-            actions=[],
-            observations=[],
-            rewards=[],
-            terminated=[],
-            truncated=[],
-        )
+        self.env = gym.make("MazeEnv-v0", render_mode="human")
 
-        for t in count():
-            action = self.dqn.select_action(state)
-            observation, reward, terminated, truncated, _ = self.env_wrapper.step(
-                action.item()
-            )
+        plt.ion()
 
-            reward = float(reward)
-            total_reward += reward
+        self.env.reset()
 
-            done = terminated or truncated
+        try:
+            for i_episode in range(1000):
+                state, _ = self.env.reset()
+                state = torch.tensor(
+                    state, device=device, dtype=torch.float32
+                ).unsqueeze(0)
 
-            transition = Transition(
-                state=state,
-                action=action,
-                observation=observation,
-                reward=torch.tensor([reward], dtype=torch.float32),
-                terminated=terminated,
-                truncated=truncated,
-            )
-            batch.append(transition)
+                rewards = 0
 
-            if i_episode % settings.RENDER_EVERY == 0:
-                self.render()
+                for t in count():
+                    action = dqn.predict(state)
+                    observation, reward, terminated, truncated, _ = self.env.step(
+                        action.item()
+                    )
+                    state = torch.tensor(
+                        observation, device=device, dtype=torch.float32
+                    ).unsqueeze(0)
+                    self.env.render()
+                    rewards += float(reward)
 
-            if done:
-                self.episode_information.durations.append(t + 1)
-                self.episode_information.rewards.append(total_reward)
-                if self.plotter is not None:
-                    self.plotter.update(self.episode_information)
-                break
+                    if terminated or truncated:
+                        self.episode_information.durations.append(t + 1)
+                        self.episode_information.rewards.append(rewards)
+                        self.plotter.update(self.episode_information)
+                        break
+        except Exception as e:
+            logging.error(e)
+        finally:
+            self.env.close()
+            logging.info("Complete")
+            self.plotter.update(self.episode_information, show_result=True)
+            plt.ioff()
+        plt.show()
 
-        return batch
+
+if __name__ == "__main__":
+    demo = CartPoleDemo()
+    demo.run()

@@ -10,7 +10,7 @@ from utils import Color
 class MazeRenderer:
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 50}
 
-    def __init__(self, height: int, width: int, screen_width: int, screen_height: int):
+    def __init__(self, width: int, height: int, screen_width: int, screen_height: int):
         self.height = height
         self.width = width
         self.screen_width = screen_width
@@ -40,7 +40,7 @@ class MazeRenderer:
         self.screen = pg.display.set_mode((self.screen_width, self.screen_height))
         self.post_init_screen = True
 
-    def init_render_mode(self, render_mode: Optional[str] = "human"):
+    def init_render_mode(self, render_mode: Optional[str] = None):
         if render_mode is None:
             return
         if render_mode and render_mode not in self.metadata["render_modes"]:
@@ -62,6 +62,8 @@ class MazeRenderer:
         self, state: np.ndarray, render_mode: Optional[str] = None
     ) -> Optional[np.ndarray]:
         self.init_render_mode(render_mode)
+        if self.render_mode is None:
+            return None
 
         color_matrix = np.full((self.height, self.width, 3), Color.WHITE.value)
         self.apply_color_masks(color_matrix, state)
