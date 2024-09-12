@@ -4,7 +4,7 @@ from demo.src.demos.rl_type import RLType
 DEMO_TYPE = DemoType.CARTPOLE
 RL_TYPE = RLType.DQN
 
-EPOCHS = 100000
+EPOCHS = 500
 RENDER = True
 RENDER_EVERY = 100
 

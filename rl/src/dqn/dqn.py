@@ -79,16 +79,16 @@ class DQN(BaseRL):
         self.wandb_manager = WandBManager(wandb, wandb_config)
 
         self.double = double
-        self.step_count = 0
         self.steps_done = 0
 
     def learn(
         self,
         total_timesteps: int,
     ):
-        while self.steps_done < total_timesteps:
+        for _ in range(total_timesteps):
             result = self._collect_rollout()
 
+            """
             self.train(
                 states=result.states,
                 actions=result.actions,
@@ -97,6 +97,7 @@ class DQN(BaseRL):
                 terminated=result.terminals,
                 truncated=result.truncated,
             )
+            """
 
     def _collect_rollout(self) -> RolloutReturn:
         state, info = self.env.reset()
@@ -130,6 +131,15 @@ class DQN(BaseRL):
                 next_value=torch.tensor([0.0], device=device),
             )
             rollout_return.append(rollout)
+
+            self.train(
+                states=[rollout.state],
+                actions=[rollout.action],
+                observations=[rollout.next_state],
+                rewards=[rollout.reward],
+                terminated=[rollout.terminated],
+                truncated=[rollout.truncated],
+            )
 
             state = next_state
 
@@ -349,7 +359,6 @@ class DQN(BaseRL):
 
         meta_data = {
             "steps_done": self.steps_done,
-            "step_count": self.step_count,
         }
         meta_data_path = path.replace(".pt", "_meta_data.json")
         json.dump(meta_data, open(meta_data_path, "w"))
@@ -366,4 +375,3 @@ class DQN(BaseRL):
         meta_data_path = path.replace(".pt", "_meta_data.json")
         meta_data = json.load(open(meta_data_path, "r"))
         self.steps_done = meta_data["steps_done"]
-        self.step_count = meta_data["step_count"]

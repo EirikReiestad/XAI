@@ -24,17 +24,26 @@ class CartPoleDemo:
             durations=[], rewards=[], object_moved_distance=[]
         )
         self.plotter = Plotter()
-        self.env = gym.make("CartPole-v1", render_mode="human")
+        self.env = gym.make("CartPole-v1")
 
     def run(self):
         dqn = DQN("dqnpolicy", self.env, wandb=True)
         dqn.learn(settings.EPOCHS)
-        print("Finished Training")
+        print("Training complete")
+
+        self.env = gym.make("CartPole-v1", render_mode="human")
+
         plt.ion()
 
+        self.env.reset()
+
         try:
-            for i_episode in range(settings.EPOCHS):
+            for i_episode in range(1000):
                 state, _ = self.env.reset()
+                state = torch.tensor(
+                    state, device=device, dtype=torch.float32
+                ).unsqueeze(0)
+
                 rewards = 0
 
                 for t in count():
@@ -42,6 +51,9 @@ class CartPoleDemo:
                     observation, reward, terminated, truncated, _ = self.env.step(
                         action.item()
                     )
+                    state = torch.tensor(
+                        observation, device=device, dtype=torch.float32
+                    ).unsqueeze(0)
                     self.env.render()
                     rewards += float(reward)
 
