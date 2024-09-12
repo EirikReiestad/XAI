@@ -3,7 +3,7 @@ import random
 import numpy as np
 
 from rl.src.dqn.base import ReplayMemoryBase
-from rl.src.dqn.components.transition import Transition
+from rl.src.dqn.components.types import Transition
 
 
 class ReplayMemory(ReplayMemoryBase):
@@ -19,3 +19,8 @@ class ReplayMemory(ReplayMemoryBase):
         indices = np.arange(batch_size)
         weights = np.ones(batch_size)
         return transitions, indices, weights
+
+    def update_priorities(
+        self, indices: np.ndarray, td_errors: np.ndarray, epsilon: float = 0.01
+    ) -> None:
+        pass
