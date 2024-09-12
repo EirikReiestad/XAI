@@ -27,9 +27,9 @@ class CartPoleDemo:
         self.env = gym.make("CartPole-v1", render_mode="human")
 
     def run(self):
-        dqn = DQN("MlpPolicy", self.env)
+        dqn = DQN("dqnpolicy", self.env, wandb=True)
         dqn.learn(settings.EPOCHS)
-
+        print("Finished Training")
         plt.ion()
 
         try:
@@ -38,11 +38,11 @@ class CartPoleDemo:
                 rewards = 0
 
                 for t in count():
-                    self.env.render()
                     action = dqn.predict(state)
                     observation, reward, terminated, truncated, _ = self.env.step(
                         action.item()
                     )
+                    self.env.render()
                     rewards += float(reward)
 
                     if terminated or truncated:

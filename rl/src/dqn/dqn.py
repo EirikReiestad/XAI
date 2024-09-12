@@ -6,7 +6,6 @@ import json
 import math
 import random
 from itertools import count
-from typing import Type
 
 import gymnasium as gym
 import numpy as np
@@ -15,12 +14,12 @@ import torch.nn as nn
 
 from rl.src.base import BaseRL
 from rl.src.common import checker, setter
+from rl.src.managers import WandBConfig, WandBManager
 
 from .common.hyperparameter import DQNHyperparameter
-from .components.memory.prioritized_replay_memory import PrioritizedReplayMemory
-from .components.types import Transition, RolloutReturn, Rollout
+from .components.types import Rollout, RolloutReturn, Transition
 from .managers import MemoryManager, OptimizerManager
-from .policies import DQNPolicy
+from .policies import DQNPolicy, QNetwork, get_policy
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -28,12 +27,13 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 class DQN(BaseRL):
     """DQN Module for managing the agent, including training and evaluation."""
 
+    policy: DQNPolicy
     policy_net: QNetwork
     target_net: QNetwork
 
     def __init__(
         self,
-        policy: str | Type[DQNPolicy],
+        policy: str | DQNPolicy,
         env: gym.Env,
         seed: int | None = None,
         dueling: bool = False,
@@ -43,36 +43,42 @@ class DQN(BaseRL):
         gamma: float = 0.99,
         epsilon_start: float = 0.9,
         epsilon_end: float = 0.05,
-        epsilon_decay: int = 5000,
-        batch_size: int = 512,
+        epsilon_decay: int = 1000,
+        batch_size: int = 128,
         tau: float = 0.005,
+        wandb: bool = False,
     ) -> None:
         setter.set_seed(seed)
 
-        self.policy = policy
         self.env = env
-        self.action_space = env.action_space
-        self.num_actions = env.action_space.n
-        self.observation_space = env.observation_space
+        self.n_actions = env.action_space.n
 
         self.hp = DQNHyperparameter(
             lr, gamma, epsilon_start, epsilon_end, epsilon_decay, batch_size, tau
         )
 
-        self.policy_net = DQNPolicy(
-            self.observation_space, self.action_space, [32, 16, 8]
-        ).to(device)
-        self.target_net = DQNPolicy(
-            self.observation_space, self.action_space, [32, 16, 8]
-        ).to(device)
+        self.policy = get_policy(
+            policy,
+            observation_space=self.env.observation_space,
+            action_space=self.env.action_space,
+        )
+        self.policy_net = self.policy.policy_net
+        self.target_net = self.policy.target_net
 
         optimizer = OptimizerManager(self.policy_net, self.hp.lr)
         self.optimizer = optimizer.initialize()
 
         self.memory = MemoryManager(memory_size).initialize()
 
+        wandb_config = WandBConfig(
+            project="dqn",
+            run_name="default",
+            tags=[],
+            other={},
+        )
+        self.wandb_manager = WandBManager(wandb, wandb_config)
+
         self.double = double
-        self.update_interval = 1
         self.step_count = 0
         self.steps_done = 0
 
@@ -84,36 +90,39 @@ class DQN(BaseRL):
             result = self._collect_rollout()
 
             self.train(
-                result.states,
-                result.actions,
-                result.next_states,
-                result.rewards,
-                result.dones,
-                result.truncated,
+                states=result.states,
+                actions=result.actions,
+                observations=result.next_states,
+                rewards=result.rewards,
+                terminated=result.terminals,
+                truncated=result.truncated,
             )
 
     def _collect_rollout(self) -> RolloutReturn:
-        observation, info = self.env.reset()
+        state, info = self.env.reset()
+        state = torch.tensor(state, device=device, dtype=torch.float32).unsqueeze(0)
         rewards = 0
+        episode_length = 0
 
         rollout_return = RolloutReturn()
 
         for t in count():
-            torch_observation = torch.tensor(
+            action = self.predict(state)
+            observation, reward, terminated, truncated, info = self.env.step(
+                action.item()
+            )
+            next_state = torch.tensor(
                 observation, device=device, dtype=torch.float32
             ).unsqueeze(0)
-            action = self.predict(torch_observation)
-            observation, reward, terminated, truncated, info = self.env.step(0)
             rewards += float(reward)
 
             rollout = Rollout(
-                state=torch_observation,
+                state=state,
                 action=action,
                 reward=torch.tensor([reward], device=device),
-                next_state=torch.tensor(
-                    observation, device=device, dtype=torch.float32
-                ).unsqueeze(0),
-                done=torch.tensor([terminated], device=device),
+                next_state=next_state,
+                terminated=torch.tensor([terminated], device=device),
+                truncated=torch.tensor([truncated], device=device),
                 value=torch.tensor([0.0], device=device),
                 log_prob=torch.tensor([0.0], device=device),
                 advantage=torch.tensor([0.0], device=device),
@@ -122,8 +131,18 @@ class DQN(BaseRL):
             )
             rollout_return.append(rollout)
 
+            state = next_state
+
             if terminated or truncated:
+                episode_length = t + 1
                 break
+
+        self.wandb_manager.log(
+            {
+                "reward": rewards,
+                "episode_length": episode_length,
+            }
+        )
 
         return rollout_return
 
@@ -138,10 +157,10 @@ class DQN(BaseRL):
     ):
         """Store transition and optimize the model."""
         checker.raise_if_not_all_same_shape_as_observation(
-            states, self.observation_space, "states"
+            states, self.env.observation_space, "states"
         )
         checker.raise_if_not_all_same_shape_as_observation(
-            observations, self.observation_space, "observations"
+            observations, self.env.observation_space, "observations"
         )
 
         next_states = [
@@ -160,7 +179,7 @@ class DQN(BaseRL):
 
     def predict(self, state: torch.Tensor) -> torch.Tensor:
         checker.raise_if_not_same_shape_as_observation(
-            state, self.observation_space, "state"
+            state, self.env.observation_space, "state"
         )
 
         eps_threshold = self.hp.eps_end + (
@@ -173,16 +192,15 @@ class DQN(BaseRL):
                 return self.policy_net(state).max(1).indices.view(1, 1)
         else:
             return torch.tensor(
-                [[random.randrange(self.num_actions)]],
+                [[random.randrange(self.n_actions)]],
                 device=device,
                 dtype=torch.long,
             )
 
     def _optimize_model(self) -> None:
         """Perform one optimization step on the policy network."""
-        if self._done_optimizing():
+        if not self._can_optimize():
             return
-        self.step_count += 1
 
         transitions, indices, weights = self.memory.sample(self.hp.batch_size)
         batch = Transition(*zip(*transitions))
@@ -221,7 +239,7 @@ class DQN(BaseRL):
 
         expected_state_action_values = next_state_values * self.hp.gamma + reward_batch
         td_errors = expected_state_action_values.unsqueeze(1) - state_action_values
-        criterion = nn.SmoothL1Loss(reduction="none")
+        criterion = nn.SmoothL1Loss()
         loss = criterion(state_action_values, expected_state_action_values.unsqueeze(1))
         loss = loss * torch.tensor(
             weights, device=device, dtype=torch.float32
@@ -233,17 +251,12 @@ class DQN(BaseRL):
         torch.nn.utils.clip_grad_value_(self.policy_net.parameters(), 100)
         self.optimizer.step()
 
-        if isinstance(self.memory, PrioritizedReplayMemory):
-            self.memory.update_priorities(
-                indices, td_errors.squeeze(1).detach().numpy()
-            )
+        self.memory.update_priorities(indices, td_errors.squeeze(1).detach().numpy())
 
-    def _done_optimizing(self) -> bool:
+    def _can_optimize(self) -> bool:
         if len(self.memory) < self.hp.batch_size:
-            return True
-        if self.step_count % self.update_interval != 0:
-            return True
-        return False
+            return False
+        return True
 
     def _soft_update_target_net(self) -> None:
         """Soft update the target network parameters."""
@@ -265,7 +278,7 @@ class DQN(BaseRL):
                 if type(state) is not torch.Tensor:
                     raise ValueError("All states must be PyTorch tensors.")
 
-        q_values = np.ndarray((*states.shape, self.num_actions), dtype=np.float32)
+        q_values = np.ndarray((*states.shape, self.n_actions), dtype=np.float32)
         height = states.shape[0]
         width = states.shape[1]
         for y in range(height):

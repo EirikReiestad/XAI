@@ -11,7 +11,8 @@ class Rollout(NamedTuple):
     action: torch.Tensor
     reward: torch.Tensor
     next_state: torch.Tensor
-    done: torch.Tensor
+    terminated: torch.Tensor
+    truncated: torch.Tensor
     value: torch.Tensor
     log_prob: torch.Tensor
     advantage: torch.Tensor
@@ -30,7 +31,8 @@ class RolloutReturn:
         self.actions: list[torch.Tensor] = []
         self.rewards: list[torch.Tensor] = []
         self.next_states: list[torch.Tensor] = []
-        self.dones: list[torch.Tensor] = []
+        self.terminals: list[torch.Tensor] = []
+        self.truncated: list[torch.Tensor] = []
         self.values: list[torch.Tensor] = []
         self.log_probs: list[torch.Tensor] = []
         self.advantages: list[torch.Tensor] = []
@@ -42,7 +44,8 @@ class RolloutReturn:
         self.actions.append(rollout.action)
         self.rewards.append(rollout.reward)
         self.next_states.append(rollout.next_state)
-        self.dones.append(rollout.done)
+        self.terminals.append(rollout.terminated)
+        self.truncated.append(rollout.truncated)
         self.values.append(rollout.value)
         self.log_probs.append(rollout.log_prob)
         self.advantages.append(rollout.advantage)

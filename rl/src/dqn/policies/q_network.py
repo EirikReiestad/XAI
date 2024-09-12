@@ -5,15 +5,15 @@ from torch import nn
 from rl.src.common.policies import BasePolicy
 
 
-class DQNPolicy(BasePolicy):
+class QNetwork(BasePolicy):
     def __init__(
         self,
         observation_space: spaces.Space,
         action_space: spaces.Space,
-        hidden_layers: list[int] = [64, 32, 16, 8],
+        hidden_layers: list[int],
         dueling: bool = False,
     ) -> None:
-        super(DQNPolicy, self).__init__(observation_space, action_space)
+        super(QNetwork, self).__init__(observation_space, action_space)
         self.dueling = dueling
         observation_size = self._observation_size(observation_space)
         number_of_actions = action_space.n
@@ -46,7 +46,7 @@ class DQNPolicy(BasePolicy):
         return nn.Sequential(*layers)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        x = self.fc_feature(x)  # Apply feature layers
+        x = self.fc_feature(x)
 
         if self.dueling:
             value = self.value_stream(x)

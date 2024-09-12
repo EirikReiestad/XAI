@@ -1,7 +1,7 @@
 import numpy as np
 
 from rl.src.dqn.base import ReplayMemoryBase
-from rl.src.dqn.components.transition import Transition
+from rl.src.dqn.components.types import Transition
 
 
 class PrioritizedReplayMemory(ReplayMemoryBase):
