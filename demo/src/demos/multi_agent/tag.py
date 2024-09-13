@@ -30,7 +30,7 @@ class TagDemo:
 
     def run(self):
         dqn = MultiAgentDQN(self.env, 2, "dqnpolicy", wandb=True)
-        dqn.learn(settings.EPOCHS)
+        dqn.learn(1000)
         print("Finished training")
 
         env = gym.make("TagEnv-v0", render_mode="human")

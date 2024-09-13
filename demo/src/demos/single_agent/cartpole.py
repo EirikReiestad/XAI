@@ -28,7 +28,7 @@ class CartPoleDemo:
 
     def run(self):
         dqn = DQN(self.env, "dqnpolicy", wandb=True)
-        dqn.learn(settings.EPOCHS)
+        dqn.learn(150)
         print("Training complete")
 
         self.env = gym.make("CartPole-v1", render_mode="human")
