@@ -24,10 +24,10 @@ class MazeDemo:
             durations=[], rewards=[], object_moved_distance=[]
         )
         self.plotter = Plotter()
-        self.env = gym.make("MazeEnv-v0")
+        self.env = gym.make("MazeEnv-v0", render_mode="human")
 
     def run(self):
-        dqn = DQN("dqnpolicy", self.env, wandb=True)
+        dqn = DQN(self.env, "dqnpolicy", wandb=True)
         dqn.learn(settings.EPOCHS)
 
         self.env = gym.make("MazeEnv-v0", render_mode="human")
