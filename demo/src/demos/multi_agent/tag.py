@@ -4,11 +4,13 @@ from itertools import count
 import gymnasium as gym
 import matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
 import torch
-from environments.gymnasium.wrappers import MultiAgentEnv
 
 from demo.src.common import EpisodeInformation
 from demo.src.plotters import Plotter
+from environments.gymnasium.wrappers import MultiAgentEnv
+from renderer import Renderer
 from rl.src.dqn.wrapper import MultiAgentDQN
 
 # Set up matplotlib
@@ -24,16 +26,12 @@ class TagDemo:
             durations=[], rewards=[], object_moved_distance=[]
         )
         self.plotter = Plotter()
-        env = gym.make("TagEnv-v0", render_mode="human")
+        self.renderer = Renderer(10, 10, 600, 600)
+        env = gym.make("TagEnv-v0", render_mode="rgb_array")
         self.env: MultiAgentEnv = MultiAgentEnv(env)
 
     def run(self):
         dqn = MultiAgentDQN(self.env, 2, "dqnpolicy", wandb=True)
-        dqn.learn(1000)
-        print("Finished training")
-
-        env = gym.make("TagEnv-v0", render_mode="human")
-        self.env: MultiAgentEnv = MultiAgentEnv(env)
 
         plt.ion()
 
@@ -41,6 +39,8 @@ class TagDemo:
 
         try:
             for i_episode in range(1000):
+                dqn.learn(1)
+
                 state, _ = self.env.reset()
                 state = torch.tensor(
                     state, device=device, dtype=torch.float32
@@ -65,9 +65,19 @@ class TagDemo:
                     agent_rewards += rewards
 
                     state = torch.tensor(
-                        observation, device=device, dtype=torch.float32
+                        full_state, device=device, dtype=torch.float32
                     ).unsqueeze(0)
-                    self.env.render()
+
+                    rgb = self.env.render()
+
+                    all_possible_states = self.env.get_wrapper_attr(
+                        "get_all_possible_states"
+                    )
+
+                    q_values = dqn.get_q_values(all_possible_states, 0)
+                    print(rgb)
+                    if isinstance(rgb, np.ndarray):
+                        self.renderer.render(background=rgb, q_values=q_values)
 
                     if terminated:
                         self.episode_information.durations.append(t + 1)

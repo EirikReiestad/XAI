@@ -173,13 +173,6 @@ class TagEnv(gym.Env):
     def reset(
         self, *, seed: Optional[int] = None, options: Optional[Dict[str, Any]] = None
     ) -> Tuple[np.ndarray, Dict[str, Any]]:
-        if options is not None and options.get("all_possible_states"):
-            return self.state.active_state, {
-                "state_type": self.state_type.value,
-                "all_possible_states": self.state.get_all_possible_states(
-                    self.agents.active_agent, self.agents.inactive_agent, self.objects
-                ),
-            }
         super().reset(seed=seed)
         render_mode = options.get("render_mode") if options else None
         self.render_mode = render_mode or self.render_mode
@@ -377,6 +370,11 @@ class TagEnv(gym.Env):
                 )
             )
         self.objects = Objects(obstacle_objects, box_objects)
+
+    def get_all_possible_states(self) -> np.ndarray:
+        return self.state.get_all_possible_states(
+            self.agents.active_agent, self.agents.inactive_agent, self.objects
+        )
 
     @property
     def num_agents(self) -> int:

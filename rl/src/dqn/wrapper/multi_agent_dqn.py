@@ -1,11 +1,13 @@
-from rl.src.dqn import DQN
-from rl.src.dqn.policies import DQNPolicy
-from rl.src.base import MultiAgentBase
-from rl.src.dqn.components.types import Rollout, RolloutReturn
-import torch
 from itertools import count
-from environments.gymnasium.wrappers import MultiAgentEnv
 
+import numpy as np
+import torch
+
+from environments.gymnasium.wrappers import MultiAgentEnv
+from rl.src.base import MultiAgentBase
+from rl.src.dqn import DQN
+from rl.src.dqn.components.types import Rollout, RolloutReturn
+from rl.src.dqn.policies import DQNPolicy
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -139,3 +141,6 @@ class MultiAgentDQN(MultiAgentBase):
     def save(self, path: str):
         for i in range(self.num_agents):
             self.agents[i].save(str(i) + path)
+
+    def get_q_values(self, states: np.ndarray, agent: int) -> np.ndarray:
+        return self.agents[agent].get_q_values(states)
