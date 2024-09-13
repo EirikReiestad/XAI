@@ -44,3 +44,11 @@ def get_same_type(
             return tuple(a.numpy().tolist())
         elif isinstance(a, tuple):
             return a
+
+
+def get_torch_from_numpy(a: torch.Tensor | np.ndarray) -> torch.Tensor:
+    if isinstance(a, torch.Tensor):
+        return a
+    if isinstance(a, np.ndarray):
+        return torch.tensor(a)
+    raise ValueError(f"Type of a: {type(a)} is not supported.")
