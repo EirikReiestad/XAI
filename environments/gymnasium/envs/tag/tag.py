@@ -9,7 +9,6 @@ import gymnasium as gym
 import numpy as np
 from gymnasium import spaces
 
-from environments import settings
 from environments.gymnasium.utils import (
     FileHandler,
     Position,
@@ -44,12 +43,12 @@ class TagEnv(gym.Env):
         self.width = 10
         screen_width = 600
         screen_height = 600
-        folder_name = "environments/gymnasium/data/maze/"
-        filename = settings.FILENAME
+        folder_name = "environments/gymnasium/data/tag/"
+        filename = "env-0-10-10.txt"
         self.state_type = StateType.PARTIAL
         self.tag_radius = 1
-        self.tag_head_start = 50
-        self.max_steps = 100
+        self.tag_head_start = 20
+        self.max_steps = 40
 
         folder_name = "environments/gymnasium/data/tag/"
         FileHandler.file_exist(folder_name, filename)
@@ -91,7 +90,13 @@ class TagEnv(gym.Env):
                     0,
                     False,
                     False,
-                    {"full_state": self.state.full, "skip": True},
+                    {
+                        "full_state": self.state.full,
+                        "skip": True,
+                        "data": {
+                            "object_moved_distance": 0,
+                        },
+                    },
                 )
         else:
             if self.agents.active_agent == AgentType.HIDER:
@@ -101,17 +106,29 @@ class TagEnv(gym.Env):
                     0,
                     False,
                     False,
-                    {"full_state": self.state.full, "skip": True},
+                    {
+                        "full_state": self.state.full,
+                        "skip": True,
+                        "data": {
+                            "object_moved_distance": 0,
+                        },
+                    },
                 )
 
         self.steps += 1
         if self.steps >= self.max_steps:
+            reward = self.tag_rewards.truncated_reward[self.agents.active_agent.value]
             return (
                 self.state.active_state,
-                self.tag_rewards.truncated_reward,
+                reward,
                 True,
                 True,
-                {"full_state": self.state.full},
+                {
+                    "full_state": self.state.full,
+                    "data": {
+                        "object_moved_distance": 0,
+                    },
+                },
             )
 
         collided = False
@@ -144,7 +161,9 @@ class TagEnv(gym.Env):
 
         return_info = {
             "full_state": self.state.full,
-            "object_moved_distance": self.info["object_moved_distance"],
+            "data": {
+                "object_moved_distance": self.info["object_moved_distance"],
+            },
         }
 
         self.agents.set_next_agent()
@@ -270,7 +289,7 @@ class TagEnv(gym.Env):
             if not EnvUtils.is_object(new_state, new_agent_position):
                 return self._move_agent_within_bounds(
                     new_state, new_agent_position
-                ), self.tag_rewards.move_reward
+                ), self.tag_rewards.move_reward[self.agents.active_agent.value]
             else:
                 return state, self.tag_rewards.collision_reward
         else:
@@ -365,4 +384,4 @@ class TagEnv(gym.Env):
 
     @property
     def num_actions(self) -> int:
-        return 4
+        return 7

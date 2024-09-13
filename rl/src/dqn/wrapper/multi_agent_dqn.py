@@ -36,6 +36,8 @@ class MultiAgentDQN(MultiAgentBase):
         episode_rewards = [0.0 for _ in range(self.num_agents)]
         episode_length = 0
 
+        data = [{} for _ in range(self.num_agents)]
+
         for t in count():
             actions = self.predict(state)
             actions = [action.item() for action in actions]
@@ -65,6 +67,11 @@ class MultiAgentDQN(MultiAgentBase):
                 skip = infos[i].get("skip")
                 if skip:
                     continue
+
+                additional_data = infos[i].get("data")
+                if additional_data is not None:
+                    for key, value in additional_data.items():
+                        data[i][key] = data[i].setdefault(key, 0) + value
 
                 action = torch.tensor([actions[i]], device=device)
                 reward = torch.tensor([rewards[i]], device=device)
@@ -107,6 +114,13 @@ class MultiAgentDQN(MultiAgentBase):
                     f"agent{i}_reward": episode_rewards[i],
                 }
             )
+            for key, value in data[i].items():
+                self.wandb_manager.log(
+                    {
+                        f"agent{i}_{key}": value,
+                    }
+                )
+
         self.wandb_manager.log(
             {
                 "episode_length": episode_length,
