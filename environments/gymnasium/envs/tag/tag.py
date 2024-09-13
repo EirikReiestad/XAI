@@ -223,10 +223,12 @@ class TagEnv(gym.Env):
 
     def _do_action(self, action: ActionType) -> tuple[Optional[np.ndarray], float]:
         reward = 0
-        if action == ActionType.GRAB:
-            reward += self._grab_entity()
-        if action == ActionType.RELEASE:
-            reward += self._release_entity()
+        if action == ActionType.GRAB_RELEASE:
+            grab = self._grab_entity()
+            release = self._release_entity()
+            reward += (
+                self.tag_rewards.wrong_grab_release_reward if not grab or release else 0
+            )
         new_full_state, move_reward = self._move_agent(self.state.full, action)
         reward += move_reward
         if new_full_state is None:
@@ -234,7 +236,7 @@ class TagEnv(gym.Env):
         new_full_state = self._move_grabbed_object(new_full_state)
         return new_full_state, reward
 
-    def _grab_entity(self) -> float:
+    def _grab_entity(self) -> bool:
         for obj in self.objects.boxes:
             if self.agents.active.position.distance_to(obj.position) <= 1:
                 can_grab = obj.grab(self.agents.active_agent)
@@ -242,13 +244,12 @@ class TagEnv(gym.Env):
                     obj.grabbed = True
                     obj.next_position = self.agents.active.position
                     self.agents.active.grab(obj)
-                    return 0
-                return self.tag_rewards.wrong_grab_reward
-        return self.tag_rewards.wrong_grab_reward
+                    return True
+                return False
+        return False
 
     def _release_entity(self):
-        ok = self.agents.active.release()
-        return 0 if ok else self.tag_rewards.wrong_release_reward
+        return self.agents.active.release()
 
     def _move_grabbed_object(self, state: np.ndarray) -> Optional[np.ndarray]:
         obj = self.agents.active.grabbed_object
@@ -382,4 +383,4 @@ class TagEnv(gym.Env):
 
     @property
     def num_actions(self) -> int:
-        return 7
+        return 5

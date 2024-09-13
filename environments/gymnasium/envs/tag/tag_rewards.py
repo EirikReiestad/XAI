@@ -11,8 +11,7 @@ class TagRewards:
             "terminated": rewards.TERMINATED_REWARD,
             "truncated": rewards.TRUNCATED_REWARD,
             "collision": rewards.COLLISION_REWARD,
-            "wrong_grab": rewards.WRONG_GRAB_REWARD,
-            "wrong_release": rewards.WRONG_RELEASE_REWARD,
+            "wrong_grab": rewards.WRONG_GRAB_RELEASE_REWARD,
         }
 
     def get_tag_reward(
@@ -47,9 +46,5 @@ class TagRewards:
         return self.rewards["truncated"]
 
     @property
-    def wrong_grab_reward(self):
+    def wrong_grab_release_reward(self):
         return self.rewards["wrong_grab"]
-
-    @property
-    def wrong_release_reward(self):
-        return self.rewards["wrong_release"]
