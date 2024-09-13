@@ -28,7 +28,7 @@ class MazeDemo:
 
     def run(self):
         dqn = DQN(self.env, "dqnpolicy", wandb=True)
-        dqn.learn(settings.EPOCHS)
+        dqn.learn(300)
 
         self.env = gym.make("MazeEnv-v0", render_mode="human")
 
