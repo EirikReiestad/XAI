@@ -5,16 +5,17 @@ from demo.src.common import EpisodeInformation
 
 from .agent_plotter import AgentPlotter
 from .object_plotter import ObjectPlotter
-from demo import settings
 
 
 class Plotter:
     """Handles plotting of training progress."""
 
-    def __init__(self):
-        if settings.PLOT_AGENT_REWARD:
+    def __init__(
+        self, plot_agent_reward: bool = False, plot_object_movement: bool = False
+    ):
+        if plot_agent_reward:
             self.agent_plotter = AgentPlotter()
-        if settings.PLOT_OBJECT_MOVEMENT:
+        if plot_object_movement:
             self.object_plotter = ObjectPlotter()
 
     def update(
@@ -25,14 +26,14 @@ class Plotter:
         show_result=False,
     ):
         """Update the plot with data from multiple episodes."""
-        if settings.PLOT_AGENT_REWARD:
+        if self.agent_plotter:
             self.agent_plotter.update(
                 episodes_information,
                 colors=colors,
                 labels=labels,
                 show_result=show_result,
             )
-        if settings.PLOT_OBJECT_MOVEMENT:
+        if self.object_plotter:
             self.object_plotter.update(episodes_information)
 
     def plot_q_values(self, q_values: np.ndarray):
@@ -42,8 +43,8 @@ class Plotter:
     @property
     def figs(self) -> list[Figure]:
         figs = []
-        if settings.PLOT_AGENT_REWARD:
+        if self.agent_plotter:
             figs.append(self.agent_plotter.fig)
-        if settings.PLOT_OBJECT_MOVEMENT:
+        if self.object_plotter:
             figs.append(self.object_plotter.fig)
         return figs
