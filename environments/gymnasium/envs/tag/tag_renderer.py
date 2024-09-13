@@ -40,7 +40,7 @@ class TagRenderer:
         self.screen = pg.display.set_mode((self.screen_width, self.screen_height))
         self.post_init_screen = True
 
-    def init_render_mode(self, render_mode: Optional[str] = "human"):
+    def init_render_mode(self, render_mode: Optional[str] = None):
         if render_mode is None:
             return
         if render_mode and render_mode not in self.metadata["render_modes"]:

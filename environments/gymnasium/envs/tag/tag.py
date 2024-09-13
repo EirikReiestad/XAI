@@ -39,7 +39,7 @@ logging.basicConfig(level=logging.INFO)
 class TagEnv(gym.Env):
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 50}
 
-    def __init__(self, render_mode: Optional[str] = "human"):
+    def __init__(self, render_mode: Optional[str] = None):
         self.height = 10
         self.width = 10
         screen_width = 600
@@ -48,8 +48,8 @@ class TagEnv(gym.Env):
         filename = settings.FILENAME
         self.state_type = StateType.PARTIAL
         self.tag_radius = 1
-
-        self.max_steps = self.height * self.width
+        self.tag_head_start = 0
+        self.max_steps = 100
 
         folder_name = "environments/gymnasium/data/tag/"
         FileHandler.file_exist(folder_name, filename)
@@ -82,6 +82,27 @@ class TagEnv(gym.Env):
     def step(self, action: int) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
         if not self.action_space.contains(action):
             raise ValueError(f"Invalid action {action}")
+
+        if self.steps < self.tag_head_start:
+            if self.agents.active_agent == AgentType.SEEKER:
+                self.agents.set_next_agent()
+                return (
+                    self.state.active_state,
+                    0,
+                    False,
+                    False,
+                    {"full_state": self.state.full, "skip": True},
+                )
+        else:
+            if self.agents.active_agent == AgentType.HIDER:
+                self.agents.set_next_agent()
+                return (
+                    self.state.active_state,
+                    0,
+                    False,
+                    False,
+                    {"full_state": self.state.full, "skip": True},
+                )
 
         self.steps += 1
         if self.steps >= self.max_steps:
@@ -146,7 +167,7 @@ class TagEnv(gym.Env):
 
         self.info["object_moved_distance"] = 0
 
-        self.state.reset(self.agents.active_agent)
+        self.state.reset()
         self._set_initial_positions(options)
         self._set_object_positions()
 
@@ -173,6 +194,7 @@ class TagEnv(gym.Env):
             self.agents.inactive.position,
             self.tag_radius,
         )
+        self.render(self.render_mode)
         return state, rewards, terminated
 
     def update_state(self, state: np.ndarray) -> np.ndarray:
@@ -343,4 +365,4 @@ class TagEnv(gym.Env):
 
     @property
     def num_actions(self) -> int:
-        return 5
+        return 4

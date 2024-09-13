@@ -29,12 +29,12 @@ class TagDemo:
         self.env: MultiAgentEnv = MultiAgentEnv(env)
 
     def run(self):
-        dqn = MultiAgentDQN(self.env, 2, "dqnpolicy", wandb=False)
+        dqn = MultiAgentDQN(self.env, 2, "dqnpolicy", wandb=True)
         dqn.learn(settings.EPOCHS)
         print("Finished training")
 
         env = gym.make("TagEnv-v0", render_mode="human")
-        self.env: MultiAgentEnv = MultiAgentEnv(self.env)
+        self.env: MultiAgentEnv = MultiAgentEnv(env)
 
         plt.ion()
 
@@ -53,6 +53,7 @@ class TagDemo:
                     predicted_actions = dqn.predict(state)
                     actions = [action.item() for action in predicted_actions]
                     (
+                        full_state,
                         observation,
                         terminated,
                         observations,
