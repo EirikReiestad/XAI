@@ -48,7 +48,7 @@ class TagEnv(gym.Env):
         filename = settings.FILENAME
         self.state_type = StateType.PARTIAL
         self.tag_radius = 1
-        self.tag_head_start = 0
+        self.tag_head_start = 50
         self.max_steps = 100
 
         folder_name = "environments/gymnasium/data/tag/"
