@@ -59,7 +59,14 @@ class TagEnv(gym.Env):
         self.tag_renderer.init_render_mode(render_mode)
 
         filename = folder_name + filename
-        self.state = TagState(self.height, self.width, filename)
+        self.state = TagState(
+            self.width,
+            self.height,
+            screen_width,
+            screen_height,
+            self.state_type,
+            filename,
+        )
         self._init_spaces()
         self.tag_rewards = TagRewards()
 
