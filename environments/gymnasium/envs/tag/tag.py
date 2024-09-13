@@ -47,6 +47,7 @@ class TagEnv(gym.Env):
         folder_name = "environments/gymnasium/data/maze/"
         filename = settings.FILENAME
         self.state_type = StateType.PARTIAL
+        self.tag_radius = 1
 
         self.max_steps = self.height * self.width
 
@@ -121,9 +122,11 @@ class TagEnv(gym.Env):
             self.steps_beyond_terminated += 1
 
         return_info = {
-            "concatenate_states_fn": self.concatenate_states,
+            "full_state": self.state.full,
             "object_moved_distance": self.info["object_moved_distance"],
         }
+
+        self.agents.set_next_agent()
 
         return (self.state.active_state, reward, terminated, False, return_info)
 
@@ -168,7 +171,7 @@ class TagEnv(gym.Env):
         rewards, terminated = self.tag_rewards.get_tag_reward(
             self.agents.active.position,
             self.agents.inactive.position,
-            settings.TAG_RADIUS,
+            self.tag_radius,
         )
         return state, rewards, terminated
 
@@ -306,7 +309,7 @@ class TagEnv(gym.Env):
             )
         seeker = Agent(seeker_position)
         hider = Agent(hider_position)
-        self.agents = DualAgents(seeker, hider, AgentType.SEEKER)
+        self.agents = DualAgents(seeker, hider)
 
     def _set_object_positions(self):
         obstacle_positions = self.state.get_obstacle_positions()

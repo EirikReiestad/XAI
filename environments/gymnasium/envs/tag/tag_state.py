@@ -48,14 +48,11 @@ class TagState:
 
     def reset(self, active_agent: AgentType):
         self.state.full = self.init_full_state
-        active_agent_position = FullStateDataExtractor.get_agent_position(
-            self.init_full_state, active_agent
+        seeker_position = FullStateDataExtractor.get_agent_position(
+            self.init_full_state, AgentType.SEEKER
         )
-        other_agent = (
-            AgentType.HIDER if active_agent == AgentType.SEEKER else AgentType.SEEKER
-        )
-        other_agent_position = FullStateDataExtractor.get_agent_position(
-            self.init_full_state, other_agent
+        hider_position = FullStateDataExtractor.get_agent_position(
+            self.init_full_state, AgentType.HIDER
         )
         obstacle_positions = FullStateDataExtractor.get_positions(
             self.init_full_state, TileType.OBSTACLE
@@ -71,20 +68,21 @@ class TagState:
         objects = Objects(obstacles, boxes)
 
         self.state.partial = self._create_partial_state(
-            active_agent_position, other_agent_position, objects
+            seeker_position, hider_position, objects
         )
+
         self.state.rgb = self._create_rgb_state()
 
     def update(
         self,
         new_full_state: np.ndarray,
-        active_agent_position: Position,
-        other_agent_position: Position,
+        seeker_position: Position,
+        hider_position: Position,
         objects: Objects,
     ):
         self.state.full = new_full_state
         self.state.partial = self._create_partial_state(
-            active_agent_position, other_agent_position, objects
+            seeker_position, hider_position, objects
         )
         self.state.rgb = self._create_rgb_state()
 
@@ -163,11 +161,11 @@ class TagState:
 
     def _create_partial_state(
         self,
-        active_agent_position: Position,
-        other_agent_position: Position,
+        seeker_position: Position,
+        hider_position: Position,
         objects: Objects,
     ) -> np.ndarray:
-        goal_distance = active_agent_position - other_agent_position
+        goal_distance = seeker_position - hider_position
         goal_direction = [goal_distance.x, goal_distance.y]
 
         distance = np.linalg.norm(goal_direction)
@@ -189,8 +187,8 @@ class TagState:
 
         return np.array(
             [
-                *active_agent_position,
-                *other_agent_position,
+                *hider_position,
+                *seeker_position,
                 int(distance_normalized),
                 *map(int, direction_normalized),
                 *object_states,
@@ -296,9 +294,6 @@ class TagState:
         inactive_agent_position = FullStateDataExtractor.get_agent_position(
             self.init_full_state, inactive_agent
         )
-        # TODO: Refactor this to use the objects class
-        obstacle_positions = [obj.position for obj in objects.obstacles]
-        box_positions = [obj.position for obj in objects.boxes]
 
         states = np.ndarray(
             (self.height, self.width, *self.partial_state_size), dtype=np.uint8
@@ -309,9 +304,14 @@ class TagState:
                 if FullStateDataExtractor.is_empty_tile(
                     clean_agent_state, active_agent_position
                 ):
-                    state = self.state.partial = self._create_partial_state(
-                        active_agent_position, inactive_agent_position, objects
-                    )
+                    if active_agent == AgentType.SEEKER:
+                        state = self.state.partial = self._create_partial_state(
+                            active_agent_position, inactive_agent_position, objects
+                        )
+                    else:
+                        state = self.state.partial = self._create_partial_state(
+                            inactive_agent_position, active_agent_position, objects
+                        )
                 else:
                     state = self._create_empty_partial_state()
                 states[active_agent_position.row_major_order] = state

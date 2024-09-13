@@ -10,7 +10,6 @@ class MultiAgentEnv(gym.Wrapper):
         super().__init__(env)
         self.env = env
         _, info = self.env.reset()
-        self.concatenated_states_fn = info.get("concatenated_states_fn")
 
     def step_multiple(
         self, actions: list[Number]
@@ -31,8 +30,10 @@ class MultiAgentEnv(gym.Wrapper):
             terminals.append(terminated)
             truncated.append(trunc)
             infos.append(info)
+
+        full_states = [info["full_state"] for info in infos]
         concatenated_state, concatenated_state_rewards, terminated = (
-            self.concatenate_states_fn(observations)
+            self.get_wrapper_attr("concatenate_states")(full_states)
         )
         rewards += concatenated_state_rewards
         return (
@@ -44,9 +45,3 @@ class MultiAgentEnv(gym.Wrapper):
             truncated,
             infos,
         )
-
-    def _reset(self):
-        _, info = self.env.reset()
-        self.concatenated_states_fn = info.get("concatenated_states_fn")
-        if not callable(self.concatenated_states_fn):
-            raise ValueError("The concatenated_states_fn is not a callable function.")

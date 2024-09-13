@@ -47,7 +47,7 @@ class MultiAgentDQN(MultiAgentBase):
                 terminals,
                 truncated,
                 infos,
-            ) = self.env.multi_step(actions)
+            ) = self.env.get_wrapper_attr("step_multiple")(actions)
 
             episode_rewards += rewards
             episode_length += 1
