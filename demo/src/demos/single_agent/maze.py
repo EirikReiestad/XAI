@@ -6,7 +6,6 @@ import matplotlib
 import matplotlib.pyplot as plt
 import torch
 
-from demo import settings
 from demo.src.common import EpisodeInformation
 from demo.src.plotters import Plotter
 from rl.src.dqn import DQN
