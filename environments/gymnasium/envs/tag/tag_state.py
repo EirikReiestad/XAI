@@ -31,6 +31,9 @@ class TagState:
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.state_type = state_type
+
+        self.random_seeker_position = False
+        self.random_hider_position = False
         self.init_states(filename)
 
     def init_states(self, filename: str):
@@ -46,7 +49,7 @@ class TagState:
             active=self.state_type,
         )
 
-    def reset(self, active_agent: AgentType):
+    def reset(self):
         self.state.full = self.init_full_state
         seeker_position = FullStateDataExtractor.get_agent_position(
             self.init_full_state, AgentType.SEEKER
@@ -220,9 +223,9 @@ class TagState:
             )
             return FullStateDataModifier.place_agent(state, random_position, agent)
 
-        if settings.RANDOM_SEEKER_POSITION:
+        if self.random_seeker_position:
             state = random_agent_position(state, AgentType.SEEKER)
-        if settings.RANDOM_HIDER_POSITION:
+        if self.random_hider_position:
             random_agent_position(state, AgentType.HIDER)
         FullStateDataExtractor.get_agent_position(state, AgentType.SEEKER)
         FullStateDataExtractor.get_agent_position(state, AgentType.HIDER)

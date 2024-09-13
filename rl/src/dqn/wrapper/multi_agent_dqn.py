@@ -40,6 +40,7 @@ class MultiAgentDQN(MultiAgentBase):
             actions = self.predict(state)
             actions = [action.item() for action in actions]
             (
+                full_state,
                 observation,
                 terminated,
                 observations,
@@ -50,6 +51,7 @@ class MultiAgentDQN(MultiAgentBase):
             ) = self.env.get_wrapper_attr("step_multiple")(actions)
 
             episode_rewards += rewards
+            episode_rewards = [e + r for e, r in zip(episode_rewards, rewards)]
             episode_length += 1
 
             next_states = [
@@ -60,6 +62,10 @@ class MultiAgentDQN(MultiAgentBase):
             ]
 
             for i in range(self.num_agents):
+                skip = infos[i].get("skip")
+                if skip:
+                    continue
+
                 action = torch.tensor([actions[i]], device=device)
                 reward = torch.tensor([rewards[i]], device=device)
                 next_state = next_states[i]
@@ -90,14 +96,15 @@ class MultiAgentDQN(MultiAgentBase):
                 )
 
             state = observation
+            state = torch.tensor(state, device=device, dtype=torch.float32).unsqueeze(0)
 
-            if terminated:
+            if terminated or any(terminals) or any(truncated):
                 break
 
         for i in range(self.num_agents):
             self.wandb_manager.log(
                 {
-                    f"agent{i}_reward": episode_rewards,
+                    f"agent{i}_reward": episode_rewards[i],
                 }
             )
         self.wandb_manager.log(

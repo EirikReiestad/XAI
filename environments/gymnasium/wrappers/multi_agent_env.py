@@ -15,6 +15,7 @@ class MultiAgentEnv(gym.Wrapper):
         self, actions: list[Number]
     ) -> tuple[
         np.ndarray,
+        np.ndarray,
         bool,
         list[np.ndarray],
         list[float],
@@ -32,12 +33,16 @@ class MultiAgentEnv(gym.Wrapper):
             infos.append(info)
 
         full_states = [info["full_state"] for info in infos]
-        concatenated_state, concatenated_state_rewards, terminated = (
-            self.get_wrapper_attr("concatenate_states")(full_states)
-        )
+        full_state, concatenated_state_rewards, terminated = self.get_wrapper_attr(
+            "concatenate_states"
+        )(full_states)
+        observation = self.get_wrapper_attr("update_state")(full_state)
+
         rewards += concatenated_state_rewards
+        rewards = [r + cr for r, cr in zip(rewards, concatenated_state_rewards)]
         return (
-            concatenated_state,
+            full_state,
+            observation,
             terminated,
             observations,
             rewards,
