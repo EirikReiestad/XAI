@@ -20,7 +20,7 @@ class TagRewards:
     ) -> tuple[tuple[float, float], bool]:
         if agent.distance_to(other_agent) <= radius:
             return self.tagged_reward, True
-        return self.not_tagged_reward, False
+        return (0, 0), False
 
     @property
     def tagged_reward(self):

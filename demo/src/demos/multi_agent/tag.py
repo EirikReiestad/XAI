@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 import torch
 from environments.gymnasium.wrappers import MultiAgentEnv
 
-from demo import settings
 from demo.src.common import EpisodeInformation
 from demo.src.plotters import Plotter
 from rl.src.dqn.wrapper import MultiAgentDQN
