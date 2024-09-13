@@ -1,5 +1,14 @@
 from demo import settings, DemoType, RLType
-from demo.src.demos.single_agent.maze import MazeDemo as Demo
+
+match settings.DEMO_TYPE:
+    case DemoType.CARTPOLE:
+        from demo.src.demos.single_agent.cartpole import CartPoleDemo as Demo
+    case DemoType.MAZE:
+        from demo.src.demos.single_agent.maze import MazeDemo as Demo
+    case DemoType.TAG:
+        from demo.src.demos.multi_agent.dqn.tag import TagDemo as Demo
+    case _:
+        raise ValueError("Invalid demo type")
 
 """
 match settings.DEMO_TYPE:

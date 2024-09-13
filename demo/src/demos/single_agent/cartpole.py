@@ -27,7 +27,7 @@ class CartPoleDemo:
         self.env = gym.make("CartPole-v1")
 
     def run(self):
-        dqn = DQN("dqnpolicy", self.env, wandb=True)
+        dqn = DQN(self.env, "dqnpolicy", wandb=True)
         dqn.learn(settings.EPOCHS)
         print("Training complete")
 

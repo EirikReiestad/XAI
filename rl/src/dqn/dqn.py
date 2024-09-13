@@ -46,7 +46,10 @@ class DQN(SingleAgentBase):
         epsilon_decay: int = 1000,
         batch_size: int = 128,
         tau: float = 0.005,
+        wandb: bool = False,
     ) -> None:
+        super().__init__(wandb)
+
         setter.set_seed(seed)
 
         self.env = env
