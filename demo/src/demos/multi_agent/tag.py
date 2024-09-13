@@ -26,11 +26,12 @@ class TagDemo:
         )
         self.plotter = Plotter()
         env = gym.make("TagEnv-v0", render_mode="human")
-        self.env: MultiAgentEnv = MultiAgentEnv(self.env)
+        self.env: MultiAgentEnv = MultiAgentEnv(env)
 
     def run(self):
-        dqn = MultiAgentDQN(self.env, 2, "dqnpolicy", wandb=True)
+        dqn = MultiAgentDQN(self.env, 2, "dqnpolicy", wandb=False)
         dqn.learn(settings.EPOCHS)
+        print("Finished training")
 
         env = gym.make("TagEnv-v0", render_mode="human")
         self.env: MultiAgentEnv = MultiAgentEnv(self.env)

@@ -45,20 +45,26 @@ class Agent:
 
 @dataclass
 class DualAgents:
-    seeker: Agent
-    hider: Agent
-    _active_agent: AgentType
+    def __init__(self, seeker: Agent, hider: Agent):
+        self.seeker = seeker
+        self.hider = hider
+        self._active_agent = AgentType.SEEKER
+        self._inactive_agent = AgentType.HIDER
+
+    def set_next_agent(self) -> AgentType:
+        self.active_agent = self._inactive_agent
+        return self.active_agent
 
     @property
-    def active(self):
+    def active(self) -> Agent:
         return self.seeker if self.active_agent == AgentType.SEEKER else self.hider
 
     @property
-    def inactive(self):
+    def inactive(self) -> Agent:
         return self.hider if self.active_agent == AgentType.SEEKER else self.seeker
 
     @property
-    def colliding(self):
+    def colliding(self) -> bool:
         return self.seeker == self.hider
 
     @property
