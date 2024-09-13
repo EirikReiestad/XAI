@@ -4,10 +4,11 @@ from dataclasses import dataclass
 
 @dataclass
 class WandBConfig:
-    project: str
-    run_name: str
-    tags: list[str]
-    other: dict
+    def __init__(self) -> None:
+        self.project: str = ""
+        self.run_name: str = ""
+        self.tags: list[str] = []
+        self.other: dict = {}
 
 
 class WandBManager:

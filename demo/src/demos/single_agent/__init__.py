@@ -1,3 +1,4 @@
-from .base_demo import BaseDemo
+from .cartpole import CartPoleDemo
+from .maze import MazeDemo
 
-__all__ = ["BaseDemo"]
+__all__ = ["CartPoleDemo", "MazeDemo"]
