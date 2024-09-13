@@ -1,4 +1,5 @@
-from .base_rl import BaseRL
+from .single_agent_base import SingleAgentBase
+from .multi_agent_base import MultiAgentBase
 
 
-__all__ = ["BaseRL"]
+__all__ = ["SingleAgentBase", "MultiAgentBase"]

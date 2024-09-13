@@ -12,19 +12,18 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from rl.src.base import BaseRL
+from rl.src.base import SingleAgentBase
 from rl.src.common import checker, setter
-from rl.src.managers import WandBConfig, WandBManager
 
 from .common.hyperparameter import DQNHyperparameter
 from .components.types import Rollout, RolloutReturn, Transition
-from .managers import MemoryManager, OptimizerManager
-from .policies import DQNPolicy, QNetwork, get_policy
+from .managers import MemoryManager, OptimizerManager, PolicyManager
+from .policies import DQNPolicy, QNetwork
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
-class DQN(BaseRL):
+class DQN(SingleAgentBase):
     """DQN Module for managing the agent, including training and evaluation."""
 
     policy: DQNPolicy
@@ -33,8 +32,9 @@ class DQN(BaseRL):
 
     def __init__(
         self,
-        policy: str | DQNPolicy,
         env: gym.Env,
+        policy: str | DQNPolicy,
+        agent: int = 0,
         seed: int | None = None,
         dueling: bool = False,
         double: bool = False,
@@ -46,7 +46,6 @@ class DQN(BaseRL):
         epsilon_decay: int = 1000,
         batch_size: int = 128,
         tau: float = 0.005,
-        wandb: bool = False,
     ) -> None:
         setter.set_seed(seed)
 
@@ -57,11 +56,12 @@ class DQN(BaseRL):
             lr, gamma, epsilon_start, epsilon_end, epsilon_decay, batch_size, tau
         )
 
-        self.policy = get_policy(
+        self.policy = PolicyManager(
             policy,
             observation_space=self.env.observation_space,
             action_space=self.env.action_space,
-        )
+        ).policy
+
         self.policy_net = self.policy.policy_net
         self.target_net = self.policy.target_net
 
@@ -70,34 +70,12 @@ class DQN(BaseRL):
 
         self.memory = MemoryManager(memory_size).initialize()
 
-        wandb_config = WandBConfig(
-            project="dqn",
-            run_name="default",
-            tags=[],
-            other={},
-        )
-        self.wandb_manager = WandBManager(wandb, wandb_config)
-
         self.double = double
         self.steps_done = 0
 
-    def learn(
-        self,
-        total_timesteps: int,
-    ):
+    def learn(self, total_timesteps: int):
         for _ in range(total_timesteps):
             result = self._collect_rollout()
-
-            """
-            self.train(
-                states=result.states,
-                actions=result.actions,
-                observations=result.next_states,
-                rewards=result.rewards,
-                terminated=result.terminals,
-                truncated=result.truncated,
-            )
-            """
 
     def _collect_rollout(self) -> RolloutReturn:
         state, info = self.env.reset()

@@ -110,6 +110,7 @@ class TagEnv(gym.Env):
             self.steps_beyond_terminated += 1
 
         return_info = {
+            "concatenate_states_fn": self.concatenate_states,
             "full_state": self.state.full,
             "object_moved_distance": self.info["object_moved_distance"],
         }
