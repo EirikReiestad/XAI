@@ -6,7 +6,7 @@ match settings.DEMO_TYPE:
     case DemoType.MAZE:
         from demo.src.demos.single_agent.maze import MazeDemo as Demo
     case DemoType.TAG:
-        from demo.src.demos.multi_agent.dqn.tag import TagDemo as Demo
+        from demo.src.demos.multi_agent.tag import TagDemo as Demo
     case _:
         raise ValueError("Invalid demo type")
 
