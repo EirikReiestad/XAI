@@ -17,9 +17,20 @@ from utils import Color
 
 
 class TagState:
-    def __init__(self, height: int, width: int, filename: str):
-        self.height = height
+    def __init__(
+        self,
+        width: int,
+        height: int,
+        screen_width: int,
+        screen_height: int,
+        state_type: StateType,
+        filename: str,
+    ):
         self.width = width
+        self.height = height
+        self.screen_width = screen_width
+        self.screen_height = screen_height
+        self.state_type = state_type
         self.init_states(filename)
 
     def init_states(self, filename: str):
@@ -32,7 +43,7 @@ class TagState:
             full=full_state,
             partial=partial_state,
             rgb=rgb_state,
-            active=settings.STATE_TYPE,
+            active=self.state_type,
         )
 
     def reset(self, active_agent: AgentType):
@@ -188,9 +199,7 @@ class TagState:
         )
 
     def _create_rgb_state(self) -> np.ndarray:
-        return np.full(
-            (settings.SCREEN_HEIGHT, settings.SCREEN_WIDTH, 3), Color.WHITE.value
-        )
+        return np.full((self.screen_height, self.screen_width, 3), Color.WHITE.value)
 
     def _load_env_from_file(self, filename: str) -> np.ndarray:
         if not os.path.exists(filename):
@@ -244,15 +253,15 @@ class TagState:
     def get_all_possible_states(
         self, active_agent: AgentType, inactive_agent: AgentType, objects: Objects
     ) -> np.ndarray:
-        if settings.STATE_TYPE == StateType.FULL:
+        if self.state_type == StateType.FULL:
             return self._get_all_possible_full_states(active_agent)
-        elif settings.STATE_TYPE == StateType.PARTIAL:
+        elif self.state_type == StateType.PARTIAL:
             return self._get_all_possible_partial_states(
                 active_agent, inactive_agent, objects
             )
-        elif settings.STATE_TYPE == StateType.RGB:
+        elif self.state_type == StateType.RGB:
             raise NotImplementedError("RGB state type not implemented yet.")
-        raise ValueError(f"Unknown state type: {settings.STATE_TYPE}")
+        raise ValueError(f"Unknown state type: {self.state_type}")
 
     def _get_all_possible_full_states(self, active_agent: AgentType) -> np.ndarray:
         clean_agent_state = self.state.full.copy()
