@@ -2,6 +2,7 @@ from typing import Any
 
 import gymnasium as gym
 import numpy as np
+from torch.types import Number
 
 
 class MultiAgentEnv(gym.Wrapper):
@@ -12,7 +13,7 @@ class MultiAgentEnv(gym.Wrapper):
         self.concatenated_states_fn = info.get("concatenated_states_fn")
 
     def step_multiple(
-        self, actions: list[int]
+        self, actions: list[Number]
     ) -> tuple[
         np.ndarray,
         bool,

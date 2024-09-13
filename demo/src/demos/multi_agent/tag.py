@@ -1,160 +1,86 @@
+import logging
 from itertools import count
 
-import numpy as np
+import gymnasium as gym
+import matplotlib
+import matplotlib.pyplot as plt
 import torch
+from environments.gymnasium.wrappers import MultiAgentEnv
 
-import wandb
 from demo import settings
-from demo.src.common import Batch, Transition
+from demo.src.common import EpisodeInformation
+from demo.src.plotters import Plotter
+from rl.src.dqn.wrapper import MultiAgentDQN
 
-from .base_demo import BaseDemo
+# Set up matplotlib
+is_ipython = "inline" in matplotlib.get_backend()
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
-class TagDemo(BaseDemo):
-    """Class for running the Tag demo with DQN and plotting results."""
+class TagDemo:
+    """Demo for the CartPole-v1 environment."""
 
-    def __init__(self):
-        """Initialize the Tag demo."""
-        super().__init__(env_id="TagEnv-v0")
-
-    def _run_episode(self, i_episode: int, state: torch.Tensor, info: dict):
-        """Handle the episode by interacting with the environment and training the DQN."""
-        state, _ = self.env_wrapper.reset()
-
-        seeker_batch = Batch(
-            states=[],
-            actions=[],
-            observations=[],
-            rewards=[],
-            terminated=[],
-            truncated=[],
+    def __init__(self) -> None:
+        self.episode_information = EpisodeInformation(
+            durations=[], rewards=[], object_moved_distance=[]
         )
-        hider_batch = Batch(
-            states=[],
-            actions=[],
-            observations=[],
-            rewards=[],
-            terminated=[],
-            truncated=[],
-        )
-        agent_batches = [seeker_batch, hider_batch]
-        total_rewards = np.zeros(self.num_agents)
+        self.plotter = Plotter()
+        env = gym.make("TagEnv-v0", render_mode="human")
+        self.env: MultiAgentEnv = MultiAgentEnv(self.env)
 
-        for t in count():
-            done = False
-            full_states, transitions, info = self._run_step(state, t)
+    def run(self):
+        dqn = MultiAgentDQN(self.env, 2, "dqnpolicy", wandb=True)
+        dqn.learn(settings.EPOCHS)
 
-            for agent, transition in enumerate(transitions):
-                done = done or transition.terminated or transition.truncated
+        env = gym.make("TagEnv-v0", render_mode="human")
+        self.env: MultiAgentEnv = MultiAgentEnv(self.env)
 
-            if not done:
-                full_state, agent_rewards, done = self.env_wrapper.concatenate_states(
-                    full_states
-                )
-                state = self.env_wrapper.update_state(full_state[0].numpy())
+        plt.ion()
 
-                for agent, transition in enumerate(transitions):
-                    transition.reward += agent_rewards[agent]
+        self.env.reset()
 
-            for agent, transition in enumerate(transitions):
-                agent_batches[agent].append(transition)
-                total_rewards[agent] += transition.reward.item()
+        try:
+            for i_episode in range(1000):
+                state, _ = self.env.reset()
+                state = torch.tensor(
+                    state, device=device, dtype=torch.float32
+                ).unsqueeze(0)
 
-            if i_episode % settings.RENDER_EVERY == 0:
-                self.render()
+                agent_rewards = [0, 0]
 
-            if done:
-                object_moved_distance = info.get("object_moved_distance")
-                if object_moved_distance is None:
-                    raise ValueError(
-                        "Object moved distance must be returned from the environment."
-                    )
-                self.episode_informations[1].object_moved_distance.append(
-                    object_moved_distance
-                )
-                for agent in range(self.num_agents):
-                    self.episode_informations[agent].durations.append(t + 1)
-                    self.episode_informations[agent].rewards.append(
-                        total_rewards[agent]
-                    )
+                for t in count():
+                    predicted_actions = dqn.predict(state)
+                    actions = [action.item() for action in predicted_actions]
+                    (
+                        observation,
+                        terminated,
+                        observations,
+                        rewards,
+                        terminals,
+                        truncated,
+                        _,
+                    ) = self.env.step_multiple(actions)
 
-                if settings.WANDB:
-                    wandb.log(self.episode_informations[0].last_episode("agent0-"))
-                    wandb.log(self.episode_informations[1].last_episode("agent1-"))
-                if self.plotter:
-                    self.plotter.update(self.episode_informations)
+                    agent_rewards += rewards
 
-                break
+                    state = torch.tensor(
+                        observation, device=device, dtype=torch.float32
+                    ).unsqueeze(0)
+                    self.env.render()
 
-        for agent in range(self.num_agents):
-            self._train_batch(agent_batches[agent], agent)
-
-    def _run_step(
-        self,
-        state: torch.Tensor,
-        step: int,
-    ) -> tuple[list[np.ndarray], list[Transition], dict]:
-        """Run a step in the environment and train the DQN."""
-        full_states = []
-        transitions = []
-
-        object_moved_distance = 0
-
-        mock_transition = Transition(
-            state=state,
-            action=torch.tensor([[4]], dtype=torch.int32),
-            observation=state,
-            reward=torch.tensor([0], dtype=torch.float32),
-            terminated=False,
-            truncated=False,
-        )
-
-        for agent in range(self.num_agents):
-            if step < settings.WAIT:
-                if agent == 0:
-                    transitions.append(mock_transition)
-                    continue
-            else:
-                if agent == 1:
-                    transitions.append(mock_transition)
-                    continue
-
-            action = self.dqns[agent].select_action(state)
-
-            self.env_wrapper.set_active_agent(agent)
-            observation, reward, terminated, truncated, info = self.env_wrapper.step(
-                action.item()
-            )
-
-            full_state = info.get("full_state")
-            new_object_moved_distance = info.get("object_moved_distance")
-            if new_object_moved_distance is not None:
-                object_moved_distance += new_object_moved_distance
-
-            if full_state is None:
-                raise ValueError("Full state must be returned from the environment.")
-
-            full_states.append(full_state)
-
-            reward = float(reward)
-
-            transition = Transition(
-                state=state,
-                action=action,
-                observation=observation,
-                reward=torch.tensor([reward], dtype=torch.float32),
-                terminated=terminated,
-                truncated=truncated,
-            )
-            transitions.append(transition)
-
-        self.env_wrapper.set_active_agent(0)
-
-        return (
-            full_states,
-            transitions,
-            {"object_moved_distance": object_moved_distance},
-        )
+                    if terminated:
+                        self.episode_information.durations.append(t + 1)
+                        self.episode_information.rewards.append(agent_rewards[0])
+                        self.plotter.update(self.episode_information)
+                        break
+        except Exception as e:
+            logging.error(e)
+        finally:
+            self.env.close()
+            logging.info("Complete")
+            self.plotter.update(self.episode_information, show_result=True)
+            plt.ioff()
+        plt.show()
 
 
 if __name__ == "__main__":

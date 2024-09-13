@@ -10,10 +10,16 @@ from environments.gymnasium.wrappers import MultiAgentEnv
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
-class MultiAgentWrapper(MultiAgentBase):
+class MultiAgentDQN(MultiAgentBase):
     def __init__(
-        self, env: MultiAgentEnv, num_agents: int, dqn_policy: str | DQNPolicy, **kwargs
+        self,
+        env: MultiAgentEnv,
+        num_agents: int,
+        dqn_policy: str | DQNPolicy,
+        wandb: bool = False,
+        **kwargs,
     ):
+        super().__init__(wandb=wandb)
         self.env = env
         self.num_agents = num_agents
         self.agents = [DQN(env, dqn_policy, **kwargs) for _ in range(num_agents)]
@@ -101,3 +107,14 @@ class MultiAgentWrapper(MultiAgentBase):
         )
 
         return rollout_returns
+
+    def predict(self, state: torch.Tensor) -> list[torch.Tensor]:
+        return [agent.predict(state) for agent in self.agents]
+
+    def load(self, path: str):
+        for i in range(self.num_agents):
+            self.agents[i].load(str(i) + path)
+
+    def save(self, path: str):
+        for i in range(self.num_agents):
+            self.agents[i].save(str(i) + path)

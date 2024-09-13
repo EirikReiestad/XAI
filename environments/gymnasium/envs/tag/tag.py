@@ -15,6 +15,7 @@ from environments.gymnasium.utils import (
     Position,
     generate_random_position,
 )
+from environments.gymnasium.utils import StateType
 
 from .tag_renderer import TagRenderer
 from .tag_rewards import TagRewards
@@ -39,22 +40,25 @@ class TagEnv(gym.Env):
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 50}
 
     def __init__(self, render_mode: Optional[str] = "human"):
-        self.height = settings.ENV_HEIGHT
-        self.width = settings.ENV_WIDTH
+        self.height = 10
+        self.width = 10
+        screen_width = 600
+        screen_height = 600
+        folder_name = "environments/gymnasium/data/maze/"
+        filename = settings.FILENAME
+        self.state_type = StateType.PARTIAL
+
         self.max_steps = self.height * self.width
 
         folder_name = "environments/gymnasium/data/tag/"
-        FileHandler.file_exist(folder_name, settings.FILENAME)
+        FileHandler.file_exist(folder_name, filename)
 
         self.tag_renderer = TagRenderer(
-            settings.ENV_HEIGHT,
-            settings.ENV_WIDTH,
-            settings.SCREEN_WIDTH,
-            settings.SCREEN_HEIGHT,
+            self.width, self.height, screen_width, screen_height
         )
         self.tag_renderer.init_render_mode(render_mode)
 
-        filename = folder_name + settings.FILENAME
+        filename = folder_name + filename
         self.state = TagState(self.height, self.width, filename)
         self._init_spaces()
         self.tag_rewards = TagRewards()
@@ -111,7 +115,6 @@ class TagEnv(gym.Env):
 
         return_info = {
             "concatenate_states_fn": self.concatenate_states,
-            "full_state": self.state.full,
             "object_moved_distance": self.info["object_moved_distance"],
         }
 
@@ -122,7 +125,7 @@ class TagEnv(gym.Env):
     ) -> Tuple[np.ndarray, Dict[str, Any]]:
         if options is not None and options.get("all_possible_states"):
             return self.state.active_state, {
-                "state_type": settings.STATE_TYPE.value,
+                "state_type": self.state_type.value,
                 "all_possible_states": self.state.get_all_possible_states(
                     self.agents.active_agent, self.agents.inactive_agent, self.objects
                 ),
@@ -140,7 +143,7 @@ class TagEnv(gym.Env):
         self.steps = 0
         self.steps_beyond_terminated = None
 
-        return self.state.active_state, {"state_type": settings.STATE_TYPE.value}
+        return self.state.active_state, {"state_type": self.state_type.value}
 
     def render(self, render_mode: Optional[str] = None) -> Optional[np.ndarray]:
         return self.tag_renderer.render(self.state.full, render_mode)
@@ -260,20 +263,20 @@ class TagEnv(gym.Env):
         self.action_space = spaces.Discrete(self.num_actions)
 
         observation_shape = self.state.active_state.shape
-        if settings.STATE_TYPE.value == "full":
+        if self.state_type.value == "full":
             self.observation_space = spaces.Box(
                 low=0, high=3, shape=observation_shape, dtype=np.uint8
             )
-        elif settings.STATE_TYPE.value == "partial":
+        elif self.state_type.value == "partial":
             self.observation_space = spaces.Box(
                 low=0, high=255, shape=self.state.partial.shape, dtype=np.uint8
             )
-        elif settings.STATE_TYPE.value == "rgb":
+        elif self.state_type.value == "rgb":
             self.observation_space = spaces.Box(
                 low=0, high=255, shape=self.state.rgb.shape, dtype=np.uint8
             )
         else:
-            raise ValueError(f"Invalid state type {settings.STATE_TYPE.value}")
+            raise ValueError(f"Invalid state type {self.state_type.value}")
 
     def _set_initial_positions(self, options: Optional[Dict[str, Any]]):
         """Sets the initial positions of the agent and goal."""
