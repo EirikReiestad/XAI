@@ -10,9 +10,9 @@ from utils import Color
 class TagRenderer:
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 50}
 
-    def __init__(self, height: int, width: int, screen_width: int, screen_height: int):
-        self.height = height
+    def __init__(self, width: int, height: int, screen_width: int, screen_height: int):
         self.width = width
+        self.height = height
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.render_mode = None
