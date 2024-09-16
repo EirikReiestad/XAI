@@ -45,7 +45,7 @@ class TagEnv(gym.Env):
         screen_height = 600
         folder_name = "environments/gymnasium/data/tag/"
         filename = "env-0-10-10.txt"
-        self.state_type = StateType.PARTIAL
+        self.state_type = StateType.FULL
         self.tag_radius = 1
         self.tag_head_start = 20
         self.max_steps = 40
@@ -377,8 +377,8 @@ class TagEnv(gym.Env):
             self.agents.active_agent, self.agents.inactive_agent, self.objects
         )
 
-    def get_occluded_states(self, state: np.ndarray) -> np.ndarray:
-        return self.state.get_occluded_states(state)
+    def get_occluded_states(self) -> np.ndarray:
+        return self.state.get_occluded_states()
 
     @property
     def num_agents(self) -> int:

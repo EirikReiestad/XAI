@@ -1,3 +1,6 @@
+import logging
+import numpy as np
+
 import torch
 from gymnasium import spaces
 from torch import nn
@@ -46,6 +49,7 @@ class QNetwork(BasePolicy):
         return nn.Sequential(*layers)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = x.flatten()
         x = self.fc_feature(x)
 
         if self.dueling:
@@ -55,14 +59,21 @@ class QNetwork(BasePolicy):
         return x
 
     def _observation_size(self, observation_space: spaces.Space) -> int:
-        if observation_space.shape is None:
-            raise ValueError("Invalid input shape: None")
+        if observation_space.shape is None or len(observation_space.shape) == 0:
+            raise ValueError(
+                f"Invalid input shape: {observation_space.shape}. Observation space must be at least 1D."
+            )
         if len(observation_space.shape) > 1:
+            logging.info(
+                f"Invalid input shape: {observation_space.shape}. DQN only supports 1D input shapes"
+            )
+            if len(observation_space.shape) == 3:
+                logging.info(
+                    "Flattening the input shape to 1D. This may lead to loss of spatial information."
+                )
+            flat_size = np.prod(observation_space.shape, dtype=int)
+            return int(flat_size)
+        else:
             raise ValueError(
                 f"Invalid input shape: {observation_space.shape}. DQN only supports 1D input shapes"
             )
-        if len(observation_space.shape) == 0:
-            raise ValueError(
-                f"Invalid input shape: {observation_space.shape}. DQN only supports 1D input shapes"
-            )
-        return observation_space.shape[0]
