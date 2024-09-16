@@ -4,7 +4,7 @@ from datetime import datetime
 from matplotlib.figure import Figure
 
 from demo import DemoType, settings
-from rl.src.base import BaseRL
+from rl.src.base import SingleAgentBase
 
 
 class ModelHandler:
@@ -12,13 +12,13 @@ class ModelHandler:
         self.dt = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         self.folder_name = self._get_folder_name()
 
-    def load(self, model: BaseRL, name: str):
+    def load(self, model: SingleAgentBase, name: str):
         if not hasattr(self, "load_folder"):
             self.load_folder = self._load_folder(self.folder_name)
         path = os.path.join(self.load_folder, name)
         model.load(path)
 
-    def save(self, model: BaseRL, name: str):
+    def save(self, model: SingleAgentBase, name: str):
         if not hasattr(self, "save_folder"):
             self.save_folder = self._save_folder(self.folder_name, self.dt)
         path = os.path.join(self.save_folder, name)
@@ -31,8 +31,6 @@ class ModelHandler:
     def _get_folder_name(self):
         if settings.DEMO_TYPE == DemoType.MAZE:
             return "maze"
-        elif settings.DEMO_TYPE == DemoType.COOP:
-            return "coop"
         elif settings.DEMO_TYPE == DemoType.TAG:
             return "tag"
         else:
