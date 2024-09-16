@@ -121,3 +121,7 @@ class Position:
             Tuple[int, int]: The coordinates in row-major order.
         """
         return (int(self.y), int(self.x))
+
+    @staticmethod
+    def empty() -> Tuple[None, None]:
+        return (None, None)
