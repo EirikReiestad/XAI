@@ -369,5 +369,4 @@ class TagState:
             for x in range(self.width):
                 state = self.state.full.copy()
                 states[y, x] = FullStateDataModifier.occlude(state, Position(x, y))
-
         return states

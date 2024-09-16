@@ -31,11 +31,11 @@ class TagDemo:
         self.plotter = Plotter()
         self.renderer = Renderer(10, 10, 600, 600)
         env = gym.make("TagEnv-v0", render_mode="rgb_array")
-        self.env: MultiAgentEnv = MultiAgentEnv(env)
+        self.env = MultiAgentEnv(env)
+        self.dqn = MultiAgentDQN(self.env, 2, "dqnpolicy", wandb=False)
         self.saliency_map = SaliencyMap()
 
     def run(self):
-        self.dqn = MultiAgentDQN(self.env, 2, "dqnpolicy", wandb=False)
         self.dqn.learn(1)
 
         plt.ion()
@@ -60,11 +60,12 @@ class TagDemo:
                     terminals,
                     truncated,
                     _,
-                ) = self.env.step_multiple(actions)
+                ) = self.env.get_wrapper_attr("step_multiple")(actions)
 
                 agent_rewards += rewards
 
-                self.render_q_values_map(full_state)
+                # self.render_q_values_map(full_state)
+                self.render_saliency_map(full_state)
 
                 if terminated or any(terminals) or any(truncated):
                     self.episode_information.durations.append(t + 1)
