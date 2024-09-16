@@ -377,6 +377,9 @@ class TagEnv(gym.Env):
             self.agents.active_agent, self.agents.inactive_agent, self.objects
         )
 
+    def get_occluded_states(self, state: np.ndarray) -> np.ndarray:
+        return self.state.get_occluded_states(state)
+
     @property
     def num_agents(self) -> int:
         return 2

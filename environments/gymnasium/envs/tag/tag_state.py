@@ -354,3 +354,20 @@ class TagState:
 
     def _create_empty_partial_state(self):
         return np.ndarray(self.partial_state_size, dtype=np.uint8)
+
+    def get_occluded_states(self) -> np.ndarray:
+        if self.state_type != StateType.FULL:
+            raise ValueError(
+                f"Occlusion is only supported for full state type, not {self.state_type}"
+            )
+
+        states = np.ndarray(
+            (self.height, self.width, *self.full_state_size), dtype=np.uint8
+        )
+
+        for y in range(self.height):
+            for x in range(self.width):
+                state = self.state.full.copy()
+                states[y, x] = FullStateDataModifier.occlude(state, Position(x, y))
+
+        return states

@@ -1,5 +1,8 @@
 import numpy as np
 import pygame as pg
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+import matplotlib.colors as mcolors
 
 from utils import Color
 from .utils import q_value_to_color
@@ -33,6 +36,20 @@ class Renderer:
             q_values_surf.set_alpha(128)
             self.screen.blit(q_values_surf, (0, 0))
 
+        saliency_map = kwargs.get("saliency_map")
+        if saliency_map is not None:
+            print("Rendering saliency_map")
+            rgb_array = self._create_heatmap(saliency_map)
+            rgb_array = np.transpose(rgb_array, (1, 0, 2))
+            surf = pg.surfarray.make_surface(rgb_array)
+            saliency_map_surf = pg.surfarray.make_surface(rgb_array)
+            saliency_map_surf = pg.transform.scale(
+                saliency_map_surf, (self.screen_height, self.screen_width)
+            )
+            saliency_map_surf = pg.transform.flip(saliency_map_surf, True, False)
+            saliency_map_surf = pg.transform.rotate(saliency_map_surf, 90)
+            self.screen.blit(saliency_map_surf, (0, 0))
+
         surf = pg.surfarray.make_surface(background)
         surf.set_colorkey(Color.WHITE.value)
         self.screen.blit(surf, (0, 0))
@@ -40,6 +57,13 @@ class Renderer:
         pg.event.pump()
         self.clock.tick(self.metadata["render_fps"])
         pg.display.flip()
+
+    def _create_heatmap(self, values: np.ndarray) -> np.ndarray:
+        norm = mcolors.Normalize(vmin=values.min(), vmax=values.max())
+        colormap = cm.get_cmap("hot")
+        colored_map = colormap(norm(values))
+        rgb_array = (colored_map[..., :3] * 255).astype(np.uint8)
+        return rgb_array
 
     def _get_q_values_surf(self, q_values: np.ndarray) -> pg.Surface:
         color_matrix = np.full((self.height, self.width, 3), Color.WHITE.value)

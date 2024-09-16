@@ -28,6 +28,12 @@ class FullStateDataModifier:
         return new_state
 
     @staticmethod
+    def occlude(state: np.ndarray, position: Position) -> np.ndarray:
+        state_copy = state.copy()
+        state_copy[position.row_major_order] = TileType.EMPTY.value
+        return state_copy
+
+    @staticmethod
     def place_agent(
         state: np.ndarray, position: Position, agent: AgentType
     ) -> np.ndarray:

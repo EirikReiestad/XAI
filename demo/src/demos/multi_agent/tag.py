@@ -9,7 +9,8 @@ import torch
 
 from demo.src.common import EpisodeInformation
 from demo.src.plotters import Plotter
-from environments.gymnasium.wrappers import MultiAgentEnv
+from environments.gymnasium.wrappers import MultiAgentEnv, StateWrapper
+from methods.src.saliency_map import SaliencyMap
 from renderer import Renderer
 from rl.src.dqn.wrapper import MultiAgentDQN
 from rl.src.common.getter import get_torch_from_numpy
@@ -31,24 +32,24 @@ class TagDemo:
         self.renderer = Renderer(10, 10, 600, 600)
         env = gym.make("TagEnv-v0", render_mode="rgb_array")
         self.env: MultiAgentEnv = MultiAgentEnv(env)
+        self.saliency_map = SaliencyMap()
 
     def run(self):
-        dqn = MultiAgentDQN(self.env, 2, "dqnpolicy", wandb=False)
+        self.dqn = MultiAgentDQN(self.env, 2, "dqnpolicy", wandb=False)
+        self.dqn.learn(1)
 
         plt.ion()
 
-        self.env.reset()
+        self.env = StateWrapper(self.env)
 
         for i_episode in range(1000):
-            dqn.learn(1)
-
             state, _ = self.env.reset()
             state = torch.tensor(state, device=device, dtype=torch.float32).unsqueeze(0)
 
             agent_rewards = [0, 0]
 
             for t in count():
-                predicted_actions = dqn.predict(state)
+                predicted_actions = self.dqn.predict(state)
                 actions = [action.item() for action in predicted_actions]
                 (
                     full_state,
@@ -63,31 +64,7 @@ class TagDemo:
 
                 agent_rewards += rewards
 
-                state = torch.tensor(
-                    observation, device=device, dtype=torch.float32
-                ).unsqueeze(0)
-
-                rgb = self.env.render()
-
-                all_possible_states = self.env.get_wrapper_attr(
-                    "get_all_possible_states"
-                )()
-
-                states = np.zeros(
-                    (len(all_possible_states[0]), len(all_possible_states)),
-                    dtype=torch.Tensor,
-                )
-                for i, row in enumerate(all_possible_states):
-                    for j, column in enumerate(row):
-                        column = np.array(column, dtype=np.float32)
-                        torch_column = get_torch_from_numpy(column)
-                        states[j, i] = torch_column
-
-                q_values = dqn.get_q_values(states, 0)
-                q_values_map = get_q_values_map(states=full_state, q_values=q_values)
-
-                if isinstance(rgb, np.ndarray):
-                    self.renderer.render(background=rgb, q_values=q_values_map)
+                self.render_q_values_map(full_state)
 
                 if terminated or any(terminals) or any(truncated):
                     self.episode_information.durations.append(t + 1)
@@ -99,6 +76,38 @@ class TagDemo:
         self.plotter.update(self.episode_information, show_result=True)
         plt.ioff()
         plt.show()
+
+    def render_saliency_map(self, state: np.ndarray):
+        rgb = self.env.render()
+
+        occluded_states = self.env.get_occluded_states()
+        torch_state = get_torch_from_numpy(state)
+        saliency_map = self.saliency_map.generate(
+            torch_state, occluded_states, self.dqn, agent=0
+        )
+        if isinstance(rgb, np.ndarray):
+            self.renderer.render(background=rgb, saliency_map=saliency_map)
+
+    def render_q_values_map(self, full_state: np.ndarray):
+        rgb = self.env.render()
+
+        all_possible_states = self.env.get_all_possible_states()
+
+        states = np.zeros(
+            (len(all_possible_states[0]), len(all_possible_states)),
+            dtype=torch.Tensor,
+        )
+        for i, row in enumerate(all_possible_states):
+            for j, column in enumerate(row):
+                column = np.array(column, dtype=np.float32)
+                torch_column = get_torch_from_numpy(column)
+                states[j, i] = torch_column
+
+        q_values = self.dqn.get_q_values(states, 0)
+        q_values_map = get_q_values_map(states=full_state, q_values=q_values)
+
+        if isinstance(rgb, np.ndarray):
+            self.renderer.render(background=rgb, q_values=q_values_map)
 
 
 if __name__ == "__main__":
