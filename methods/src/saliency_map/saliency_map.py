@@ -51,6 +51,7 @@ class SaliencyMap:
         model: MultiAgentBase,
         agent: int,
     ):
+        print(state)
         current_reward = model.predict(state)[agent]
         heatmap = np.zeros_like(state)
 
