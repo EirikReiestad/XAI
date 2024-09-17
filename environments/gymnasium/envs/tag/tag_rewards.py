@@ -8,6 +8,7 @@ class TagRewards:
             "tagged": rewards.TAGGED_REWARD,
             "not_tagged": rewards.NOT_TAGGED_REWARD,
             "move": rewards.MOVE_REWARD,
+            "end": rewards.END_REWARD,
             "terminated": rewards.TERMINATED_REWARD,
             "truncated": rewards.TRUNCATED_REWARD,
             "collision": rewards.COLLISION_REWARD,
@@ -19,7 +20,7 @@ class TagRewards:
     ) -> tuple[tuple[float, float], bool]:
         if agent.distance_to(other_agent) <= radius:
             return self.tagged_reward, True
-        return (0, 0), False
+        return self.not_tagged_reward, False
 
     @property
     def tagged_reward(self):
@@ -36,6 +37,10 @@ class TagRewards:
     @property
     def collision_reward(self):
         return self.rewards["collision"]
+
+    @property
+    def end_reward(self):
+        return self.rewards["end"]
 
     @property
     def terminated_reward(self):

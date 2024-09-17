@@ -6,7 +6,6 @@ import matplotlib
 import matplotlib.pyplot as plt
 import torch
 
-from demo import settings
 from demo.src.common import EpisodeInformation
 from demo.src.plotters import Plotter
 from rl.src.dqn import DQN
@@ -28,7 +27,7 @@ class CartPoleDemo:
 
     def run(self):
         dqn = DQN(self.env, "dqnpolicy", wandb=True)
-        dqn.learn(150)
+        dqn.learn(200)
         print("Training complete")
 
         self.env = gym.make("CartPole-v1", render_mode="human")

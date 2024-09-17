@@ -44,11 +44,12 @@ class TagEnv(gym.Env):
         screen_width = 600
         screen_height = 600
         folder_name = "environments/gymnasium/data/tag/"
-        filename = "env-0-10-10.txt"
+        filename = "clean-env-0-10-10.txt"
         self.state_type = StateType.FULL
         self.tag_radius = 1
-        self.tag_head_start = 20
-        self.max_steps = 40
+        self.tag_head_start = 10
+        self.max_steps = 25
+        self.terminate_out_of_bounds = False
 
         folder_name = "environments/gymnasium/data/tag/"
         FileHandler.file_exist(folder_name, filename)
@@ -117,7 +118,7 @@ class TagEnv(gym.Env):
 
         self.steps += 1
         if self.steps >= self.max_steps:
-            reward = self.tag_rewards.truncated_reward[self.agents.active_agent.value]
+            reward = self.tag_rewards.terminated_reward
             return (
                 self.state.active_state,
                 reward,
@@ -213,6 +214,8 @@ class TagEnv(gym.Env):
             self.agents.inactive.position,
             self.tag_radius,
         )
+        if self.steps >= self.max_steps:
+            rewards = self.tag_rewards.end_reward
         self.render(self.render_mode)
         return state, rewards, terminated
 
@@ -294,7 +297,9 @@ class TagEnv(gym.Env):
             else:
                 return state, self.tag_rewards.collision_reward
         else:
-            return None, self.tag_rewards.terminated_reward
+            if self.terminate_out_of_bounds:
+                return None, self.tag_rewards.terminated_reward
+            return state, self.tag_rewards.collision_reward
 
     def _move_agent_within_bounds(
         self, state: np.ndarray, agent_position: Position

@@ -26,9 +26,12 @@ class MultiAgentDQN(MultiAgentBase):
         self.num_agents = num_agents
         self.agents = [DQN(env, dqn_policy, **kwargs) for _ in range(num_agents)]
 
-    def learn(self, total_timesteps: int):
+    def learn(self, total_timesteps: int) -> list[list[RolloutReturn]]:
+        results = []
         for _ in range(total_timesteps):
             result = self._collect_rollouts()
+            results.append(result)
+        return results
 
     def _collect_rollouts(self) -> list[RolloutReturn]:
         state, info = self.env.reset()
@@ -46,7 +49,7 @@ class MultiAgentDQN(MultiAgentBase):
             (
                 full_state,
                 observation,
-                terminated,
+                done,
                 observations,
                 rewards,
                 terminals,
@@ -107,7 +110,7 @@ class MultiAgentDQN(MultiAgentBase):
             state = observation
             state = torch.tensor(state, device=device, dtype=torch.float32).unsqueeze(0)
 
-            if terminated or any(terminals) or any(truncated):
+            if done:
                 break
 
         for i in range(self.num_agents):
