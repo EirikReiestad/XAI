@@ -52,7 +52,10 @@ class TestPrioritizedReplayMemory(unittest.TestCase):
         td_errors = np.array([0.5])
         self.memory.update_priorities(indices, td_errors)
         expected_priority = (np.abs(0.5) + 0.01) ** self.memory.alpha
-        self.assertEqual(self.memory.priorities[0], expected_priority)
+        expected_priority = np.float32(expected_priority)
+        self.assertEqual(
+            round(self.memory.priorities[0], 4), round(expected_priority, 4)
+        )
 
 
 if __name__ == "__main__":

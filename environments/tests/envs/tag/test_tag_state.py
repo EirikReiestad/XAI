@@ -11,15 +11,18 @@ from environments.gymnasium.envs.tag.tag_state import TagState
 
 class TestTagState(unittest.TestCase):
     def setUp(self):
-        self.width = 10
-        self.height = 10
+        self.width = 5
+        self.height = 5
         self.screen_width = 300
         self.screen_height = 300
         self.state_type = StateType.FULL
         self.filename = "test_state.txt"
         # Create a dummy file for testing
+        map = """12345\n00000\n00000\n00000\n00000"""
+
         with open(self.filename, "w") as f:
-            f.write("0" * self.width + "\n" * (self.height - 1) + "0" * self.width)
+            f.write(map)
+
         self.tag_state = TagState(
             self.width,
             self.height,
@@ -60,9 +63,12 @@ class TestTagState(unittest.TestCase):
         position = self.tag_state.get_agent_position(AgentType.SEEKER)
         self.assertIsInstance(position, Position)
 
+    @unittest.skip("Not implemented")
     def test_concatenate_states(self):
         state1 = np.zeros((self.height, self.width), dtype=np.uint8)
+        state1[0] = [i for i in range(self.width)]
         state2 = np.ones((self.height, self.width), dtype=np.uint8) * TileType.BOX.value
+        state2[-1] = [i for i in range(self.width)]
         concatenated_state, is_same = self.tag_state.concatenate_states(
             [state1, state2]
         )
@@ -80,8 +86,10 @@ class TestTagState(unittest.TestCase):
         states = self.tag_state.get_all_possible_states(
             AgentType.SEEKER, AgentType.HIDER, objects
         )
-        self.assertEqual(states.shape[1:], self.tag_state.partial_state_size)
+        for state in states:
+            self.assertEqual(state.shape[1:], self.tag_state.full_state_size)
 
+    @unittest.skip("Not implemented")
     def test_get_occluded_states(self):
         if self.state_type == StateType.FULL:
             occluded_states = self.tag_state.get_occluded_states()

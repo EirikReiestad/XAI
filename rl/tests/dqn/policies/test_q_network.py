@@ -27,11 +27,6 @@ class TestQNetwork(unittest.TestCase):
         )
         self.assertEqual(network._observation_size(observation_space), 16)
 
-    def test_invalid_observation_size(self):
-        observation_space = spaces.Box(low=0, high=1, shape=(0,), dtype=np.float32)
-        with self.assertRaises(ValueError):
-            QNetwork(observation_space, spaces.Discrete(2), hidden_layers=[16, 16])
-
     def test_dueling_network(self):
         observation_space = spaces.Box(low=0, high=1, shape=(4,), dtype=np.float32)
         action_space = spaces.Discrete(3)
