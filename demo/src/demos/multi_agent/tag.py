@@ -65,7 +65,7 @@ class TagDemo:
                 agent_rewards += rewards
 
                 # self.render_q_values_map(full_state)
-                self.render_saliency_map(full_state)
+                self.render_saliency_map(observation)
 
                 if terminated or any(terminals) or any(truncated):
                     self.episode_information.durations.append(t + 1)
