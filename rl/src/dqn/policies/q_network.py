@@ -49,7 +49,6 @@ class QNetwork(BasePolicy):
         return nn.Sequential(*layers)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        x = x.flatten()
         x = self.fc_feature(x)
 
         if self.dueling:
@@ -73,7 +72,8 @@ class QNetwork(BasePolicy):
                 )
             flat_size = np.prod(observation_space.shape, dtype=int)
             return int(flat_size)
-        else:
-            raise ValueError(
-                f"Invalid input shape: {observation_space.shape}. DQN only supports 1D input shapes"
-            )
+        elif len(observation_space.shape) == 1:
+            return int(observation_space.shape[0])
+        raise ValueError(
+            f"Invalid input shape: {observation_space.shape}. Observation space must be at least 1D."
+        )

@@ -168,7 +168,13 @@ class TagEnv(gym.Env):
 
         self.agents.set_next_agent()
 
-        return (self.state.active_state, reward, terminated, False, return_info)
+        return (
+            self.state.active_state,
+            reward,
+            terminated,
+            False,
+            return_info,
+        )
 
     def reset(
         self, *, seed: Optional[int] = None, options: Optional[Dict[str, Any]] = None
@@ -186,7 +192,8 @@ class TagEnv(gym.Env):
         self.steps = 0
         self.steps_beyond_terminated = None
 
-        return self.state.active_state, {"state_type": self.state_type.value}
+        return_state = self.state.active_state
+        return return_state, {"state_type": self.state_type.value}
 
     def render(self, render_mode: Optional[str] = None) -> Optional[np.ndarray]:
         return self.tag_renderer.render(self.state.full, render_mode)
@@ -307,10 +314,9 @@ class TagEnv(gym.Env):
 
         self.action_space = spaces.Discrete(self.num_actions)
 
-        observation_shape = self.state.active_state.shape
         if self.state_type.value == "full":
             self.observation_space = spaces.Box(
-                low=0, high=3, shape=observation_shape, dtype=np.uint8
+                low=0, high=8, shape=self.state.full.shape, dtype=np.uint8
             )
         elif self.state_type.value == "partial":
             self.observation_space = spaces.Box(

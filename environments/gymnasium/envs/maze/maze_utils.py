@@ -21,7 +21,7 @@ class MazeUtils:
             raise ValueError(
                 f"Invalid maze size. Expected {height}x{width}, got {len(env)}x{len(env[0])}"
             )
-        flatten_maze = np.array(env).flatten()
+        flatten_maze = np.array(env)
         if np.all(flatten_maze != TileType.END.value):
             raise ValueError("The goal position is not set.")
         if np.all(flatten_maze != TileType.START.value):
