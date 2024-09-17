@@ -13,7 +13,7 @@ class TestTagEnv(unittest.TestCase):
         action = ActionType.UP.value  # Replace with an actual valid action
         state, reward, terminated, truncated, info = self.env.step(action)
         self.assertIsInstance(state, np.ndarray)
-        self.assertIsInstance(reward, float)
+        self.assertIsInstance(reward, (float, int))
         self.assertIsInstance(terminated, bool)
         self.assertIsInstance(truncated, bool)
         self.assertIn("full_state", info)

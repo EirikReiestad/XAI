@@ -34,7 +34,6 @@ class DQN(SingleAgentBase):
         self,
         env: gym.Env,
         policy: str | DQNPolicy,
-        agent: int = 0,
         seed: int | None = None,
         dueling: bool = False,
         double: bool = False,

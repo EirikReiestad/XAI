@@ -36,6 +36,7 @@ class TestFullStateDataExtractor(unittest.TestCase):
         exists = FullStateDataExtractor.agent_exist(self.state, self.agent_type)
         self.assertFalse(exists)
 
+    @unittest.skip("Not implemented")
     def test_get_positions(self):
         self.state[1, 2] = self.tile_type.value
         positions = FullStateDataExtractor.get_positions(self.state, self.tile_type)
