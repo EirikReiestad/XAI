@@ -278,8 +278,9 @@ class DQN(SingleAgentBase):
         width = states.shape[1]
         for y in range(height):
             for x in range(width):
+                state = states[y, x].unsqueeze(0)  # Add batch dimension
                 with torch.no_grad():
-                    q_values[y, x] = self.policy_net(states[y, x]).cpu()
+                    q_values[y, x] = self.policy_net(state).cpu()
         return q_values
 
     def save(self, path: str) -> None:

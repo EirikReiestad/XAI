@@ -49,7 +49,6 @@ class QNetwork(BasePolicy):
         return nn.Sequential(*layers)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        print("forward", x.shape)
         x = torch.flatten(x, start_dim=1)
         x = self.fc_feature(x)
 
