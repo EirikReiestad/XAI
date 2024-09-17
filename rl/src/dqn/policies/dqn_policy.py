@@ -9,8 +9,8 @@ class DQNPolicy:
         action_space: spaces.Space,
         dueling: bool = False,
     ):
-        policy_net_hidden_layers = [128, 128]
-        target_net_hidden_layers = [128, 128]
+        policy_net_hidden_layers = [128, 64, 32]
+        target_net_hidden_layers = [128, 64, 32]
         self._policy_net: QNetwork = QNetwork(
             observation_space, action_space, policy_net_hidden_layers, dueling
         )

@@ -28,21 +28,23 @@ class TagDemo:
         self.episode_information = EpisodeInformation(
             durations=[], rewards=[], object_moved_distance=[]
         )
-        self.plotter = Plotter()
-        self.renderer = Renderer(10, 10, 600, 600)
-        env = gym.make("TagEnv-v0", render_mode="rgb_array")
+        env = gym.make("TagEnv-v0", render_mode="human")
         self.env = MultiAgentEnv(env)
-        self.dqn = MultiAgentDQN(self.env, 2, "dqnpolicy", wandb=False)
-        self.saliency_map = SaliencyMap()
+        self.dqn = MultiAgentDQN(self.env, 2, "dqnpolicy", wandb=True)
 
     def run(self):
-        self.dqn.learn(1)
+        self.dqn.learn(1000)
+
+        self.plotter = Plotter()
+        self.renderer = Renderer(10, 10, 600, 600)
+        self.saliency_map = SaliencyMap()
 
         plt.ion()
 
         self.env = StateWrapper(self.env)
 
         for i_episode in range(1000):
+            self.dqn.learn(10)
             state, _ = self.env.reset()
             state = torch.tensor(state, device=device, dtype=torch.float32).unsqueeze(0)
 
@@ -62,10 +64,10 @@ class TagDemo:
                     _,
                 ) = self.env.get_wrapper_attr("step_multiple")(actions)
 
-                agent_rewards += rewards
+                agent_rewards = [e + r for e, r in zip(agent_rewards, rewards)]
 
                 # self.render_q_values_map(full_state)
-                self.render_saliency_map(observation)
+                # self.render_saliency_map(observation)
 
                 if terminated or any(terminals) or any(truncated):
                     self.episode_information.durations.append(t + 1)
