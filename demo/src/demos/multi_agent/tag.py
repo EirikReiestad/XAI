@@ -30,7 +30,7 @@ class TagDemo:
         )
         self.plotter = Plotter()
         self.renderer = Renderer(10, 10, 600, 600)
-        env = gym.make("TagEnv-v0", render_mode="human")
+        env = gym.make("TagEnv-v0", render_mode="rgb_array")
         self.env = MultiAgentEnv(env)
         self.dqn = MultiAgentDQN(self.env, 2, "dqnpolicy", wandb=False)
         self.saliency_map = SaliencyMap()
@@ -65,7 +65,7 @@ class TagDemo:
                 agent_rewards += rewards
 
                 # self.render_q_values_map(full_state)
-                # self.render_saliency_map(observation)
+                self.render_saliency_map(observation)
 
                 if terminated or any(terminals) or any(truncated):
                     self.episode_information.durations.append(t + 1)
@@ -83,6 +83,7 @@ class TagDemo:
 
         occluded_states = self.env.get_occluded_states()
         torch_state = get_torch_from_numpy(state)
+        torch_state.unsqueeze(0)
         saliency_map = self.saliency_map.generate(
             torch_state, occluded_states, self.dqn, agent=0
         )
@@ -98,6 +99,7 @@ class TagDemo:
             (len(all_possible_states[0]), len(all_possible_states)),
             dtype=torch.Tensor,
         )
+
         for i, row in enumerate(all_possible_states):
             for j, column in enumerate(row):
                 column = np.array(column, dtype=np.float32)

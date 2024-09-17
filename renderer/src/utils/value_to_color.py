@@ -1,11 +1,12 @@
 import matplotlib.pyplot as plt
 
 
-def q_value_to_color(
-    q_value: float, min_q: float, max_q: float
-) -> tuple[int, int, int]:
+def value_to_color(value: float, min: float, max: float) -> tuple[int, int, int]:
     """Map a Q-value to a color based on its magnitude."""
-    normalized = (q_value - min_q) / (max_q - min_q)  # Normalize Q-value
+    if max - min == 0:
+        normalized = 0
+    else:
+        normalized = (value - min) / (max - min)  # Normalize Q-value
 
     colormap = plt.get_cmap("coolwarm")
     rgba_color = colormap(normalized)

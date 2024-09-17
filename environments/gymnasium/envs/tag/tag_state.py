@@ -11,6 +11,7 @@ from environments.gymnasium.envs.tag.utils import (
     Object,
     ObjectType,
 )
+from rl.src.common.getter import get_torch_from_numpy
 from environments.gymnasium.utils import Position, State, StateType
 from utils import Color
 
@@ -368,5 +369,7 @@ class TagState:
         for y in range(self.height):
             for x in range(self.width):
                 state = self.state.full.copy()
-                states[y, x] = FullStateDataModifier.occlude(state, Position(x, y))
+                state = FullStateDataModifier.occlude(state, Position(x, y))
+                torch_state = get_torch_from_numpy(state)
+                states[y, x] = torch_state.unsqueeze(0)
         return states
