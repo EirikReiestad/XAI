@@ -31,17 +31,11 @@ class SaliencyMap:
 
         for row in range(heatmap.shape[0]):
             for col in range(heatmap.shape[1]):
-                occluded_state = state.clone()
+                occluded_state = torch.tensor(
+                    occluded_states[row, col], device=device, dtype=torch.float32
+                ).unsqueeze(0)
                 occluded_reward = model.predict(occluded_state)
                 heatmap[row, col] = current_reward - occluded_reward
-
-        for i, occluded_state in enumerate(occluded_states):
-            occluded_state = torch.tensor(
-                occluded_state, device=device, dtype=torch.float32
-            ).unsqueeze(0)
-            occluded_reward = model.predict(occluded_state)
-            heatmap[i] = current_reward - occluded_reward
-
         return heatmap
 
     def generate_multi_agent(
@@ -51,13 +45,12 @@ class SaliencyMap:
         model: MultiAgentBase,
         agent: int,
     ):
-        print(state)
         current_reward = model.predict(state)[agent]
         heatmap = np.zeros_like(state)
 
         for row in range(heatmap.shape[0]):
             for col in range(heatmap.shape[1]):
-                occluded_state = state.clone()
+                occluded_state = state.clone().unsqueeze(0)
                 occluded_reward = model.predict(occluded_state)[agent]
                 heatmap[row, col] = current_reward - occluded_reward
 
@@ -65,6 +58,7 @@ class SaliencyMap:
             occluded_state = torch.tensor(
                 occluded_state, device=device, dtype=torch.float32
             ).unsqueeze(0)
+            print(occluded_state.shape)
             occluded_reward = model.predict(occluded_state)[agent]
             heatmap[i] = current_reward - occluded_reward
         return heatmap
