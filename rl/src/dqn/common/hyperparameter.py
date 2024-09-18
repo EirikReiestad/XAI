@@ -19,16 +19,3 @@ class DQNHyperparameter:
             f"eps_end={self.eps_end}, eps_decay={self.eps_decay}, "
             f"batch_size={self.batch_size}, tau={self.tau}"
         )
-
-    @classmethod
-    def default(cls) -> "DQNHyperparameter":
-        """Return default hyperparameters."""
-        return cls(
-            lr=1e-4,
-            gamma=0.99,
-            eps_start=0.9,
-            eps_end=0.05,
-            eps_decay=1000,
-            batch_size=128,
-            tau=0.005,
-        )
