@@ -32,14 +32,14 @@ class MultiAgentDQN(MultiAgentBase):
     def learn(self, total_timesteps: int) -> list[list[RolloutReturn]]:
         results = []
         for i in range(total_timesteps):
-            result = self._collect_rollouts()
+            result = self._collect_rollouts(i)
             results.append(result)
             if i % self.save_every_n_episodes == 0:
                 self.save(str(i))
-            self.wandb_manager.log({"episode": i})
+            self.wandb_manager.log({"episode": i}, step=i)
         return results
 
-    def _collect_rollouts(self) -> list[RolloutReturn]:
+    def _collect_rollouts(self, episode: int) -> list[RolloutReturn]:
         state, info = self.env.reset()
         state = torch.tensor(state, device=device, dtype=torch.float32).unsqueeze(0)
 
@@ -123,7 +123,8 @@ class MultiAgentDQN(MultiAgentBase):
             self.wandb_manager.log(
                 {
                     f"agent{i}_reward": episode_rewards[i],
-                }
+                },
+                step=episode,
             )
             for key, value in data[i].items():
                 self.wandb_manager.log(
@@ -135,7 +136,8 @@ class MultiAgentDQN(MultiAgentBase):
         self.wandb_manager.log(
             {
                 "episode_length": episode_length,
-            }
+            },
+            step=episode,
         )
 
         return rollout_returns

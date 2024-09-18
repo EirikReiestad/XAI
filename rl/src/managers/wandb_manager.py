@@ -27,10 +27,10 @@ class WandBManager:
             tags=config.tags,
         )
 
-    def log(self, data: dict):
+    def log(self, data: dict, step=None):
         if not self.active:
             return
-        wandb.log(data)
+        wandb.log(data, step=step)
 
     def finish(self):
         if not self.active:
