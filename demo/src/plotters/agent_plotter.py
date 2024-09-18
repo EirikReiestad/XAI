@@ -8,6 +8,8 @@ from matplotlib.pyplot import cm
 
 from demo.src.common import EpisodeInformation
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 class AgentPlotter:
     """Handles plotting of training progress."""
@@ -59,8 +61,12 @@ class AgentPlotter:
         self._set_axis()
 
         for i, episode_info in enumerate(episodes_information):
-            durations_t = torch.tensor(episode_info.durations, dtype=torch.float)
-            rewards_t = torch.tensor(episode_info.rewards, dtype=torch.float)
+            durations_t = torch.tensor(
+                episode_info.durations, device=device, dtype=torch.float
+            )
+            rewards_t = torch.tensor(
+                episode_info.rewards, device=device, dtype=torch.float
+            )
             self._plot_metrics(
                 durations_t, rewards_t, label=labels[i], color=valid_colors[i]
             )

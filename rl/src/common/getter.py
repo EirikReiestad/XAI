@@ -4,6 +4,8 @@ import numpy as np
 import torch
 from gymnasium import spaces
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 def get_numpy(a: np.ndarray | torch.Tensor | tuple[int, ...] | None) -> np.ndarray:
     if isinstance(a, np.ndarray):
@@ -36,7 +38,7 @@ def get_same_type(
     if isinstance(b, np.ndarray):
         return np.array(a)
     elif isinstance(b, torch.Tensor):
-        return torch.tensor(a)
+        return torch.tensor(a, device=device)
     elif isinstance(b, tuple):
         if isinstance(a, np.ndarray):
             return tuple(a.tolist())
@@ -50,5 +52,5 @@ def get_torch_from_numpy(a: torch.Tensor | np.ndarray) -> torch.Tensor:
     if isinstance(a, torch.Tensor):
         return a
     if isinstance(a, np.ndarray):
-        return torch.tensor(a)
+        return torch.tensor(a, device=device, dtype=torch.float32)
     raise ValueError(f"Type of a: {type(a)} is not supported.")
