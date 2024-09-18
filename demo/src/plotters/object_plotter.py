@@ -4,6 +4,8 @@ from IPython import display
 
 from demo.src.common import EpisodeInformation
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 class ObjectPlotter:
     """Handles plotting of training progress."""
@@ -27,7 +29,7 @@ class ObjectPlotter:
 
         for _, episode_info in enumerate(episodes_information):
             object_moved_distance_t = torch.tensor(
-                episode_info.object_moved_distance, dtype=torch.float
+                episode_info.object_moved_distance, device=device, dtype=torch.float
             )
             self._plot_metrics(object_moved_distance_t)
 

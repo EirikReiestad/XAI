@@ -1,6 +1,8 @@
 import numpy as np
 import torch
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 def preprocess_state(state: torch.Tensor | np.ndarray) -> torch.Tensor:
     """
@@ -14,7 +16,7 @@ def preprocess_state(state: torch.Tensor | np.ndarray) -> torch.Tensor:
     """
     # Convert the NumPy array to a PyTorch tensor
     if isinstance(state, np.ndarray):
-        torch_state = torch.tensor(state, dtype=torch.float32)
+        torch_state = torch.tensor(state, device=device, dtype=torch.float32)
     else:
         torch_state = state
 
