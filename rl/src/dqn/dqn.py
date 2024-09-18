@@ -230,6 +230,7 @@ class DQN(SingleAgentBase):
 
         state_batch = state_batch.to(device)
         action_batch = action_batch.to(device)
+        reward_batch = reward_batch.to(device)
 
         state_action_values = self.policy_net(state_batch).gather(1, action_batch)
         next_state_values = torch.zeros(self.hp.batch_size, device=device)
