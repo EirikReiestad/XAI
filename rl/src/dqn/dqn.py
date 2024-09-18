@@ -207,6 +207,8 @@ class DQN(SingleAgentBase):
         if not self._can_optimize():
             return
 
+        device = next(self.policy_net.parameters()).device
+
         transitions, indices, weights = self.memory.sample(self.hp.batch_size)
         batch = Transition(*zip(*transitions))
 
