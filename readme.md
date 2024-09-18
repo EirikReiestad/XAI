@@ -1,10 +1,15 @@
 ## Run
-python -m 'filename'
+### Install Poetry
+pip install poetry
 
-**make sure you are in the correct directory**
+### Install dependencies
+poetry install
+
+### Run the project
+poetry run python demo
 
 ## Test
-python -m unittest discover -s *foldername*
+poetry run python -m unittest discover
 
 ## Naming conventions for git
 ### Git branch prefixes
@@ -22,3 +27,9 @@ release/v1.0
 
 hotfix/fix-login-bug
 
+### Commit messages
+- `feat:` - new feature
+- `fix:` - bug fix
+- `refactor:` - code refactoring
+- `docs:` - changes in documentation
+- `idun:` - changes to IDUN 
