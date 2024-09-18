@@ -28,12 +28,13 @@ class TagDemo:
         self.episode_information = EpisodeInformation(
             durations=[], rewards=[], object_moved_distance=[]
         )
-        env = gym.make("TagEnv-v0", render_mode="human")
+        env = gym.make("TagEnv-v0", render_mode="rgb_array")
         self.env = MultiAgentEnv(env)
         self.dqn = MultiAgentDQN(self.env, 2, "dqnpolicy", wandb=True)
 
     def run(self):
-        self.dqn.learn(1000)
+        self.dqn.learn(100000)
+        return
 
         self.plotter = Plotter()
         self.renderer = Renderer(10, 10, 600, 600)
