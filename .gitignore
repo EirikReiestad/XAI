@@ -6,6 +6,7 @@ history/models/maze/*
 history/models/tag/*
 
 rl/models/*
+!rl/models/.gitkeep
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
