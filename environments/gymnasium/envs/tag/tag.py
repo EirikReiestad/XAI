@@ -44,11 +44,11 @@ class TagEnv(gym.Env):
         screen_width = 600
         screen_height = 600
         folder_name = "environments/gymnasium/data/tag/"
-        filename = "clean-env-0-10-10.txt"
-        self.state_type = StateType.FULL
+        filename = "env-0-10-10.txt"
+        self.state_type = StateType.PARTIAL
         self.tag_radius = 1
-        self.tag_head_start = 10
-        self.max_steps = 25
+        self.tag_head_start = 20
+        self.max_steps = 50
         self.terminate_out_of_bounds = False
 
         folder_name = "environments/gymnasium/data/tag/"
@@ -234,11 +234,14 @@ class TagEnv(gym.Env):
     def _do_action(self, action: ActionType) -> tuple[Optional[np.ndarray], float]:
         reward = 0
         if action == ActionType.GRAB_RELEASE:
-            grab = self._grab_entity()
-            release = self._release_entity()
-            reward += (
-                self.tag_rewards.wrong_grab_release_reward if not grab or release else 0
-            )
+            if self.agents.active.grabbed_object is not None:
+                release = self._release_entity()
+                reward += (
+                    self.tag_rewards.wrong_grab_release_reward if not release else 0
+                )
+            else:
+                grab = self._grab_entity()
+                reward += self.tag_rewards.wrong_grab_release_reward if not grab else 0
         new_full_state, move_reward = self._move_agent(self.state.full, action)
         reward += move_reward
         if new_full_state is None:
