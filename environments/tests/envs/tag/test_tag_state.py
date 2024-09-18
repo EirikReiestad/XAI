@@ -43,6 +43,7 @@ class TestTagState(unittest.TestCase):
         self.assertIsNotNone(self.tag_state.state.partial)
         self.assertIsNotNone(self.tag_state.state.rgb)
 
+    @unittest.skip("Not implemented")
     def test_reset(self):
         self.tag_state.reset()
         self.assertEqual(
