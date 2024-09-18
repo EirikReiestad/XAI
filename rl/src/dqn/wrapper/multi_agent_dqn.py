@@ -26,18 +26,17 @@ class MultiAgentDQN(MultiAgentBase):
         self.num_agents = num_agents
         self.agents = [DQN(env, dqn_policy, **kwargs) for _ in range(num_agents)]
 
-        self.episode_count = 0
         self.save_every_n_episodes = kwargs.get("save_every_n_episodes", 10)
 
     def learn(self, total_timesteps: int) -> list[list[RolloutReturn]]:
         results = []
-        for _ in range(total_timesteps):
+        for i in range(total_timesteps):
+            print(i)
             result = self._collect_rollouts()
             results.append(result)
-            self.episode_count += 1
-            if self.episode_count % self.save_every_n_episodes == 0:
-                print("Saving...", self.episode_count)
-                self.save(str(self.episode_count))
+            if i % self.save_every_n_episodes == 0:
+                print("Saving...", i)
+                self.save(str(i))
         return results
 
     def _collect_rollouts(self) -> list[RolloutReturn]:
