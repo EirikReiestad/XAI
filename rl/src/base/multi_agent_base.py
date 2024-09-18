@@ -16,9 +16,9 @@ class MultiAgentBase(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def save(self, path: str):
+    def save(self):
         raise NotImplementedError
 
     @abstractmethod
-    def load(self, path: str):
+    def load(self):
         raise NotImplementedError
