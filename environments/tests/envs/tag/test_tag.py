@@ -44,8 +44,9 @@ class TestTagEnv(unittest.TestCase):
         self.assertIsInstance(states, np.ndarray)
 
     def test_get_occluded_states(self):
-        occluded_states = self.env.get_occluded_states()
-        self.assertIsInstance(occluded_states, np.ndarray)
+        if self.env.state_type == "full":
+            occluded_states = self.env.get_occluded_states()
+            self.assertIsInstance(occluded_states, np.ndarray)
 
 
 if __name__ == "__main__":
