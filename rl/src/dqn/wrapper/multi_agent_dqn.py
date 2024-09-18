@@ -27,7 +27,7 @@ class MultiAgentDQN(MultiAgentBase):
         self.agents = [DQN(env, dqn_policy, **kwargs) for _ in range(num_agents)]
 
         self.episode_count = 0
-        self.save_every_n_episodes = kwargs.get("save_every_n_episodes", 100)
+        self.save_every_n_episodes = kwargs.get("save_every_n_episodes", 1000)
 
     def learn(self, total_timesteps: int) -> list[list[RolloutReturn]]:
         results = []
@@ -36,7 +36,7 @@ class MultiAgentDQN(MultiAgentBase):
             results.append(result)
             self.episode_count += 1
             if self.episode_count % self.save_every_n_episodes == 0:
-                self.save()
+                self.save(str(self.episode_count))
         return results
 
     def _collect_rollouts(self) -> list[RolloutReturn]:
@@ -147,9 +147,11 @@ class MultiAgentDQN(MultiAgentBase):
         for i in range(self.num_agents):
             self.agents[i].load()
 
-    def save(self):
+    def save(self, append: str = ""):
         for i in range(self.num_agents):
-            self.agents[i].save(f"_agent{i}_", wandb_manager=self.wandb_manager)
+            self.agents[i].save(
+                f"_agent{i}_{append}_", wandb_manager=self.wandb_manager
+            )
 
     def get_q_values(self, states: np.ndarray, agent: int) -> np.ndarray:
         return self.agents[agent].get_q_values(states)
