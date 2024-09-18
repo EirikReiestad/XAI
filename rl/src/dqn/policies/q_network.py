@@ -50,6 +50,7 @@ class QNetwork(BasePolicy):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = torch.flatten(x, start_dim=1)
+        x = x.to(next(self.fc_feature.parameters()).device)
         x = self.fc_feature(x)
 
         if self.dueling:
