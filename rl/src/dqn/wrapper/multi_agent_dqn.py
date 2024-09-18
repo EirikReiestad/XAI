@@ -19,7 +19,7 @@ class MultiAgentDQN(MultiAgentBase):
         num_agents: int,
         dqn_policy: str | DQNPolicy,
         wandb: bool = False,
-        save_every_n_episodes: int = 10,
+        save_every_n_episodes: int = 100,
         **kwargs,
     ):
         super().__init__(wandb=wandb)
