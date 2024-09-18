@@ -85,17 +85,16 @@ class DQN(SingleAgentBase):
 
         self.double = double
         self.steps_done = 0
-        self.episode_count = 0
 
     def learn(self, total_timesteps: int):
-        for _ in range(total_timesteps):
-            result = self._collect_rollout()
-            self.episode_count += 1
-            if self.episode_count % self.save_every_n_episodes == 0:
+        for i in range(total_timesteps):
+            print("epoch:", i)
+            _ = self._collect_rollout()
+            if i % self.save_every_n_episodes == 0:
                 self.save()
 
     def _collect_rollout(self) -> RolloutReturn:
-        state, info = self.env.reset()
+        state, _ = self.env.reset()
         state = torch.tensor(state, device=device, dtype=torch.float32).unsqueeze(0)
         rewards = 0
         episode_length = 0
@@ -104,9 +103,7 @@ class DQN(SingleAgentBase):
 
         for t in count():
             action = self.predict(state)
-            observation, reward, terminated, truncated, info = self.env.step(
-                action.item()
-            )
+            observation, reward, terminated, truncated, _ = self.env.step(action.item())
             next_state = torch.tensor(
                 observation, device=device, dtype=torch.float32
             ).unsqueeze(0)
