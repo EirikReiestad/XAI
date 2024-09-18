@@ -7,5 +7,7 @@
 #SBATCH --mem=5G              # 5 gigabytes memory
 #SBATCH --output=log.txt    # Log file
 
+module purge
 module load Python/3.11.5-GCCcore-13.2.0
+module list
 poetry run python demo
