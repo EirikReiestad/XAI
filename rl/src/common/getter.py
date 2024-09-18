@@ -11,6 +11,8 @@ def get_numpy(a: np.ndarray | torch.Tensor | tuple[int, ...] | None) -> np.ndarr
     if isinstance(a, np.ndarray):
         return a
     elif isinstance(a, torch.Tensor):
+        if a.is_cuda:
+            return a.cpu().numpy()
         return a.numpy()
     elif isinstance(a, tuple):
         return np.array(a)
