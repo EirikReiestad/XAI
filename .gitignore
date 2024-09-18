@@ -5,6 +5,8 @@ history/models/coop/*
 history/models/maze/*
 history/models/tag/*
 
+rl/models/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -1,5 +1,4 @@
 import logging
-import datetime as dt
 from itertools import count
 
 import gymnasium as gym
@@ -30,8 +29,7 @@ class TagDemo:
             durations=[], rewards=[], object_moved_distance=[]
         )
         env = gym.make("TagEnv-v0", render_mode="rgb_array")
-        current_date = dt.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-        model_name = f"tag/{current_date}-tag-v0"
+        model_name = "tag-v0"
         self.env = MultiAgentEnv(env)
         self.dqn = MultiAgentDQN(
             self.env,
