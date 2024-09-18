@@ -35,13 +35,17 @@ class MultiAgentDQN(MultiAgentBase):
             rollout, episode_rewards, steps, episode_data = self._collect_rollouts()
 
             log = dict()
-            for i in range(self.num_agents):
-                log[f"agent{i}_reward"] = episode_rewards[i],
-                log[f"steps"] = steps,
-                for key, value in episode_data[i].items():
-                    log[f"agent{i}_{key}"] = value
+            for agent in range(self.num_agents):
+                log[f"agent{agent}_reward"] = episode_rewards[agent]
+                log["steps"] = steps
+                log["episode"] = i
+                for key, value in episode_data[agent].items():
+                    log[f"agent{agent}_{key}"] = value
             self.wandb_manager.log(log)
             results.append(rollout)
+
+            if i % self.save_every_n_episodes == 0:
+                self.save(append=f"episode_{i}")
         return results
 
     def _collect_rollouts(
@@ -127,9 +131,6 @@ class MultiAgentDQN(MultiAgentBase):
                 break
 
         return rollout_returns, episode_rewards, episode_length, data
-
-    def _wandb_log()
-
 
     def predict(self, state: torch.Tensor) -> list[torch.Tensor]:
         return [agent.predict(state) for agent in self.agents]

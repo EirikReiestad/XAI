@@ -38,8 +38,6 @@ class WandBManager:
         wandb.finish()
 
     def save(self, path: str):
-        logging.info(f"Trying to save model to {path}...")
         if not self.active:
             return
-        logging.info(f"Saving model to {path}")
         wandb.save(path)
