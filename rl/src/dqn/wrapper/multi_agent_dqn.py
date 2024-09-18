@@ -32,14 +32,21 @@ class MultiAgentDQN(MultiAgentBase):
     def learn(self, total_timesteps: int) -> list[list[RolloutReturn]]:
         results = []
         for i in range(total_timesteps):
-            result = self._collect_rollouts(i)
-            results.append(result)
-            if i % self.save_every_n_episodes == 0:
-                self.save(str(i))
-            self.wandb_manager.log({"episode": i}, step=i)
+            rollout, episode_rewards, steps, episode_data = self._collect_rollouts()
+
+            log = dict()
+            for i in range(self.num_agents):
+                log[f"agent{i}_reward"] = episode_rewards[i],
+                log[f"steps"] = steps,
+                for key, value in episode_data[i].items():
+                    log[f"agent{i}_{key}"] = value
+            self.wandb_manager.log(log)
+            results.append(rollout)
         return results
 
-    def _collect_rollouts(self, episode: int) -> list[RolloutReturn]:
+    def _collect_rollouts(
+        self,
+    ) -> tuple[list[RolloutReturn], list[float], int, list[dict]]:
         state, info = self.env.reset()
         state = torch.tensor(state, device=device, dtype=torch.float32).unsqueeze(0)
 
@@ -119,28 +126,10 @@ class MultiAgentDQN(MultiAgentBase):
             if done:
                 break
 
-        for i in range(self.num_agents):
-            self.wandb_manager.log(
-                {
-                    f"agent{i}_reward": episode_rewards[i],
-                },
-                step=episode,
-            )
-            for key, value in data[i].items():
-                self.wandb_manager.log(
-                    {
-                        f"agent{i}_{key}": value,
-                    }
-                )
+        return rollout_returns, episode_rewards, episode_length, data
 
-        self.wandb_manager.log(
-            {
-                "episode_length": episode_length,
-            },
-            step=episode,
-        )
+    def _wandb_log()
 
-        return rollout_returns
 
     def predict(self, state: torch.Tensor) -> list[torch.Tensor]:
         return [agent.predict(state) for agent in self.agents]
