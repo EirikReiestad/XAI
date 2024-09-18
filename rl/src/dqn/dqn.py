@@ -44,12 +44,12 @@ class DQN(SingleAgentBase):
         gamma: float = 0.99,
         epsilon_start: float = 0.9,
         epsilon_end: float = 0.05,
-        epsilon_decay: int = 100000,
+        epsilon_decay: int = 10000,
         batch_size: int = 128,
         tau: float = 0.005,
         wandb: bool = False,
         save_model: bool = False,
-        model_path: str = "rl/models/",
+        model_path: str = "rl/models",
         model_name: str = "dqn",
     ) -> None:
         super().__init__(wandb)

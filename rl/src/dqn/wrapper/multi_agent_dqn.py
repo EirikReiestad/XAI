@@ -36,6 +36,7 @@ class MultiAgentDQN(MultiAgentBase):
             results.append(result)
             self.episode_count += 1
             if self.episode_count % self.save_every_n_episodes == 0:
+                print("Saving...", self.episode_count)
                 self.save(str(self.episode_count))
         return results
 
