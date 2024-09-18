@@ -35,3 +35,8 @@ class WandBManager:
         if not self.active:
             return
         wandb.finish()
+
+    def save(self, path: str):
+        if not self.active:
+            return
+        wandb.save(path)

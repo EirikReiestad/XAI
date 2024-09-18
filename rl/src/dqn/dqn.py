@@ -19,6 +19,7 @@ from .common.hyperparameter import DQNHyperparameter
 from .components.types import Rollout, RolloutReturn, Transition
 from .managers import MemoryManager, OptimizerManager, PolicyManager
 from .policies import DQNPolicy, QNetwork
+from rl.src.managers import WandBManager
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -35,6 +36,7 @@ class DQN(SingleAgentBase):
         env: gym.Env,
         policy: str | DQNPolicy,
         seed: int | None = None,
+        agent_id: int = 0,
         dueling: bool = False,
         double: bool = False,
         memory_size: int = 10000,
@@ -46,6 +48,9 @@ class DQN(SingleAgentBase):
         batch_size: int = 128,
         tau: float = 0.005,
         wandb: bool = False,
+        save_model: bool = False,
+        model_path: str = "rl/models/",
+        model_name: str = "dqn",
     ) -> None:
         super().__init__(wandb)
 
@@ -53,6 +58,12 @@ class DQN(SingleAgentBase):
 
         self.env = env
         self.n_actions = env.action_space.n
+        self.agent_id = agent_id
+
+        self.save_model = save_model
+        self.model_path = model_path
+        self.model_name = model_name
+        self.save_every_n_episodes = 100
 
         self.hp = DQNHyperparameter(
             lr, gamma, epsilon_start, epsilon_end, epsilon_decay, batch_size, tau
@@ -74,10 +85,14 @@ class DQN(SingleAgentBase):
 
         self.double = double
         self.steps_done = 0
+        self.episode_count = 0
 
     def learn(self, total_timesteps: int):
         for _ in range(total_timesteps):
             result = self._collect_rollout()
+            self.episode_count += 1
+            if self.episode_count % self.save_every_n_episodes == 0:
+                self.save()
 
     def _collect_rollout(self) -> RolloutReturn:
         state, info = self.env.reset()
@@ -283,8 +298,12 @@ class DQN(SingleAgentBase):
                     q_values[y, x] = self.policy_net(state).cpu()
         return q_values
 
-    def save(self, path: str) -> None:
+    def save(
+        self, additional_filename: str = "", wandb_manager: WandBManager | None = None
+    ) -> None:
         """Save the policy network to the specified path."""
+        path = f"{self.model_path}/{self.model_name}{additional_filename}"
+
         if not path.endswith(".pt"):
             path += ".pt"
         torch.save(self.policy_net.state_dict(), path)
@@ -294,9 +313,13 @@ class DQN(SingleAgentBase):
         }
         meta_data_path = path.replace(".pt", "_meta_data.json")
         json.dump(meta_data, open(meta_data_path, "w"))
+        if wandb_manager is not None:
+            wandb_manager.save(path)
+        self.wandb_manager.save(path)
 
-    def load(self, path: str) -> None:
+    def load(self) -> None:
         """Load the policy network from the specified path."""
+        path = f"{self.model_path}/{self.model_name}"
         if not path.endswith(".pt"):
             path += ".pt"
         self.policy_net.load_state_dict(torch.load(path, weights_only=True))

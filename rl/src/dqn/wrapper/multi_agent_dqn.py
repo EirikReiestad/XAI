@@ -26,11 +26,17 @@ class MultiAgentDQN(MultiAgentBase):
         self.num_agents = num_agents
         self.agents = [DQN(env, dqn_policy, **kwargs) for _ in range(num_agents)]
 
+        self.episode_count = 0
+        self.save_every_n_episodes = kwargs.get("save_every_n_episodes", 100)
+
     def learn(self, total_timesteps: int) -> list[list[RolloutReturn]]:
         results = []
         for _ in range(total_timesteps):
             result = self._collect_rollouts()
             results.append(result)
+            self.episode_count += 1
+            if self.episode_count % self.save_every_n_episodes == 0:
+                self.save()
         return results
 
     def _collect_rollouts(self) -> list[RolloutReturn]:
@@ -137,13 +143,13 @@ class MultiAgentDQN(MultiAgentBase):
     def predict(self, state: torch.Tensor) -> list[torch.Tensor]:
         return [agent.predict(state) for agent in self.agents]
 
-    def load(self, path: str):
+    def load(self):
         for i in range(self.num_agents):
-            self.agents[i].load(str(i) + path)
+            self.agents[i].load()
 
-    def save(self, path: str):
+    def save(self):
         for i in range(self.num_agents):
-            self.agents[i].save(str(i) + path)
+            self.agents[i].save(f"_agent{i}_", wandb_manager=self.wandb_manager)
 
     def get_q_values(self, states: np.ndarray, agent: int) -> np.ndarray:
         return self.agents[agent].get_q_values(states)
