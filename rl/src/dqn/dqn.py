@@ -49,6 +49,7 @@ class DQN(SingleAgentBase):
         tau: float = 0.005,
         wandb: bool = False,
         save_model: bool = False,
+        save_every_n_episodes: int = 100,
         model_path: str = "rl/models",
         model_name: str = "dqn",
     ) -> None:
@@ -63,7 +64,7 @@ class DQN(SingleAgentBase):
         self.save_model = save_model
         self.model_path = model_path
         self.model_name = model_name
-        self.save_every_n_episodes = 100
+        self.save_every_n_episodes = save_every_n_episodes
 
         self.hp = DQNHyperparameter(
             lr, gamma, epsilon_start, epsilon_end, epsilon_decay, batch_size, tau
@@ -88,7 +89,6 @@ class DQN(SingleAgentBase):
 
     def learn(self, total_timesteps: int):
         for i in range(total_timesteps):
-            print("epoch:", i)
             _ = self._collect_rollout()
             if i % self.save_every_n_episodes == 0:
                 self.save()
