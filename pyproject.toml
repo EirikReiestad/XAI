@@ -15,6 +15,7 @@ pygame = "^2.6.0"
 numpy = "^2.0.1"
 pylint = "^3.2.6"
 ipython = "^8.26.0"
+scipy = "^1.14.1"
 
 [tool.pyright]
 venvPath = "."
