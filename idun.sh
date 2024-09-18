@@ -10,4 +10,10 @@
 module purge
 module load Python/3.11.5-GCCcore-13.2.0
 module list
+
+pip install poetry
+poetry install
+
+poetry run wandb login
+
 poetry run python demo
