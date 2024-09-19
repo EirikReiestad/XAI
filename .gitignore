@@ -4,9 +4,11 @@ wandb/offline-run-*
 history/models/coop/*
 history/models/maze/*
 history/models/tag/*
+models/*
 
 rl/models/*
 !rl/models/.gitkeep
+!models/.gitkeep
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
