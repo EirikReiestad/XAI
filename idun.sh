@@ -1,7 +1,7 @@
 #!/bin/sh
 #SBATCH --partition=CPUQ
 #SBATCH --account=eirre
-#SBATCH --time=0-00:15:00     # 0 days and 15 minutes limit
+#SBATCH --time=0-10:00:00     # 0 days and 15 minutes limit
 #SBATCH --nodes=1             # 1 compute nodes
 #SBATCH --gres=gpu:1          # 1 GPU
 #SBATCH --output=log.txt      # Log file
