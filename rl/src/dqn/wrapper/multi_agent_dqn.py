@@ -21,7 +21,7 @@ class MultiAgentDQN(MultiAgentBase):
         dqn_policy: str | DQNPolicy,
         wandb: bool = False,
         wandb_config: WandBConfig | None = None,
-        save_every_n_episodes: int = 10,
+        save_every_n_episodes: int = 100,
         load_model: bool = False,
         run_path: str = "",
         model_artifact: str = "",
