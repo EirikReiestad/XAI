@@ -4,7 +4,11 @@ import torch
 
 
 class MultiAgentBase(ABC):
-    def __init__(self, wandb: bool = False, wandb_config: WandBConfig = WandBConfig()):
+    def __init__(
+        self,
+        wandb: bool = False,
+        wandb_config: WandBConfig | None = None,
+    ):
         self.wandb_manager = WandBManager(wandb, wandb_config)
 
     @abstractmethod

@@ -2,7 +2,6 @@
 This module contains the DQN agent that interacts with the environment.
 """
 
-import json
 import math
 import random
 from itertools import count
@@ -50,7 +49,7 @@ class DQN(SingleAgentBase):
         wandb: bool = False,
         save_model: bool = False,
         save_every_n_episodes: int = 100,
-        model_path: str = "rl/models",
+        model_path: str = "models/",
         model_name: str = "dqn",
         load_model: bool = False,
     ) -> None:
@@ -306,54 +305,46 @@ class DQN(SingleAgentBase):
 
     def save(self, append: str = "", wandb_manager: WandBManager | None = None) -> None:
         """Save the policy network to the specified path."""
-        path = f"{self.model_path}/{self.model_name}{append}"
-
+        path = f"{self.model_path}{self.model_name}{append}"
         if not path.endswith(".pt"):
             path += ".pt"
         torch.save(self.policy_net.state_dict(), path)
+        self._save_model(path, wandb_manager)
 
-        meta_data = {
-            "steps_done": self.steps_done,
-        }
-        meta_data_path = path.replace(".pt", "_meta_data.json")
-        json.dump(meta_data, open(meta_data_path, "w"))
+    def _save_model(self, path: str, wandb_manager: WandBManager | None = None) -> None:
+        torch.save(self.policy_net.state_dict(), path)
         if wandb_manager is not None:
             wandb_manager.save_model(path)
-            wandb_manager.save_file(meta_data_path)
         self.wandb_manager.save_model(path)
-        self.wandb_manager.save_file(meta_data_path)
 
     def load(self, append: str = "", wandb_manager: WandBManager | None = None) -> None:
         """Load the policy network from the specified path."""
-        path = f"{self.model_path}/{self.model_name}{append}"
+        path = f"{self.model_path}{self.model_name}{append}"
         if not path.endswith(".pt"):
             path += ".pt"
+        self._load_model(run_id, model_artifact, append, wandb_manager)
 
-        self._load_model(path, wandb_manager)
-        self._load_metadata(path, wandb_manager)
-
-    def _load_model(self, path: str, wandb_manager: WandBManager | None = None) -> None:
-        artifact_dir = self.wandb_manager.load_model(path)
+    def _load_model(
+        self,
+        run_id: str,
+        model_artifact: str,
+        append: str = "",
+        wandb_manager: WandBManager | None = None,
+    ) -> None:
+        artifact_dir = self.wandb_manager.load_model(run_id, model_artifact)
         if wandb_manager is not None:
-            artifact_dir = wandb_manager.load_model(path)
+            artifact_dir = wandb_manager.load_model(run_id, model_artifact)
         if artifact_dir is None:
             return
 
-        load_dir = artifact_dir + path
-        self.policy_net.load_state_dict(torch.load(load_dir, weights_only=True))
+        path = f"{artifact_dir}/{self.model_name}{append}"
+        if not path.endswith(".pt"):
+            path += ".pt"
+
+        self.policy_net.load_state_dict(torch.load(path, weights_only=True))
         self.target_net.load_state_dict(self.policy_net.state_dict())
         self.policy_net.eval()
         self.target_net.eval()
 
-    def _load_metadata(
-        self, path: str, wandb_manager: WandBManager | None = None
-    ) -> None:
-        artifact_dir = self.wandb_manager.load_file(path)
-        if wandb_manager is not None:
-            artifact_dir = wandb_manager.load_file(path)
-        if artifact_dir is None:
-            return
-        load_dir = artifact_dir + path
-        meta_data = json.load(open(load_dir, "r"))
-        self.steps_done = meta_data["steps_done"]
-        return meta_data
+    def _load_artifacts(self, path: str):
+        pass

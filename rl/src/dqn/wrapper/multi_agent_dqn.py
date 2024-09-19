@@ -8,6 +8,7 @@ from rl.src.base import MultiAgentBase
 from rl.src.dqn import DQN
 from rl.src.dqn.components.types import Rollout, RolloutReturn
 from rl.src.dqn.policies import DQNPolicy
+from rl.src.managers import WandBConfig
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -19,10 +20,11 @@ class MultiAgentDQN(MultiAgentBase):
         num_agents: int,
         dqn_policy: str | DQNPolicy,
         wandb: bool = False,
-        save_every_n_episodes: int = 100,
+        wandb_config: WandBConfig | None = None,
+        save_every_n_episodes: int = 10,
         **kwargs,
     ):
-        super().__init__(wandb=wandb)
+        super().__init__(wandb=wandb, wandb_config=wandb_config)
         self.env = env
         self.num_agents = num_agents
         self.agents = [DQN(env, dqn_policy, **kwargs) for _ in range(num_agents)]
@@ -37,7 +39,8 @@ class MultiAgentDQN(MultiAgentBase):
             log = dict()
             for agent in range(self.num_agents):
                 log[f"agent{agent}_reward"] = episode_rewards[agent]
-                log["steps"] = steps
+                log["agent{agent}_steps_done"] = self.agents[agent].steps_done
+                log[f"agent{agent}_episode_steps"] = steps
                 log["episode"] = i
                 for key, value in episode_data[agent].items():
                     log[f"agent{agent}_{key}"] = value
@@ -137,15 +140,11 @@ class MultiAgentDQN(MultiAgentBase):
 
     def load(self, append: str = ""):
         for i in range(self.num_agents):
-            self.agents[i].load(
-                f"_agent{i}_{append}_", wandb_manager=self.wandb_manager
-            )
+            self.agents[i].load(f"_agent{i}_{append}", wandb_manager=self.wandb_manager)
 
     def save(self, append: str = ""):
         for i in range(self.num_agents):
-            self.agents[i].save(
-                f"_agent{i}_{append}_", wandb_manager=self.wandb_manager
-            )
+            self.agents[i].save(f"_agent{i}_{append}", wandb_manager=self.wandb_manager)
 
     def get_q_values(self, states: np.ndarray, agent: int) -> np.ndarray:
         return self.agents[agent].get_q_values(states)

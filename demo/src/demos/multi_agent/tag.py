@@ -15,6 +15,7 @@ from renderer import Renderer
 from rl.src.dqn.wrapper import MultiAgentDQN
 from rl.src.common.getter import get_torch_from_numpy
 from rl.src.dqn.common.q_values_map import get_q_values_map
+from rl.src.managers import WandBConfig
 
 # Set up matplotlib
 is_ipython = "inline" in matplotlib.get_backend()
@@ -31,18 +32,19 @@ class TagDemo:
         env = gym.make("TagEnv-v0", render_mode="rgb_array")
         model_name = "tag-v0"
         self.env = MultiAgentEnv(env)
+        wandb_config = WandBConfig(project="tag-v0-local")
         self.dqn = MultiAgentDQN(
             self.env,
             2,
             "dqnpolicy",
             wandb=True,
+            wandb_config=wandb_config,
             model_name=model_name,
             save_model=True,
         )
 
     def run(self):
-        self.dqn.learn(100000)
-        return
+        self.dqn.learn(100)
 
         self.plotter = Plotter()
         self.renderer = Renderer(10, 10, 600, 600)
