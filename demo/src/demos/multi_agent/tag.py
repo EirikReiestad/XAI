@@ -46,7 +46,7 @@ class TagDemo:
         )
 
     def run(self):
-        self.dqn.learn(1)
+        self.dqn.learn(1000000)
 
         self.plotter = Plotter()
         self.renderer = Renderer(10, 10, 600, 600)
