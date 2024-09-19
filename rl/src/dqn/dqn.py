@@ -101,6 +101,7 @@ class DQN(SingleAgentBase):
                 {
                     "reward": rewards,
                     "episode_length": steps,
+                    "steps_done": self.steps_done,
                 },
             )
             if i % self.save_every_n_episodes == 0:
@@ -320,10 +321,11 @@ class DQN(SingleAgentBase):
         if not self.save_model:
             return
         torch.save(self.policy_net.state_dict(), path)
+        metadata = {"steps_done": self.steps_done}
         if wandb_manager is not None:
-            wandb_manager.save_model(path, step=episode)
+            wandb_manager.save_model(path, step=episode, metadata=metadata)
         else:
-            self.wandb_manager.save_model(path, step=episode)
+            self.wandb_manager.save_model(path, step=episode, metadata=metadata)
 
     def load(
         self,
@@ -366,4 +368,4 @@ class DQN(SingleAgentBase):
         self.policy_net.eval()
         self.target_net.eval()
 
-        self.steps_done = metadata[f"agent{self.agent_id}_steps_done"]
+        self.steps_done = metadata[f"steps_done"]
