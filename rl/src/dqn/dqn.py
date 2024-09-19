@@ -14,7 +14,7 @@ import torch.nn as nn
 
 from rl.src.base import SingleAgentBase
 from rl.src.common import checker, setter
-from rl.src.managers import WandBManager
+from rl.src.managers import WandBManager, WandBConfig
 
 from .common.hyperparameter import DQNHyperparameter
 from .components.types import Rollout, RolloutReturn, Transition
@@ -48,16 +48,17 @@ class DQN(SingleAgentBase):
         batch_size: int = 128,
         tau: float = 0.005,
         wandb: bool = False,
+        wandb_config: WandBConfig | None = None,
         save_model: bool = False,
         save_every_n_episodes: int = 100,
         model_path: str = "models/",
         model_name: str = "dqn",
         load_model: bool = False,
-        run_id: str = "",
+        run_path: str = "",
         model_artifact: str = "",
         version_number: str = "latest",
     ) -> None:
-        super().__init__(wandb)
+        super().__init__(wandb, wandb_config)
 
         setter.set_seed(seed)
 
@@ -84,7 +85,7 @@ class DQN(SingleAgentBase):
         self.target_net = self.policy.target_net
 
         if load_model:
-            self.load(run_id, model_artifact, version_number)
+            self.load(run_path, model_artifact, version_number)
 
         optimizer = OptimizerManager(self.policy_net, self.hp.lr)
         self.optimizer = optimizer.initialize()
