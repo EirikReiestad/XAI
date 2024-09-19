@@ -1,6 +1,5 @@
 import wandb
 from dataclasses import dataclass
-import logging
 
 
 @dataclass
@@ -37,7 +36,28 @@ class WandBManager:
             return
         wandb.finish()
 
-    def save(self, path: str):
+    def save_model(self, path: str):
         if not self.active:
             return
         wandb.save(path)
+
+    def save_file(self, path: str):
+        if not self.active:
+            return
+        artifact = wandb.Artifact("model", type="model")
+        artifact.add_file(path)
+        wandb.log_artifact(artifact)
+
+    def load_model(self, name: str):
+        if not self.active:
+            return
+        artifact = wandb.use_artifact(name, type="model")
+        artifact_dir = artifact.download()
+        return artifact_dir
+
+    def load_file(self, name: str):
+        if not self.active:
+            return
+        artifact = wandb.use_artifact(name)
+        artifact_dir = artifact.download()
+        return artifact_dir

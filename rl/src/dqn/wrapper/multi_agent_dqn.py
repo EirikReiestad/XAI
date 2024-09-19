@@ -135,9 +135,11 @@ class MultiAgentDQN(MultiAgentBase):
     def predict(self, state: torch.Tensor) -> list[torch.Tensor]:
         return [agent.predict(state) for agent in self.agents]
 
-    def load(self):
+    def load(self, append: str = ""):
         for i in range(self.num_agents):
-            self.agents[i].load()
+            self.agents[i].load(
+                f"_agent{i}_{append}_", wandb_manager=self.wandb_manager
+            )
 
     def save(self, append: str = ""):
         for i in range(self.num_agents):

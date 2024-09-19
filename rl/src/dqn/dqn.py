@@ -52,6 +52,7 @@ class DQN(SingleAgentBase):
         save_every_n_episodes: int = 100,
         model_path: str = "rl/models",
         model_name: str = "dqn",
+        load_model: bool = False,
     ) -> None:
         super().__init__(wandb)
 
@@ -78,6 +79,9 @@ class DQN(SingleAgentBase):
 
         self.policy_net = self.policy.policy_net
         self.target_net = self.policy.target_net
+
+        if load_model:
+            self.load()
 
         optimizer = OptimizerManager(self.policy_net, self.hp.lr)
         self.optimizer = optimizer.initialize()
@@ -295,16 +299,14 @@ class DQN(SingleAgentBase):
         width = states.shape[1]
         for y in range(height):
             for x in range(width):
-                state = states[y, x].unsqueeze(0)  # Add batch dimension
+                state = states[y, x].unsqueeze(0)
                 with torch.no_grad():
                     q_values[y, x] = self.policy_net(state).cpu()
         return q_values
 
-    def save(
-        self, additional_filename: str = "", wandb_manager: WandBManager | None = None
-    ) -> None:
+    def save(self, append: str = "", wandb_manager: WandBManager | None = None) -> None:
         """Save the policy network to the specified path."""
-        path = f"{self.model_path}/{self.model_name}{additional_filename}"
+        path = f"{self.model_path}/{self.model_name}{append}"
 
         if not path.endswith(".pt"):
             path += ".pt"
@@ -316,19 +318,42 @@ class DQN(SingleAgentBase):
         meta_data_path = path.replace(".pt", "_meta_data.json")
         json.dump(meta_data, open(meta_data_path, "w"))
         if wandb_manager is not None:
-            wandb_manager.save(path)
-        self.wandb_manager.save(path)
+            wandb_manager.save_model(path)
+            wandb_manager.save_file(meta_data_path)
+        self.wandb_manager.save_model(path)
+        self.wandb_manager.save_file(meta_data_path)
 
-    def load(self) -> None:
+    def load(self, append: str = "", wandb_manager: WandBManager | None = None) -> None:
         """Load the policy network from the specified path."""
-        path = f"{self.model_path}/{self.model_name}"
+        path = f"{self.model_path}/{self.model_name}{append}"
         if not path.endswith(".pt"):
             path += ".pt"
-        self.policy_net.load_state_dict(torch.load(path, weights_only=True))
+
+        self._load_model(path, wandb_manager)
+        self._load_metadata(path, wandb_manager)
+
+    def _load_model(self, path: str, wandb_manager: WandBManager | None = None) -> None:
+        artifact_dir = self.wandb_manager.load_model(path)
+        if wandb_manager is not None:
+            artifact_dir = wandb_manager.load_model(path)
+        if artifact_dir is None:
+            return
+
+        load_dir = artifact_dir + path
+        self.policy_net.load_state_dict(torch.load(load_dir, weights_only=True))
         self.target_net.load_state_dict(self.policy_net.state_dict())
         self.policy_net.eval()
         self.target_net.eval()
 
-        meta_data_path = path.replace(".pt", "_meta_data.json")
-        meta_data = json.load(open(meta_data_path, "r"))
+    def _load_metadata(
+        self, path: str, wandb_manager: WandBManager | None = None
+    ) -> None:
+        artifact_dir = self.wandb_manager.load_file(path)
+        if wandb_manager is not None:
+            artifact_dir = wandb_manager.load_file(path)
+        if artifact_dir is None:
+            return
+        load_dir = artifact_dir + path
+        meta_data = json.load(open(load_dir, "r"))
         self.steps_done = meta_data["steps_done"]
+        return meta_data
