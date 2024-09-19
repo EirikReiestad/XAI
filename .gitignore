@@ -4,9 +4,10 @@ wandb/offline-run-*
 history/models/coop/*
 history/models/maze/*
 history/models/tag/*
-models/*
-
 rl/models/*
+models/*
+artifacts
+
 !rl/models/.gitkeep
 !models/.gitkeep
 

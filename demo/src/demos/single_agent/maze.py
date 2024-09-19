@@ -6,6 +6,8 @@ import matplotlib
 import matplotlib.pyplot as plt
 import torch
 
+from rl.src.managers import WandBConfig
+
 from demo.src.common import EpisodeInformation
 from demo.src.plotters import Plotter
 from rl.src.dqn import DQN
@@ -22,12 +24,23 @@ class MazeDemo:
         self.episode_information = EpisodeInformation(
             durations=[], rewards=[], object_moved_distance=[]
         )
-        self.plotter = Plotter()
-        self.env = gym.make("MazeEnv-v0", render_mode="human")
+        self.plotter = Plotter(plot_agent=True)
+        self.env = gym.make("MazeEnv-v0", render_mode="rgb_array")
 
     def run(self):
-        dqn = DQN(self.env, "dqnpolicy", wandb=True)
-        dqn.learn(300)
+        wandb_config = WandBConfig(project="maze-v0-local")
+
+        dqn = DQN(
+            self.env,
+            "dqnpolicy",
+            wandb=True,
+            wandb_config=wandb_config,
+            save_model=False,
+            load_model=True,
+            run_path="eirikreiestad-ntnu/maze-v0-local",
+            model_artifact="model_200",
+        )
+        dqn.learn(1)
 
         self.env = gym.make("MazeEnv-v0", render_mode="human")
 
