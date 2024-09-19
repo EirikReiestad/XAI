@@ -6,7 +6,7 @@ history/models/maze/*
 history/models/tag/*
 rl/models/*
 models/*
-artifacts
+artifacts/
 
 !rl/models/.gitkeep
 !models/.gitkeep
