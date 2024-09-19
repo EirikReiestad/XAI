@@ -48,7 +48,7 @@ class MultiAgentDQN(MultiAgentBase):
             log = dict()
             for agent in range(self.num_agents):
                 log[f"agent{agent}_reward"] = episode_rewards[agent]
-                log[f"agent{agent}_steps_done"] = self.agents[agent].steps_done
+                log["steps_done"] = self.agents[agent].steps_done
                 log[f"agent{agent}_episode_steps"] = steps
                 log["episode"] = i
                 for key, value in episode_data[agent].items():

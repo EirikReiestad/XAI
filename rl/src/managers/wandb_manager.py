@@ -48,7 +48,9 @@ class WandBManager:
             return
         wandb.finish()
 
-    def save_model(self, path: str, step: int, model_artifact: str = "model") -> None:
+    def save_model(
+        self, path: str, step: int, model_artifact: str = "model", metadata: dict = {}
+    ) -> None:
         if not self.active:
             return
 
@@ -58,6 +60,7 @@ class WandBManager:
 
         artifact_name = f"{model_artifact}_{step}"
         artifact = wandb.Artifact(artifact_name, type="model")
+        artifact.metadata = metadata
         artifact.add_file(path)
         wandb.log_artifact(artifact)
         wandb.log({"model_logged": True}, step=step + 1)
