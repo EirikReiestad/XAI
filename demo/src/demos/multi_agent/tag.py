@@ -46,7 +46,7 @@ class TagDemo:
         )
 
     def run(self):
-        self.dqn.learn(100)
+        self.dqn.learn(1)
 
         self.plotter = Plotter()
         self.renderer = Renderer(10, 10, 600, 600)
@@ -79,7 +79,7 @@ class TagDemo:
 
                 agent_rewards = [e + r for e, r in zip(agent_rewards, rewards)]
 
-                # self.render_q_values_map(full_state)
+                self.render_q_values_map(full_state)
                 # self.render_saliency_map(observation)
 
                 if terminated or any(terminals) or any(truncated):
