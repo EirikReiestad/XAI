@@ -17,7 +17,6 @@ from rl.src.common.getter import get_torch_from_numpy
 from rl.src.dqn.common.q_values_map import get_q_values_map
 from rl.src.managers import WandBConfig
 
-# Set up matplotlib
 is_ipython = "inline" in matplotlib.get_backend()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -42,9 +41,8 @@ class TagDemo:
             model_name=model_name,
             save_model=False,
             load_model=True,
-            run_id="playful-capybara-1",
-            model_artifact="model_60",
-            version_number="latest",
+            run_path="eirikreiestad-ntnu/tag-v0-local",
+            model_artifact="model_30",
         )
 
     def run(self):

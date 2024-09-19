@@ -307,11 +307,9 @@ class DQN(SingleAgentBase):
                     q_values[y, x] = self.policy_net(state).cpu()
         return q_values
 
-    def save(
-        self, episode: int, append: str = "", wandb_manager: WandBManager | None = None
-    ) -> None:
+    def save(self, episode: int, wandb_manager: WandBManager | None = None) -> None:
         """Save the policy network to the specified path."""
-        path = f"{self.model_path}{self.model_name}{append}"
+        path = f"{self.model_path}{self.model_name}"
         if not path.endswith(".pt"):
             path += ".pt"
         self._save_model(path, episode, wandb_manager)
@@ -332,7 +330,6 @@ class DQN(SingleAgentBase):
         run_path: str,
         model_artifact: str,
         version_number: str,
-        append: str = "",
         wandb_manager: WandBManager | None = None,
     ) -> None:
         """Load the policy network from the specified path."""
@@ -340,16 +337,13 @@ class DQN(SingleAgentBase):
             logging.warning(
                 "Run ID, model artifact, and version number must be specified."
             )
-        self._load_model(
-            run_path, model_artifact, version_number, append, wandb_manager
-        )
+        self._load_model(run_path, model_artifact, version_number, wandb_manager)
 
     def _load_model(
         self,
         run_id: str,
         model_artifact: str,
         version_number: str,
-        append: str = "",
         wandb_manager: WandBManager | None = None,
     ) -> None:
         if wandb_manager is not None:
@@ -363,13 +357,13 @@ class DQN(SingleAgentBase):
         if artifact_dir is None or metadata is None:
             return
 
-        path = f"{artifact_dir}/{self.model_name}{append}"
+        path = f"{artifact_dir}/{self.model_name}"
         if not path.endswith(".pt"):
             path += ".pt"
 
-        self.policy_net.load_state_dict(torch.load(path))
+        self.policy_net.load_state_dict(torch.load(path, weights_only=True))
         self.target_net.load_state_dict(self.policy_net.state_dict())
         self.policy_net.eval()
         self.target_net.eval()
 
-        self.steps_done = metadata["steps_done"]
+        self.steps_done = metadata[f"agent{self.agent_id}_steps_done"]
