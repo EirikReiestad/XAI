@@ -2,6 +2,7 @@
 This module contains the DQN agent that interacts with the environment.
 """
 
+import logging
 import math
 import random
 from itertools import count
@@ -13,12 +14,12 @@ import torch.nn as nn
 
 from rl.src.base import SingleAgentBase
 from rl.src.common import checker, setter
+from rl.src.managers import WandBManager
 
 from .common.hyperparameter import DQNHyperparameter
 from .components.types import Rollout, RolloutReturn, Transition
 from .managers import MemoryManager, OptimizerManager, PolicyManager
 from .policies import DQNPolicy, QNetwork
-from rl.src.managers import WandBManager
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -52,6 +53,9 @@ class DQN(SingleAgentBase):
         model_path: str = "models/",
         model_name: str = "dqn",
         load_model: bool = False,
+        run_id: str = "",
+        model_artifact: str = "",
+        version_number: str = "latest",
     ) -> None:
         super().__init__(wandb)
 
@@ -80,7 +84,7 @@ class DQN(SingleAgentBase):
         self.target_net = self.policy.target_net
 
         if load_model:
-            self.load()
+            self.load(run_id, model_artifact, version_number)
 
         optimizer = OptimizerManager(self.policy_net, self.hp.lr)
         self.optimizer = optimizer.initialize()
@@ -97,10 +101,10 @@ class DQN(SingleAgentBase):
                 {
                     "reward": rewards,
                     "episode_length": steps,
-                }
+                },
             )
             if i % self.save_every_n_episodes == 0:
-                self.save()
+                self.save(i)
 
     def _collect_rollout(self) -> tuple[RolloutReturn, float, int]:
         state, _ = self.env.reset()
@@ -303,49 +307,69 @@ class DQN(SingleAgentBase):
                     q_values[y, x] = self.policy_net(state).cpu()
         return q_values
 
-    def save(self, append: str = "", wandb_manager: WandBManager | None = None) -> None:
+    def save(
+        self, episode: int, append: str = "", wandb_manager: WandBManager | None = None
+    ) -> None:
         """Save the policy network to the specified path."""
         path = f"{self.model_path}{self.model_name}{append}"
         if not path.endswith(".pt"):
             path += ".pt"
-        torch.save(self.policy_net.state_dict(), path)
-        self._save_model(path, wandb_manager)
+        self._save_model(path, episode, wandb_manager)
 
-    def _save_model(self, path: str, wandb_manager: WandBManager | None = None) -> None:
-        print("Saving model")
+    def _save_model(
+        self, path: str, episode: int, wandb_manager: WandBManager | None = None
+    ) -> None:
+        if not self.save_model:
+            return
         torch.save(self.policy_net.state_dict(), path)
         if wandb_manager is not None:
-            wandb_manager.save_model(path)
-        self.wandb_manager.save_model(path)
+            wandb_manager.save_model(path, step=episode)
+        else:
+            self.wandb_manager.save_model(path, step=episode)
 
-    def load(self, append: str = "", wandb_manager: WandBManager | None = None) -> None:
+    def load(
+        self,
+        run_path: str,
+        model_artifact: str,
+        version_number: str,
+        append: str = "",
+        wandb_manager: WandBManager | None = None,
+    ) -> None:
         """Load the policy network from the specified path."""
-        path = f"{self.model_path}{self.model_name}{append}"
-        if not path.endswith(".pt"):
-            path += ".pt"
-        self._load_model(run_id, model_artifact, append, wandb_manager)
+        if run_path == "" or model_artifact == "" or version_number == "":
+            logging.warning(
+                "Run ID, model artifact, and version number must be specified."
+            )
+        self._load_model(
+            run_path, model_artifact, version_number, append, wandb_manager
+        )
 
     def _load_model(
         self,
         run_id: str,
         model_artifact: str,
+        version_number: str,
         append: str = "",
         wandb_manager: WandBManager | None = None,
     ) -> None:
-        artifact_dir = self.wandb_manager.load_model(run_id, model_artifact)
         if wandb_manager is not None:
-            artifact_dir = wandb_manager.load_model(run_id, model_artifact)
-        if artifact_dir is None:
+            artifact_dir, metadata = wandb_manager.load_model(
+                run_id, model_artifact, version_number
+            )
+        else:
+            artifact_dir, metadata = self.wandb_manager.load_model(
+                run_id, model_artifact, version_number
+            )
+        if artifact_dir is None or metadata is None:
             return
 
         path = f"{artifact_dir}/{self.model_name}{append}"
         if not path.endswith(".pt"):
             path += ".pt"
 
-        self.policy_net.load_state_dict(torch.load(path, weights_only=True))
+        self.policy_net.load_state_dict(torch.load(path))
         self.target_net.load_state_dict(self.policy_net.state_dict())
         self.policy_net.eval()
         self.target_net.eval()
 
-    def _load_artifacts(self, path: str):
-        pass
+        self.steps_done = metadata["steps_done"]

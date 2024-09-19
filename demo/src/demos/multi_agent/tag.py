@@ -40,7 +40,11 @@ class TagDemo:
             wandb=True,
             wandb_config=wandb_config,
             model_name=model_name,
-            save_model=True,
+            save_model=False,
+            load_model=True,
+            run_id="playful-capybara-1",
+            model_artifact="model_60",
+            version_number="latest",
         )
 
     def run(self):

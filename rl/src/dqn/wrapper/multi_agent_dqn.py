@@ -22,6 +22,10 @@ class MultiAgentDQN(MultiAgentBase):
         wandb: bool = False,
         wandb_config: WandBConfig | None = None,
         save_every_n_episodes: int = 10,
+        load_model: bool = False,
+        run_path: str = "",
+        model_artifact: str = "",
+        version_number: str = "latest",
         **kwargs,
     ):
         super().__init__(wandb=wandb, wandb_config=wandb_config)
@@ -30,6 +34,9 @@ class MultiAgentDQN(MultiAgentBase):
         self.agents = [DQN(env, dqn_policy, **kwargs) for _ in range(num_agents)]
 
         self.save_every_n_episodes = save_every_n_episodes
+
+        if load_model:
+            self.load(run_id, model_artifact, version_number)
 
     def learn(self, total_timesteps: int) -> list[list[RolloutReturn]]:
         results = []
@@ -48,7 +55,7 @@ class MultiAgentDQN(MultiAgentBase):
             results.append(rollout)
 
             if i % self.save_every_n_episodes == 0:
-                self.save(append=f"episode_{i}")
+                self.save(i, append=f"episode_{i}")
         return results
 
     def _collect_rollouts(
@@ -138,13 +145,27 @@ class MultiAgentDQN(MultiAgentBase):
     def predict(self, state: torch.Tensor) -> list[torch.Tensor]:
         return [agent.predict(state) for agent in self.agents]
 
-    def load(self, append: str = ""):
+    def load(
+        self,
+        run_id: str,
+        model_artifact: str,
+        version_number: str,
+        append: str = "",
+    ):
         for i in range(self.num_agents):
-            self.agents[i].load(f"_agent{i}_{append}", wandb_manager=self.wandb_manager)
+            self.agents[i].load(
+                run_id,
+                model_artifact,
+                version_number,
+                append=f"_agent{i}_{append}",
+                wandb_manager=self.wandb_manager,
+            )
 
-    def save(self, append: str = ""):
+    def save(self, episode: int, append: str = ""):
         for i in range(self.num_agents):
-            self.agents[i].save(f"_agent{i}_{append}", wandb_manager=self.wandb_manager)
+            self.agents[i].save(
+                episode, f"_agent{i}_{append}", wandb_manager=self.wandb_manager
+            )
 
     def get_q_values(self, states: np.ndarray, agent: int) -> np.ndarray:
         return self.agents[agent].get_q_values(states)

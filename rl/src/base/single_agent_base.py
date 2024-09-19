@@ -18,9 +18,9 @@ class SingleAgentBase(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def save(self):
+    def save(self, episode: int):
         raise NotImplementedError
 
     @abstractmethod
-    def load(self):
+    def load(self, run_path: str, model_artifact: str, version_number: str):
         raise NotImplementedError
