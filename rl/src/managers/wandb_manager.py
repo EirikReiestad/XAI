@@ -44,11 +44,11 @@ class WandBManager:
             return
         wandb.finish()
 
-    def save_model(self, model_artifact: str, prefix: str = "") -> None:
+    def save_model(self, path: str, model_artifact: str = "model") -> None:
         if not self.active:
             return
         artifact = wandb.Artifact(model_artifact, type="model")
-        artifact.add_file(f"{prefix}model.pt")
+        artifact.add_file(path)
 
     def load_model(self, run_id: str, model_artifact: str) -> None | str:
         if not self.active:
