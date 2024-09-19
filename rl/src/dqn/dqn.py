@@ -312,6 +312,7 @@ class DQN(SingleAgentBase):
         self._save_model(path, wandb_manager)
 
     def _save_model(self, path: str, wandb_manager: WandBManager | None = None) -> None:
+        print("Saving model")
         torch.save(self.policy_net.state_dict(), path)
         if wandb_manager is not None:
             wandb_manager.save_model(path)
