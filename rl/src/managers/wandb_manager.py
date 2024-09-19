@@ -67,18 +67,18 @@ class WandBManager:
     ) -> tuple[None | str, None | dict]:
         if not self.active:
             return None, None
+        if version_number == "":
+            logging.error("Error: version_number cannot be empty")
+        artifact_path = f"{run_path}/{model_artifact}:{version_number}"
         try:
-            run = self.api.run(run_path)
-            artifact = run.use_artifact(
-                f"{model_artifact}:{version_number}", type="model"
+            artifact = self.api.artifact(
+                artifact_path,
             )
             artifact_dir = artifact.download()
             logging.info("model loaded")
             logging.info("Metadata: " + str(artifact.metadata))
             return artifact_dir, artifact.metadata
         except wandb.Error as e:
-            logging.error(
-                f"Error: Could not load model with artifact: {run_path}:{model_artifact}:{version_number}"
-            )
+            logging.error(f"Error: Could not load model with artifact: {artifact_path}")
             logging.error(f"Error: {e}")
             return None, None

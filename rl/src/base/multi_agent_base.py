@@ -28,6 +28,6 @@ class MultiAgentBase(ABC):
         self,
         run_id: str,
         model_artifact: str,
-        version_number: str,
+        version_numbers: list[str],
     ):
         raise NotImplementedError
