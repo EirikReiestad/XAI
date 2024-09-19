@@ -4,19 +4,27 @@ from dataclasses import dataclass
 
 @dataclass
 class WandBConfig:
-    def __init__(self) -> None:
-        self.project: str = ""
-        self.run_name: str = ""
-        self.tags: list[str] = []
-        self.other: dict = {}
+    def __init__(
+        self,
+        project: str = "",
+        run_name: str = "",
+        tags: list[str] = [],
+        other: dict = {},
+    ) -> None:
+        self.project: str = project
+        self.run_name: str = run_name
+        self.tags: list[str] = tags
+        self.other: dict = other
 
 
 class WandBManager:
-    def __init__(self, active: bool, config: WandBConfig):
+    def __init__(self, active: bool, config: WandBConfig | None):
         self.active = active
         if not active:
             return
 
+        if config is None:
+            config = WandBConfig()
         self.config = config
         wandb.init(
             project=config.project,
@@ -36,28 +44,15 @@ class WandBManager:
             return
         wandb.finish()
 
-    def save_model(self, path: str):
+    def save_model(self, model_artifact: str, prefix: str = "") -> None:
         if not self.active:
             return
-        wandb.save(path)
+        artifact = wandb.Artifact(model_artifact, type="model")
+        artifact.add_file(f"{prefix}model.pt")
 
-    def save_file(self, path: str):
+    def load_model(self, run_id: str, model_artifact: str) -> None | str:
         if not self.active:
             return
-        artifact = wandb.Artifact("model", type="model")
-        artifact.add_file(path)
-        wandb.log_artifact(artifact)
-
-    def load_model(self, name: str):
-        if not self.active:
-            return
-        artifact = wandb.use_artifact(name, type="model")
-        artifact_dir = artifact.download()
-        return artifact_dir
-
-    def load_file(self, name: str):
-        if not self.active:
-            return
-        artifact = wandb.use_artifact(name)
+        artifact = wandb.use_artifact(f"{run_id}:{model_artifact}", type="model")
         artifact_dir = artifact.download()
         return artifact_dir
