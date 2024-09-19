@@ -1,5 +1,7 @@
 import wandb
+import os
 from dataclasses import dataclass
+import logging
 
 
 @dataclass
@@ -23,6 +25,8 @@ class WandBManager:
         if not active:
             return
 
+        self.api = wandb.Api()
+
         if config is None:
             config = WandBConfig()
         self.config = config
@@ -44,15 +48,37 @@ class WandBManager:
             return
         wandb.finish()
 
-    def save_model(self, path: str, model_artifact: str = "model") -> None:
+    def save_model(self, path: str, step: int, model_artifact: str = "model") -> None:
         if not self.active:
             return
-        artifact = wandb.Artifact(model_artifact, type="model")
-        artifact.add_file(path)
 
-    def load_model(self, run_id: str, model_artifact: str) -> None | str:
-        if not self.active:
+        if not os.path.isfile(path) or os.path.getsize(path) == 0:
+            logging.warning(f"Error: The file {path} does not exist or is empty.")
             return
-        artifact = wandb.use_artifact(f"{run_id}:{model_artifact}", type="model")
-        artifact_dir = artifact.download()
-        return artifact_dir
+
+        artifact_name = f"{model_artifact}_{step}"
+        artifact = wandb.Artifact(artifact_name, type="model")
+        artifact.add_file(path)
+        wandb.log_artifact(artifact)
+        wandb.log({"model_logged": True}, step=step + 1)
+
+    def load_model(
+        self, run_path: str, model_artifact: str, version_number: str
+    ) -> tuple[None | str, None | dict]:
+        if not self.active:
+            return None, None
+        try:
+            run = self.api.run(run_path)
+            artifact = run.use_artifact(
+                f"{model_artifact}:{version_number}", type="model"
+            )
+            artifact_dir = artifact.download()
+            logging.info("model loaded")
+            logging.info("Metadata: " + str(artifact.metadata))
+            return artifact_dir, artifact.metadata
+        except wandb.Error as e:
+            logging.error(
+                f"Error: Could not load model with artifact: {run_path}:{model_artifact}:{version_number}"
+            )
+            logging.error(f"Error: {e}")
+            return None, None
