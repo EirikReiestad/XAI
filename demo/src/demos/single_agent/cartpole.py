@@ -29,13 +29,20 @@ class CartPoleDemo:
     def run(self):
         dqn = DQN(self.env, "dqnpolicy", wandb=False)
         logging.info("Learning...")
-        dqn.learn(10)
+        dqn.learn(1)
 
         self.shap = Shap(self.env, dqn)
         logging.info("Explaining...")
         shap_values = self.shap.explain()
-        print(shap_values)
-        self.shap.plot(shap_values)
+        self.shap.plot(
+            shap_values,
+            feature_names=[
+                "Cart Position",
+                "Cart Velocity",
+                "Pole Angle",
+                "Pole Velocity",
+            ],
+        )
 
         return
 
