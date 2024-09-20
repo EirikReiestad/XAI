@@ -79,8 +79,7 @@ class TagDemo:
 
                 agent_rewards = [e + r for e, r in zip(agent_rewards, rewards)]
 
-                self.render_q_values_map(full_state)
-                # self.render_saliency_map(observation)
+                self.render(full_state, render="q_values")
 
                 if terminated or any(terminals) or any(truncated):
                     self.episode_information.durations.append(t + 1)
@@ -93,21 +92,27 @@ class TagDemo:
         plt.ioff()
         plt.show()
 
-    def render_saliency_map(self, state: np.ndarray):
+    def render(self, state: np.ndarray, render: str = ""):
         rgb = self.env.render()
 
+        q_values_map = self.get_q_values_map(state) if render == "q_values" else None
+        saliency_map = self._get_saliency_map(state) if render == "saliency" else None
+
+        if isinstance(rgb, np.ndarray):
+            self.renderer.render(
+                background=rgb, q_values_map=q_values_map, saliency_map=saliency_map
+            )
+
+    def _get_saliency_map(self, state: np.ndarray) -> np.ndarray:
         occluded_states = self.env.get_occluded_states()
         torch_state = get_torch_from_numpy(state)
         torch_state.unsqueeze(0)
         saliency_map = self.saliency_map.generate(
             torch_state, occluded_states, self.dqn, agent=0
         )
-        if isinstance(rgb, np.ndarray):
-            self.renderer.render(background=rgb, saliency_map=saliency_map)
+        return saliency_map
 
-    def render_q_values_map(self, full_state: np.ndarray):
-        rgb = self.env.render()
-
+    def get_q_values_map(self, full_state: np.ndarray):
         all_possible_states = self.env.get_all_possible_states()
 
         states = np.zeros(
@@ -123,9 +128,7 @@ class TagDemo:
 
         q_values = self.dqn.get_q_values(states, 0)
         q_values_map = get_q_values_map(states=full_state, q_values=q_values)
-
-        if isinstance(rgb, np.ndarray):
-            self.renderer.render(background=rgb, q_values=q_values_map)
+        return q_values_map
 
 
 if __name__ == "__main__":
