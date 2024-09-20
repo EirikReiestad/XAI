@@ -7,21 +7,46 @@ import numpy as np
 import shap
 import torch
 
-from rl import SingleAgentBase
+import rl
+from environments.gymnasium.wrappers import MultiAgentEnv
+
+from .multi_agent_shap import MultiAgentShap
+from .single_agent_shap import SingleAgentShap
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 class Shap:
-    def __init__(self, env: gym.Env, model: SingleAgentBase):
+    def __init__(
+        self,
+        env: gym.Env | MultiAgentEnv,
+        model: rl.SingleAgentBase | rl.MultiAgentBase,
+    ):
+        self.multi_agent = isinstance(env, MultiAgentEnv)
+
+        if isinstance(env, MultiAgentEnv) and not isinstance(model, rl.MultiAgentBase):
+            raise ValueError("Model must be MultiAgentBase")
+        elif not isinstance(env, MultiAgentEnv) and isinstance(
+            model, rl.MultiAgentBase
+        ):
+            raise ValueError("Model must be SingleAgentBase")
+
         self.env = env
         self.model = model
-        self.background_states, self.test_states = self._sample_states(200)
 
-    def explain(self) -> np.ndarray:
-        explainer = shap.Explainer(self.model.predict, self.background_states)
-        shap_values = explainer(self.test_states).values
-        return shap_values
+        if self.multi_agent:
+            assert isinstance(self.env, MultiAgentEnv)
+            assert isinstance(self.model, rl.MultiAgentBase)
+            self.explainer = MultiAgentShap(self.env, self.model)
+        else:
+            assert isinstance(self.env, gym.Env)
+            assert isinstance(self.model, rl.SingleAgentBase)
+            self.explainer = SingleAgentShap(self.env, self.model)
+
+        self.test_states = self.explainer.test_states
+
+    def explain(self) -> np.ndarray | list[np.ndarray]:
+        return self.explainer.explain()
 
     def plot(self, shap_values: Any, **kwargs):
         feature_names = kwargs.get("feature_names", None)
@@ -29,37 +54,3 @@ class Shap:
         shap.summary_plot(
             mean_shap_values, self.test_states, feature_names=feature_names
         )
-
-    def _sample_states(self, num_states: int, test: float = 0.2):
-        states = self._generate_states(num_states)
-        background_states = states[: int(num_states * (1 - test))]
-        test_states = states[int(num_states * (1 - test)) :]
-        return background_states, test_states
-
-    def _generate_states(self, num_states) -> np.ndarray:
-        states: list[np.ndarray] = []
-        sample_prob = 0.1
-
-        state, _ = self.env.reset()
-        for _ in count():
-            state, _ = self.env.reset()
-            state = torch.tensor(state, device=device, dtype=torch.float32).unsqueeze(0)
-
-            for _ in count():
-                action = self.model.predict_action(state)
-                observation, _, terminated, truncated, _ = self.env.step(action.item())
-                state = torch.tensor(
-                    observation, device=device, dtype=torch.float32
-                ).unsqueeze(0)
-
-                if len(states) >= num_states:
-                    return np.vstack(states)
-
-                if random.random() < sample_prob:
-                    numpy_state = state.cpu().numpy()
-                    states.append(numpy_state)
-
-                if terminated or truncated:
-                    break
-
-        return np.vstack(states)

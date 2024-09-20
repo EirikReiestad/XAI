@@ -149,7 +149,7 @@ class MultiAgentDQN(MultiAgentBase):
 
         return rollout_returns, episode_rewards, episode_length, data
 
-    def predict(self, state: torch.Tensor) -> list[torch.Tensor]:
+    def predict(self, state: torch.Tensor) -> list[np.ndarray | list[np.ndarray]]:
         return [agent.predict(state) for agent in self.agents]
 
     def predict_actions(self, state: torch.Tensor) -> list[torch.Tensor]:
@@ -175,3 +175,7 @@ class MultiAgentDQN(MultiAgentBase):
 
     def get_q_values(self, states: np.ndarray, agent: int) -> np.ndarray:
         return self.agents[agent].get_q_values(states)
+
+    @property
+    def models(self) -> list[DQN]:
+        return self.agents

@@ -15,4 +15,4 @@ poetry install
 
 poetry run wandb login
 
-poetry run python demo
+poetry run python -O demo
