@@ -1,3 +1,4 @@
+import logging
 from itertools import count
 
 import numpy as np
@@ -42,23 +43,27 @@ class MultiAgentDQN(MultiAgentBase):
 
     def learn(self, total_timesteps: int) -> list[list[RolloutReturn]]:
         results = []
-        for i in range(total_timesteps):
-            rollout, episode_rewards, steps, episode_data = self._collect_rollouts()
+        try:
+            for i in range(total_timesteps):
+                rollout, episode_rewards, steps, episode_data = self._collect_rollouts()
 
-            log = dict()
-            for agent in range(self.num_agents):
-                log[f"agent{agent}_reward"] = episode_rewards[agent]
-                log["steps_done"] = self.agents[agent].steps_done
-                log[f"agent{agent}_episode_steps"] = steps
-                log["episode"] = i
-                for key, value in episode_data[agent].items():
-                    log[f"agent{agent}_{key}"] = value
-            self.wandb_manager.log(log)
-            results.append(rollout)
+                log = dict()
+                for agent in range(self.num_agents):
+                    log[f"agent{agent}_reward"] = episode_rewards[agent]
+                    log["steps_done"] = self.agents[agent].steps_done
+                    log[f"agent{agent}_episode_steps"] = steps
+                    log["episode"] = i
+                    for key, value in episode_data[agent].items():
+                        log[f"agent{agent}_{key}"] = value
+                self.wandb_manager.log(log)
+                results.append(rollout)
 
-            if i % self.save_every_n_episodes == 0:
-                self.save(i)
-        return results
+                if i % self.save_every_n_episodes == 0:
+                    self.save(i)
+        except Exception as e:
+            logging.error(e)
+        finally:
+            return results
 
     def _collect_rollouts(
         self,
