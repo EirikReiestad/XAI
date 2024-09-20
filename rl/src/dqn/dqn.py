@@ -96,17 +96,20 @@ class DQN(SingleAgentBase):
         self.steps_done = 0
 
     def learn(self, total_timesteps: int):
-        for i in range(total_timesteps):
-            _, rewards, steps = self._collect_rollout()
-            self.wandb_manager.log(
-                {
-                    "reward": rewards,
-                    "episode_length": steps,
-                    "steps_done": self.steps_done,
-                },
-            )
-            if i % self.save_every_n_episodes == 0:
-                self.save(i)
+        try:
+            for i in range(total_timesteps):
+                _, rewards, steps = self._collect_rollout()
+                self.wandb_manager.log(
+                    {
+                        "reward": rewards,
+                        "episode_length": steps,
+                        "steps_done": self.steps_done,
+                    },
+                )
+                if i % self.save_every_n_episodes == 0:
+                    self.save(i)
+        except Exception as e:
+            logging.error(f"Error: {e}")
 
     def _collect_rollout(self) -> tuple[RolloutReturn, float, int]:
         state, _ = self.env.reset()
