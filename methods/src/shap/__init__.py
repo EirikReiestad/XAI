@@ -1,5 +1,6 @@
 from .shap import Shap
-from .wrappers import MultiAgentShap
+from .single_agent_shap import SingleAgentShap
+from .multi_agent_shap import MultiAgentShap
 
 
-__all__ = ["Shap"]
+__all__ = ["Shap", "SingleAgentShap", "MultiAgentShap"]

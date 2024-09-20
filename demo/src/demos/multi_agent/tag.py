@@ -9,7 +9,7 @@ import torch
 
 from demo.src.common import EpisodeInformation
 from demo.src.plotters import Plotter
-from environments.gymnasium.wrappers import MultiAgentEnv, StateWrapper
+from environments.gymnasium.wrappers import MultiAgentEnv, StateWrapper, MetadataWrapper
 from methods import Shap, SaliencyMap
 from renderer import Renderer
 from rl.src.dqn.wrapper import MultiAgentDQN
@@ -48,13 +48,15 @@ class TagDemo:
         )
 
     def run(self):
+        logging.info("Learning...")
         self.dqn.learn(10)
+        logging.info("Shap setup...")
         shap = Shap(self.env, self.dqn)
         logging.info("Explaining...")
         shap_values = shap.explain()
-        shap.plot(
-            shap_values,
-        )
+        env = MetadataWrapper(self.env)
+        feature_names = env.feature_names()
+        shap.plot(shap_values, feature_names=feature_names)
 
         self.show(False)
 

@@ -14,10 +14,10 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 class SingleAgentShap(SingleAgentBase):
-    def __init__(self, env: gym.Env, model: rl.SingleAgentBase):
+    def __init__(self, env: gym.Env, model: rl.SingleAgentBase, samples: int):
         self.env = env
         self.model = model
-        self.background_states, self.test_states = self._sample_states(10000)
+        self.background_states, self.test_states = self._sample_states(samples)
 
     def explain(self) -> np.ndarray:
         explainer = shap.Explainer(self.model.predict, self.background_states)

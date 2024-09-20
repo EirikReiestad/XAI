@@ -76,6 +76,10 @@ class Object:
     def state_size_static() -> int:
         return 4
 
+    @staticmethod
+    def feature_names_static() -> list[str]:
+        return ["x", "y", "grabable", "grabbed"]
+
 
 class Objects:
     def __init__(self, obstacles: list[Object], boxes: list[Object]):

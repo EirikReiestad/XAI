@@ -199,6 +199,29 @@ class TagState:
             dtype=np.uint8,
         )
 
+    @property
+    def feature_names(self) -> list[str]:
+        hider_position_names = ["Hider X", "Hider Y"]
+        seeker_position_names = ["Seeker X", "Seeker Y"]
+        distance_name = "Distance"
+        direction_names = ["Direction X", "Direction Y"]
+        obstacle_names = []
+        for i in range(self._num_obstacles):
+            for name in Object.feature_names_static():
+                obstacle_names.append(f"Obstacle {i} {name}")
+        box_names = []
+        for i in range(self._num_obstacles):
+            for name in Object.feature_names_static():
+                box_names.append(f"Obstacle {i} {name}")
+        return [
+            *hider_position_names,
+            *seeker_position_names,
+            *distance_name,
+            *direction_names,
+            *obstacle_names,
+            *box_names,
+        ]
+
     def _create_rgb_state(self) -> np.ndarray:
         return np.full((self.screen_height, self.screen_width, 3), Color.WHITE.value)
 
@@ -326,29 +349,53 @@ class TagState:
 
     @property
     def partial_state_size(self) -> np.ndarray:
-        active_agent_position = 2
-        inactive_agent_position = 2
-        distance = 1
-        direction = 2
-        num_obstacles = len(
+        partial_state_size = (
+            self._active_agnet_position_size
+            + self._inactive_agent_position_size
+            + self._distance_size
+            + self._direction_size
+            + self._obstacle_state_size
+            + self._box_state_size
+        )
+        return np.array([partial_state_size], dtype=np.uint8)
+
+    @property
+    def _active_agnet_position_size(self) -> int:
+        return 2
+
+    @property
+    def _inactive_agent_position_size(self) -> int:
+        return 2
+
+    @property
+    def _distance_size(self) -> int:
+        return 1
+
+    @property
+    def _direction_size(self) -> int:
+        return 2
+
+    @property
+    def _obstacle_state_size(self) -> int:
+        return self._num_obstacles * Object.state_size_static()
+
+    @property
+    def _num_obstacles(self) -> int:
+        return len(
             FullStateDataExtractor.get_positions(
                 self.init_full_state, TileType.OBSTACLE
             )
         )
-        num_boxes = len(
+
+    @property
+    def _box_state_size(self) -> int:
+        return self._num_boxes * Object.state_size_static()
+
+    @property
+    def _num_boxes(self) -> int:
+        return len(
             FullStateDataExtractor.get_positions(self.init_full_state, TileType.BOX)
         )
-        obstacle_state_size = num_obstacles * Object.state_size_static()
-        box_state_size = num_boxes * Object.state_size_static()
-        partial_state_size = (
-            active_agent_position
-            + inactive_agent_position
-            + distance
-            + direction
-            + obstacle_state_size
-            + box_state_size
-        )
-        return np.array([partial_state_size], dtype=np.uint8)
 
     def _create_empty_full_state(self):
         return np.zeros((self.height, self.width), dtype=np.uint8)

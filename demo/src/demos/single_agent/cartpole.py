@@ -25,13 +25,14 @@ class CartPoleDemo:
         )
         self.plotter = Plotter()
         self.env = gym.make("CartPole-v1")
+        self.dqn = DQN(self.env, "dqnpolicy", wandb=False)
 
     def run(self):
-        dqn = DQN(self.env, "dqnpolicy", wandb=False)
         logging.info("Learning...")
-        dqn.learn(200)
+        self.dqn.learn(20)
 
-        self.shap = Shap(self.env, dqn)
+        logging.info("Initializing Shap...")
+        self.shap = Shap(self.env, self.dqn)
         logging.info("Explaining...")
         shap_values = self.shap.explain()
         self.shap.plot(
@@ -44,7 +45,11 @@ class CartPoleDemo:
             ],
         )
 
-        return
+        self.show(False)
+
+    def show(self, run: bool = True):
+        if not run:
+            return
 
         self.env = gym.make("CartPole-v1", render_mode="human")
 
@@ -62,7 +67,7 @@ class CartPoleDemo:
                 rewards = 0
 
                 for t in count():
-                    action = dqn.predict_action(state)
+                    action = self.dqn.predict_action(state)
                     observation, reward, terminated, truncated, _ = self.env.step(
                         action.item()
                     )
