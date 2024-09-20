@@ -32,8 +32,8 @@ class Shap:
         test_states = states[int(num_states * test) :]
         return background_states, test_states
 
-    def _generate_states(self, num_states) -> list[torch.Tensor]:
-        states: list[torch.Tensor] = []
+    def _generate_states(self, num_states) -> np.ndarray:
+        states: list[np.ndarray] = []
         sample_prob = 0.1
 
         state, _ = self.env.reset()
@@ -49,12 +49,13 @@ class Shap:
                 ).unsqueeze(0)
 
                 if len(states) >= num_states:
-                    return states
+                    return np.vstack(states)
 
                 if random.random() < sample_prob:
-                    states.append(state)
+                    numpy_state = state.cpu().numpy()
+                    states.append(numpy_state)
 
                 if terminated or truncated:
                     break
 
-        return states
+        return np.vstack(states)
