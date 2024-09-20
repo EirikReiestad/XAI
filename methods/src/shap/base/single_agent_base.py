@@ -9,5 +9,10 @@ class SingleAgentBase(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def plot(self, shap_values: Any, **kwargs):
+    def plot(
+        self,
+        shap_values: Any,
+        feature_names: list[str] | None = None,
+        include: list[str] | None = None,
+    ):
         raise NotImplementedError

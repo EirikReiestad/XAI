@@ -31,10 +31,71 @@ class TagState:
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.state_type = state_type
-
         self.random_seeker_position = True
         self.random_hider_position = True
         self.init_states(filename)
+
+    @property
+    def init_full_state(self):
+        state = self._init_full_state
+
+        def random_agent_position(state: np.ndarray, agent: AgentType) -> np.ndarray:
+            state = FullStateDataModifier.remove_agent(self._init_full_state, agent)
+            random_position = FullStateDataExtractor.get_random_position(
+                state, TileType.EMPTY
+            )
+            return FullStateDataModifier.place_agent(state, random_position, agent)
+
+        if self.random_seeker_position:
+            state = random_agent_position(state, AgentType.SEEKER)
+        if self.random_hider_position:
+            random_agent_position(state, AgentType.HIDER)
+        FullStateDataExtractor.get_agent_position(state, AgentType.SEEKER)
+        FullStateDataExtractor.get_agent_position(state, AgentType.HIDER)
+        return state
+
+    @init_full_state.setter
+    def init_full_state(self, value: np.ndarray):
+        self._init_full_state = value
+
+    @property
+    def active_state(self) -> np.ndarray:
+        return self.state.active_state
+
+    @property
+    def full(self) -> np.ndarray:
+        return self.state.full
+
+    @property
+    def partial(self) -> np.ndarray:
+        return self.state.partial
+
+    @property
+    def rgb(self) -> np.ndarray:
+        return self.state.rgb
+
+    @property
+    def feature_names(self) -> list[str]:
+        hider_position_names = ["Hider X", "Hider Y"]
+        seeker_position_names = ["Seeker X", "Seeker Y"]
+        distance_name = "Distance"
+        direction_names = ["Direction X", "Direction Y"]
+        obstacle_names = []
+        for i in range(self._num_obstacles):
+            for name in Object.feature_names_static():
+                obstacle_names.append(f"Obstacle {i} {name}")
+        box_names = []
+        for i in range(self._num_boxes):
+            for name in Object.feature_names_static():
+                box_names.append(f"Box {i} {name}")
+        return [
+            *hider_position_names,
+            *seeker_position_names,
+            distance_name,
+            *direction_names,
+            *obstacle_names,
+            *box_names,
+        ]
 
     def init_states(self, filename: str):
         self.init_full_state = self._load_env_from_file(filename)
@@ -73,7 +134,6 @@ class TagState:
         self.state.partial = self._create_partial_state(
             seeker_position, hider_position, objects
         )
-
         self.state.rgb = self._create_rgb_state()
 
     def update(
@@ -104,6 +164,76 @@ class TagState:
             return self._concatenate_double_state(states)
         else:
             raise ValueError("Two states are required to concatenate.")
+
+    def get_obstacle_positions(self) -> list[Position]:
+        return FullStateDataExtractor.get_positions(self.full, TileType.OBSTACLE)
+
+    def get_box_positions(self) -> list[Position]:
+        return FullStateDataExtractor.get_positions(self.full, TileType.BOX)
+
+    def get_all_possible_states(
+        self, active_agent: AgentType, inactive_agent: AgentType, objects: Objects
+    ) -> np.ndarray:
+        if self.state_type == StateType.FULL:
+            return self._get_all_possible_full_states(active_agent)
+        elif self.state_type == StateType.PARTIAL:
+            return self._get_all_possible_partial_states(
+                active_agent, inactive_agent, objects
+            )
+        elif self.state_type == StateType.RGB:
+            raise NotImplementedError("RGB state type not implemented yet.")
+        raise ValueError(f"Unknown state type: {self.state_type}")
+
+    def _load_env_from_file(self, filename: str) -> np.ndarray:
+        if not os.path.exists(filename):
+            logging.info(f"Current working directory: {os.getcwd()}")
+            raise FileNotFoundError(f"File {filename} does not exist.")
+
+        with open(filename, "r") as f:
+            env = [list(map(int, list(row.strip()))) for row in f.readlines()]
+
+        return np.array(env, dtype=np.uint8)
+
+    def _create_rgb_state(self) -> np.ndarray:
+        return np.full((self.screen_height, self.screen_width, 3), Color.WHITE.value)
+
+    def _validate_state(self, state: np.ndarray):
+        FullStateDataExtractor.get_agent_position(state, AgentType.SEEKER)
+        FullStateDataExtractor.get_agent_position(state, AgentType.HIDER)
+
+    def _create_partial_state(
+        self, seeker_position: Position, hider_position: Position, objects: Objects
+    ) -> np.ndarray:
+        goal_distance = seeker_position - hider_position
+        goal_direction = [goal_distance.x, goal_distance.y]
+
+        distance = np.linalg.norm(goal_direction)
+        distance_normalized = np.clip(
+            distance / np.sqrt(self.height**2 + self.width**2) * 255, 0, 255
+        )
+
+        direction_offset = 128
+        direction_normalized = np.clip(
+            [
+                (val / np.sqrt(self.height**2 + self.width**2)) * 127 + direction_offset
+                for val in goal_direction
+            ],
+            0,
+            255,
+        )
+
+        object_states = objects.state
+
+        return np.array(
+            [
+                *hider_position,
+                *seeker_position,
+                int(distance_normalized),
+                *map(int, direction_normalized),
+                *object_states,
+            ],
+            dtype=np.uint8,
+        )
 
     def _concatenate_single_state(self, state: np.ndarray) -> tuple[np.ndarray, bool]:
         seeker_exists = FullStateDataExtractor.agent_exist(state, AgentType.SEEKER)
@@ -151,141 +281,6 @@ class TagState:
 
         self._validate_state(state)
         return state, False
-
-    def get_obstacle_positions(self) -> list[Position]:
-        return FullStateDataExtractor.get_positions(self.full, TileType.OBSTACLE)
-
-    def get_box_positions(self) -> list[Position]:
-        return FullStateDataExtractor.get_positions(self.full, TileType.BOX)
-
-    def _validate_state(self, state: np.ndarray):
-        FullStateDataExtractor.get_agent_position(state, AgentType.SEEKER)
-        FullStateDataExtractor.get_agent_position(state, AgentType.HIDER)
-
-    def _create_partial_state(
-        self,
-        seeker_position: Position,
-        hider_position: Position,
-        objects: Objects,
-    ) -> np.ndarray:
-        goal_distance = seeker_position - hider_position
-        goal_direction = [goal_distance.x, goal_distance.y]
-
-        distance = np.linalg.norm(goal_direction)
-        distance_normalized = np.clip(
-            distance / np.sqrt(self.height**2 + self.width**2) * 255, 0, 255
-        )
-
-        direction_offset = 128
-        direction_normalized = np.clip(
-            [
-                (val / np.sqrt(self.height**2 + self.width**2)) * 127 + direction_offset
-                for val in goal_direction
-            ],
-            0,
-            255,
-        )
-
-        object_states = objects.state
-
-        return np.array(
-            [
-                *hider_position,
-                *seeker_position,
-                int(distance_normalized),
-                *map(int, direction_normalized),
-                *object_states,
-            ],
-            dtype=np.uint8,
-        )
-
-    @property
-    def feature_names(self) -> list[str]:
-        hider_position_names = ["Hider X", "Hider Y"]
-        seeker_position_names = ["Seeker X", "Seeker Y"]
-        distance_name = "Distance"
-        direction_names = ["Direction X", "Direction Y"]
-        obstacle_names = []
-        for i in range(self._num_obstacles):
-            for name in Object.feature_names_static():
-                obstacle_names.append(f"Obstacle {i} {name}")
-        box_names = []
-        for i in range(self._num_obstacles):
-            for name in Object.feature_names_static():
-                box_names.append(f"Obstacle {i} {name}")
-        return [
-            *hider_position_names,
-            *seeker_position_names,
-            *distance_name,
-            *direction_names,
-            *obstacle_names,
-            *box_names,
-        ]
-
-    def _create_rgb_state(self) -> np.ndarray:
-        return np.full((self.screen_height, self.screen_width, 3), Color.WHITE.value)
-
-    def _load_env_from_file(self, filename: str) -> np.ndarray:
-        if not os.path.exists(filename):
-            logging.info(f"Current working directory: {os.getcwd()}")
-            raise FileNotFoundError(f"File {filename} does not exist.")
-
-        with open(filename, "r") as f:
-            env = [list(map(int, list(row.strip()))) for row in f.readlines()]
-
-        return np.array(env, dtype=np.uint8)
-
-    @property
-    def init_full_state(self):
-        state = self._init_full_state
-
-        def random_agent_position(state: np.ndarray, agent: AgentType) -> np.ndarray:
-            state = FullStateDataModifier.remove_agent(self._init_full_state, agent)
-            random_position = FullStateDataExtractor.get_random_position(
-                state, TileType.EMPTY
-            )
-            return FullStateDataModifier.place_agent(state, random_position, agent)
-
-        if self.random_seeker_position:
-            state = random_agent_position(state, AgentType.SEEKER)
-        if self.random_hider_position:
-            random_agent_position(state, AgentType.HIDER)
-        FullStateDataExtractor.get_agent_position(state, AgentType.SEEKER)
-        FullStateDataExtractor.get_agent_position(state, AgentType.HIDER)
-        return state
-
-    @init_full_state.setter
-    def init_full_state(self, value: np.ndarray):
-        self._init_full_state = value
-
-    @property
-    def active_state(self) -> np.ndarray:
-        return self.state.active_state
-
-    @property
-    def full(self) -> np.ndarray:
-        return self.state.full
-
-    @property
-    def partial(self) -> np.ndarray:
-        return self.state.partial
-
-    @property
-    def rgb(self) -> np.ndarray:
-        return self.state.rgb
-
-    def get_all_possible_states(
-        self, active_agent: AgentType, inactive_agent: AgentType, objects: Objects
-    ) -> np.ndarray:
-        if self.state_type == StateType.FULL:
-            return self._get_all_possible_full_states(active_agent)
-        elif self.state_type == StateType.PARTIAL:
-            return self._get_all_possible_partial_states(
-                active_agent, inactive_agent, objects
-            )
-        elif self.state_type == StateType.RGB:
-            raise NotImplementedError("RGB state type not implemented yet.")
-        raise ValueError(f"Unknown state type: {self.state_type}")
 
     def _get_all_possible_full_states(self, active_agent: AgentType) -> np.ndarray:
         clean_agent_state = self.state.full.copy()
@@ -343,6 +338,30 @@ class TagState:
                 states[active_agent_position.row_major_order] = state
         return states
 
+    def get_occluded_states(self) -> np.ndarray:
+        if self.state_type != StateType.FULL:
+            raise ValueError(
+                f"Occlusion is only supported for full state type, not {self.state_type}"
+            )
+
+        states = np.ndarray(
+            (self.height, self.width, *self.full_state_size), dtype=np.uint8
+        )
+
+        for y in range(self.height):
+            for x in range(self.width):
+                state = self.state.full.copy()
+                state = FullStateDataModifier.occlude(state, Position(x, y))
+                torch_state = get_torch_from_numpy(state)
+                states[y, x] = torch_state.unsqueeze(0)
+        return states
+
+    def _create_empty_full_state(self):
+        return np.zeros((self.height, self.width), dtype=np.uint8)
+
+    def _create_empty_partial_state(self):
+        return np.ndarray(self.partial_state_size, dtype=np.uint8)
+
     @property
     def full_state_size(self) -> tuple[int, int]:
         return self.init_full_state.shape[0], self.init_full_state.shape[1]
@@ -396,27 +415,3 @@ class TagState:
         return len(
             FullStateDataExtractor.get_positions(self.init_full_state, TileType.BOX)
         )
-
-    def _create_empty_full_state(self):
-        return np.zeros((self.height, self.width), dtype=np.uint8)
-
-    def _create_empty_partial_state(self):
-        return np.ndarray(self.partial_state_size, dtype=np.uint8)
-
-    def get_occluded_states(self) -> np.ndarray:
-        if self.state_type != StateType.FULL:
-            raise ValueError(
-                f"Occlusion is only supported for full state type, not {self.state_type}"
-            )
-
-        states = np.ndarray(
-            (self.height, self.width, *self.full_state_size), dtype=np.uint8
-        )
-
-        for y in range(self.height):
-            for x in range(self.width):
-                state = self.state.full.copy()
-                state = FullStateDataModifier.occlude(state, Position(x, y))
-                torch_state = get_torch_from_numpy(state)
-                states[y, x] = torch_state.unsqueeze(0)
-        return states
