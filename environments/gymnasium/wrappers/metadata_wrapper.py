@@ -6,4 +6,4 @@ class MetadataWrapper(gym.Wrapper):
         super().__init__(env)
 
     def feature_names(self) -> list[str]:
-        return self.env.get_wrapper_attr("feature_names")()
+        return self.env.get_wrapper_attr("feature_names")

@@ -28,12 +28,28 @@ class MultiAgentShap(MultiAgentBase):
         shap_values = [self._explain_single_agent(agent) for agent in self.models]
         return shap_values
 
-    def plot(self, shap_values: Any, **kwargs):
-        feature_names = kwargs.get("feature_names", None)
+    def plot(
+        self,
+        shap_values: Any,
+        feature_names: list[str] | None = None,
+        include: list[str] | None = None,
+    ):
+        test_states = self.test_states
+        if include is not None and feature_names is not None:
+            included_indices = [
+                i for i, name in enumerate(feature_names) if name in include
+            ]
+            shap_values = [
+                agent_shap_values[:, included_indices, :]
+                for agent_shap_values in shap_values
+            ]
+            test_states = test_states[:, included_indices]
+            feature_names = include
+
         for agent_shap_values in shap_values:
             mean_shap_values = agent_shap_values.mean(axis=2)
             shap.summary_plot(
-                mean_shap_values, self.test_states, feature_names=feature_names
+                mean_shap_values, test_states, feature_names=feature_names
             )
 
     def _explain_single_agent(self, agent: rl.SingleAgentBase) -> Any:

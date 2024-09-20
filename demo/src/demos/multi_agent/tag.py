@@ -51,12 +51,24 @@ class TagDemo:
         logging.info("Learning...")
         self.dqn.learn(10)
         logging.info("Shap setup...")
-        shap = Shap(self.env, self.dqn)
+        shap = Shap(self.env, self.dqn, samples=10)
         logging.info("Explaining...")
         shap_values = shap.explain()
         env = MetadataWrapper(self.env)
         feature_names = env.feature_names()
-        shap.plot(shap_values, feature_names=feature_names)
+        shap.plot(
+            shap_values,
+            feature_names=feature_names,
+            include=[
+                "Hider X",
+                "Hider Y",
+                "Seeker X",
+                "Seeker Y",
+                "Distance",
+                "Direction X",
+                "Direction Y",
+            ],
+        )
 
         self.show(False)
 

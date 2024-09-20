@@ -48,4 +48,8 @@ class Shap:
         return self.explainer.explain()
 
     def plot(self, shap_values: Any, **kwargs):
-        return self.explainer.plot(shap_values, **kwargs)
+        feature_names = kwargs.get("feature_names", None)
+        include = kwargs.get("include", None)
+        return self.explainer.plot(
+            shap_values, feature_names=feature_names, include=include
+        )
