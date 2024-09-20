@@ -58,7 +58,7 @@ class MazeDemo:
                 rewards = 0
 
                 for t in count():
-                    action = dqn.predict(state)
+                    action = dqn.predict_action(state)
                     observation, reward, terminated, truncated, _ = self.env.step(
                         action.item()
                     )

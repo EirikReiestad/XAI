@@ -120,7 +120,7 @@ class DQN(SingleAgentBase):
         rollout_return = RolloutReturn()
 
         for t in count():
-            action = self.predict(state)
+            action = self.predict_action(state)
             observation, reward, terminated, truncated, _ = self.env.step(action.item())
             next_state = torch.tensor(
                 observation, device=device, dtype=torch.float32
@@ -191,6 +191,13 @@ class DQN(SingleAgentBase):
         self._soft_update_target_net()
 
     def predict(self, state: torch.Tensor) -> torch.Tensor:
+        checker.raise_if_not_same_shape_as_observation(
+            state, self.env.observation_space, "state"
+        )
+        with torch.no_grad():
+            return self.policy_net(state)
+
+    def predict_action(self, state: torch.Tensor) -> torch.Tensor:
         checker.raise_if_not_same_shape_as_observation(
             state, self.env.observation_space, "state"
         )
