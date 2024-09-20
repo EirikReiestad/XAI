@@ -16,20 +16,24 @@ class Shap:
     def __init__(self, env: gym.Env, model: SingleAgentBase):
         self.env = env
         self.model = model
-        self.background_states, self.test_states = self._sample_states(1000)
+        self.background_states, self.test_states = self._sample_states(200)
 
-    def explain(self):
+    def explain(self) -> np.ndarray:
         explainer = shap.Explainer(self.model.predict, self.background_states)
-        shap_values = explainer(self.test_states)
+        shap_values = explainer(self.test_states).values
         return shap_values
 
-    def plot(self, shap_values: Any):
-        shap.summary_plot(shap_values, self.test_states)
+    def plot(self, shap_values: Any, **kwargs):
+        feature_names = kwargs.get("feature_names", None)
+        mean_shap_values = shap_values.mean(axis=2)
+        shap.summary_plot(
+            mean_shap_values, self.test_states, feature_names=feature_names
+        )
 
     def _sample_states(self, num_states: int, test: float = 0.2):
         states = self._generate_states(num_states)
-        background_states = states[: int(num_states * test)]
-        test_states = states[int(num_states * test) :]
+        background_states = states[: int(num_states * (1 - test))]
+        test_states = states[int(num_states * (1 - test)) :]
         return background_states, test_states
 
     def _generate_states(self, num_states) -> np.ndarray:
