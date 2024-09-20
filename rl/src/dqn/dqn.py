@@ -190,12 +190,12 @@ class DQN(SingleAgentBase):
 
         self._soft_update_target_net()
 
-    def predict(self, state: torch.Tensor) -> torch.Tensor:
+    def predict(self, state: torch.Tensor) -> np.ndarray:
         checker.raise_if_not_same_shape_as_observation(
             state, self.env.observation_space, "state"
         )
         with torch.no_grad():
-            return self.policy_net(state)
+            return self.policy_net(state).detach().numpy()
 
     def predict_action(self, state: torch.Tensor) -> torch.Tensor:
         checker.raise_if_not_same_shape_as_observation(

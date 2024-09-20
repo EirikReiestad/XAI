@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+import numpy as np
 import torch
 
 from rl.src.managers import WandBConfig, WandBManager
@@ -14,7 +15,11 @@ class SingleAgentBase(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def predict(self, state: torch.Tensor) -> torch.Tensor:
+    def predict(self, state: torch.Tensor) -> np.ndarray:
+        raise NotImplementedError
+
+    @abstractmethod
+    def predict_action(self, state: torch.Tensor) -> torch.Tensor:
         raise NotImplementedError
 
     @abstractmethod
