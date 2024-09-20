@@ -36,17 +36,17 @@ class TagDemo:
             self.env,
             2,
             "dqnpolicy",
-            wandb=True,
+            wandb=False,
             wandb_config=wandb_config,
             model_name=model_name,
-            save_model=True,
+            save_model=False,
             load_model=False,
             run_path="eirikreiestad-ntnu/tag-v0-idun",
             model_artifact="model_30",
         )
 
     def run(self):
-        self.dqn.learn(1000000)
+        self.dqn.learn(1)
 
         self.plotter = Plotter()
         self.renderer = Renderer(10, 10, 600, 600)
@@ -64,7 +64,7 @@ class TagDemo:
             agent_rewards = [0, 0]
 
             for t in count():
-                predicted_actions = self.dqn.predict(state)
+                predicted_actions = self.dqn.predict_actions(state)
                 actions = [action.item() for action in predicted_actions]
                 (
                     full_state,

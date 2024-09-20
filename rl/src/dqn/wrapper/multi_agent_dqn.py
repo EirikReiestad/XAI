@@ -78,7 +78,7 @@ class MultiAgentDQN(MultiAgentBase):
         data = [{} for _ in range(self.num_agents)]
 
         for t in count():
-            actions = self.predict(state)
+            actions = self.predict_actions(state)
             actions = [action.item() for action in actions]
             (
                 full_state,
@@ -151,6 +151,9 @@ class MultiAgentDQN(MultiAgentBase):
 
     def predict(self, state: torch.Tensor) -> list[torch.Tensor]:
         return [agent.predict(state) for agent in self.agents]
+
+    def predict_actions(self, state: torch.Tensor) -> list[torch.Tensor]:
+        return [agent.predict_action(state) for agent in self.agents]
 
     def load(
         self,
