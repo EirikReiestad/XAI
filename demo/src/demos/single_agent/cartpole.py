@@ -34,6 +34,7 @@ class CartPoleDemo:
         self.shap = Shap(self.env, dqn)
         logging.info("Explaining...")
         shap_values = self.shap.explain()
+        print(shap_values)
         self.shap.plot(shap_values)
 
         return

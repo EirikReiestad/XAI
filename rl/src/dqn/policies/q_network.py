@@ -48,6 +48,9 @@ class QNetwork(BasePolicy):
         return nn.Sequential(*layers)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        if isinstance(x, np.ndarray):
+            x = torch.tensor(x, dtype=torch.float32)
+
         x = torch.flatten(x, start_dim=1)
         x = x.to(next(self.fc_feature.parameters()).device)
         x = self.fc_feature(x)
