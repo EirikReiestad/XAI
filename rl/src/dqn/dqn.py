@@ -96,6 +96,8 @@ class DQN(SingleAgentBase):
         self.steps_done = 0
 
     def learn(self, total_timesteps: int):
+        self.policy_net.train()
+        self.target_net.eval()
         try:
             for i in range(total_timesteps):
                 _, rewards, steps = self._collect_rollout()
@@ -381,4 +383,4 @@ class DQN(SingleAgentBase):
         self.policy_net.eval()
         self.target_net.eval()
 
-        self.steps_done = metadata[f"steps_done"]
+        self.steps_done = metadata["steps_done"]
