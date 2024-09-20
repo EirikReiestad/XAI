@@ -11,6 +11,7 @@ from demo.src.common import EpisodeInformation
 from demo.src.plotters import Plotter
 from environments.gymnasium.wrappers import MultiAgentEnv, StateWrapper
 from methods.src.saliency_map import SaliencyMap
+from methods import Shap, SaliencyMap
 from renderer import Renderer
 from rl.src.dqn.wrapper import MultiAgentDQN
 from rl.src.common.getter import get_torch_from_numpy
@@ -48,12 +49,15 @@ class TagDemo:
     def run(self):
         self.dqn.learn(1)
 
-        self.plotter = Plotter()
+        self.show()
+
+    def show(self):
+        plt.ion()
+
         self.renderer = Renderer(10, 10, 600, 600)
         self.saliency_map = SaliencyMap()
 
-        plt.ion()
-
+        self.plotter = Plotter()
         self.env = StateWrapper(self.env)
 
         for i_episode in range(1000):

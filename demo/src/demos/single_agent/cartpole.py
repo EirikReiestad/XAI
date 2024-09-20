@@ -9,6 +9,7 @@ import torch
 from demo.src.common import EpisodeInformation
 from demo.src.plotters import Plotter
 from rl.src.dqn import DQN
+from methods import Shap
 
 # Set up matplotlib
 is_ipython = "inline" in matplotlib.get_backend()
@@ -26,9 +27,16 @@ class CartPoleDemo:
         self.env = gym.make("CartPole-v1")
 
     def run(self):
-        dqn = DQN(self.env, "dqnpolicy", wandb=True)
-        dqn.learn(200)
-        print("Training complete")
+        dqn = DQN(self.env, "dqnpolicy", wandb=False)
+        logging.info("Learning...")
+        dqn.learn(10)
+
+        self.shap = Shap(self.env, dqn)
+        logging.info("Explaining...")
+        shap_values = self.shap.explain()
+        self.shap.plot(shap_values)
+
+        return
 
         self.env = gym.make("CartPole-v1", render_mode="human")
 

@@ -1,8 +1,5 @@
 import numpy as np
 import pygame as pg
-import matplotlib.cm as cm
-import matplotlib.colors as mcolors
-from scipy.ndimage import zoom
 
 from utils import Color
 from .utils import value_to_color
