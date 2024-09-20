@@ -42,15 +42,16 @@ class SingleAgentShap(SingleAgentBase):
         mean_shap_values = shap_values.mean(axis=2)
         shap.summary_plot(mean_shap_values, test_states, feature_names=feature_names)
 
-    def _sample_states(self, num_states: int, test: float = 0.2):
-        states = self._generate_states(num_states)
+    def _sample_states(
+        self, num_states: int, test: float = 0.2, sample_prob: float = 0.4
+    ):
+        states = self._generate_states(num_states, sample_prob)
         background_states = states[: int(num_states * (1 - test))]
         test_states = states[int(num_states * (1 - test)) :]
         return background_states, test_states
 
-    def _generate_states(self, num_states) -> np.ndarray:
+    def _generate_states(self, num_states: int, sample_prob: float) -> np.ndarray:
         states: list[np.ndarray] = []
-        sample_prob = 0.1
 
         state, _ = self.env.reset()
         for _ in count():

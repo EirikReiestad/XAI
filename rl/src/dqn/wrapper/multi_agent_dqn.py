@@ -43,6 +43,10 @@ class MultiAgentDQN(MultiAgentBase):
 
     def learn(self, total_timesteps: int) -> list[list[RolloutReturn]]:
         results = []
+        for agent in self.agents:
+            agent.policy_net.train()
+            agent.target_net.train()
+
         try:
             for i in range(total_timesteps):
                 rollout, episode_rewards, steps, episode_data = self._collect_rollouts()

@@ -33,25 +33,33 @@ class TagDemo:
         env = gym.make("TagEnv-v0", render_mode="rgb_array")
         model_name = "tag-v0"
         self.env = MultiAgentEnv(env)
-        wandb_config = WandBConfig(project="tag-v0-local")
+        wandb_config = WandBConfig(project="tag-v0-idun")
         self.dqn = MultiAgentDQN(
             self.env,
             self.num_agents,
             "dqnpolicy",
-            wandb=False,
+            wandb=True,
             wandb_config=wandb_config,
             model_name=model_name,
-            save_model=False,
-            load_model=False,
+            save_model=True,
+            load_model=True,
             run_path="eirikreiestad-ntnu/tag-v0-idun",
-            model_artifact="model_30",
+            model_artifact="model_4500",
+            version_numbers=["v0", "v1"],
         )
 
     def run(self):
         logging.info("Learning...")
-        self.dqn.learn(10)
+        self.dqn.learn(10000)
+
+        self.shap(False)
+        self.show(False)
+
+    def shap(self, run: bool = True):
+        if not run:
+            return
         logging.info("Shap setup...")
-        shap = Shap(self.env, self.dqn, samples=10)
+        shap = Shap(self.env, self.dqn, samples=200)
         logging.info("Explaining...")
         shap_values = shap.explain()
         env = MetadataWrapper(self.env)
@@ -67,10 +75,12 @@ class TagDemo:
                 "Distance",
                 "Direction X",
                 "Direction Y",
+                "Box 0 x",
+                "Box 0 y",
+                "Box 0 grabbable",
+                "Box 0 grabbed",
             ],
         )
-
-        self.show(False)
 
     def show(self, run: bool = True):
         if not run:
@@ -84,8 +94,8 @@ class TagDemo:
         self.plotter = Plotter()
         self.env = StateWrapper(self.env)
 
-        for i_episode in range(1000):
-            self.dqn.learn(10)
+        for i_episode in range(100):
+            self.dqn.learn(1)
             state, _ = self.env.reset()
             state = torch.tensor(state, device=device, dtype=torch.float32).unsqueeze(0)
 
