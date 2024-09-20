@@ -100,7 +100,7 @@ class TagDemo:
 
         if isinstance(rgb, np.ndarray):
             self.renderer.render(
-                background=rgb, q_values_map=q_values_map, saliency_map=saliency_map
+                background=rgb, q_values=q_values_map, saliency_map=saliency_map
             )
 
     def _get_saliency_map(self, state: np.ndarray) -> np.ndarray:
