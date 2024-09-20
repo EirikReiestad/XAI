@@ -1,6 +1,9 @@
 from abc import ABC, abstractmethod
-from rl.src.managers import WandBConfig, WandBManager
+
+import numpy as np
 import torch
+
+from rl.src.managers import WandBConfig, WandBManager
 
 
 class MultiAgentBase(ABC):
@@ -11,12 +14,21 @@ class MultiAgentBase(ABC):
     ):
         self.wandb_manager = WandBManager(wandb, wandb_config)
 
+    @property
+    @abstractmethod
+    def models(self) -> list:
+        raise NotImplementedError
+
     @abstractmethod
     def learn(self, total_timesteps: int):
         raise NotImplementedError
 
     @abstractmethod
-    def predict(self, state: torch.Tensor) -> torch.Tensor | list[torch.Tensor]:
+    def predict(self, state: torch.Tensor) -> list[np.ndarray | list[np.ndarray]]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def predict_actions(self, state: torch.Tensor) -> list[torch.Tensor]:
         raise NotImplementedError
 
     @abstractmethod

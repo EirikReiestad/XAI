@@ -15,7 +15,7 @@ class SingleAgentBase(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def predict(self, states: list[torch.Tensor] | torch.Tensor) -> np.ndarray:
+    def predict(self, states: torch.Tensor) -> list[np.ndarray] | np.ndarray:
         raise NotImplementedError
 
     @abstractmethod

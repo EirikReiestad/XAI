@@ -10,7 +10,6 @@ import torch
 from demo.src.common import EpisodeInformation
 from demo.src.plotters import Plotter
 from environments.gymnasium.wrappers import MultiAgentEnv, StateWrapper
-from methods.src.saliency_map import SaliencyMap
 from methods import Shap, SaliencyMap
 from renderer import Renderer
 from rl.src.dqn.wrapper import MultiAgentDQN
@@ -29,13 +28,15 @@ class TagDemo:
         self.episode_information = EpisodeInformation(
             durations=[], rewards=[], object_moved_distance=[]
         )
+        self.num_agents = 2
+
         env = gym.make("TagEnv-v0", render_mode="rgb_array")
         model_name = "tag-v0"
         self.env = MultiAgentEnv(env)
-        wandb_config = WandBConfig(project="tag-v0-idun")
+        wandb_config = WandBConfig(project="tag-v0-local")
         self.dqn = MultiAgentDQN(
             self.env,
-            2,
+            self.num_agents,
             "dqnpolicy",
             wandb=False,
             wandb_config=wandb_config,
@@ -47,11 +48,20 @@ class TagDemo:
         )
 
     def run(self):
-        self.dqn.learn(1)
+        self.dqn.learn(10)
+        shap = Shap(self.env, self.dqn)
+        logging.info("Explaining...")
+        shap_values = shap.explain()
+        shap.plot(
+            shap_values,
+        )
 
-        self.show()
+        self.show(False)
 
-    def show(self):
+    def show(self, run: bool = True):
+        if not run:
+            return
+
         plt.ion()
 
         self.renderer = Renderer(10, 10, 600, 600)

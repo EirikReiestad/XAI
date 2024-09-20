@@ -29,7 +29,7 @@ class CartPoleDemo:
     def run(self):
         dqn = DQN(self.env, "dqnpolicy", wandb=False)
         logging.info("Learning...")
-        dqn.learn(1)
+        dqn.learn(200)
 
         self.shap = Shap(self.env, dqn)
         logging.info("Explaining...")
