@@ -1,5 +1,3 @@
-import random
-from itertools import count
 from typing import Any
 
 import gymnasium as gym
@@ -21,6 +19,7 @@ class Shap:
         self,
         env: gym.Env | MultiAgentEnv,
         model: rl.SingleAgentBase | rl.MultiAgentBase,
+        samples: int = 100,
     ):
         self.multi_agent = isinstance(env, MultiAgentEnv)
 
@@ -37,11 +36,11 @@ class Shap:
         if self.multi_agent:
             assert isinstance(self.env, MultiAgentEnv)
             assert isinstance(self.model, rl.MultiAgentBase)
-            self.explainer = MultiAgentShap(self.env, self.model)
+            self.explainer = MultiAgentShap(self.env, self.model, samples)
         else:
             assert isinstance(self.env, gym.Env)
             assert isinstance(self.model, rl.SingleAgentBase)
-            self.explainer = SingleAgentShap(self.env, self.model)
+            self.explainer = SingleAgentShap(self.env, self.model, samples)
 
         self.test_states = self.explainer.test_states
 
@@ -49,8 +48,4 @@ class Shap:
         return self.explainer.explain()
 
     def plot(self, shap_values: Any, **kwargs):
-        feature_names = kwargs.get("feature_names", None)
-        mean_shap_values = shap_values.mean(axis=2)
-        shap.summary_plot(
-            mean_shap_values, self.test_states, feature_names=feature_names
-        )
+        return self.explainer.plot(shap_values, **kwargs)

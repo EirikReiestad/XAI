@@ -1,3 +1,4 @@
+import logging
 import random
 from itertools import count
 from typing import Any
@@ -6,19 +7,22 @@ import numpy as np
 import shap
 import torch
 
-from environments.gymnasium.wrappers import MultiAgentEnv
-from .base import MultiAgentBase
 import rl
+from environments.gymnasium.wrappers import MultiAgentEnv
+
+from .base import MultiAgentBase
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 class MultiAgentShap(MultiAgentBase):
-    def __init__(self, env: MultiAgentEnv, model: rl.MultiAgentBase):
+    def __init__(self, env: MultiAgentEnv, model: rl.MultiAgentBase, samples: int):
         self.env = env
         self.models = model.models
         self.model = model
-        self.background_states, self.test_states = self._sample_states(10000)
+        self.background_states, self.test_states = self._sample_states(samples)
+
+        logging.info("MultiAgentShap initialized")
 
     def explain(self) -> list[np.ndarray]:
         shap_values = [self._explain_single_agent(agent) for agent in self.models]
@@ -26,10 +30,11 @@ class MultiAgentShap(MultiAgentBase):
 
     def plot(self, shap_values: Any, **kwargs):
         feature_names = kwargs.get("feature_names", None)
-        mean_shap_values = shap_values.mean(axis=2)
-        shap.summary_plot(
-            mean_shap_values, self.test_states, feature_names=feature_names
-        )
+        for agent_shap_values in shap_values:
+            mean_shap_values = agent_shap_values.mean(axis=2)
+            shap.summary_plot(
+                mean_shap_values, self.test_states, feature_names=feature_names
+            )
 
     def _explain_single_agent(self, agent: rl.SingleAgentBase) -> Any:
         explainer = shap.Explainer(agent.predict, self.background_states)
