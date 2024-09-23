@@ -33,54 +33,27 @@ class TagDemo:
         env = gym.make("TagEnv-v0", render_mode="rgb_array")
         model_name = "tag-v0"
         self.env = MultiAgentEnv(env)
-        wandb_config = WandBConfig(project="tag-v0-idun")
+        wandb_config = WandBConfig(project="tag-v0-local")
         self.dqn = MultiAgentDQN(
             self.env,
             self.num_agents,
             "dqnpolicy",
-            wandb=True,
+            wandb=False,
             wandb_config=wandb_config,
             model_name=model_name,
-            save_model=True,
-            load_model=True,
+            save_model=False,
+            load_model=False,
             run_path="eirikreiestad-ntnu/tag-v0-idun",
-            model_artifact="model_4500",
+            model_artifact="model_3000",
             version_numbers=["v0", "v1"],
         )
 
     def run(self):
         logging.info("Learning...")
-        self.dqn.learn(10000)
+        self.dqn.learn(0)
 
         self.shap(False)
-        self.show(False)
-
-    def shap(self, run: bool = True):
-        if not run:
-            return
-        logging.info("Shap setup...")
-        shap = Shap(self.env, self.dqn, samples=200)
-        logging.info("Explaining...")
-        shap_values = shap.explain()
-        env = MetadataWrapper(self.env)
-        feature_names = env.feature_names()
-        shap.plot(
-            shap_values,
-            feature_names=feature_names,
-            include=[
-                "Hider X",
-                "Hider Y",
-                "Seeker X",
-                "Seeker Y",
-                "Distance",
-                "Direction X",
-                "Direction Y",
-                "Box 0 x",
-                "Box 0 y",
-                "Box 0 grabbable",
-                "Box 0 grabbed",
-            ],
-        )
+        self.show(True)
 
     def show(self, run: bool = True):
         if not run:
@@ -94,8 +67,7 @@ class TagDemo:
         self.plotter = Plotter()
         self.env = StateWrapper(self.env)
 
-        for i_episode in range(100):
-            self.dqn.learn(1)
+        for i_episode in range(10000):
             state, _ = self.env.reset()
             state = torch.tensor(state, device=device, dtype=torch.float32).unsqueeze(0)
 
@@ -165,8 +137,38 @@ class TagDemo:
                 states[j, i] = torch_column
 
         q_values = self.dqn.get_q_values(states, 0)
-        q_values_map = get_q_values_map(states=full_state, q_values=q_values)
+        q_values_map = get_q_values_map(
+            states=full_state, q_values=q_values, max_q_values=True
+        )
         return q_values_map
+
+    def shap(self, run: bool = True):
+        if not run:
+            return
+
+        logging.info("Shap setup...")
+        shap = Shap(self.env, self.dqn, samples=1000)
+        logging.info("Explaining...")
+        shap_values = shap.explain()
+        env = MetadataWrapper(self.env)
+        feature_names = env.feature_names()
+        shap.plot(
+            shap_values,
+            feature_names=feature_names,
+            include=[
+                "Hider X",
+                "Hider Y",
+                "Seeker X",
+                "Seeker Y",
+                "Distance",
+                "Direction X",
+                "Direction Y",
+                "Box 0 x",
+                "Box 0 y",
+                "Box 0 grabbable",
+                "Box 0 grabbed",
+            ],
+        )
 
 
 if __name__ == "__main__":
