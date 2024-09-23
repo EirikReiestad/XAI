@@ -62,8 +62,6 @@ class Renderer:
 
         surf = pg.surfarray.make_surface(color_matrix)
         surf = pg.transform.scale(surf, (self.screen_height, self.screen_width))
-        surf = pg.transform.flip(surf, True, False)
-        surf = pg.transform.rotate(surf, 90)
 
         return surf
 

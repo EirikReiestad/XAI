@@ -1,13 +1,15 @@
 import numpy as np
 
 
-def get_q_values_map(states: np.ndarray, q_values: np.ndarray, **args) -> np.ndarray:
+def get_q_values_map(
+    states: np.ndarray, q_values: np.ndarray, max_q_values: bool = False
+) -> np.ndarray:
     if states.shape[:2] != q_values.shape[:2]:
         raise ValueError(
             f"States shape {states.shape[:2]} does not match Q-values shape {q_values.shape[:2]}"
         )
 
-    if args.get("max_q_values"):
+    if max_q_values:
         max_q_values = np.max(q_values, axis=2)
         normalized_max_q_values = (max_q_values - np.min(max_q_values)) / np.ptp(
             max_q_values

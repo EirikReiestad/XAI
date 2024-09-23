@@ -45,7 +45,7 @@ class TagEnv(gym.Env):
         screen_height = 600
         folder_name = "environments/gymnasium/data/tag/"
         filename = "env-0-10-10.txt"
-        self.state_type = StateType.PARTIAL
+        self.state_type = StateType.FULL
         self.tag_radius = 1
         self.tag_head_start = 20
         self.max_steps = 50
