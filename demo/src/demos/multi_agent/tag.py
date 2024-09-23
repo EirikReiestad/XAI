@@ -38,10 +38,10 @@ class TagDemo:
             self.env,
             self.num_agents,
             "dqnpolicy",
-            wandb=False,
+            wandb=True,
             wandb_config=wandb_config,
             model_name=model_name,
-            save_model=False,
+            save_model=True,
             load_model=False,
             run_path="eirikreiestad-ntnu/tag-v0-idun",
             model_artifact="model_3000",
@@ -50,10 +50,10 @@ class TagDemo:
 
     def run(self):
         logging.info("Learning...")
-        self.dqn.learn(0)
+        self.dqn.learn(10000)
 
         self.shap(False)
-        self.show(True)
+        self.show(False)
 
     def show(self, run: bool = True):
         if not run:
