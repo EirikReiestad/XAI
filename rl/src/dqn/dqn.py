@@ -52,7 +52,7 @@ class DQN(SingleAgentBase):
         wandb: bool = False,
         wandb_config: WandBConfig | None = None,
         save_model: bool = False,
-        save_every_n_episodes: int = 50,
+        save_every_n_episodes: int = 100,
         model_path: str = "models/",
         model_name: str = "dqn",
         load_model: bool = False,
@@ -132,7 +132,7 @@ class DQN(SingleAgentBase):
                 _, rewards, steps, frames = self._collect_rollout()
                 if rewards > max_gif_reward:
                     max_gif_reward = rewards
-                    self._save_gif_local(frames)
+                    self.save_gif_local(frames)
 
                 self.wandb_manager.log(
                     {
@@ -142,6 +142,7 @@ class DQN(SingleAgentBase):
                     },
                 )
                 if self.episodes % self.save_every_n_episodes == 0:
+                    max_gif_reward = -float("inf")
                     self.save(self.episodes)
         except Exception as e:
             logging.error(f"Error: {e}")
@@ -207,7 +208,6 @@ class DQN(SingleAgentBase):
                     assert isinstance(rgb_array, np.ndarray)
                     pil_image = Image.fromarray(rgb_array.transpose(1, 0, 2), "RGB")
                     pil_image = pil_image.rotate(-90, expand=True)
-
                     frames.append(pil_image)
 
             if terminated or truncated:
@@ -405,10 +405,10 @@ class DQN(SingleAgentBase):
         else:
             self.wandb_manager.save_gif(path, step=episode)
 
-    def _save_gif_local(self, frames: list) -> None:
+    def save_gif_local(self, frames: list, append: str = "") -> None:
         if len(frames) != 0:
             frames[0].save(
-                f"{self.gif_path}/{self.gif_name}.gif",
+                f"{self.gif_path}/{self.gif_name}{append}.gif",
                 save_all=True,
                 append_images=frames[1:],
                 loop=0,
