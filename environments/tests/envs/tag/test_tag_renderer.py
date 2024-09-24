@@ -17,21 +17,15 @@ class TestTagRenderer(unittest.TestCase):
     def test_init_render(self):
         self.assertTrue(self.renderer.is_open)
 
-    def test_init_render_mode(self):
-        self.renderer.init_render_mode("rgb_array")
-        self.assertEqual(self.renderer.render_mode, "rgb_array")
-        with self.assertRaises(ValueError):
-            self.renderer.init_render_mode("invalid_mode")
-
     def test_render_rgb_array(self):
-        self.renderer.init_render_mode("rgb_array")
+        self.renderer.render_mode = "rgb_array"
         result = self.renderer.render(self.state)
         assert result is not None
         self.assertIsInstance(result, np.ndarray)
         self.assertEqual(result.shape, (300, 300, 3))
 
     def test_render_human(self):
-        self.renderer.init_render_mode("human")
+        self.renderer.render_mode = "human"
         result = self.renderer.render(self.state)
         self.assertIsNone(result)
 
