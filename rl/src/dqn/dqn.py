@@ -378,13 +378,15 @@ class DQN(SingleAgentBase):
                     q_values[y, x] = self.policy_net(state).cpu()
         return q_values
 
-    def save(self, episode: int, wandb_manager: WandBManager | None = None) -> None:
+    def save(
+        self, episode: int, wandb_manager: WandBManager | None = None, append: str = ""
+    ) -> None:
         """Save the policy network to the specified path."""
         path = f"{self.model_path}{self.model_name}"
         if not path.endswith(".pt"):
             path += ".pt"
         self._save_model(path, episode, wandb_manager)
-        self._save_gif(episode, wandb_manager)
+        self._save_gif(episode, wandb_manager, append=append)
 
     def _save_model(
         self, path: str, episode: int, wandb_manager: WandBManager | None = None
@@ -398,8 +400,10 @@ class DQN(SingleAgentBase):
         else:
             self.wandb_manager.save_model(path, step=episode, metadata=metadata)
 
-    def _save_gif(self, episode: int, wandb_manager: WandBManager | None = None):
-        path = f"{self.gif_path}/{self.gif_name}.gif"
+    def _save_gif(
+        self, episode: int, wandb_manager: WandBManager | None = None, append: str = ""
+    ):
+        path = f"{self.gif_path}/{self.gif_name}{append}.gif"
         if wandb_manager is not None:
             wandb_manager.save_gif(path, step=episode)
         else:

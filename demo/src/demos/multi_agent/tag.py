@@ -44,6 +44,7 @@ class TagDemo:
             save_every_n_episodes=20,
             save_model=True,
             load_model=False,
+            gif=True,
             run_path="eirikreiestad-ntnu/tag-v0-idun",
             model_artifact="model_3000",
             version_numbers=["v0", "v1"],
