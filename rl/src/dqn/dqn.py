@@ -386,6 +386,7 @@ class DQN(SingleAgentBase):
         if not path.endswith(".pt"):
             path += ".pt"
         self._save_model(path, episode, wandb_manager)
+        self._delete_model_local(path)
         self._save_gif(episode, wandb_manager, append=append)
 
     def _save_model(
@@ -400,14 +401,20 @@ class DQN(SingleAgentBase):
         else:
             self.wandb_manager.save_model(path, step=episode, metadata=metadata)
 
+    def _delete_model_local(self, path: str) -> None:
+        if not self.save_model:
+            return
+        if os.path.exists(path):
+            os.remove(path)
+
     def _save_gif(
         self, episode: int, wandb_manager: WandBManager | None = None, append: str = ""
     ):
         path = f"{self.gif_path}/{self.gif_name}{append}.gif"
         if wandb_manager is not None:
-            wandb_manager.save_gif(path, step=episode)
+            wandb_manager.save_gif(path, step=episode, append=append)
         else:
-            self.wandb_manager.save_gif(path, step=episode)
+            self.wandb_manager.save_gif(path, step=episode, append=append)
 
     def save_gif_local(self, frames: list, append: str = "") -> None:
         if len(frames) != 0:

@@ -187,8 +187,8 @@ class MultiAgentDQN(MultiAgentBase):
                 ):
                     rgb_array = self.env.render()
                     assert isinstance(rgb_array, np.ndarray)
-                    pil_image = Image.fromarray(rgb_array.transpose(1, 0, 2), "RGB")
-                    pil_image = pil_image.rotate(-90, expand=True)
+                    rgb_array_transposed = rgb_array.transpose(1, 0, 2)
+                    pil_image = Image.fromarray(rgb_array_transposed, "RGB")
                     frames.append(pil_image)
 
             state = observation
