@@ -52,7 +52,7 @@ class DQN(SingleAgentBase):
         wandb: bool = False,
         wandb_config: WandBConfig | None = None,
         save_model: bool = False,
-        save_every_n_episodes: int = 100,
+        save_every_n_episodes: int = 50,
         model_path: str = "models/",
         model_name: str = "dqn",
         load_model: bool = False,
@@ -205,7 +205,9 @@ class DQN(SingleAgentBase):
                 ):
                     rgb_array = self.env.render()
                     assert isinstance(rgb_array, np.ndarray)
-                    pil_image = Image.fromarray(rgb_array.swapaxes(0, 1), "RGB")
+                    pil_image = Image.fromarray(rgb_array.transpose(1, 0, 2), "RGB")
+                    pil_image = pil_image.rotate(-90, expand=True)
+
                     frames.append(pil_image)
 
             if terminated or truncated:
