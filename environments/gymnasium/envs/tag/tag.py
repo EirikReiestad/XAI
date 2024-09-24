@@ -38,7 +38,7 @@ logging.basicConfig(level=logging.INFO)
 class TagEnv(gym.Env):
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 50}
 
-    def __init__(self, render_mode: Optional[str] = None):
+    def __init__(self, render_mode: Optional[str] = "rgb_array"):
         self.height = 10
         self.width = 10
         screen_width = 600
@@ -57,7 +57,7 @@ class TagEnv(gym.Env):
         self.tag_renderer = TagRenderer(
             self.width, self.height, screen_width, screen_height
         )
-        self.tag_renderer.init_render_mode(render_mode)
+        self.render_mode = render_mode
 
         filename = folder_name + filename
         self.state = TagState(
@@ -405,3 +405,11 @@ class TagEnv(gym.Env):
     @property
     def feature_names(self) -> list[str]:
         return self.state.feature_names
+
+    @property
+    def render_mode(self) -> str | None:
+        return self.tag_renderer.render_mode
+
+    @render_mode.setter
+    def render_mode(self, mode: str | None):
+        self.tag_renderer.render_mode = mode

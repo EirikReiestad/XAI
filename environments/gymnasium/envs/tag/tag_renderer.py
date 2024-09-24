@@ -15,7 +15,7 @@ class TagRenderer:
         self.height = height
         self.screen_width = screen_width
         self.screen_height = screen_height
-        self.render_mode = None
+        self._render_mode = None
 
         self._init_render()
         self.post_init_screen = False
@@ -40,20 +40,25 @@ class TagRenderer:
         self.screen = pg.display.set_mode((self.screen_width, self.screen_height))
         self.post_init_screen = True
 
-    def init_render_mode(self, render_mode: Optional[str] = None):
+    @property
+    def render_mode(self) -> str | None:
+        return self._render_mode
+
+    @render_mode.setter
+    def render_mode(self, render_mode: Optional[str] = None):
         if render_mode is None:
-            return
+            return self._render_mode
         if render_mode and render_mode not in self.metadata["render_modes"]:
             raise ValueError(
                 f"Invalid render mode {render_mode}. "
                 f"Available modes: {self.metadata['render_modes']}"
             )
-        self.render_mode = render_mode
+        self._render_mode = render_mode
 
     def render(
         self, state: np.ndarray, render_mode: Optional[str] = None
     ) -> Optional[np.ndarray]:
-        self.init_render_mode(render_mode)
+        self.render_mode = render_mode
 
         color_matrix = np.full((self.height, self.width, 3), Color.WHITE.value)
         self.apply_color_masks(color_matrix, state)

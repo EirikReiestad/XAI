@@ -67,13 +67,16 @@ class MultiAgentDQN(MultiAgentBase):
         gifs = [[] for _ in range(self.num_agents)]
 
         try:
-            for i in range(total_timesteps):
+            for _ in range(total_timesteps):
+                self.episodes += 1
                 rollout, episode_rewards, steps, episode_data, gif = (
                     self._collect_rollouts()
                 )
 
                 for agent in range(self.num_agents):
                     if self.gif:
+                        if len(gif) == 0:
+                            continue
                         if episode_rewards[agent] > max_gif_rewards[agent]:
                             max_gif_rewards[agent] = episode_rewards[agent]
                             gifs[agent] = gif
@@ -83,16 +86,16 @@ class MultiAgentDQN(MultiAgentBase):
                     log[f"agent{agent}_reward"] = episode_rewards[agent]
                     log["steps_done"] = self.agents[agent].steps_done
                     log[f"agent{agent}_episode_steps"] = steps
-                    log["episode"] = i
+                    log["episode"] = self.episodes
                     for key, value in episode_data[agent].items():
                         log[f"agent{agent}_{key}"] = value
                 self.wandb_manager.log(log)
                 results.append(rollout)
 
-                if i % self.save_every_n_episodes == 0:
+                if self.episodes % self.save_every_n_episodes == 0:
                     max_gif_rewards = [-np.inf for _ in range(self.num_agents)]
                     self._save_gifs_local(gifs)
-                    self.save(i)
+                    self.save(self.episodes)
         except Exception as e:
             logging.error(e)
         finally:
@@ -218,11 +221,13 @@ class MultiAgentDQN(MultiAgentBase):
 
     def save(self, episode: int):
         for i in range(self.num_agents):
-            self.agents[i].save(episode, wandb_manager=self.wandb_manager)
+            self.agents[i].save(
+                episode, wandb_manager=self.wandb_manager, append=f"_agent{i}"
+            )
 
     def _save_gifs_local(self, gifs: list):
         for i in range(self.num_agents):
-            self.agents[i].save_gif_local(gifs[i], append="_agent{i}")
+            self.agents[i].save_gif_local(gifs[i], append=f"_agent{i}")
 
     def get_q_values(self, states: np.ndarray, agent: int) -> np.ndarray:
         return self.agents[agent].get_q_values(states)
