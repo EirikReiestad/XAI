@@ -388,6 +388,7 @@ class DQN(SingleAgentBase):
         self._save_model(path, episode, wandb_manager)
         self._delete_model_local(path)
         self._save_gif(episode, wandb_manager, append=append)
+        self._delete_gif_local(path)
 
     def _save_model(
         self, path: str, episode: int, wandb_manager: WandBManager | None = None
@@ -403,6 +404,12 @@ class DQN(SingleAgentBase):
 
     def _delete_model_local(self, path: str) -> None:
         if not self.save_model:
+            return
+        if os.path.exists(path):
+            os.remove(path)
+
+    def _delete_gif_local(self, path: str) -> None:
+        if not self.gif:
             return
         if os.path.exists(path):
             os.remove(path)
