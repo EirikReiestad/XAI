@@ -3,6 +3,7 @@ from itertools import count
 
 import numpy as np
 import torch
+from PIL import Image
 
 from environments.gymnasium.wrappers import MultiAgentEnv
 from rl.src.base import MultiAgentBase
@@ -27,6 +28,7 @@ class MultiAgentDQN(MultiAgentBase):
         run_path: str = "",
         model_artifact: str = "",
         version_numbers: list[str] = ["v0", "v1"],
+        gif: bool = False,
         **kwargs,
     ):
         super().__init__(wandb=wandb, wandb_config=wandb_config)
@@ -38,8 +40,22 @@ class MultiAgentDQN(MultiAgentBase):
 
         self.save_every_n_episodes = save_every_n_episodes
 
+        self.episodes = 0
+
         if load_model:
             self.load(run_path, model_artifact, version_numbers)
+
+        self._init_gif(gif)
+
+    def _init_gif(self, gif: bool) -> None:
+        self.gif = gif
+        if self.gif and self.env.render_mode != "rgb_array":
+            logging.warning(
+                "GIF is enabled but the environment does not support RGB array rendering."
+            )
+            self.gif = False
+        else:
+            self.gif_samples = 10
 
     def learn(self, total_timesteps: int) -> list[list[RolloutReturn]]:
         results = []
@@ -47,9 +63,20 @@ class MultiAgentDQN(MultiAgentBase):
             agent.policy_net.train()
             agent.target_net.train()
 
+        max_gif_rewards = [-np.inf for _ in range(self.num_agents)]
+        gifs = [[] for _ in range(self.num_agents)]
+
         try:
             for i in range(total_timesteps):
-                rollout, episode_rewards, steps, episode_data = self._collect_rollouts()
+                rollout, episode_rewards, steps, episode_data, gif = (
+                    self._collect_rollouts()
+                )
+
+                for agent in range(self.num_agents):
+                    if self.gif:
+                        if episode_rewards[agent] > max_gif_rewards[agent]:
+                            max_gif_rewards[agent] = episode_rewards[agent]
+                            gifs[agent] = gif
 
                 log = dict()
                 for agent in range(self.num_agents):
@@ -63,6 +90,8 @@ class MultiAgentDQN(MultiAgentBase):
                 results.append(rollout)
 
                 if i % self.save_every_n_episodes == 0:
+                    max_gif_rewards = [-np.inf for _ in range(self.num_agents)]
+                    self._save_gifs_local(gifs)
                     self.save(i)
         except Exception as e:
             logging.error(e)
@@ -71,7 +100,7 @@ class MultiAgentDQN(MultiAgentBase):
 
     def _collect_rollouts(
         self,
-    ) -> tuple[list[RolloutReturn], list[float], int, list[dict]]:
+    ) -> tuple[list[RolloutReturn], list[float], int, list[dict], list]:
         state, info = self.env.reset()
         state = torch.tensor(state, device=device, dtype=torch.float32).unsqueeze(0)
 
@@ -80,6 +109,8 @@ class MultiAgentDQN(MultiAgentBase):
         episode_length = 0
 
         data = [{} for _ in range(self.num_agents)]
+
+        frames = []
 
         for t in count():
             actions = self.predict_actions(state)
@@ -145,13 +176,25 @@ class MultiAgentDQN(MultiAgentBase):
                     truncated=[rollout.truncated],
                 )
 
+            if self.gif:
+                if (
+                    self.save_every_n_episodes - self.gif_samples
+                    < self.episodes % self.save_every_n_episodes
+                    < self.save_every_n_episodes
+                ):
+                    rgb_array = self.env.render()
+                    assert isinstance(rgb_array, np.ndarray)
+                    pil_image = Image.fromarray(rgb_array.transpose(1, 0, 2), "RGB")
+                    pil_image = pil_image.rotate(-90, expand=True)
+                    frames.append(pil_image)
+
             state = observation
             state = torch.tensor(state, device=device, dtype=torch.float32).unsqueeze(0)
 
             if done:
                 break
 
-        return rollout_returns, episode_rewards, episode_length, data
+        return rollout_returns, episode_rewards, episode_length, data, frames
 
     def predict(self, state: torch.Tensor) -> list[np.ndarray | list[np.ndarray]]:
         return [agent.predict(state) for agent in self.agents]
@@ -176,6 +219,10 @@ class MultiAgentDQN(MultiAgentBase):
     def save(self, episode: int):
         for i in range(self.num_agents):
             self.agents[i].save(episode, wandb_manager=self.wandb_manager)
+
+    def _save_gifs_local(self, gifs: list):
+        for i in range(self.num_agents):
+            self.agents[i].save_gif_local(gifs[i], append="_agent{i}")
 
     def get_q_values(self, states: np.ndarray, agent: int) -> np.ndarray:
         return self.agents[agent].get_q_values(states)

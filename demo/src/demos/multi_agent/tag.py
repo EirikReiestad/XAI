@@ -41,6 +41,7 @@ class TagDemo:
             wandb=True,
             wandb_config=wandb_config,
             model_name=model_name,
+            save_every_n_episodes=20,
             save_model=True,
             load_model=False,
             run_path="eirikreiestad-ntnu/tag-v0-idun",
