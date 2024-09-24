@@ -8,8 +8,9 @@ import torch
 
 from demo.src.common import EpisodeInformation
 from demo.src.plotters import Plotter
-from rl.src.dqn import DQN
 from methods import Shap
+from rl.src.dqn import DQN
+from rl.src.managers import WandBConfig
 
 # Set up matplotlib
 is_ipython = "inline" in matplotlib.get_backend()
@@ -24,12 +25,15 @@ class CartPoleDemo:
             durations=[], rewards=[], object_moved_distance=[]
         )
         self.plotter = Plotter()
-        self.env = gym.make("CartPole-v1")
-        self.dqn = DQN(self.env, "dqnpolicy", wandb=False)
+        self.env = gym.make("CartPole-v1", render_mode="rgb_array")
+        wandb_config = WandBConfig(project="cartpole-v1-local")
+        self.dqn = DQN(
+            self.env, "dqnpolicy", wandb=True, wandb_config=wandb_config, gif=True
+        )
 
     def run(self):
         logging.info("Learning...")
-        self.dqn.learn(20)
+        self.dqn.learn(200)
 
         logging.info("Initializing Shap...")
         self.shap = Shap(self.env, self.dqn)

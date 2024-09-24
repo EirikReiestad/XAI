@@ -4,6 +4,7 @@ This module contains the DQN agent that interacts with the environment.
 
 import logging
 import math
+import os
 import random
 from itertools import count
 
@@ -11,10 +12,11 @@ import gymnasium as gym
 import numpy as np
 import torch
 import torch.nn as nn
+from PIL import Image
 
 from rl.src.base import SingleAgentBase
 from rl.src.common import checker, setter
-from rl.src.managers import WandBManager, WandBConfig
+from rl.src.managers import WandBConfig, WandBManager
 
 from .common.hyperparameter import DQNHyperparameter
 from .components.types import Rollout, RolloutReturn, Transition
@@ -57,6 +59,9 @@ class DQN(SingleAgentBase):
         run_path: str = "",
         model_artifact: str = "",
         version_number: str = "latest",
+        gif: bool = False,
+        gif_path="assets/gifs",
+        gif_name="dqn",
     ) -> None:
         super().__init__(wandb, wandb_config)
 
@@ -94,13 +99,41 @@ class DQN(SingleAgentBase):
 
         self.double = double
         self.steps_done = 0
+        self.episodes = 0
+
+        self._init_gif(gif, gif_path, gif_name)
+
+    def _init_gif(self, gif: bool, gif_path: str, gif_name: str) -> None:
+        self.gif = gif
+        if not os.path.exists(gif_path):
+            logging.warning(f"Directory {gif_path} does not exist.")
+            self.gif = False
+        elif self.gif and not self.wandb_manager.active:
+            logging.warning("GIF is enabled but Weights & Biases is not enabled.")
+            self.gif = False
+        elif self.gif and self.env.render_mode != "rgb_array":
+            logging.warning(
+                "GIF is enabled but the environment does not support RGB array rendering."
+            )
+            self.gif = False
+        else:
+            self.gif_samples = 10
+            self.gif_path = gif_path
+            self.gif_name = gif_name
 
     def learn(self, total_timesteps: int):
         self.policy_net.train()
         self.target_net.eval()
+        max_gif_reward = -float("inf")
+
         try:
-            for i in range(total_timesteps):
-                _, rewards, steps = self._collect_rollout()
+            for _ in range(total_timesteps):
+                self.episodes += 1
+                _, rewards, steps, frames = self._collect_rollout()
+                if rewards > max_gif_reward:
+                    max_gif_reward = rewards
+                    self._save_gif_local(frames)
+
                 self.wandb_manager.log(
                     {
                         "reward": rewards,
@@ -108,18 +141,27 @@ class DQN(SingleAgentBase):
                         "steps_done": self.steps_done,
                     },
                 )
-                if i % self.save_every_n_episodes == 0:
-                    self.save(i)
+                if self.episodes % self.save_every_n_episodes == 0:
+                    self.save(self.episodes)
         except Exception as e:
             logging.error(f"Error: {e}")
 
-    def _collect_rollout(self) -> tuple[RolloutReturn, float, int]:
+    def _collect_rollout(
+        self,
+    ) -> tuple[
+        RolloutReturn,
+        float,
+        int,
+        list,
+    ]:
         state, _ = self.env.reset()
         state = torch.tensor(state, device=device, dtype=torch.float32).unsqueeze(0)
         rewards = 0
         episode_length = 0
 
         rollout_return = RolloutReturn()
+
+        frames = []
 
         for t in count():
             action = self.predict_action(state)
@@ -155,11 +197,22 @@ class DQN(SingleAgentBase):
 
             state = next_state
 
+            if self.gif:
+                if (
+                    self.save_every_n_episodes - self.gif_samples
+                    < self.episodes % self.save_every_n_episodes
+                    < self.save_every_n_episodes
+                ):
+                    rgb_array = self.env.render()
+                    assert isinstance(rgb_array, np.ndarray)
+                    pil_image = Image.fromarray(rgb_array.swapaxes(0, 1), "RGB")
+                    frames.append(pil_image)
+
             if terminated or truncated:
                 episode_length = t + 1
                 break
 
-        return rollout_return, rewards, episode_length
+        return rollout_return, rewards, episode_length, frames
 
     def train(
         self,
@@ -329,6 +382,7 @@ class DQN(SingleAgentBase):
         if not path.endswith(".pt"):
             path += ".pt"
         self._save_model(path, episode, wandb_manager)
+        self._save_gif(episode, wandb_manager)
 
     def _save_model(
         self, path: str, episode: int, wandb_manager: WandBManager | None = None
@@ -341,6 +395,22 @@ class DQN(SingleAgentBase):
             wandb_manager.save_model(path, step=episode, metadata=metadata)
         else:
             self.wandb_manager.save_model(path, step=episode, metadata=metadata)
+
+    def _save_gif(self, episode: int, wandb_manager: WandBManager | None = None):
+        path = f"{self.gif_path}/{self.gif_name}.gif"
+        if wandb_manager is not None:
+            wandb_manager.save_gif(path, step=episode)
+        else:
+            self.wandb_manager.save_gif(path, step=episode)
+
+    def _save_gif_local(self, frames: list) -> None:
+        if len(frames) != 0:
+            frames[0].save(
+                f"{self.gif_path}/{self.gif_name}.gif",
+                save_all=True,
+                append_images=frames[1:],
+                loop=0,
+            )
 
     def load(
         self,

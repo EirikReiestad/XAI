@@ -85,3 +85,11 @@ class WandBManager:
             logging.error(f"Error: Could not load model with artifact: {artifact_path}")
             logging.error(f"Error: {e}")
             return None, None
+
+    def save_gif(self, path: str, step: int):
+        if not self.active:
+            return
+        if not os.path.isfile(path) or os.path.getsize(path) == 0:
+            logging.warning(f"Error: The file {path} does not exist or is empty.")
+            return
+        wandb.log({"gif": wandb.Image(path)}, step=step + 1)
