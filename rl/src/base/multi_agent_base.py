@@ -43,3 +43,6 @@ class MultiAgentBase(ABC):
         version_numbers: list[str],
     ):
         raise NotImplementedError
+
+    def close(self):
+        self.wandb_manager.finish()
