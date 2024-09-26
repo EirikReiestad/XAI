@@ -46,7 +46,7 @@ class DQN(SingleAgentBase):
         gamma: float = 0.99,
         epsilon_start: float = 0.9,
         epsilon_end: float = 0.05,
-        epsilon_decay: int = 1000,
+        epsilon_decay: int = 100000,
         batch_size: int = 128,
         tau: float = 0.005,
         wandb: bool = False,
@@ -215,7 +215,7 @@ class DQN(SingleAgentBase):
             if self.gif:
                 if (
                     self.save_every_n_episodes - self.gif_samples
-                    < self.episodes % self.save_every_n_episodes
+                    < self.steps_done % self.save_every_n_episodes
                     < self.save_every_n_episodes
                 ):
                     rgb_array = self.env.render()
