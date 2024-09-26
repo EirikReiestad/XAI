@@ -86,9 +86,10 @@ class MultiAgentDQN(MultiAgentBase):
                     log[f"agent{agent}_reward"] = episode_rewards[agent]
                     log["steps_done"] = self.agents[agent].steps_done
                     log[f"agent{agent}_episode_steps"] = steps
-                    log["episode"] = self.episodes
+                    log["epsilon threshold"] = self.agents[agent].eps_threshold
                     for key, value in episode_data[agent].items():
                         log[f"agent{agent}_{key}"] = value
+                log["episode"] = self.episodes
                 self.wandb_manager.log(log)
                 results.append(rollout)
 

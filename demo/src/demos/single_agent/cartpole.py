@@ -24,16 +24,21 @@ class CartPoleDemo:
         self.episode_information = EpisodeInformation(
             durations=[], rewards=[], object_moved_distance=[]
         )
-        self.plotter = Plotter()
+        self.plotter = Plotter(plot_agent=True)
         self.env = gym.make("CartPole-v1", render_mode="rgb_array")
         wandb_config = WandBConfig(project="cartpole-v1-local")
         self.dqn = DQN(
-            self.env, "dqnpolicy", wandb=True, wandb_config=wandb_config, gif=True
+            self.env,
+            "dqnpolicy",
+            wandb=True,
+            save_model=False,
+            wandb_config=wandb_config,
+            gif=True,
         )
 
     def run(self):
         logging.info("Learning...")
-        self.dqn.learn(200)
+        self.dqn.learn(1000)
 
         logging.info("Initializing Shap...")
         self.shap = Shap(self.env, self.dqn)

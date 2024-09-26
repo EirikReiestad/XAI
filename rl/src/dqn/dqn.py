@@ -46,7 +46,7 @@ class DQN(SingleAgentBase):
         gamma: float = 0.99,
         epsilon_start: float = 0.9,
         epsilon_end: float = 0.05,
-        epsilon_decay: int = 10000,
+        epsilon_decay: int = 1000,
         batch_size: int = 128,
         tau: float = 0.005,
         wandb: bool = False,
@@ -79,6 +79,7 @@ class DQN(SingleAgentBase):
         self.hp = DQNHyperparameter(
             lr, gamma, epsilon_start, epsilon_end, epsilon_decay, batch_size, tau
         )
+        self.eps_threshold = 0
 
         self.policy = PolicyManager(
             policy,
@@ -95,7 +96,7 @@ class DQN(SingleAgentBase):
         optimizer = OptimizerManager(self.policy_net, self.hp.lr)
         self.optimizer = optimizer.initialize()
 
-        self.memory = MemoryManager(memory_size).initialize("prioritized")
+        self.memory = MemoryManager(memory_size).initialize()
 
         self.double = double
         self.steps_done = 0
@@ -126,23 +127,33 @@ class DQN(SingleAgentBase):
         self.target_net.eval()
         max_gif_reward = -float("inf")
 
+        max_gif_reward = -np.inf
+        frames = []
+
         try:
             for _ in range(total_timesteps):
                 self.episodes += 1
-                _, rewards, steps, frames = self._collect_rollout()
-                if rewards > max_gif_reward:
-                    max_gif_reward = rewards
-                    self.save_gif_local(frames)
+                _, episode_rewards, steps, gif_frames = self._collect_rollout()
+
+                if (
+                    self.gif
+                    and len(gif_frames) > 0
+                    and episode_rewards > max_gif_reward
+                ):
+                    max_gif_reward = episode_rewards
+                    frames = gif_frames
 
                 self.wandb_manager.log(
                     {
-                        "reward": rewards,
+                        "reward": episode_rewards,
                         "episode_length": steps,
                         "steps_done": self.steps_done,
+                        "epsilon_threshold": self.eps_threshold,
                     },
                 )
                 if self.episodes % self.save_every_n_episodes == 0:
                     max_gif_reward = -float("inf")
+                    self.save_gif_local(frames)
                     self.save(self.episodes)
         except Exception as e:
             logging.error(f"Error: {e}")
@@ -264,12 +275,12 @@ class DQN(SingleAgentBase):
             state, self.env.observation_space, "state"
         )
 
-        eps_threshold = self.hp.eps_end + (
+        self.eps_threshold = self.hp.eps_end + (
             self.hp.eps_start - self.hp.eps_end
         ) * math.exp(-self.steps_done / self.hp.eps_decay)
         self.steps_done += 1
 
-        if random.random() > eps_threshold:
+        if random.random() > self.eps_threshold:
             with torch.no_grad():
                 return self.policy_net(state).max(1).indices.view(1, 1)
         else:
@@ -439,6 +450,8 @@ class DQN(SingleAgentBase):
                 append_images=frames[1:],
                 loop=0,
             )
+        else:
+            logging.warning("No frames in gif to save.")
 
     def load(
         self,
