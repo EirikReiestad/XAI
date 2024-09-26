@@ -14,7 +14,7 @@ class WandBConfig:
         run_name: str = "",
         tags: list[str] = [],
         other: dict = {},
-        dir: str = "/tmp",
+        dir: str = "~/tmp",
     ) -> None:
         self.project: str = project
         self.run_name: str = run_name
