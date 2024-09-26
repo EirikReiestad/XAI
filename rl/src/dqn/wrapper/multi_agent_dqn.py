@@ -98,7 +98,9 @@ class MultiAgentDQN(MultiAgentBase):
                     self.save(self.episodes)
         except Exception as e:
             logging.error(e)
+            self.close()
         finally:
+            self.close()
             return results
 
     def _collect_rollouts(

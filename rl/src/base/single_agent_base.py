@@ -29,3 +29,6 @@ class SingleAgentBase(ABC):
     @abstractmethod
     def load(self, run_path: str, model_artifact: str, version_number: str):
         raise NotImplementedError
+
+    def close(self):
+        self.wandb_manager.finish()

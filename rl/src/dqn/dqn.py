@@ -146,6 +146,9 @@ class DQN(SingleAgentBase):
                     self.save(self.episodes)
         except Exception as e:
             logging.error(f"Error: {e}")
+            self.close()
+        finally:
+            self.close()
 
     def _collect_rollout(
         self,
