@@ -277,7 +277,7 @@ class DQN(SingleAgentBase):
 
         self.eps_threshold = self.hp.eps_end + (
             self.hp.eps_start - self.hp.eps_end
-        ) * math.exp(-self.episodes / self.hp.eps_decay)
+        ) * math.exp(-self.steps_done / self.hp.eps_decay)
         self.steps_done += 1
 
         if random.random() > self.eps_threshold:
