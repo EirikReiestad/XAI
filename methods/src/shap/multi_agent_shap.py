@@ -9,6 +9,7 @@ import torch
 
 import rl
 from environments.gymnasium.wrappers import MultiAgentEnv
+from .utils import ShapType
 
 from .base import MultiAgentBase
 
@@ -16,7 +17,12 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 class MultiAgentShap(MultiAgentBase):
-    def __init__(self, env: MultiAgentEnv, model: rl.MultiAgentBase, samples: int):
+    def __init__(
+        self,
+        env: MultiAgentEnv,
+        model: rl.MultiAgentBase,
+        samples: int,
+    ):
         self.env = env
         self.models = model.models
         self.model = model
@@ -31,6 +37,7 @@ class MultiAgentShap(MultiAgentBase):
     def plot(
         self,
         shap_values: Any,
+        plot_type: ShapType,
         feature_names: list[str] | None = None,
         include: list[str] | None = None,
     ):
@@ -48,9 +55,14 @@ class MultiAgentShap(MultiAgentBase):
 
         for agent_shap_values in shap_values:
             mean_shap_values = agent_shap_values.mean(axis=2)
-            shap.summary_plot(
-                mean_shap_values, test_states, feature_names=feature_names
-            )
+            if plot_type == ShapType.BEESWARM:
+                shap.summary_plot(
+                    mean_shap_values, test_states, feature_names=feature_names
+                )
+            elif plot_type == ShapType.IMAGE:
+                shap.image_plot(
+                    mean_shap_values, test_states, feature_names=feature_names
+                )
 
     def _explain_single_agent(self, agent: rl.SingleAgentBase) -> Any:
         explainer = shap.Explainer(agent.predict, self.background_states)

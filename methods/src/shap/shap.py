@@ -2,11 +2,11 @@ from typing import Any
 
 import gymnasium as gym
 import numpy as np
-import shap
 import torch
 
 import rl
 from environments.gymnasium.wrappers import MultiAgentEnv
+from .utils import ShapType
 
 from .multi_agent_shap import MultiAgentShap
 from .single_agent_shap import SingleAgentShap
@@ -47,9 +47,12 @@ class Shap:
     def explain(self) -> np.ndarray | list[np.ndarray]:
         return self.explainer.explain()
 
-    def plot(self, shap_values: Any, **kwargs):
+    def plot(self, shap_values: Any, plot_type: ShapType = ShapType.IMAGE, **kwargs):
         feature_names = kwargs.get("feature_names", None)
         include = kwargs.get("include", None)
         return self.explainer.plot(
-            shap_values, feature_names=feature_names, include=include
+            shap_values,
+            plot_type=plot_type,
+            feature_names=feature_names,
+            include=include,
         )

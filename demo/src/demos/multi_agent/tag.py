@@ -38,7 +38,7 @@ class TagDemo:
             self.env,
             self.num_agents,
             "dqnpolicy",
-            wandb=True,
+            wandb=False,
             wandb_config=wandb_config,
             model_name=model_name,
             save_every_n_episodes=100,
@@ -52,9 +52,9 @@ class TagDemo:
 
     def run(self):
         logging.info("Learning...")
-        self.dqn.learn(100000)
+        self.dqn.learn(1)
 
-        self.shap(False)
+        self.shap(True)
         self.show(False)
 
     def show(self, run: bool = True):
@@ -149,7 +149,7 @@ class TagDemo:
             return
 
         logging.info("Shap setup...")
-        shap = Shap(self.env, self.dqn, samples=1000)
+        shap = Shap(self.env, self.dqn, samples=10)
         logging.info("Explaining...")
         shap_values = shap.explain()
         env = MetadataWrapper(self.env)
