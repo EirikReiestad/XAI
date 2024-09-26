@@ -14,7 +14,7 @@ class WandBConfig:
         run_name: str = "",
         tags: list[str] = [],
         other: dict = {},
-        dir: str = "~/tmp",
+        dir: str = ".",
         cleanup: bool = True,
         cleanup_period: int = 100,
     ) -> None:
@@ -50,10 +50,13 @@ class WandBManager:
 
         self.cleanup_counter = 0
 
-    def log(self, data: dict):
+    def log(self, data: dict, step: int | None = None):
         if not self.active:
             return
-        wandb.log(data)
+        if step is not None:
+            wandb.log(data, step=step)
+        else:
+            wandb.log(data)
 
     def cleanup(self):
         if not self.active or not self.config.cleanup:
