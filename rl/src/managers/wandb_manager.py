@@ -1,7 +1,9 @@
-import wandb
-import os
-from dataclasses import dataclass
 import logging
+import os
+import shutil
+from dataclasses import dataclass
+
+import wandb
 
 
 @dataclass
@@ -12,11 +14,13 @@ class WandBConfig:
         run_name: str = "",
         tags: list[str] = [],
         other: dict = {},
+        dir: str = "/tmp/",
     ) -> None:
         self.project: str = project
         self.run_name: str = run_name
         self.tags: list[str] = tags
         self.other: dict = other
+        self.dir: str = dir
 
 
 class WandBManager:
@@ -35,7 +39,9 @@ class WandBManager:
             name=config.run_name,
             config=config.other,
             reinit=True,
+            mode="online",
             tags=config.tags,
+            dir=config.dir,
         )
 
     def log(self, data: dict):
@@ -64,6 +70,18 @@ class WandBManager:
         artifact.add_file(path)
         wandb.log_artifact(artifact)
         wandb.log({"model_logged": True}, step=step + 1)
+
+        self._delete_local_models()
+
+    def _delete_local_models(self):
+        run = wandb.run
+        if run is None:
+            logging.warning("Error: Could not find wandb run path")
+            return
+        dir = run.dir
+        assert dir[-5:] == "files"
+        run_file = dir[:-6]
+        shutil.rmtree(run_file)
 
     def load_model(
         self, run_path: str, model_artifact: str, version_number: str
