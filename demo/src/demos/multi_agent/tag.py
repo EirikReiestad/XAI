@@ -52,9 +52,9 @@ class TagDemo:
 
     def run(self):
         logging.info("Learning...")
-        self.dqn.learn(100000)
+        self.dqn.learn(1)
 
-        self.shap(False)
+        self.shap(True)
         self.show(False)
 
     def show(self, run: bool = True):

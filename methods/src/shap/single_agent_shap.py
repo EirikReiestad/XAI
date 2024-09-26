@@ -35,6 +35,7 @@ class SingleAgentShap(SingleAgentBase):
     def plot(
         self,
         shap_values: Any,
+        plot_type: ShapType,
         feature_names: list[str] | None = None,
         include: list[str] | None = None,
     ):
@@ -48,11 +49,19 @@ class SingleAgentShap(SingleAgentBase):
             feature_names = include
 
         mean_shap_values = shap_values.mean(axis=2)
+<<<<<<< HEAD
         if self.shap_type == ShapType.BEESWARM:
             shap.summary_plot(
                 mean_shap_values, test_states, feature_names=feature_names
             )
         elif self.shap_type == ShapType.IMAGE:
+=======
+        if plot_type == ShapType.BEESWARM:
+            shap.summary_plot(
+                mean_shap_values, test_states, feature_names=feature_names
+            )
+        elif plot_type == ShapType.IMAGE:
+>>>>>>> 41574cb (Cfeat shap iamge)
             shap.image_plot(mean_shap_values, test_states, feature_names=feature_names)
 
     def _sample_states(

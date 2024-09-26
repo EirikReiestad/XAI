@@ -22,7 +22,10 @@ class MultiAgentShap(MultiAgentBase):
         env: MultiAgentEnv,
         model: rl.MultiAgentBase,
         samples: int,
+<<<<<<< HEAD
         shap_type: ShapType,
+=======
+>>>>>>> 41574cb (Cfeat shap iamge)
     ):
         self.env = env
         self.models = model.models
@@ -39,6 +42,7 @@ class MultiAgentShap(MultiAgentBase):
     def plot(
         self,
         shap_values: Any,
+        plot_type: ShapType,
         feature_names: list[str] | None = None,
         include: list[str] | None = None,
     ):
@@ -56,9 +60,14 @@ class MultiAgentShap(MultiAgentBase):
 
         for agent_shap_values in shap_values:
             mean_shap_values = agent_shap_values.mean(axis=2)
-            shap.summary_plot(
-                mean_shap_values, test_states, feature_names=feature_names
-            )
+            if plot_type == ShapType.BEESWARM:
+                shap.summary_plot(
+                    mean_shap_values, test_states, feature_names=feature_names
+                )
+            elif plot_type == ShapType.IMAGE:
+                shap.image_plot(
+                    mean_shap_values, test_states, feature_names=feature_names
+                )
 
     def _explain_single_agent(self, agent: rl.SingleAgentBase) -> Any:
         explainer = shap.Explainer(agent.predict, self.background_states)
