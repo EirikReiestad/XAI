@@ -15,12 +15,16 @@ class WandBConfig:
         tags: list[str] = [],
         other: dict = {},
         dir: str = "~/tmp",
+        cleanup: bool = True,
+        cleanup_period: int = 100,
     ) -> None:
         self.project: str = project
         self.run_name: str = run_name
         self.tags: list[str] = tags
         self.other: dict = other
         self.dir: str = dir
+        self.cleanup: bool = cleanup
+        self.cleanup_period = cleanup_period
 
 
 class WandBManager:
@@ -44,10 +48,21 @@ class WandBManager:
             dir=config.dir,
         )
 
+        self.cleanup_counter = 0
+
     def log(self, data: dict):
         if not self.active:
             return
         wandb.log(data)
+
+    def cleanup(self):
+        if not self.active or not self.config.cleanup:
+            return
+        if self.cleanup_counter >= self.config.cleanup_period:
+            self.cleanup_counter = 0
+            self._delete_local_models()
+            return
+        self.cleanup_counter += 1
 
     def finish(self):
         if not self.active:
@@ -71,8 +86,6 @@ class WandBManager:
         artifact.add_file(path)
         wandb.log_artifact(artifact)
         wandb.log({"model_logged": True}, step=step + 1)
-
-        self._delete_local_models()
 
     def _delete_local_models(self):
         run = wandb.run

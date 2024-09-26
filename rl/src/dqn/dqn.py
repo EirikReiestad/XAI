@@ -393,6 +393,11 @@ class DQN(SingleAgentBase):
         self._save_gif(episode, wandb_manager, append=append)
         self._delete_gif_local(path)
 
+        if wandb_manager is not None:
+            wandb_manager.cleanup()
+        else:
+            self.wandb_manager.cleanup()
+
     def _save_model(
         self, path: str, episode: int, wandb_manager: WandBManager | None = None
     ) -> None:
