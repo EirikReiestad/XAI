@@ -20,6 +20,7 @@ class Shap:
         env: gym.Env | MultiAgentEnv,
         model: rl.SingleAgentBase | rl.MultiAgentBase,
         samples: int = 100,
+        shap_type: ShapType = ShapType.IMAGE,
     ):
         self.multi_agent = isinstance(env, MultiAgentEnv)
 
@@ -36,7 +37,7 @@ class Shap:
         if self.multi_agent:
             assert isinstance(self.env, MultiAgentEnv)
             assert isinstance(self.model, rl.MultiAgentBase)
-            self.explainer = MultiAgentShap(self.env, self.model, samples)
+            self.explainer = MultiAgentShap(self.env, self.model, samples, shap_type)
         else:
             assert isinstance(self.env, gym.Env)
             assert isinstance(self.model, rl.SingleAgentBase)
@@ -47,12 +48,11 @@ class Shap:
     def explain(self) -> np.ndarray | list[np.ndarray]:
         return self.explainer.explain()
 
-    def plot(self, shap_values: Any, plot_type: ShapType = ShapType.IMAGE, **kwargs):
+    def plot(self, shap_values: Any, **kwargs):
         feature_names = kwargs.get("feature_names", None)
         include = kwargs.get("include", None)
         return self.explainer.plot(
             shap_values,
-            plot_type=plot_type,
             feature_names=feature_names,
             include=include,
         )

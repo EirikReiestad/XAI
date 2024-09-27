@@ -15,10 +15,17 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 class SingleAgentShap(SingleAgentBase):
-    def __init__(self, env: gym.Env, model: rl.SingleAgentBase, samples: int):
+    def __init__(
+        self,
+        env: gym.Env,
+        model: rl.SingleAgentBase,
+        samples: int,
+        shap_type: ShapType = ShapType.IMAGE,
+    ):
         self.env = env
         self.model = model
         self.background_states, self.test_states = self._sample_states(samples)
+        self.shap_type = shap_type
 
     def explain(self) -> np.ndarray:
         explainer = shap.Explainer(self.model.predict, self.background_states[0].shape)
@@ -28,7 +35,6 @@ class SingleAgentShap(SingleAgentBase):
     def plot(
         self,
         shap_values: Any,
-        plot_type: ShapType,
         feature_names: list[str] | None = None,
         include: list[str] | None = None,
     ):
@@ -42,11 +48,11 @@ class SingleAgentShap(SingleAgentBase):
             feature_names = include
 
         mean_shap_values = shap_values.mean(axis=2)
-        if plot_type == ShapType.BEESWARM:
+        if self.shap_type == ShapType.BEESWARM:
             shap.summary_plot(
                 mean_shap_values, test_states, feature_names=feature_names
             )
-        elif plot_type == ShapType.IMAGE:
+        elif self.shap_type == ShapType.IMAGE:
             shap.image_plot(mean_shap_values, test_states, feature_names=feature_names)
 
     def _sample_states(
