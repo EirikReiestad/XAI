@@ -16,7 +16,7 @@ class WandBConfig:
         other: dict = {},
         dir: str = ".",
         cleanup: bool = True,
-        cleanup_period: int = 20,
+        cleanup_period: int = 20,  # TODO: Make this dependent on size of cache
     ) -> None:
         self.project: str = project
         self.run_name: str = run_name
