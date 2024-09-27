@@ -64,6 +64,8 @@ class WandBManager:
         if self.cleanup_counter >= self.config.cleanup_period:
             self.cleanup_counter = 0
             self._delete_local_models()
+            self._clean_cache()
+            self._clean_local()
             return
         self.cleanup_counter += 1
 
@@ -71,7 +73,11 @@ class WandBManager:
         if not self.active:
             return
         wandb.finish()
-        shutil.rmtree(self.config.dir + "/wandb")
+        wandb_dir = self.config.dir + "/wandb"
+        try:
+            shutil.rmtree(wandb_dir)
+        except FileNotFoundError:
+            logging.warning(f"Error: Could not find wandb directory: {wandb_dir}")
 
     def save_model(
         self, path: str, step: int, model_artifact: str = "model", metadata: dict = {}
@@ -98,7 +104,36 @@ class WandBManager:
         dir = run.dir
         assert dir[-5:] == "files"
         run_file = dir[:-6]
-        shutil.rmtree(run_file)
+        try:
+            shutil.rmtree(run_file)
+        except FileNotFoundError:
+            logging.warning(f"Error: Could not find run file: {run_file}")
+
+    def _clean_cache(self):
+        # https://community.wandb.ai/t/wandb-artifact-cache-directory-fills-up-the-home-directory/5224
+        # This is a workaround to clean the cache as wandb fills up the cache directory
+        cache_dir = os.path.expanduser("~/.cache/wandb/artifacts/obj")
+        if not os.path.exists(cache_dir):
+            return
+        try:
+            logging.info(
+                f"Cleaning cache: {cache_dir} {os.path.getsize(cache_dir) / 1024 / 1024} MB"
+            )
+            shutil.rmtree(cache_dir)
+        except FileNotFoundError:
+            logging.warning(f"Error: Could not find cache directory: {cache_dir}")
+
+    def _clean_local(self):
+        local_dir = os.path.expanduser("~/.local/share/wandb/artifacts/staging")
+        if not os.path.exists(local_dir):
+            return
+        try:
+            logging.info(
+                f"cleaning local: {local_dir} {os.path.getsize(local_dir) / 1024 / 1024} MB"
+            )
+            shutil.rmtree(local_dir)
+        except FileNotFoundError:
+            logging.warning(f"Error: Could not find local directory: {local_dir}")
 
     def load_model(
         self, run_path: str, model_artifact: str, version_number: str

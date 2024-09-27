@@ -10,6 +10,7 @@ logging.basicConfig(
         logging.FileHandler("log.txt"),
         logging.StreamHandler(),  # This sends logs to the terminal
     ],
+    datefmt="%Y-%m-%d %H:%M:%S",
 )
 
 
