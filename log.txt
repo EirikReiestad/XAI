@@ -453,3 +453,76 @@ INFO: Learning...
 INFO: Initializing Shap...
 INFO: Explaining...
 INFO: Learning...
+INFO: Learning...
+INFO: Learning...
+INFO: Learning...
+INFO: Learning...
+INFO: Learning...
+INFO: Cleaning cache: /home/eirik/.cache/wandb/artifacts/obj/md5. Current size: 4096
+ERROR: [Errno 2] No such file or directory: '/home/eirik/.cache/wandb/artifacts/obj/md5'
+INFO: Learning...
+INFO: Cleaning cache: /home/eirik/.cache/wandb/artifacts/obj. Current size: 4096
+ERROR: [Errno 2] No such file or directory: '/home/eirik/.cache/wandb/artifacts/obj'
+INFO: Learning...
+INFO: Cleaning cache: /home/eirik/.cache/wandb/artifacts/obj. Current size: 4096
+ERROR: [Errno 2] No such file or directory: '/home/eirik/.cache/wandb/artifacts/obj'
+INFO: No wandb directory found: ./wandb
+INFO: Learning...
+INFO: Cleaning cache: /home/eirik/.cache/wandb/artifacts/obj. Current size: 4096
+WARNING: Error: Could not find cache directory: /home/eirik/.cache/wandb/artifacts/obj
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging/. current size: 4096
+WARNING: Error: Could not find local directory: /home/eirik/.local/share/wandb/artifacts/staging/
+WARNING: Error: Could not find cache directory: /home/eirik/.cache/wandb/artifacts/obj
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging/. current size: 4096
+WARNING: Error: Could not find local directory: /home/eirik/.local/share/wandb/artifacts/staging/
+WARNING: Error: Could not find cache directory: /home/eirik/.cache/wandb/artifacts/obj
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging/. current size: 4096
+WARNING: Error: Could not find local directory: /home/eirik/.local/share/wandb/artifacts/staging/
+WARNING: Error: Could not find cache directory: /home/eirik/.cache/wandb/artifacts/obj
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging/. current size: 4096
+WARNING: Error: Could not find local directory: /home/eirik/.local/share/wandb/artifacts/staging/
+WARNING: Error: Could not find cache directory: /home/eirik/.cache/wandb/artifacts/obj
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging/. current size: 4096
+WARNING: Error: Could not find local directory: /home/eirik/.local/share/wandb/artifacts/staging/
+INFO: Learning...
+WARNING: Error: Could not find cache directory: /home/eirik/.cache/wandb/artifacts/obj
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging. current size: 4096
+WARNING: Error: Could not find local directory: /home/eirik/.local/share/wandb/artifacts/staging
+WARNING: Error: Could not find cache directory: /home/eirik/.cache/wandb/artifacts/obj
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging. current size: 4096
+WARNING: Error: Could not find local directory: /home/eirik/.local/share/wandb/artifacts/staging
+INFO: Learning...
+WARNING: Error: Could not find cache directory: /home/eirik/.cache/wandb/artifacts/obj
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging 0.00390625 MB
+WARNING: Error: Could not find local directory: /home/eirik/.local/share/wandb/artifacts/staging
+WARNING: Error: Could not find cache directory: /home/eirik/.cache/wandb/artifacts/obj
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging 0.00390625 MB
+WARNING: Error: Could not find local directory: /home/eirik/.local/share/wandb/artifacts/staging
+WARNING: Error: Could not find cache directory: /home/eirik/.cache/wandb/artifacts/obj
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging 0.00390625 MB
+WARNING: Error: Could not find local directory: /home/eirik/.local/share/wandb/artifacts/staging
+INFO: Learning...
+INFO: Cleaning cache: /home/eirik/.cache/wandb/artifacts/obj 0.00390625 MB
+WARNING: Error: Could not find cache directory: /home/eirik/.cache/wandb/artifacts/obj
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging 0.00390625 MB
+WARNING: Error: Could not find local directory: /home/eirik/.local/share/wandb/artifacts/staging
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging 0.00390625 MB
+WARNING: Error: Could not find local directory: /home/eirik/.local/share/wandb/artifacts/staging
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging 0.00390625 MB
+WARNING: Error: Could not find local directory: /home/eirik/.local/share/wandb/artifacts/staging
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging 0.00390625 MB
+WARNING: Error: Could not find local directory: /home/eirik/.local/share/wandb/artifacts/staging
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging 0.00390625 MB
+WARNING: Error: Could not find local directory: /home/eirik/.local/share/wandb/artifacts/staging
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging 0.00390625 MB
+WARNING: Error: Could not find local directory: /home/eirik/.local/share/wandb/artifacts/staging
+INFO: Learning...
+INFO: Cleaning cache: /home/eirik/.cache/wandb/artifacts/obj 0.00390625 MB
+WARNING: Error: Could not find cache directory: /home/eirik/.cache/wandb/artifacts/obj
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging 0.00390625 MB
+WARNING: Error: Could not find local directory: /home/eirik/.local/share/wandb/artifacts/staging
+INFO: Learning...
+INFO: Learning...
+INFO: Cleaning cache: /home/eirik/.cache/wandb/artifacts/obj 0.00390625 MB
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging 0.00390625 MB
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging 0.00390625 MB
