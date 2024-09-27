@@ -48,15 +48,18 @@ class Shap:
     def explain(self) -> np.ndarray | list[np.ndarray]:
         return self.explainer.explain()
 
-    def plot(self, shap_values: Any, plot_type: ShapType = ShapType.IMAGE, **kwargs):
+    def plot(self, shap_values: Any, **kwargs):
         feature_names = kwargs.get("feature_names", None)
         include = kwargs.get("include", None)
         return self.explainer.plot(
             shap_values,
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
             plot_type=plot_type,
 >>>>>>> 41574cb (Cfeat shap iamge)
+=======
+>>>>>>> df19d30 (feat: shap changes)
             feature_names=feature_names,
             include=include,
         )
