@@ -180,7 +180,12 @@ class DQN(SingleAgentBase):
 
         for t in count():
             action = self.predict_action(state)
-            observation, reward, terminated, truncated, _ = self.env.step(action.item())
+            observation, reward, terminated, truncated, info = self.env.step(
+                action.item()
+            )
+            skip = info.get("skip")
+            if skip:
+                continue
             next_state = torch.tensor(
                 observation, device=device, dtype=torch.float32
             ).unsqueeze(0)

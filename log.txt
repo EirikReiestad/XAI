@@ -1,0 +1,73 @@
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.COMBINED bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.COMBINED bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.

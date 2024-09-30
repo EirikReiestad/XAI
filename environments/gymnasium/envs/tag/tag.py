@@ -12,31 +12,33 @@ from gymnasium import spaces
 from environments.gymnasium.utils import (
     FileHandler,
     Position,
+    StateType,
     generate_random_position,
 )
-from environments.gymnasium.utils import StateType
 
+from .env_utils import EnvUtils
 from .tag_renderer import TagRenderer
 from .tag_rewards import TagRewards
 from .tag_state import TagState
-from .env_utils import EnvUtils
 from .utils import (
     AGENT_TILE_TYPE,
+    ActionType,
     Agent,
     AgentType,
+    Bootcamp,
+    BootcampName,
     DualAgents,
-    TileType,
-    ActionType,
-    Objects,
     Object,
+    Objects,
     ObjectType,
+    TileType,
 )
 
 logging.basicConfig(level=logging.INFO)
 
 
 class TagEnv(gym.Env):
-    metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 50}
+    metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 120}
 
     def __init__(self, render_mode: Optional[str] = "rgb_array"):
         self.height = 10
@@ -46,9 +48,11 @@ class TagEnv(gym.Env):
         folder_name = "environments/gymnasium/data/tag/"
         filename = "env2-0-10-10.txt"
         self.state_type = StateType.FULL
+        self.bootcamp = Bootcamp()
         self.tag_radius = 1
-        self.tag_head_start = 100
+        self.tag_head_start = 0
         self.max_steps = 200
+        self.freeze_hider = False
         self.terminate_out_of_bounds = False
 
         folder_name = "environments/gymnasium/data/tag/"
@@ -83,6 +87,39 @@ class TagEnv(gym.Env):
         if not self.action_space.contains(action):
             raise ValueError(f"Invalid action {action}")
 
+        if self.bootcamp.name == BootcampName.HIDER:
+            if self.agents.active_agent == AgentType.SEEKER:
+                self.agents.set_next_agent()
+                return (
+                    self.state.active_state,
+                    0,
+                    False,
+                    False,
+                    {
+                        "full_state": self.state.full,
+                        "skip": True,
+                        "data": {
+                            "object_moved_distance": 0,
+                        },
+                    },
+                )
+        if self.bootcamp.name == BootcampName.SEEKER:
+            if self.agents.active_agent == AgentType.HIDER:
+                self.agents.set_next_agent()
+                return (
+                    self.state.active_state,
+                    0,
+                    False,
+                    False,
+                    {
+                        "full_state": self.state.full,
+                        "skip": True,
+                        "data": {
+                            "object_moved_distance": 0,
+                        },
+                    },
+                )
+
         if self.steps < self.tag_head_start:
             if self.agents.active_agent == AgentType.SEEKER:
                 self.agents.set_next_agent()
@@ -99,7 +136,7 @@ class TagEnv(gym.Env):
                         },
                     },
                 )
-        else:
+        if self.steps >= self.tag_head_start and self.freeze_hider:
             if self.agents.active_agent == AgentType.HIDER:
                 self.agents.set_next_agent()
                 return (
@@ -217,6 +254,7 @@ class TagEnv(gym.Env):
         if self.steps >= self.max_steps:
             rewards = self.tag_rewards.end_reward
         self.render(self.render_mode)
+        self.bootcamp.train()
         return state, rewards, terminated
 
     def update_state(self, state: np.ndarray) -> np.ndarray:
@@ -279,7 +317,7 @@ class TagEnv(gym.Env):
                 obj.position = new_obj_position
                 obj.next_position = self.agents.active.position
                 state[*obj.position.row_major_order] = TileType.BOX.value
-                self.info["object_moved_distance"] += 1
+                self.info["object_moved_distance"] = 1
             else:
                 logging.warning(
                     f"Object {obj.position} is outside the bounds of the environment."

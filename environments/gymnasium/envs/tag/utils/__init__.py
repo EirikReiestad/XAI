@@ -6,6 +6,7 @@ from .full_state_data_extractor import FullStateDataExtractor
 from .full_state_data_modifier import FullStateDataModifier
 from .object import Object, Objects, ObjectType
 from .tile_type import TileType
+from .bootcamp import Bootcamp, BootcampName
 
 __all__ = [
     "AGENT_TILE_TYPE",
@@ -19,4 +20,6 @@ __all__ = [
     "Objects",
     "Object",
     "ObjectType",
+    "Bootcamp",
+    "BootcampName",
 ]
