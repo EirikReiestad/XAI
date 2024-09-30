@@ -63,22 +63,13 @@ class MultiAgentShap(MultiAgentBase):
 
         for agent_shap_values in shap_values:
             mean_shap_values = agent_shap_values.mean(axis=2)
-            if self.shap_type == ShapType.BEESWARM:
-                shap.summary_plot(
-                    mean_shap_values, test_states, feature_names=feature_names
-                )
-            elif self.shap_type == ShapType.IMAGE:
-                shap.image_plot(mean_shap_values, test_states, feature_names)
+            shap.summary_plot(
+                mean_shap_values, test_states, feature_names=feature_names
+            )
 
     def _explain_single_agent(self, agent: rl.SingleAgentBase) -> Any:
-        if self.shap_type == ShapType.BEESWARM:
-            explainer = shap.Explainer(agent.predict, self.background_states)
-            shap_values = explainer(self.test_states).values
-        elif self.shap_type == ShapType.IMAGE:
-            explainer = shap.Explainer(agent.predict, self.background_states)
-            shap_values = explainer(self.test_states).values
-        else:
-            raise ValueError("Invalid shap type")
+        explainer = shap.Explainer(agent.predict, self.background_states)
+        shap_values = explainer(self.test_states).values
         return shap_values
 
     def _sample_states(
