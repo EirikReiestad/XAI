@@ -151,8 +151,7 @@ class TagEnv(gym.Env):
                             "object_moved_distance": 0,
                         },
                     },
-                },
-            )
+                )
 
         self.steps += 1
         if self.steps >= self.max_steps:
