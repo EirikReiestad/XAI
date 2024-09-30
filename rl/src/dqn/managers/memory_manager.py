@@ -1,6 +1,5 @@
-from rl.src.dqn.components.memory import PrioritizedReplayMemory
-from rl.src.dqn.components.memory import ReplayMemory
 from rl.src.dqn.base import ReplayMemoryBase
+from rl.src.dqn.components.memory import PrioritizedReplayMemory, ReplayMemory
 
 
 class MemoryManager:

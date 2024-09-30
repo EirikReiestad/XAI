@@ -44,11 +44,11 @@ class TagEnv(gym.Env):
         screen_width = 600
         screen_height = 600
         folder_name = "environments/gymnasium/data/tag/"
-        filename = "env-0-10-10.txt"
+        filename = "env2-0-10-10.txt"
         self.state_type = StateType.FULL
         self.tag_radius = 1
-        self.tag_head_start = 20
-        self.max_steps = 50
+        self.tag_head_start = 100
+        self.max_steps = 200
         self.terminate_out_of_bounds = False
 
         folder_name = "environments/gymnasium/data/tag/"
@@ -252,7 +252,7 @@ class TagEnv(gym.Env):
     def _grab_entity(self) -> bool:
         for obj in self.objects.boxes:
             if self.agents.active.position.distance_to(obj.position) <= 1:
-                can_grab = obj.grab(self.agents.active_agent)
+                can_grab = obj.can_grab()
                 if can_grab:
                     obj.grabbed = True
                     obj.next_position = self.agents.active.position
