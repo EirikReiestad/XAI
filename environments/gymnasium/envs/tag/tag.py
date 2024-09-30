@@ -47,7 +47,8 @@ class TagEnv(gym.Env):
         filename = "env2-0-10-10.txt"
         self.state_type = StateType.FULL
         self.tag_radius = 1
-        self.tag_head_start = 100
+        self.tag_head_start = 0
+        self.freeze_hider = False
         self.max_steps = 200
         self.terminate_out_of_bounds = False
 
@@ -99,22 +100,21 @@ class TagEnv(gym.Env):
                         },
                     },
                 )
-        else:
-            if self.agents.active_agent == AgentType.HIDER:
-                self.agents.set_next_agent()
-                return (
-                    self.state.active_state,
-                    0,
-                    False,
-                    False,
-                    {
-                        "full_state": self.state.full,
-                        "skip": True,
-                        "data": {
-                            "object_moved_distance": 0,
-                        },
+        if self.agents.active_agent == AgentType.HIDER and self.freeze_hider:
+            self.agents.set_next_agent()
+            return (
+                self.state.active_state,
+                0,
+                False,
+                False,
+                {
+                    "full_state": self.state.full,
+                    "skip": True,
+                    "data": {
+                        "object_moved_distance": 0,
                     },
-                )
+                },
+            )
 
         self.steps += 1
         if self.steps >= self.max_steps:
