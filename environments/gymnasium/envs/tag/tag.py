@@ -132,7 +132,7 @@ class TagEnv(gym.Env):
                         "full_state": self.state.full,
                         "skip": True,
                         "data": {
-                            "object_moved_distance": 0,
+                            "object_moved_distance": self.info["object_moved_distance"]
                         },
                     },
                 )
@@ -151,7 +151,8 @@ class TagEnv(gym.Env):
                             "object_moved_distance": 0,
                         },
                     },
-                )
+                },
+            )
 
         self.steps += 1
         if self.steps >= self.max_steps:
@@ -164,7 +165,7 @@ class TagEnv(gym.Env):
                 {
                     "full_state": self.state.full,
                     "data": {
-                        "object_moved_distance": 0,
+                        "object_moved_distance": self.info["object_moved_distance"]
                     },
                 },
             )

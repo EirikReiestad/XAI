@@ -22,7 +22,7 @@ class MultiAgentShap(MultiAgentBase):
         env: MultiAgentEnv,
         model: rl.MultiAgentBase,
         samples: int,
-        shap_type: ShapType,
+        shap_type: ShapType = ShapType.IMAGE,
     ):
         self.env = env
         self.models = model.models
