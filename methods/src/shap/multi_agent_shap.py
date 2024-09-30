@@ -22,14 +22,7 @@ class MultiAgentShap(MultiAgentBase):
         env: MultiAgentEnv,
         model: rl.MultiAgentBase,
         samples: int,
-<<<<<<< HEAD
-<<<<<<< HEAD
         shap_type: ShapType,
-=======
->>>>>>> 41574cb (Cfeat shap iamge)
-=======
-        shap_type: ShapType,
->>>>>>> df19d30 (feat: shap changes)
     ):
         self.env = env
         self.models = model.models
