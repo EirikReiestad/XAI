@@ -262,6 +262,8 @@ class TagEnv(gym.Env):
     def _grab_entity(self) -> bool:
         for obj in self.objects.boxes:
             if self.agents.active.position.distance_to(obj.position) <= 1:
+                if self.agents.active_agent == AgentType.SEEKER:
+                    return False
                 can_grab = obj.can_grab()
                 if can_grab:
                     obj.grabbed = True

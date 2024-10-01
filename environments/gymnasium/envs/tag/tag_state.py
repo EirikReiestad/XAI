@@ -53,8 +53,7 @@ class TagState:
         if self.random_hider_position:
             init_state = random_agent_position(init_state, AgentType.HIDER)
 
-        FullStateDataExtractor.get_agent_position(init_state, AgentType.SEEKER)
-        FullStateDataExtractor.get_agent_position(init_state, AgentType.HIDER)
+        self._validate_state(init_state)
         return init_state
 
     @init_full_state.setter
@@ -134,8 +133,7 @@ class TagState:
         boxes = [Object(ObjectType.BOX, position, True) for position in box_positions]
         objects = Objects(obstacles, boxes)
 
-        FullStateDataExtractor.get_agent_position(self.state.full, AgentType.SEEKER)
-        FullStateDataExtractor.get_agent_position(self.state.full, AgentType.HIDER)
+        self._validate_state(self.state.full)
 
         self.state.partial = self._create_partial_state(
             seeker_position, hider_position, objects
