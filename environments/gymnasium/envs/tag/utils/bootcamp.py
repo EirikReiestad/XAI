@@ -6,31 +6,23 @@ from dataclasses import dataclass
 class BootcampName(enum.Enum):
     HIDER = 0
     SEEKER = 1
-    SLOW_HIDER_10 = 2
-    SLOW_HIDER_5 = 3
-    SLOW_HIDER_2 = 4
-    COMBINED = 5
+    SLOW_HIDER = 2
+    COMBINED = 3
 
 
 @dataclass
 class BootcampTrainingSteps:
-    hider = 10000
-    seeker = 20000
-    slow_hider_10 = 50000
-    slow_hider_5 = 50000
-    slow_hider_2 = 100000
+    hider = 100
+    seeker = 200
+    slow_hider = 500
 
     def get_days(self, name: BootcampName):
         if name == BootcampName.HIDER:
             return self.hider
         if name == BootcampName.SEEKER:
             return self.seeker
-        if name == BootcampName.SLOW_HIDER_10:
-            return self.slow_hider_10
-        if name == BootcampName.SLOW_HIDER_5:
-            return self.slow_hider_5
-        if name == BootcampName.SLOW_HIDER_2:
-            return self.slow_hider_2
+        if name == BootcampName.SLOW_HIDER:
+            return self.slow_hider
         return 0
 
 
@@ -38,6 +30,12 @@ class Bootcamp:
     def __init__(self):
         self._name = BootcampName.HIDER
         self._training_days = 0
+        self.slow_hider_factor = 10
+        self.slow_hider_step_factor = 1
+
+        self.__post_init__()
+
+    def __post_init__(self):
         logging.info(f"Starting {self._name} bootcamp")
 
     def train(self):
@@ -47,11 +45,10 @@ class Bootcamp:
     def move_hider(self, steps: int) -> bool:
         if self._name == BootcampName.HIDER:
             return True
-        if self._name == BootcampName.SLOW_HIDER_10 and steps % 10 == 0:
-            return True
-        if self._name == BootcampName.SLOW_HIDER_5 and steps % 5 == 0:
-            return True
-        if self._name == BootcampName.SLOW_HIDER_2 and steps % 2 == 0:
+        if (
+            self._name == BootcampName.SLOW_HIDER
+            and steps % self.slow_hider_factor == 0
+        ):
             return True
         if self._name == BootcampName.COMBINED:
             return True
@@ -62,6 +59,14 @@ class Bootcamp:
             return
         if self._name == BootcampName.COMBINED:
             return
+        if self._name == BootcampName.SLOW_HIDER:
+            self.slow_hider_factor -= self.slow_hider_step_factor
+            self._training_days = 0
+            if self.slow_hider_factor > 1:
+                logging.info(
+                    f"Continuing with bootcamp {self._name} with slow hider factor: {self.slow_hider_factor}"
+                )
+                return
         self._training_days = 0
         old_name = self._name
         self._name = BootcampName(self._name.value + 1)

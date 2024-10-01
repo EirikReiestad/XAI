@@ -137,12 +137,7 @@ class TagEnv(gym.Env):
             new_full_state, reward = self._do_action(action_type)
             collided = new_full_state is None
             if not collided and new_full_state is not None:
-                self.state.update(
-                    new_full_state,
-                    self.agents.active.position,
-                    self.agents.inactive.position,
-                    self.objects,
-                )
+                self.update_state(new_full_state)
             terminated = collided or terminated
         elif self.steps_beyond_terminated is None:
             self.steps_beyond_terminated = 0

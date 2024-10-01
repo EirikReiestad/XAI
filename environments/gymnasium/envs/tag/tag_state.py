@@ -134,6 +134,9 @@ class TagState:
         boxes = [Object(ObjectType.BOX, position, True) for position in box_positions]
         objects = Objects(obstacles, boxes)
 
+        FullStateDataExtractor.get_agent_position(self.state.full, AgentType.SEEKER)
+        FullStateDataExtractor.get_agent_position(self.state.full, AgentType.HIDER)
+
         self.state.partial = self._create_partial_state(
             seeker_position, hider_position, objects
         )

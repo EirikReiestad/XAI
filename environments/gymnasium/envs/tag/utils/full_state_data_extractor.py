@@ -1,9 +1,12 @@
-from dataclasses import dataclass
-import numpy as np
 import random
+import traceback
+from dataclasses import dataclass
+
+import numpy as np
+
 from environments.gymnasium.envs.tag.utils import AgentType
-from environments.gymnasium.envs.tag.utils.tile_type import TileType
 from environments.gymnasium.envs.tag.utils.agent_tile_type import AGENT_TILE_TYPE
+from environments.gymnasium.envs.tag.utils.tile_type import TileType
 from environments.gymnasium.utils import Position
 
 
@@ -16,9 +19,15 @@ class FullStateDataExtractor:
             raise ValueError(f"Agent type {agent} is not supported.")
         agent_position = np.where(state == agent_tile_type)
         if len(agent_position[0]) > 1 or len(agent_position[1]) > 1:
-            raise ValueError(f"More than one agent found in the state {state}.")
+            raise ValueError(
+                f"More than one agent found in the state {state}\n"
+                + "".join(traceback.format_stack())
+            )
         if len(agent_position[0]) == 0 or len(agent_position[1]) == 0:
-            raise ValueError(f"No agent found in the state.{state}")
+            raise ValueError(
+                f"No agent found in the state {state}\n"
+                + "".join(traceback.format_stack())
+            )
         agent_position = Position(x=agent_position[1][0], y=agent_position[0][0])
         return agent_position
 
