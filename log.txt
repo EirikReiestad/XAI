@@ -466,3 +466,7 @@ INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER_1
 INFO: BootcampName.SLOW_HIDER_10 bootcamp completed, starting BootcampName.SLOW_HIDER_5 bootcamp
 INFO: BootcampName.SLOW_HIDER_5 bootcamp completed, starting BootcampName.SLOW_HIDER_2 bootcamp
 INFO: BootcampName.SLOW_HIDER_2 bootcamp completed, starting BootcampName.COMBINED bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...

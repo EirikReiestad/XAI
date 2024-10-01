@@ -186,6 +186,7 @@ class DQN(SingleAgentBase):
             skip = info.get("skip")
             if skip:
                 continue
+
             next_state = torch.tensor(
                 observation, device=device, dtype=torch.float32
             ).unsqueeze(0)
