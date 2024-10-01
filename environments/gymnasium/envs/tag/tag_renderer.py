@@ -8,7 +8,7 @@ from utils import Color
 
 
 class TagRenderer:
-    metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 50}
+    metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 120}
 
     def __init__(self, width: int, height: int, screen_width: int, screen_height: int):
         self.width = width

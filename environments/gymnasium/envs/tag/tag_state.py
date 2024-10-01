@@ -31,28 +31,31 @@ class TagState:
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.state_type = state_type
-        self.random_seeker_position = False
-        self.random_hider_position = False
+        self.random_seeker_position = True
+        self.random_hider_position = True
         self.init_states(filename)
 
     @property
     def init_full_state(self):
-        state = self._init_full_state
+        init_state = self._init_full_state
 
         def random_agent_position(state: np.ndarray, agent: AgentType) -> np.ndarray:
-            state = FullStateDataModifier.remove_agent(self._init_full_state, agent)
+            removed_agent_state = FullStateDataModifier.remove_agent(state, agent)
             random_position = FullStateDataExtractor.get_random_position(
-                state, TileType.EMPTY
+                removed_agent_state, TileType.EMPTY
             )
-            return FullStateDataModifier.place_agent(state, random_position, agent)
+            return FullStateDataModifier.place_agent(
+                removed_agent_state, random_position, agent
+            )
 
         if self.random_seeker_position:
-            state = random_agent_position(state, AgentType.SEEKER)
+            init_state = random_agent_position(init_state, AgentType.SEEKER)
         if self.random_hider_position:
-            random_agent_position(state, AgentType.HIDER)
-        FullStateDataExtractor.get_agent_position(state, AgentType.SEEKER)
-        FullStateDataExtractor.get_agent_position(state, AgentType.HIDER)
-        return state
+            init_state = random_agent_position(init_state, AgentType.HIDER)
+
+        FullStateDataExtractor.get_agent_position(init_state, AgentType.SEEKER)
+        FullStateDataExtractor.get_agent_position(init_state, AgentType.HIDER)
+        return init_state
 
     @init_full_state.setter
     def init_full_state(self, value: np.ndarray):

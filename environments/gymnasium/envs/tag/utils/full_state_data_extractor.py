@@ -16,9 +16,9 @@ class FullStateDataExtractor:
             raise ValueError(f"Agent type {agent} is not supported.")
         agent_position = np.where(state == agent_tile_type)
         if len(agent_position[0]) > 1 or len(agent_position[1]) > 1:
-            raise ValueError("More than one agent found in the state.")
+            raise ValueError(f"More than one agent found in the state {state}.")
         if len(agent_position[0]) == 0 or len(agent_position[1]) == 0:
-            raise ValueError("No agent found in the state.")
+            raise ValueError(f"No agent found in the state.{state}")
         agent_position = Position(x=agent_position[1][0], y=agent_position[0][0])
         return agent_position
 
@@ -29,7 +29,7 @@ class FullStateDataExtractor:
             raise ValueError(f"Agent type {agent} is not supported.")
         agent_position = np.where(state == agent_tile_type)
         if len(agent_position[0]) > 1 or len(agent_position[1]) > 1:
-            raise ValueError("More than one agent found in the state.")
+            raise ValueError(f"More than one agent found in the state {state}.")
         return len(agent_position[0]) == 1 and len(agent_position[1]) == 1
 
     @staticmethod

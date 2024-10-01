@@ -38,7 +38,7 @@ logging.basicConfig(level=logging.INFO)
 
 
 class TagEnv(gym.Env):
-    metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 120}
+    metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 50}
 
     def __init__(self, render_mode: Optional[str] = "rgb_array"):
         self.height = 10
@@ -51,8 +51,9 @@ class TagEnv(gym.Env):
         self.bootcamp = Bootcamp()
         self.tag_radius = 1
         self.tag_head_start = 0
-        self.max_steps = 200
+        self.max_steps = 20
         self.freeze_hider = False
+        self.slow_hider_factor = 1
         self.terminate_out_of_bounds = False
 
         folder_name = "environments/gymnasium/data/tag/"
@@ -86,74 +87,32 @@ class TagEnv(gym.Env):
     def step(self, action: int) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
         if not self.action_space.contains(action):
             raise ValueError(f"Invalid action {action}")
-
-        if self.bootcamp.name == BootcampName.HIDER:
-            if self.agents.active_agent == AgentType.SEEKER:
-                self.agents.set_next_agent()
-                return (
-                    self.state.active_state,
-                    0,
-                    False,
-                    False,
-                    {
-                        "full_state": self.state.full,
-                        "skip": True,
-                        "data": {
-                            "object_moved_distance": 0,
-                        },
-                    },
-                )
-        if self.bootcamp.name == BootcampName.SEEKER:
-            if self.agents.active_agent == AgentType.HIDER:
-                self.agents.set_next_agent()
-                return (
-                    self.state.active_state,
-                    0,
-                    False,
-                    False,
-                    {
-                        "full_state": self.state.full,
-                        "skip": True,
-                        "data": {
-                            "object_moved_distance": 0,
-                        },
-                    },
-                )
-
-        if self.steps < self.tag_head_start:
-            if self.agents.active_agent == AgentType.SEEKER:
-                self.agents.set_next_agent()
-                return (
-                    self.state.active_state,
-                    0,
-                    False,
-                    False,
-                    {
-                        "full_state": self.state.full,
-                        "skip": True,
-                        "data": {
-                            "object_moved_distance": self.info["object_moved_distance"]
-                        },
-                    },
-                )
-        if self.steps >= self.tag_head_start and self.freeze_hider:
-            if self.agents.active_agent == AgentType.HIDER:
-                self.agents.set_next_agent()
-                return (
-                    self.state.active_state,
-                    0,
-                    False,
-                    False,
-                    {
-                        "full_state": self.state.full,
-                        "skip": True,
-                        "data": {
-                            "object_moved_distance": 0,
-                        },
-                    },
-                )
-
         self.steps += 1
+        if (
+            (
+                self.bootcamp.name in [BootcampName.HIDER]
+                and self.agents.active_agent == AgentType.SEEKER
+            )
+            or (
+                self.bootcamp.name in [BootcampName.SEEKER]
+                and self.agents.active_agent == AgentType.HIDER
+            )
+            or (
+                self.agents.active_agent == AgentType.HIDER
+                and not self.bootcamp.move_hider(self.steps)
+            )
+            or (
+                self.steps < self.tag_head_start
+                and self.agents.active_agent == AgentType.SEEKER
+            )
+            or (
+                self.steps >= self.tag_head_start
+                and self.freeze_hider
+                and self.agents.active_agent == AgentType.HIDER
+            )
+        ):
+            return self._handle_agent_switch(True)
+
         if self.steps >= self.max_steps:
             reward = self.tag_rewards.terminated_reward
             return (
@@ -212,6 +171,24 @@ class TagEnv(gym.Env):
             terminated,
             False,
             return_info,
+        )
+
+    def _handle_agent_switch(
+        self, skip: bool
+    ) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
+        self.agents.set_next_agent()
+        return (
+            self.state.active_state,
+            0,
+            False,
+            False,
+            {
+                "full_state": self.state.full,
+                "skip": skip,
+                "data": {
+                    "object_moved_distance": self.info["object_moved_distance"],
+                },
+            },
         )
 
     def reset(

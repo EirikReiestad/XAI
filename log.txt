@@ -1,2 +1,468 @@
 WARNING: GIF is enabled but the environment does not support RGB array rendering.
 INFO: Learning...
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.COMBINED bootcamp
+INFO: Cleaning cache: /home/eirik/.cache/wandb/artifacts/obj 0.00390625 MB
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging 0.00390625 MB
+INFO: Cleaning cache: /home/eirik/.cache/wandb/artifacts/obj 0.00390625 MB
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging 0.00390625 MB
+INFO: Cleaning cache: /home/eirik/.cache/wandb/artifacts/obj 0.00390625 MB
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging 0.00390625 MB
+INFO: Cleaning cache: /home/eirik/.cache/wandb/artifacts/obj 0.00390625 MB
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging 0.00390625 MB
+INFO: Cleaning cache: /home/eirik/.cache/wandb/artifacts/obj 0.00390625 MB
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging 0.00390625 MB
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.COMBINED bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_10 bootcamp
+INFO: BootcampName.SLOW_10 bootcamp completed, starting BootcampName.SLOW_5 bootcamp
+INFO: BootcampName.SLOW_5 bootcamp completed, starting BootcampName.SLOW_2 bootcamp
+INFO: BootcampName.SLOW_2 bootcamp completed, starting BootcampName.COMBINED bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_10 bootcamp
+INFO: BootcampName.SLOW_10 bootcamp completed, starting BootcampName.SLOW_5 bootcamp
+INFO: BootcampName.SLOW_5 bootcamp completed, starting BootcampName.SLOW_2 bootcamp
+INFO: BootcampName.SLOW_2 bootcamp completed, starting BootcampName.COMBINED bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_10 bootcamp
+INFO: BootcampName.SLOW_10 bootcamp completed, starting BootcampName.SLOW_5 bootcamp
+INFO: BootcampName.SLOW_5 bootcamp completed, starting BootcampName.SLOW_2 bootcamp
+INFO: BootcampName.SLOW_2 bootcamp completed, starting BootcampName.COMBINED bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_10 bootcamp
+INFO: BootcampName.SLOW_10 bootcamp completed, starting BootcampName.SLOW_5 bootcamp
+INFO: BootcampName.SLOW_5 bootcamp completed, starting BootcampName.SLOW_2 bootcamp
+INFO: BootcampName.SLOW_2 bootcamp completed, starting BootcampName.COMBINED bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_10 bootcamp
+INFO: BootcampName.SLOW_10 bootcamp completed, starting BootcampName.SLOW_5 bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_10 bootcamp
+INFO: BootcampName.SLOW_10 bootcamp completed, starting BootcampName.SLOW_5 bootcamp
+INFO: BootcampName.SLOW_5 bootcamp completed, starting BootcampName.SLOW_2 bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+ERROR: More than one agent found in the state.
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+ERROR: More than one agent found in the state.
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+ERROR: More than one agent found in the state.
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: No agent found in the state.
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+ERROR: More than one agent found in the state [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 2. 0. 2. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [3. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 4. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]].
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+ERROR: More than one agent found in the state [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 3. 0. 0. 2.]
+ [0. 0. 0. 4. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 2.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]].
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+ERROR: More than one agent found in the state [[0. 0. 0. 0. 0. 0. 0. 2. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 2. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 3. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 4. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]].
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+ERROR: More than one agent found in the state [[0. 0. 0. 0. 0. 0. 0. 3. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 4. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 2. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 2. 0. 0.]].
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+ERROR: More than one agent found in the state [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 2.]
+ [0. 0. 3. 0. 0. 0. 0. 0. 2. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 4. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]].
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+ERROR: More than one agent found in the state [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 2. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [3. 0. 2. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 4. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]].
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+ERROR: More than one agent found in the state [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 4. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 3. 0. 0. 0. 0. 0. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 2. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 2.]].
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+ERROR: More than one agent found in the state [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 2. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 2. 0. 0. 0.]
+ [0. 3. 0. 4. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]].
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+ERROR: More than one agent found in the state [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 2. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 2. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 4. 3. 0. 0. 0. 0. 0. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]].
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+ERROR: More than one agent found in the state [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 2. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 2. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [3. 0. 0. 4. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]].
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+ERROR: More than one agent found in the state [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 2. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 2. 0. 0. 0. 0.]
+ [0. 0. 3. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 4. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]].
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+ERROR: More than one agent found in the state [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 2. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 2. 0. 0.]
+ [0. 3. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 4. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]].
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+ERROR: More than one agent found in the state [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 2. 2. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 3. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 4. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]].
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+ERROR: More than one agent found in the state [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 2. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 2. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 4. 3. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]].
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+ERROR: More than one agent found in the state [[0. 0. 0. 0. 0. 0. 0. 2. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 2. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 3. 0. 4. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]].
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+ERROR: More than one agent found in the state [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 2. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 2. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 3. 0. 0. 0. 0.]
+ [0. 0. 0. 4. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]].
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER_10 bootcamp
+INFO: BootcampName.SLOW_HIDER_10 bootcamp completed, starting BootcampName.SLOW_HIDER_5 bootcamp
+INFO: BootcampName.SLOW_HIDER_5 bootcamp completed, starting BootcampName.SLOW_HIDER_2 bootcamp
+INFO: BootcampName.SLOW_HIDER_2 bootcamp completed, starting BootcampName.COMBINED bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER_10 bootcamp
+INFO: BootcampName.SLOW_HIDER_10 bootcamp completed, starting BootcampName.SLOW_HIDER_5 bootcamp
+INFO: BootcampName.SLOW_HIDER_5 bootcamp completed, starting BootcampName.SLOW_HIDER_2 bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER_10 bootcamp
+INFO: BootcampName.SLOW_HIDER_10 bootcamp completed, starting BootcampName.SLOW_HIDER_5 bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER_10 bootcamp
+INFO: BootcampName.SLOW_HIDER_10 bootcamp completed, starting BootcampName.SLOW_HIDER_5 bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER_10 bootcamp
+INFO: BootcampName.SLOW_HIDER_10 bootcamp completed, starting BootcampName.SLOW_HIDER_5 bootcamp
+INFO: BootcampName.SLOW_HIDER_5 bootcamp completed, starting BootcampName.SLOW_HIDER_2 bootcamp
+INFO: BootcampName.SLOW_HIDER_2 bootcamp completed, starting BootcampName.COMBINED bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER_10 bootcamp
+INFO: BootcampName.SLOW_HIDER_10 bootcamp completed, starting BootcampName.SLOW_HIDER_5 bootcamp
+INFO: BootcampName.SLOW_HIDER_5 bootcamp completed, starting BootcampName.SLOW_HIDER_2 bootcamp
+INFO: BootcampName.SLOW_HIDER_2 bootcamp completed, starting BootcampName.COMBINED bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER_10 bootcamp
+INFO: BootcampName.SLOW_HIDER_10 bootcamp completed, starting BootcampName.SLOW_HIDER_5 bootcamp
+INFO: BootcampName.SLOW_HIDER_5 bootcamp completed, starting BootcampName.SLOW_HIDER_2 bootcamp
+INFO: BootcampName.SLOW_HIDER_2 bootcamp completed, starting BootcampName.COMBINED bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER_10 bootcamp
+INFO: BootcampName.SLOW_HIDER_10 bootcamp completed, starting BootcampName.SLOW_HIDER_5 bootcamp
+INFO: BootcampName.SLOW_HIDER_5 bootcamp completed, starting BootcampName.SLOW_HIDER_2 bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER_10 bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+ERROR: No agent found in the state.[[0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [2 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 4 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [1 1 0 1 0 0 0 0 0 0]
+ [0 0 0 1 0 0 0 0 0 0]
+ [0 0 0 1 0 0 0 0 0 0]]
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER_10 bootcamp
+INFO: BootcampName.SLOW_HIDER_10 bootcamp completed, starting BootcampName.SLOW_HIDER_5 bootcamp
+INFO: BootcampName.SLOW_HIDER_5 bootcamp completed, starting BootcampName.SLOW_HIDER_2 bootcamp
+INFO: BootcampName.SLOW_HIDER_2 bootcamp completed, starting BootcampName.COMBINED bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER_10 bootcamp
+INFO: BootcampName.SLOW_HIDER_10 bootcamp completed, starting BootcampName.SLOW_HIDER_5 bootcamp
+INFO: BootcampName.SLOW_HIDER_5 bootcamp completed, starting BootcampName.SLOW_HIDER_2 bootcamp
+INFO: BootcampName.SLOW_HIDER_2 bootcamp completed, starting BootcampName.COMBINED bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER_10 bootcamp
+INFO: BootcampName.SLOW_HIDER_10 bootcamp completed, starting BootcampName.SLOW_HIDER_5 bootcamp
+INFO: BootcampName.SLOW_HIDER_5 bootcamp completed, starting BootcampName.SLOW_HIDER_2 bootcamp
+INFO: BootcampName.SLOW_HIDER_2 bootcamp completed, starting BootcampName.COMBINED bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER_10 bootcamp
+INFO: BootcampName.SLOW_HIDER_10 bootcamp completed, starting BootcampName.SLOW_HIDER_5 bootcamp
+INFO: BootcampName.SLOW_HIDER_5 bootcamp completed, starting BootcampName.SLOW_HIDER_2 bootcamp
+INFO: BootcampName.SLOW_HIDER_2 bootcamp completed, starting BootcampName.COMBINED bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER_10 bootcamp
+INFO: BootcampName.SLOW_HIDER_10 bootcamp completed, starting BootcampName.SLOW_HIDER_5 bootcamp
+INFO: BootcampName.SLOW_HIDER_5 bootcamp completed, starting BootcampName.SLOW_HIDER_2 bootcamp
+INFO: BootcampName.SLOW_HIDER_2 bootcamp completed, starting BootcampName.COMBINED bootcamp
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER_10 bootcamp
+INFO: BootcampName.SLOW_HIDER_10 bootcamp completed, starting BootcampName.SLOW_HIDER_5 bootcamp
+INFO: BootcampName.SLOW_HIDER_5 bootcamp completed, starting BootcampName.SLOW_HIDER_2 bootcamp
+INFO: BootcampName.SLOW_HIDER_2 bootcamp completed, starting BootcampName.COMBINED bootcamp
