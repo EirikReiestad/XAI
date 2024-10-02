@@ -54,20 +54,31 @@ class MultiAgentShap(MultiAgentBase):
             test_states = test_states[:, included_indices]
             feature_names = include
 
+        print(len(shap_values))
         for agent_shap_values in shap_values:
-            mean_shap_values = agent_shap_values.mean(axis=2)
-            shap.summary_plot(
-                mean_shap_values, test_states, feature_names=feature_names
-            )
+            if self.shap_type == ShapType.IMAGE:
+                print(agent_shap_values.shape)
+                shap.image_plot(agent_shap_values, test_states)
+            elif self.shap_type == ShapType.BEESWARM:
+                mean_shap_values = agent_shap_values.mean(axis=2)
+                shap.summary_plot(
+                    mean_shap_values, test_states, feature_names=feature_names
+                )
 
     def _explain_single_agent(self, agent: rl.SingleAgentBase) -> Any:
         if self.shap_type == ShapType.IMAGE:
-            explainer = shap.GradientExplainer(agent.policy_net, self.background_states)
+            background_states = torch.tensor(
+                self.background_states,
+                device=device,
+            )
+            explainer = shap.GradientExplainer(agent.policy_net, background_states)
+            test_states = torch.tensor(self.test_states, device=device)
+            shap_values = explainer(test_states).values
         elif self.shap_type == ShapType.BEESWARM:
             explainer = shap.Explainer(agent.predict, self.background_states)
+            shap_values = explainer(self.test_states).values
         else:
             raise ValueError(f"Invalid shap type: {self.shap_type}")
-        shap_values = explainer(self.test_states).values
         return shap_values
 
     def _sample_states(

@@ -154,10 +154,8 @@ class TagDemo:
         shap_values = shap.explain()
         env = MetadataWrapper(self.env)
         feature_names = env.feature_names()
-        shap.plot(
-            shap_values,
-            feature_names=feature_names,
-            include=[
+        include = (
+            [
                 "Hider X",
                 "Hider Y",
                 "Seeker X",
@@ -170,6 +168,10 @@ class TagDemo:
                 "Box 0 grabbable",
                 "Box 0 grabbed",
             ],
+        )
+        shap.plot(
+            shap_values,
+            feature_names=feature_names,
         )
 
 
