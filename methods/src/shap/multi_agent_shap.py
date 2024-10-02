@@ -61,7 +61,12 @@ class MultiAgentShap(MultiAgentBase):
             )
 
     def _explain_single_agent(self, agent: rl.SingleAgentBase) -> Any:
-        explainer = shap.Explainer(agent.predict, self.background_states)
+        if self.shap_type == ShapType.IMAGE:
+            explainer = shap.GradientExplainer(agent.policy_net, self.background_states)
+        elif self.shap_type == ShapType.BEESWARM:
+            explainer = shap.Explainer(agent.predict, self.background_states)
+        else:
+            raise ValueError(f"Invalid shap type: {self.shap_type}")
         shap_values = explainer(self.test_states).values
         return shap_values
 

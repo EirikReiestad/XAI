@@ -33,6 +33,7 @@ class Shap:
 
         self.env = env
         self.model = model
+        self.shap_type = shap_type
 
         if self.multi_agent:
             assert isinstance(self.env, MultiAgentEnv)

@@ -33,12 +33,12 @@ class TagDemo:
         env = gym.make("TagEnv-v0", render_mode="rgb_array")
         model_name = "tag-v0"
         self.env = MultiAgentEnv(env)
-        wandb_config = WandBConfig(project="tag-v0-idun")
+        wandb_config = WandBConfig(project="tag-v0-local")
         self.dqn = MultiAgentDQN(
             self.env,
             self.num_agents,
             "dqnpolicy",
-            wandb=True,
+            wandb=False,
             wandb_config=wandb_config,
             model_name=model_name,
             save_every_n_episodes=100,
@@ -52,9 +52,8 @@ class TagDemo:
 
     def run(self):
         logging.info("Learning...")
-        self.dqn.learn(100000)
-
-        self.shap(False)
+        self.dqn.learn(1)
+        self.shap(True)
         self.show(False)
 
     def show(self, run: bool = True):

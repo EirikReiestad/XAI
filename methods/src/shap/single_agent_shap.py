@@ -27,8 +27,15 @@ class SingleAgentShap(SingleAgentBase):
         self.background_states, self.test_states = self._sample_states(samples)
         self.shap_type = shap_type
 
-    def explain(self) -> np.ndarray:
-        explainer = shap.Explainer(self.model.predict, self.background_states[0].shape)
+    def explain(self) -> Any:
+        if self.shap_type == ShapType.IMAGE:
+            explainer = shap.GradientExplainer(
+                self.model.predict, self.background_states
+            )
+        elif self.shap_type == ShapType.BEESWARM:
+            explainer = shap.Explainer(self.model.predict, self.background_states)
+        else:
+            raise ValueError(f"Invalid shap type: {self.shap_type}")
         shap_values = explainer(self.test_states).values
         return shap_values
 
