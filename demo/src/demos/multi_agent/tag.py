@@ -151,7 +151,8 @@ class TagDemo:
         logging.info("Shap setup...")
         shap = Shap(self.env, self.dqn, samples=10)
         logging.info("Explaining...")
-        shap_values = shap.explain()
+        shap.explain()
+        shap_values = shap.shap_values()
         env = MetadataWrapper(self.env)
         feature_names = env.feature_names()
         include = (

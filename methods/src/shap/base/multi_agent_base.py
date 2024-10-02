@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-import numpy as np
+import shap
 
 
 class MultiAgentBase(ABC):
     @abstractmethod
-    def explain(self) -> list[np.ndarray]:
+    def explain(self) -> list[shap.GradientExplainer | shap.Explainer]:
         raise NotImplementedError
 
     @abstractmethod

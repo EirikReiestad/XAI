@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-import numpy as np
+import shap
 
 
 class SingleAgentBase(ABC):
     @abstractmethod
-    def explain(self) -> np.ndarray:
+    def explain(self) -> shap.GradientExplainer | shap.Explainer:
         raise NotImplementedError
 
     @abstractmethod

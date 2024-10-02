@@ -30,5 +30,9 @@ class SingleAgentBase(ABC):
     def load(self, run_path: str, model_artifact: str, version_number: str):
         raise NotImplementedError
 
+    @abstractmethod
+    def model(self) -> torch.nn.Module:
+        raise NotImplementedError
+
     def close(self):
         self.wandb_manager.finish()

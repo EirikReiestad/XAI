@@ -296,6 +296,9 @@ class DQN(SingleAgentBase):
                 dtype=torch.long,
             )
 
+    def model(self) -> torch.nn.Module:
+        return self.policy_net
+
     def _optimize_model(self) -> None:
         """Perform one optimization step on the policy network."""
         if not self._can_optimize():

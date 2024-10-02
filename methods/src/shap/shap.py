@@ -1,7 +1,7 @@
 from typing import Any
+import shap
 
 import gymnasium as gym
-import numpy as np
 import torch
 
 import rl
@@ -44,8 +44,17 @@ class Shap:
             assert isinstance(self.model, rl.SingleAgentBase)
             self.explainer = SingleAgentShap(self.env, self.model, samples)
 
-    def explain(self) -> np.ndarray | list[np.ndarray]:
+    def explain(
+        self,
+    ) -> (
+        shap.GradientExplainer
+        | shap.Explainer
+        | list[shap.GradientExplainer | shap.Explainer]
+    ):
         return self.explainer.explain()
+
+    def shap_values(self) -> Any:
+        return self.explainer.shap_values()
 
     def plot(self, shap_values: Any, **kwargs):
         feature_names = kwargs.get("feature_names", None)
