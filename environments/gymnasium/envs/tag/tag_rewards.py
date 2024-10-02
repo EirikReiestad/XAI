@@ -16,9 +16,13 @@ class TagRewards:
         }
 
     def get_tag_reward(
-        self, agent: Position, other_agent: Position, radius: float = 1
+        self,
+        agent: Position,
+        other_agent: Position,
+        terminated: bool,
+        radius: float = 1,
     ) -> tuple[tuple[float, float], bool]:
-        if agent.distance_to(other_agent) <= radius:
+        if agent.distance_to(other_agent) <= radius or terminated:
             return self.tagged_reward, True
         return self.not_tagged_reward, False
 

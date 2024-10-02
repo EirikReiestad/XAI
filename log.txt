@@ -600,3 +600,878 @@ INFO: Learning...
 INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
 INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
 INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 9
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 9
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 8
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 7
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 6
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 5
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 4
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 3
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 2
+INFO: BootcampName.SLOW_HIDER bootcamp completed, starting BootcampName.COMBINED bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+ERROR: No agent found in the state [[0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 2 0 4 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [1 1 0 1 0 0 0 0 0 0]
+ [0 0 0 1 0 0 0 0 0 0]
+ [0 0 0 1 0 0 0 0 0 0]]
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/eirik/Projects/XAI/demo/__main__.py", line 14, in <module>
+    demo.run()
+  File "/home/eirik/Projects/XAI/demo/src/demos/multi_agent/tag.py", line 55, in run
+    self.dqn.learn(100000)
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 73, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 133, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 36, in step_multiple
+    full_state, concatenated_state_rewards, terminated = self.get_wrapper_attr(
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 220, in concatenate_states
+    state, _ = self.state.concatenate_states(states)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_state.py", line 168, in concatenate_states
+    return self._concatenate_double_state(states)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_state.py", line 265, in _concatenate_double_state
+    hider_position = FullStateDataExtractor.get_agent_position(
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/full_state_data_extractor.py", line 29, in get_agent_position
+    + "".join(traceback.format_stack())
+
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 9
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 8
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 7
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 6
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 5
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 4
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 3
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 2
+INFO: BootcampName.SLOW_HIDER bootcamp completed, starting BootcampName.COMBINED bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 9
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 8
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 7
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 6
+ERROR: No agent found in the state [[0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 2 0 0 0 0 0 0 0 0]
+ [0 0 0 4 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [1 1 0 1 0 0 0 0 0 0]
+ [0 0 0 1 0 0 0 0 0 0]
+ [0 0 0 1 0 0 0 0 0 0]]
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/eirik/Projects/XAI/demo/__main__.py", line 14, in <module>
+    demo.run()
+  File "/home/eirik/Projects/XAI/demo/src/demos/multi_agent/tag.py", line 55, in run
+    self.dqn.learn(100000)
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 73, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 133, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 36, in step_multiple
+    full_state, concatenated_state_rewards, terminated = self.get_wrapper_attr(
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 220, in concatenate_states
+    state, _ = self.state.concatenate_states(states)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_state.py", line 168, in concatenate_states
+    return self._concatenate_double_state(states)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_state.py", line 265, in _concatenate_double_state
+    hider_position = FullStateDataExtractor.get_agent_position(
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/full_state_data_extractor.py", line 29, in get_agent_position
+    + "".join(traceback.format_stack())
+
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 9
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 8
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 7
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 6
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 5
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 4
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 3
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: states: [array([[0, 0, 2, 0, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 4, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+       [1, 1, 0, 1, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 1, 0, 0, 0, 0, 0, 0]], dtype=uint8), array([[0, 0, 2, 0, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 4, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+       [1, 1, 0, 1, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 1, 0, 0, 0, 0, 0, 0]], dtype=uint8)]
+ERROR: No agent found in the state [[0 0 2 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 4 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [1 1 0 1 0 0 0 0 0 0]
+ [0 0 0 1 0 0 0 0 0 0]
+ [0 0 0 1 0 0 0 0 0 0]]
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/eirik/Projects/XAI/demo/__main__.py", line 14, in <module>
+    demo.run()
+  File "/home/eirik/Projects/XAI/demo/src/demos/multi_agent/tag.py", line 55, in run
+    self.dqn.learn(100000)
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 73, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 133, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 36, in step_multiple
+    full_state, concatenated_state_rewards, terminated = self.get_wrapper_attr(
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 220, in concatenate_states
+    state, _ = self.state.concatenate_states(states)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_state.py", line 168, in concatenate_states
+    return self._concatenate_double_state(states)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_state.py", line 266, in _concatenate_double_state
+    hider_position = FullStateDataExtractor.get_agent_position(
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/full_state_data_extractor.py", line 29, in get_agent_position
+    + "".join(traceback.format_stack())
+
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+ERROR: 'TagState' object has no attribute '_validate_state'
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 9
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 8
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 7
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 6
+ERROR: No agent found in the state [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 4. 0. 0. 0. 0. 0. 0.]
+ [0. 3. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]]
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/eirik/Projects/XAI/demo/__main__.py", line 14, in <module>
+    demo.run()
+  File "/home/eirik/Projects/XAI/demo/src/demos/multi_agent/tag.py", line 55, in run
+    self.dqn.learn(100000)
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 73, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 133, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 28, in step_multiple
+    observation, reward, terminated, trunc, info = self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/order_enforcing.py", line 56, in step
+    return self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/env_checker.py", line 51, in step
+    return self.env.step(action)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 140, in step
+    self.update_state(new_full_state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 233, in update_state
+    self.state.validate_state(state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_state.py", line 205, in validate_state
+    FullStateDataExtractor.get_agent_position(state, AgentType.SEEKER)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/full_state_data_extractor.py", line 29, in get_agent_position
+    + "".join(traceback.format_stack())
+
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+ERROR: No agent found in the state [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 4. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 3. 0. 1. 0. 0. 0. 0. 0. 0.]]
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/eirik/Projects/XAI/demo/__main__.py", line 14, in <module>
+    demo.run()
+  File "/home/eirik/Projects/XAI/demo/src/demos/multi_agent/tag.py", line 55, in run
+    self.dqn.learn(100000)
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 73, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 133, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 28, in step_multiple
+    observation, reward, terminated, trunc, info = self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/order_enforcing.py", line 56, in step
+    return self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/env_checker.py", line 51, in step
+    return self.env.step(action)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 140, in step
+    self.update_state(new_full_state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 233, in update_state
+    self.state.validate_state(state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_state.py", line 205, in validate_state
+    FullStateDataExtractor.get_agent_position(state, AgentType.SEEKER)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/full_state_data_extractor.py", line 29, in get_agent_position
+    + "".join(traceback.format_stack())
+
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 9
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 8
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 7
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 6
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 5
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 4
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 3
+ERROR: No agent found in the state [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 3. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 4. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]]
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/eirik/Projects/XAI/demo/__main__.py", line 14, in <module>
+    demo.run()
+  File "/home/eirik/Projects/XAI/demo/src/demos/multi_agent/tag.py", line 55, in run
+    self.dqn.learn(100000)
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 73, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 133, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 28, in step_multiple
+    observation, reward, terminated, trunc, info = self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/order_enforcing.py", line 56, in step
+    return self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/env_checker.py", line 51, in step
+    return self.env.step(action)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 137, in step
+    new_full_state, reward = self._do_action(action_type)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 258, in _do_action
+    self.state.validate_state(new_full_state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_state.py", line 205, in validate_state
+    FullStateDataExtractor.get_agent_position(state, AgentType.SEEKER)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/full_state_data_extractor.py", line 29, in get_agent_position
+    + "".join(traceback.format_stack())
+
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 9
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 8
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 7
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 6
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 5
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 4
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 3
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 2
+INFO: BootcampName.SLOW_HIDER bootcamp completed, starting BootcampName.COMBINED bootcamp
+ERROR: No agent found in the state [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 3. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 4. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]]
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/eirik/Projects/XAI/demo/__main__.py", line 14, in <module>
+    demo.run()
+  File "/home/eirik/Projects/XAI/demo/src/demos/multi_agent/tag.py", line 55, in run
+    self.dqn.learn(100000)
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 73, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 133, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 28, in step_multiple
+    observation, reward, terminated, trunc, info = self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/order_enforcing.py", line 56, in step
+    return self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/env_checker.py", line 51, in step
+    return self.env.step(action)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 140, in step
+    self.update_state(new_full_state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 233, in update_state
+    self.state.validate_state(state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_state.py", line 205, in validate_state
+    FullStateDataExtractor.get_agent_position(state, AgentType.SEEKER)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/full_state_data_extractor.py", line 29, in get_agent_position
+    + "".join(traceback.format_stack())
+
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 9
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 8
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 7
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 6
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 5
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 4
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 3
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 2
+INFO: BootcampName.SLOW_HIDER bootcamp completed, starting BootcampName.COMBINED bootcamp
+ERROR: No agent found in the state [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 3. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 4. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]]
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/eirik/Projects/XAI/demo/__main__.py", line 14, in <module>
+    demo.run()
+  File "/home/eirik/Projects/XAI/demo/src/demos/multi_agent/tag.py", line 55, in run
+    self.dqn.learn(100000)
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 73, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 133, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 28, in step_multiple
+    observation, reward, terminated, trunc, info = self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/order_enforcing.py", line 56, in step
+    return self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/env_checker.py", line 51, in step
+    return self.env.step(action)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 140, in step
+    self.update_state(new_full_state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 233, in update_state
+    self.state.validate_state(state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_state.py", line 205, in validate_state
+    FullStateDataExtractor.get_agent_position(state, AgentType.SEEKER)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/full_state_data_extractor.py", line 29, in get_agent_position
+    + "".join(traceback.format_stack())
+
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 9
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 8
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 7
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 6
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 5
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 4
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 3
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 2
+INFO: BootcampName.SLOW_HIDER bootcamp completed, starting BootcampName.COMBINED bootcamp
+ERROR: No agent found in the state [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 3. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 4. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]]
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/eirik/Projects/XAI/demo/__main__.py", line 14, in <module>
+    demo.run()
+  File "/home/eirik/Projects/XAI/demo/src/demos/multi_agent/tag.py", line 55, in run
+    self.dqn.learn(100000)
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 73, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 133, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 28, in step_multiple
+    observation, reward, terminated, trunc, info = self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/order_enforcing.py", line 56, in step
+    return self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/env_checker.py", line 51, in step
+    return self.env.step(action)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 140, in step
+    self.update_state(new_full_state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 233, in update_state
+    self.state.validate_state(state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_state.py", line 205, in validate_state
+    FullStateDataExtractor.get_agent_position(state, AgentType.SEEKER)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/full_state_data_extractor.py", line 29, in get_agent_position
+    + "".join(traceback.format_stack())
+
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+ERROR: No agent found in the state [[0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 4 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [1 1 0 1 0 0 0 0 0 0]
+ [0 0 0 1 0 0 0 0 0 0]
+ [0 0 0 1 0 0 0 2 0 0]]
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/eirik/Projects/XAI/demo/__main__.py", line 14, in <module>
+    demo.run()
+  File "/home/eirik/Projects/XAI/demo/src/demos/multi_agent/tag.py", line 55, in run
+    self.dqn.learn(100000)
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 73, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 133, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 28, in step_multiple
+    observation, reward, terminated, trunc, info = self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/order_enforcing.py", line 56, in step
+    return self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/env_checker.py", line 51, in step
+    return self.env.step(action)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 140, in step
+    self.update_state(new_full_state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 237, in update_state
+    self.state.validate_state(state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_state.py", line 206, in validate_state
+    FullStateDataExtractor.get_agent_position(state, AgentType.HIDER)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/full_state_data_extractor.py", line 29, in get_agent_position
+    + "".join(traceback.format_stack())
+
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 9
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 8
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 7
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 6
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 5
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 4
+ERROR: No agent found in the state [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 3. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 4. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]]
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/eirik/Projects/XAI/demo/__main__.py", line 14, in <module>
+    demo.run()
+  File "/home/eirik/Projects/XAI/demo/src/demos/multi_agent/tag.py", line 55, in run
+    self.dqn.learn(100000)
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 73, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 133, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 28, in step_multiple
+    observation, reward, terminated, trunc, info = self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/order_enforcing.py", line 56, in step
+    return self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/env_checker.py", line 51, in step
+    return self.env.step(action)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 140, in step
+    self.update_state(new_full_state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 237, in update_state
+    self.state.validate_state(state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_state.py", line 205, in validate_state
+    FullStateDataExtractor.get_agent_position(state, AgentType.SEEKER)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/full_state_data_extractor.py", line 29, in get_agent_position
+    + "".join(traceback.format_stack())
+
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 9
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 8
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 7
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 6
+ERROR: No agent found in the state [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 4. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 3. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]]
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/eirik/Projects/XAI/demo/__main__.py", line 14, in <module>
+    demo.run()
+  File "/home/eirik/Projects/XAI/demo/src/demos/multi_agent/tag.py", line 55, in run
+    self.dqn.learn(100000)
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 73, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 133, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 28, in step_multiple
+    observation, reward, terminated, trunc, info = self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/order_enforcing.py", line 56, in step
+    return self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/env_checker.py", line 51, in step
+    return self.env.step(action)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 140, in step
+    self.update_state(new_full_state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 237, in update_state
+    self.state.validate_state(state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_state.py", line 205, in validate_state
+    FullStateDataExtractor.get_agent_position(state, AgentType.SEEKER)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/full_state_data_extractor.py", line 29, in get_agent_position
+    + "".join(traceback.format_stack())
+
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 9
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 8
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 7
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 6
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 5
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 4
+ERROR: No agent found in the state [[0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 2 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 4 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [1 1 0 1 0 0 0 0 0 0]
+ [0 0 0 1 0 0 0 0 0 0]
+ [0 0 0 1 0 0 0 0 0 0]]
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/eirik/Projects/XAI/demo/__main__.py", line 14, in <module>
+    demo.run()
+  File "/home/eirik/Projects/XAI/demo/src/demos/multi_agent/tag.py", line 55, in run
+    self.dqn.learn(100000)
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 73, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 133, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 28, in step_multiple
+    observation, reward, terminated, trunc, info = self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/order_enforcing.py", line 56, in step
+    return self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/env_checker.py", line 51, in step
+    return self.env.step(action)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 140, in step
+    self.update_state(new_full_state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 237, in update_state
+    self.state.validate_state(state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_state.py", line 206, in validate_state
+    FullStateDataExtractor.get_agent_position(state, AgentType.HIDER)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/full_state_data_extractor.py", line 29, in get_agent_position
+    + "".join(traceback.format_stack())
+
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 9
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 8
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 7
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 6
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 5
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 4
+ERROR: No agent found in the state [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 4. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 3. 0. 0. 0. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]]
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/eirik/Projects/XAI/demo/__main__.py", line 14, in <module>
+    demo.run()
+  File "/home/eirik/Projects/XAI/demo/src/demos/multi_agent/tag.py", line 55, in run
+    self.dqn.learn(100000)
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 73, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 133, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 28, in step_multiple
+    observation, reward, terminated, trunc, info = self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/order_enforcing.py", line 56, in step
+    return self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/env_checker.py", line 51, in step
+    return self.env.step(action)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 140, in step
+    self.update_state(new_full_state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 237, in update_state
+    self.state.validate_state(state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_state.py", line 205, in validate_state
+    FullStateDataExtractor.get_agent_position(state, AgentType.SEEKER)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/full_state_data_extractor.py", line 29, in get_agent_position
+    + "".join(traceback.format_stack())
+
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 9
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 8
+ERROR: No agent found in the state [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 4. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 3. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]]
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/eirik/Projects/XAI/demo/__main__.py", line 14, in <module>
+    demo.run()
+  File "/home/eirik/Projects/XAI/demo/src/demos/multi_agent/tag.py", line 55, in run
+    self.dqn.learn(100000)
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 73, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 133, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 28, in step_multiple
+    observation, reward, terminated, trunc, info = self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/order_enforcing.py", line 56, in step
+    return self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/env_checker.py", line 51, in step
+    return self.env.step(action)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 137, in step
+    new_full_state, reward = self._do_action(action_type)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 265, in _do_action
+    self.state.validate_state(new_full_state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_state.py", line 205, in validate_state
+    FullStateDataExtractor.get_agent_position(state, AgentType.SEEKER)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/full_state_data_extractor.py", line 29, in get_agent_position
+    + "".join(traceback.format_stack())
+
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 9
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 8
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 7
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 6
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 5
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 4
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 3
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 2
+ERROR: No agent found in the state [[0. 0. 0. 3. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 4. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [1. 1. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 1. 0. 0. 0. 0. 0. 0.]]
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/eirik/Projects/XAI/demo/__main__.py", line 14, in <module>
+    demo.run()
+  File "/home/eirik/Projects/XAI/demo/src/demos/multi_agent/tag.py", line 55, in run
+    self.dqn.learn(100000)
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 73, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 133, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 28, in step_multiple
+    observation, reward, terminated, trunc, info = self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/order_enforcing.py", line 56, in step
+    return self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/env_checker.py", line 51, in step
+    return self.env.step(action)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 137, in step
+    new_full_state, reward = self._do_action(action_type)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 265, in _do_action
+    self.state.validate_state(new_full_state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_state.py", line 205, in validate_state
+    FullStateDataExtractor.get_agent_position(state, AgentType.SEEKER)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/full_state_data_extractor.py", line 29, in get_agent_position
+    + "".join(traceback.format_stack())
+
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 9
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 8
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 7
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 6
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 5
+ERROR: No agent found in the state [[0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 4 0 0 0 2 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [1 1 0 1 0 0 0 0 0 0]
+ [0 0 0 1 0 0 0 0 0 0]
+ [0 0 0 1 0 0 0 0 0 0]]
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/eirik/Projects/XAI/demo/__main__.py", line 14, in <module>
+    demo.run()
+  File "/home/eirik/Projects/XAI/demo/src/demos/multi_agent/tag.py", line 55, in run
+    self.dqn.learn(100000)
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 73, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 133, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 28, in step_multiple
+    observation, reward, terminated, trunc, info = self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/order_enforcing.py", line 56, in step
+    return self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/env_checker.py", line 51, in step
+    return self.env.step(action)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 137, in step
+    new_full_state, reward = self._do_action(action_type)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 265, in _do_action
+    self.state.validate_state(new_full_state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_state.py", line 206, in validate_state
+    FullStateDataExtractor.get_agent_position(state, AgentType.HIDER)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/full_state_data_extractor.py", line 29, in get_agent_position
+    + "".join(traceback.format_stack())
+
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+ERROR: No agent found in the state [[0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 2 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [0 0 0 4 0 0 0 0 0 0]
+ [0 0 0 0 0 0 0 0 0 0]
+ [1 1 0 1 0 0 0 0 0 0]
+ [0 0 0 1 0 0 0 0 0 0]
+ [0 0 0 1 0 0 0 0 0 0]]
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/eirik/Projects/XAI/demo/__main__.py", line 14, in <module>
+    demo.run()
+  File "/home/eirik/Projects/XAI/demo/src/demos/multi_agent/tag.py", line 55, in run
+    self.dqn.learn(100000)
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 73, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 133, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 28, in step_multiple
+    observation, reward, terminated, trunc, info = self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/order_enforcing.py", line 56, in step
+    return self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/env_checker.py", line 51, in step
+    return self.env.step(action)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 137, in step
+    new_full_state, reward = self._do_action(action_type)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 265, in _do_action
+    self.state.validate_state(new_full_state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_state.py", line 206, in validate_state
+    FullStateDataExtractor.get_agent_position(state, AgentType.HIDER)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/full_state_data_extractor.py", line 29, in get_agent_position
+    + "".join(traceback.format_stack())
+
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+ERROR: unsupported operand type(s) for +=: 'int' and 'tuple'
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 9
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 8
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 7
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 6
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 5
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 4
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 3
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 2
+ERROR: unsupported operand type(s) for +=: 'int' and 'tuple'
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 9
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 8
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 7
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 6
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 5
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 4
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 3
+ERROR: unsupported operand type(s) for +=: 'int' and 'tuple'
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 9
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 8
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 7
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 6
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 5
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 4
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 3
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 2
+INFO: BootcampName.SLOW_HIDER bootcamp completed, starting BootcampName.COMBINED bootcamp

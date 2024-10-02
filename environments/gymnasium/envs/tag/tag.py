@@ -217,19 +217,24 @@ class TagEnv(gym.Env):
     def concatenate_states(
         self, states: list[np.ndarray]
     ) -> tuple[np.ndarray, tuple[float, float], bool]:
-        state, _ = self.state.concatenate_states(states)
-        rewards, terminated = self.tag_rewards.get_tag_reward(
+        state, concat_terminated = self.state.concatenate_states(states)
+        rewards, tag_terminated = self.tag_rewards.get_tag_reward(
             self.agents.active.position,
             self.agents.inactive.position,
+            concat_terminated,
             self.tag_radius,
         )
         if self.steps >= self.max_steps:
             rewards = self.tag_rewards.end_reward
         self.render(self.render_mode)
         self.bootcamp.train()
+
+        terminated = concat_terminated or tag_terminated
+
         return state, rewards, terminated
 
     def update_state(self, state: np.ndarray) -> np.ndarray:
+        self.state.validate_state(state)
         self.state.update(
             state,
             self.agents.active.position,
@@ -257,6 +262,8 @@ class TagEnv(gym.Env):
         if new_full_state is None:
             return None, reward
         new_full_state = self._move_grabbed_object(new_full_state)
+        if new_full_state is None:
+            return None, reward
         return new_full_state, reward
 
     def _grab_entity(self) -> bool:
@@ -278,6 +285,7 @@ class TagEnv(gym.Env):
 
     def _move_grabbed_object(self, state: np.ndarray) -> Optional[np.ndarray]:
         obj = self.agents.active.grabbed_object
+        self.info["object_moved_distance"] = 0
         if obj is not None:
             if obj.next_position is None:
                 raise ValueError("The object should have a next position.")
@@ -304,6 +312,8 @@ class TagEnv(gym.Env):
     ) -> tuple[Optional[np.ndarray], float]:
         new_state = state.copy()
         new_agent_position = self.agents.active.position + action.direction.tuple
+        if self.agents.inactive.position == new_agent_position:
+            return state, 0
         if EnvUtils.is_within_bounds(new_state, new_agent_position):
             if not EnvUtils.is_object(new_state, new_agent_position):
                 return self._move_agent_within_bounds(

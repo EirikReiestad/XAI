@@ -53,7 +53,7 @@ class TagState:
         if self.random_hider_position:
             init_state = random_agent_position(init_state, AgentType.HIDER)
 
-        self._validate_state(init_state)
+        self.validate_state(init_state)
         return init_state
 
     @init_full_state.setter
@@ -133,7 +133,7 @@ class TagState:
         boxes = [Object(ObjectType.BOX, position, True) for position in box_positions]
         objects = Objects(obstacles, boxes)
 
-        self._validate_state(self.state.full)
+        self.validate_state(self.state.full)
 
         self.state.partial = self._create_partial_state(
             seeker_position, hider_position, objects
@@ -201,7 +201,7 @@ class TagState:
     def _create_rgb_state(self) -> np.ndarray:
         return np.full((self.screen_height, self.screen_width, 3), Color.WHITE.value)
 
-    def _validate_state(self, state: np.ndarray):
+    def validate_state(self, state: np.ndarray):
         FullStateDataExtractor.get_agent_position(state, AgentType.SEEKER)
         FullStateDataExtractor.get_agent_position(state, AgentType.HIDER)
 
@@ -283,7 +283,7 @@ class TagState:
         if seeker_position == hider_position:
             return state, True
 
-        self._validate_state(state)
+        self.validate_state(state)
         return state, False
 
     def _get_all_possible_full_states(self, active_agent: AgentType) -> np.ndarray:
