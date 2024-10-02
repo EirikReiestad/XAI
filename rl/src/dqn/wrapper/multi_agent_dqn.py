@@ -118,8 +118,6 @@ class MultiAgentDQN(MultiAgentBase):
 
         frames = []
 
-        print("----------------" * 2)
-
         for t in count():
             actions = self.predict_actions(state)
             actions = [action.item() for action in actions]
@@ -136,9 +134,6 @@ class MultiAgentDQN(MultiAgentBase):
 
             episode_rewards = [e + r for e, r in zip(episode_rewards, rewards)]
             episode_length += 1
-
-            if episode_rewards != [0.0, 0.0]:
-                print(episode_rewards, terminals, truncated, done)
 
             next_states = [
                 torch.tensor(observation, device=device, dtype=torch.float32).unsqueeze(

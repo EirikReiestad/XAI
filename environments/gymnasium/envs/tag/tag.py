@@ -233,8 +233,6 @@ class TagEnv(gym.Env):
 
         terminated = concat_terminated or tag_terminated
 
-        if rewards != (0, 0):
-            print("concat: ", rewards, terminated, truncated)
         return state, rewards, terminated, truncated
 
     def update_state(self, state: np.ndarray) -> np.ndarray:
