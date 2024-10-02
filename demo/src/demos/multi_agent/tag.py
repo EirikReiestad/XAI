@@ -30,7 +30,7 @@ class TagDemo:
         )
         self.num_agents = 2
 
-        env = gym.make("TagEnv-v0", render_mode="rgb_array")
+        env = gym.make("TagEnv-v0", render_mode="human")
         model_name = "tag-v0"
         self.env = MultiAgentEnv(env)
         wandb_config = WandBConfig(project="tag-v0-idun")
@@ -38,7 +38,7 @@ class TagDemo:
             self.env,
             self.num_agents,
             "dqnpolicy",
-            wandb=True,
+            wandb=False,
             wandb_config=wandb_config,
             model_name=model_name,
             save_every_n_episodes=100,
@@ -66,10 +66,11 @@ class TagDemo:
         self.renderer = Renderer(10, 10, 600, 600)
         self.saliency_map = SaliencyMap()
 
-        self.plotter = Plotter()
+        self.plotter = Plotter(plot_agent=True)
         self.env = StateWrapper(self.env)
 
         for i_episode in range(10000):
+            self.dqn.learn(1)
             state, _ = self.env.reset()
             state = torch.tensor(state, device=device, dtype=torch.float32).unsqueeze(0)
 

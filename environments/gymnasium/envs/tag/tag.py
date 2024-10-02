@@ -311,7 +311,7 @@ class TagEnv(gym.Env):
         new_state = state.copy()
         new_agent_position = self.agents.active.position + action.direction.tuple
         if self.agents.inactive.position == new_agent_position:
-            return state, 0
+            return state, self.tag_rewards.collision_reward
         if EnvUtils.is_within_bounds(new_state, new_agent_position):
             if not EnvUtils.is_object(new_state, new_agent_position):
                 return self._move_agent_within_bounds(
