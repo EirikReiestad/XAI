@@ -1550,3 +1550,13 @@ INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootca
 INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
 INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 9
 INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 8
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+ERROR: Rewards are not in the range [-1, 1]
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp

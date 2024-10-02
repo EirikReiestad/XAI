@@ -39,6 +39,7 @@ class MultiAgentEnv(gym.Wrapper):
         observation = self.get_wrapper_attr("update_state")(full_state)
 
         rewards = [r + cr for r, cr in zip(rewards, concatenated_state_rewards)]
+
         done = any(terminals) or terminated
         return (
             full_state,

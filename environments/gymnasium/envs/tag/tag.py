@@ -159,6 +159,7 @@ class TagEnv(gym.Env):
         }
 
         self.agents.set_next_agent()
+        self.bootcamp.step()
 
         return (
             self.state.active_state,
@@ -227,7 +228,6 @@ class TagEnv(gym.Env):
         if self.steps >= self.max_steps:
             rewards = self.tag_rewards.end_reward
         self.render(self.render_mode)
-        self.bootcamp.train()
 
         terminated = concat_terminated or tag_terminated
 

@@ -38,7 +38,7 @@ class Bootcamp:
     def __post_init__(self):
         logging.info(f"Starting {self._name} bootcamp")
 
-    def train(self):
+    def step(self):
         self._training_days += 1
         self._next()
 

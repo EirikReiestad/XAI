@@ -132,7 +132,6 @@ class MultiAgentDQN(MultiAgentBase):
                 infos,
             ) = self.env.get_wrapper_attr("step_multiple")(actions)
 
-            episode_rewards += rewards
             episode_rewards = [e + r for e, r in zip(episode_rewards, rewards)]
             episode_length += 1
 
