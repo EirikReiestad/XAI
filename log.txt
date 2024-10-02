@@ -1475,3 +1475,18 @@ INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 4
 INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 3
 INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 2
 INFO: BootcampName.SLOW_HIDER bootcamp completed, starting BootcampName.COMBINED bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 9
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 8
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 7
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 6
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 5
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 4
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 3
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 2
+INFO: BootcampName.SLOW_HIDER bootcamp completed, starting BootcampName.COMBINED bootcamp
