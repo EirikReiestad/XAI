@@ -33,20 +33,22 @@ class MultiAgentEnv(gym.Wrapper):
             infos.append(info)
 
         full_states = [info["full_state"] for info in infos]
-        full_state, concatenated_state_rewards, terminated = self.get_wrapper_attr(
-            "concatenate_states"
-        )(full_states)
+        full_state, concatenated_state_rewards, terminated, concat_truncated = (
+            self.get_wrapper_attr("concatenate_states")(full_states)
+        )
         observation = self.get_wrapper_attr("update_state")(full_state)
 
-        rewards = [r + cr for r, cr in zip(rewards, concatenated_state_rewards)]
+        total_rewards = [r + cr for r, cr in zip(rewards, concatenated_state_rewards)]
 
-        done = any(terminals) or terminated
+        done = any(terminals) or terminated or concat_truncated or any(truncated)
+        if total_rewards != [0.0, 0.0]:
+            print("rewards", total_rewards, rewards, concatenated_state_rewards, done)
         return (
             full_state,
             observation,
             done,
             observations,
-            rewards,
+            total_rewards,
             terminals,
             truncated,
             infos,

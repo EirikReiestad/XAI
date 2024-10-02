@@ -217,7 +217,7 @@ class TagEnv(gym.Env):
 
     def concatenate_states(
         self, states: list[np.ndarray]
-    ) -> tuple[np.ndarray, tuple[float, float], bool]:
+    ) -> tuple[np.ndarray, tuple[float, float], bool, bool]:
         state, concat_terminated = self.state.concatenate_states(states)
         rewards, tag_terminated = self.tag_rewards.get_tag_reward(
             self.agents.active.position,
@@ -225,13 +225,17 @@ class TagEnv(gym.Env):
             concat_terminated,
             self.tag_radius,
         )
+        truncated = False
         if self.steps >= self.max_steps:
             rewards = self.tag_rewards.end_reward
+            truncated = True
         self.render(self.render_mode)
 
         terminated = concat_terminated or tag_terminated
 
-        return state, rewards, terminated
+        if rewards != (0, 0):
+            print("concat: ", rewards, terminated, truncated)
+        return state, rewards, terminated, truncated
 
     def update_state(self, state: np.ndarray) -> np.ndarray:
         self.state.validate_state(state)
