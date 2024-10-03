@@ -32,7 +32,7 @@ class TagState:
         self.screen_height = screen_height
         self.state_type = state_type
         self.random_seeker_position = False
-        self.random_hider_position = False
+        self.random_hider_position = True
         self.init_states(filename)
 
     @property
