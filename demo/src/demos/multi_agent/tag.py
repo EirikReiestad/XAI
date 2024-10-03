@@ -38,7 +38,7 @@ class TagDemo:
             self.env,
             self.num_agents,
             "dqnpolicy",
-            wandb=False,
+            wandb=True,
             wandb_config=wandb_config,
             model_name=model_name,
             save_every_n_episodes=100,
@@ -52,8 +52,8 @@ class TagDemo:
 
     def run(self):
         logging.info("Learning...")
-        self.dqn.learn(1)
-        self.shap(True)
+        self.dqn.learn(100000)
+        self.shap(False)
         self.show(False)
 
     def show(self, run: bool = True):
