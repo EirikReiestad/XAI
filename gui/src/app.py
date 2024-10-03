@@ -1,5 +1,5 @@
 import customtkinter
-from .components.checkbox_frame import MyCheckboxFrame
+from .components import ImageFrame, ConfigurationFrame
 
 
 class App(customtkinter.CTk):
@@ -7,25 +7,18 @@ class App(customtkinter.CTk):
         super().__init__()
 
         self.title("Hello World")
-        self.geometry("400x400")
-        self.grid_rowconfigure(0, weight=1)
+        self.geometry("800x800")
+        self.grid_rowconfigure((0, 1), weight=1)
         self.grid_columnconfigure((0, 1), weight=1)
 
-        self.button = customtkinter.CTkButton(
-            self, text="my button", command=self.button_callback
+        self.image_frame = ImageFrame(self, "image.jpg")
+        self.image_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nswe")
+        self.image_frame = ImageFrame(self, "image.jpg")
+        self.image_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nswe")
+        self.configuration_frame = ConfigurationFrame(self)
+        self.configuration_frame.grid(
+            row=0, column=1, rowspan=2, padx=10, pady=10, sticky="nswe"
         )
-
-        self.checkbox_frame = MyCheckboxFrame(self, "Values", values=["a", "b", "c"])
-        self.checkbox_frame.grid(row=0, column=0, padx=10, pady=(10, 0), sticky="nsw")
-        self.checkbox_frame.configure(fg_color="transparent")
-        self.checkbox_frame_0 = MyCheckboxFrame(self, "Values", values=["a", "b", "c"])
-        self.checkbox_frame_0.grid(row=0, column=1, padx=10, pady=(10, 0), sticky="nsw")
-
-        self.button = customtkinter.CTkButton(
-            self, text="my button", command=self.button_callback
-        )
-        self.button.grid(row=3, column=0, padx=10, pady=10, sticky="ew")
 
     def button_callback(self):
-        print(self.checkbox_frame.get())
-        print(self.checkbox_frame_0.get())
+        pass

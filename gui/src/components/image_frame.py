@@ -1,7 +1,22 @@
-import customtkinter
+import customtkinter as ctk
+from gui.src import utils
 
 
-class ImageFrame(customtkinter.CTkFrame):
-    def __init__(self, master: customtkinter.CTkFrame):
+class ImageFrame(ctk.CTkFrame):
+    def __init__(self, master: ctk.CTk, path: str):
         super().__init__(master)
         self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+
+        self.image = utils.open_image(f"gui/src/assets/{path}")
+        self.ctk_image = ctk.CTkImage(self.image)
+        self.label = ctk.CTkLabel(self, image=self.ctk_image)
+        self.label.grid(row=0, column=0, sticky="nswe")
+        self.bind("<Configure>", self._resize_image)
+
+    def _resize_image(self, event):
+        new_width, new_height = event.width, event.height
+        resized_image = self.image.resize((new_width, new_height))
+        self.ctk_image.configure(size=(new_width, new_height))
+        self.ctk_image = ctk.CTkImage(resized_image, size=(new_width, new_height))
+        self.label.configure(image=self.ctk_image)
