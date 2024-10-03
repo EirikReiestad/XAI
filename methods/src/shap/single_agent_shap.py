@@ -34,17 +34,17 @@ class SingleAgentShap(SingleAgentBase):
     def explain(self) -> shap.GradientExplainer | shap.Explainer:
         if self.shap_type == ShapType.IMAGE:
             states = torch.tensor(self.background_states, device=device)
-            self.explainer = shap.GradientExplainer(
-                self.model.policy_net, states
-            )
+            self.explainer = shap.GradientExplainer(self.model.policy_net, states)
         elif self.shap_type == ShapType.BEESWARM:
             self.explainer = shap.Explainer(self.model.predict, self.background_states)
         else:
             raise ValueError(f"Invalid shap type: {self.shap_type}")
         return self.explainer
 
-    def shap_values(self) -> Any:
+    def shap_values(self, state: np.ndarray | None = None) -> Any:
         states = self.test_states
+        if state is not None:
+            states = state
         if self.shap_type == ShapType.IMAGE:
             test_states = torch.tensor(states, device=device)
         else:
@@ -58,6 +58,7 @@ class SingleAgentShap(SingleAgentBase):
         feature_names: list[str] | None = None,
         include: list[str] | None = None,
         states: np.ndarray | None = None,
+        show: bool = True,
     ):
         test_states = self.test_states
         if states is not None:
@@ -73,8 +74,8 @@ class SingleAgentShap(SingleAgentBase):
 
         if self.shap_type == ShapType.BEESWARM:
             mean_shap_values = shap_values.mean(axis=2)
-            shap.summary_plot(
+            return shap.summary_plot(
                 mean_shap_values, test_states, feature_names=feature_names
             )
         elif self.shap_type == ShapType.IMAGE:
-            shap.image_plot(shap_values, test_states)
+            return shap.image_plot(shap_values, test_states, show=show)

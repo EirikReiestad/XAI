@@ -44,9 +44,11 @@ class MultiAgentShap(MultiAgentBase):
             explainers.append(explainer)
         return explainers
 
-    def shap_values(self) -> list[np.ndarray]:
+    def shap_values(self, state: np.ndarray | None = None) -> list[np.ndarray]:
         shap_values = []
         for agent_shap in self.agent_shaps:
+            if state is not None:
+                shap_values.append(agent_shap.shap_values(state))
             shap_values.append(agent_shap.shap_values())
         return shap_values
 
@@ -56,11 +58,16 @@ class MultiAgentShap(MultiAgentBase):
         feature_names: list[str] | None = None,
         include: list[str] | None = None,
         states: np.ndarray | None = None,
+        show: bool = True,
     ):
+        plots = []
         for agent_shap, agent_shap_values in zip(self.agent_shaps, shap_values):
-            agent_shap.plot(
+            plot = agent_shap.plot(
                 agent_shap_values,
                 feature_names=feature_names,
                 include=include,
                 states=states,
+                show=show,
             )
+            plots.append(plot)
+        return plots

@@ -1,7 +1,6 @@
 import customtkinter as ctk
 
 from gui.src.utils import EnvHandler
-from utils.src.tag_generator.utils import DrawMode
 
 from .image_frame import ImageFrame
 
@@ -16,30 +15,11 @@ class ResultFrame(ctk.CTkFrame):
 
         self.image_frame_0 = ImageFrame(self, "image.png")
         self.image_frame_0.grid(row=0, column=0, padx=10, pady=10, sticky="nswe")
-        self.image_frame_1 = ImageFrame(self, "image.png")
+        self.image_frame_1 = ImageFrame(self, "shap.png")
         self.image_frame_1.grid(row=1, column=0, padx=10, pady=10, sticky="nswe")
 
     def update_result(
         self,
-        seeker_position: tuple[int, int] | None = None,
-        hider_position: tuple[int, int] | None = None,
     ):
-        self._update_seeker_position(seeker_position)
-        self._update_hider_position(hider_position)
-
         self.image_frame_0.update_image("image.png")
-        self.image_frame_1.update_image("image.png")
-
-    def _update_seeker_position(self, position: tuple[int, int] | None):
-        if position is None:
-            return
-        self.env_handler.current_square = position
-        self.env_handler.placement_mode = DrawMode.SEEKER
-        self.env_handler.generate()
-
-    def _update_hider_position(self, position: tuple[int, int] | None):
-        if position is None:
-            return
-        self.env_handler.current_square = position
-        self.env_handler.placement_mode = DrawMode.HIDER
-        self.env_handler.generate()
+        self.image_frame_1.update_image("shap.png")
