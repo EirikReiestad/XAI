@@ -27,20 +27,19 @@ class ResultFrame(ctk.CTkFrame):
         self._update_seeker_position(seeker_position)
         self._update_hider_position(hider_position)
 
-        self.env_handler.save_image("gui/src/assets/image.png")
+        self.image_frame_0.update_image("image.png")
+        self.image_frame_1.update_image("image.png")
 
     def _update_seeker_position(self, position: tuple[int, int] | None):
-        print("Updating seeker")
         if position is None:
             return
         self.env_handler.current_square = position
-        self.env_handler.draw_mode = DrawMode.SEEKER
+        self.env_handler.placement_mode = DrawMode.SEEKER
         self.env_handler.generate()
 
     def _update_hider_position(self, position: tuple[int, int] | None):
-        print("Updating hider")
         if position is None:
             return
         self.env_handler.current_square = position
-        self.env_handler.draw_mode = DrawMode.SEEKER
+        self.env_handler.placement_mode = DrawMode.HIDER
         self.env_handler.generate()

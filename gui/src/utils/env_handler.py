@@ -48,6 +48,9 @@ class EnvHandler:
     def generate(self):
         """Let the user generate an env by drawing obstacles"""
         self.surface.fill((255, 255, 255))
+        print(self.current_square)
+        print(self.placement_mode)
+        print(self.draw_mode)
         self._update_env()
         self._save_env("gui/src/assets/env.txt")
         self.action = None

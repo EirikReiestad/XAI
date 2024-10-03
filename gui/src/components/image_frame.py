@@ -20,3 +20,8 @@ class ImageFrame(ctk.CTkFrame):
         self.ctk_image.configure(size=(new_width, new_height))
         self.ctk_image = ctk.CTkImage(resized_image, size=(new_width, new_height))
         self.label.configure(image=self.ctk_image)
+
+    def update_image(self, path: str):
+        self.image = open_image(f"gui/src/assets/{path}")
+        self.ctk_image = ctk.CTkImage(self.image)
+        self.label.configure(image=self.ctk_image)
