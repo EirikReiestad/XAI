@@ -28,9 +28,13 @@ class TagRewards:
         if distance <= radius or terminated:
             return self.tagged_reward, True
         self.max_distance = max(self.max_distance, distance)
-        distance_reward = 1 - distance / self.max_distance
-        not_tagged_reward: tuple[float, float] = tuple(
-            [reward + distance_reward for reward in self.not_tagged_reward]
+        distance_rewards = (
+            1 - distance / self.max_distance,
+            distance / self.max_distance,
+        )
+        not_tagged_reward = tuple(
+            not_tagged + dist
+            for not_tagged, dist in zip(distance_rewards, self.not_tagged_reward)
         )
         return not_tagged_reward, False
 
