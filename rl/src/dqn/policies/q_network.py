@@ -7,6 +7,8 @@ from torch import nn
 
 from rl.src.common.policies import BasePolicy
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 class QNetwork(BasePolicy):
     logged = False
@@ -66,7 +68,7 @@ class QNetwork(BasePolicy):
         if len(input_dim) == 2:
             return input_dim[1]
         with torch.no_grad():
-            dummy_input = torch.zeros(*input_dim)
+            dummy_input = torch.zeros(*input_dim, device=device)
             output = self.conv_feature(dummy_input)
         return output.numel()
 
@@ -101,12 +103,12 @@ class QNetwork(BasePolicy):
         if len(x.shape) == 3:
             if isinstance(x, np.ndarray):
                 return (
-                    torch.tensor(x, dtype=torch.float32)
+                    torch.tensor(x, device=device, dtype=torch.float32)
                     .unsqueeze(0)
                     .permute(1, 0, 2, 3)
                 )
             return x.unsqueeze(0).permute(1, 0, 2, 3)
-        return torch.tensor(x, dtype=torch.float32)
+        return torch.tensor(x, device=device, dtype=torch.float32)
 
     def _observation_size(
         self, observation_space: spaces.Space
