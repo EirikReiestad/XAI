@@ -38,7 +38,7 @@ class TagDemo:
             self.env,
             self.num_agents,
             "dqnpolicy",
-            wandb=True,
+            wandb=False,
             wandb_config=wandb_config,
             model_name=model_name,
             save_every_n_episodes=100,

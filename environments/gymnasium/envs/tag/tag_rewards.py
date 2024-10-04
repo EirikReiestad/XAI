@@ -28,15 +28,16 @@ class TagRewards:
         if distance <= radius or terminated:
             return self.tagged_reward, True
         self.max_distance = max(self.max_distance, distance)
-        max_distance = self.max_distance * 100
         distance_rewards = (
-            1 - distance / max_distance,
-            distance / max_distance,
+            (1 - distance / self.max_distance) * 0.01,
+            (distance / self.max_distance) * 0.01,
         )
+
         not_tagged_reward = tuple(
             not_tagged + dist
             for not_tagged, dist in zip(distance_rewards, self.not_tagged_reward)
         )
+        print(not_tagged_reward)
         return not_tagged_reward, False
 
     @property
