@@ -34,12 +34,12 @@ class ModelHandler:
         self.shap = Shap(self.env, self.dqn, samples=10)
 
     def generate_shap(
-        self, state: np.ndarray | None = None, filename: str = "shap.png"
+        self, states: np.ndarray | None = None, filename: str = "shap.png"
     ):
         self.shap.explain()
-        if state is None:
+        if states is None:
             return
-        shap_values = self.shap.shap_values(state)
+        shap_values = self.shap.shap_values(states)
         plt.figure()
         self.shap.plot(shap_values, show=False)
         plt.savefig(f"gui/src/assets/{filename}")

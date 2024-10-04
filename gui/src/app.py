@@ -39,7 +39,9 @@ class App(customtkinter.CTk):
         self._update_seeker_position(seeker_position)
         self._update_hider_position(hider_position)
         self.result_frame.update_result()
-        self.model_handler.generate_shap(np.array(self.env_handler.env))
+        state = np.expand_dims(np.array(self.env_handler.env), axis=0)
+        print(state.shape)
+        self.model_handler.generate_shap(state)
 
     def _update_seeker_position(self, position: tuple[int, int] | None):
         if position is None:

@@ -44,11 +44,11 @@ class MultiAgentShap(MultiAgentBase):
             explainers.append(explainer)
         return explainers
 
-    def shap_values(self, state: np.ndarray | None = None) -> list[np.ndarray]:
+    def shap_values(self, test_states: np.ndarray | None = None) -> list[np.ndarray]:
         shap_values = []
         for agent_shap in self.agent_shaps:
-            if state is not None:
-                shap_values.append(agent_shap.shap_values(state))
+            if test_states is not None:
+                shap_values.append(agent_shap.shap_values(test_states))
             shap_values.append(agent_shap.shap_values())
         return shap_values
 

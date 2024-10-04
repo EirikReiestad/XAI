@@ -54,9 +54,9 @@ class Shap:
     ):
         return self.explainer.explain()
 
-    def shap_values(self, state: np.ndarray | None = None) -> Any:
-        if state is not None:
-            return self.explainer.shap_values(state)
+    def shap_values(self, states: np.ndarray | None = None) -> Any:
+        if states is not None:
+            return self.explainer.shap_values(states)
         return self.explainer.shap_values()
 
     def plot(self, shap_values: Any, show: bool = True, **kwargs):

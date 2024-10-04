@@ -41,15 +41,15 @@ class SingleAgentShap(SingleAgentBase):
             raise ValueError(f"Invalid shap type: {self.shap_type}")
         return self.explainer
 
-    def shap_values(self, state: np.ndarray | None = None) -> Any:
+    def shap_values(self, test_states: np.ndarray | None = None) -> Any:
         states = self.test_states
-        if state is not None:
-            states = state
+        if test_states is not None:
+            states = test_states
         if self.shap_type == ShapType.IMAGE:
-            test_states = torch.tensor(states, device=device)
+            input_states = torch.tensor(states, device=device)
         else:
-            test_states = states
-        shap_values = self.explainer(test_states).values
+            input_states = states
+        shap_values = self.explainer(input_states).values
         return shap_values
 
     def plot(
