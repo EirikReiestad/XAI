@@ -1955,3 +1955,31 @@ INFO: Starting BootcampName.HIDER bootcamp
 INFO: Learning...
 INFO: Shap setup...
 INFO: Explaining...
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: 'DualAgents().active_collided'
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: 'DualAgents().active_collided'
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Starting BootcampName.HIDER bootcamp
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...

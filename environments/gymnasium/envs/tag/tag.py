@@ -46,7 +46,7 @@ class TagEnv(gym.Env):
         screen_width = 600
         screen_height = 600
         folder_name = "environments/gymnasium/data/tag/"
-        filename = "clean-env-0-10-10.txt"
+        filename = "mazeenv-0-10-10.txt"
         self.state_type = StateType.FULL
         self.bootcamp = Bootcamp()
         self.tag_radius = 1
@@ -82,6 +82,7 @@ class TagEnv(gym.Env):
 
         self.info = {
             "object_moved_distance": 0,
+            "collided": 0,
         }
 
     def step(self, action: int) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
@@ -123,7 +124,12 @@ class TagEnv(gym.Env):
                 {
                     "full_state": self.state.full,
                     "data": {
-                        "object_moved_distance": self.info["object_moved_distance"]
+                        f"agent{self.agents.active_agent.value}_object_moved_distance": self.info[
+                            "object_moved_distance"
+                        ],
+                        f"agent{self.agents.active_agent.value}_collided": self.info[
+                            "collided"
+                        ],
                     },
                 },
             )
@@ -138,6 +144,9 @@ class TagEnv(gym.Env):
             collided = new_full_state is None
             if not collided and new_full_state is not None:
                 self.update_state(new_full_state)
+            self.info["collided"] = 0
+            if collided:
+                self.info["collided"] = 1
             terminated = collided or terminated
         elif self.steps_beyond_terminated is None:
             self.steps_beyond_terminated = 0
@@ -154,7 +163,12 @@ class TagEnv(gym.Env):
         return_info = {
             "full_state": self.state.full,
             "data": {
-                "object_moved_distance": self.info["object_moved_distance"],
+                f"agent{self.agents.active_agent.value}_object_moved_distance": self.info[
+                    "object_moved_distance"
+                ],
+                f"agent{self.agents.active_agent.value}_collided": self.info[
+                    "collided"
+                ],
             },
         }
 
@@ -182,7 +196,12 @@ class TagEnv(gym.Env):
                 "full_state": self.state.full,
                 "skip": skip,
                 "data": {
-                    "object_moved_distance": self.info["object_moved_distance"],
+                    f"agent{self.agents.active_agent.value}_object_moved_distance": self.info[
+                        "object_moved_distance"
+                    ],
+                    f"agent{self.agents.active_agent.value}_collided": self.info[
+                        "collided"
+                    ],
                 },
             },
         )
@@ -194,7 +213,10 @@ class TagEnv(gym.Env):
         render_mode = options.get("render_mode") if options else None
         self.render_mode = render_mode or self.render_mode
 
-        self.info["object_moved_distance"] = 0
+        self.info = {
+            "object_moved_distance": 0,
+            "collided": 0,
+        }
 
         self.state.reset()
         self._set_initial_positions(options)
@@ -422,7 +444,7 @@ class TagEnv(gym.Env):
 
     @property
     def num_actions(self) -> int:
-        return 5
+        return 4
 
     @property
     def feature_names(self) -> list[str]:
