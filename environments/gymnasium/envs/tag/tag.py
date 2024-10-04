@@ -124,12 +124,8 @@ class TagEnv(gym.Env):
                 {
                     "full_state": self.state.full,
                     "data": {
-                        f"agent{self.agents.active_agent.value}_object_moved_distance": self.info[
-                            "object_moved_distance"
-                        ],
-                        f"agent{self.agents.active_agent.value}_collided": self.info[
-                            "collided"
-                        ],
+                        "object_moved_distance": self.info["object_moved_distance"],
+                        "collided": self.info["collided"],
                     },
                 },
             )
@@ -163,12 +159,8 @@ class TagEnv(gym.Env):
         return_info = {
             "full_state": self.state.full,
             "data": {
-                f"agent{self.agents.active_agent.value}_object_moved_distance": self.info[
-                    "object_moved_distance"
-                ],
-                f"agent{self.agents.active_agent.value}_collided": self.info[
-                    "collided"
-                ],
+                "object_moved_distance": self.info["object_moved_distance"],
+                "collided": self.info["collided"],
             },
         }
 
@@ -196,12 +188,8 @@ class TagEnv(gym.Env):
                 "full_state": self.state.full,
                 "skip": skip,
                 "data": {
-                    f"agent{self.agents.active_agent.value}_object_moved_distance": self.info[
-                        "object_moved_distance"
-                    ],
-                    f"agent{self.agents.active_agent.value}_collided": self.info[
-                        "collided"
-                    ],
+                    "object_moved_distance": self.info["object_moved_distance"],
+                    "collided": self.info["collided"],
                 },
             },
         )
