@@ -7,8 +7,6 @@ from torch import nn
 
 from rl.src.common.policies import BasePolicy
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
 
 class QNetwork(BasePolicy):
     logged = False
@@ -87,6 +85,8 @@ class QNetwork(BasePolicy):
         return nn.Sequential(*layers)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        device = next(self.parameters()).device
+
         x = self._alter_input_shape(x)
 
         x = self.conv_feature(x)
@@ -101,6 +101,7 @@ class QNetwork(BasePolicy):
         return x
 
     def _alter_input_shape(self, x: np.ndarray | torch.Tensor) -> torch.Tensor:
+        device = next(self.parameters()).device
         if len(x.shape) == 3:
             if isinstance(x, np.ndarray):
                 return (
