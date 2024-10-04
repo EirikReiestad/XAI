@@ -136,13 +136,11 @@ class TagEnv(gym.Env):
 
         if not terminated:
             action_type = ActionType(action)
+            self.info["collided"] = 0
             new_full_state, reward = self._do_action(action_type)
             collided = new_full_state is None
             if not collided and new_full_state is not None:
                 self.update_state(new_full_state)
-            self.info["collided"] = 0
-            if collided:
-                self.info["collided"] = 1
             terminated = collided or terminated
         elif self.steps_beyond_terminated is None:
             self.steps_beyond_terminated = 0
@@ -323,6 +321,7 @@ class TagEnv(gym.Env):
         new_state = state.copy()
         new_agent_position = self.agents.active.position + action.direction.tuple
         if self.agents.inactive.position == new_agent_position:
+            self.info["collided"] = 1
             return state, self.tag_rewards.collision_reward
         if EnvUtils.is_within_bounds(new_state, new_agent_position):
             if not EnvUtils.is_object(new_state, new_agent_position):
@@ -330,6 +329,7 @@ class TagEnv(gym.Env):
                     new_state, new_agent_position
                 ), self.tag_rewards.move_reward[self.agents.active_agent.value]
             else:
+                self.info["collided"] = 1
                 return state, self.tag_rewards.collision_reward
         else:
             if self.terminate_out_of_bounds:
