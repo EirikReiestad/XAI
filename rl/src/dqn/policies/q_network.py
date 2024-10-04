@@ -67,7 +67,7 @@ class QNetwork(BasePolicy):
         if len(input_dim) == 2:
             return input_dim[1]
         with torch.no_grad():
-            dummy_input = torch.zeros(*input_dim, device=device)
+            dummy_input = torch.zeros(*input_dim).to(device)
             output = self.conv_feature(dummy_input)
         return output.numel()
 
@@ -91,7 +91,7 @@ class QNetwork(BasePolicy):
 
         x = self.conv_feature(x)
         x = torch.flatten(x, start_dim=1)
-        x = x.to(next(self.fc_feature.parameters()).device)
+        x = x.to(device)
         x = self.fc_feature(x)
 
         if self.dueling:
@@ -105,12 +105,13 @@ class QNetwork(BasePolicy):
         if len(x.shape) == 3:
             if isinstance(x, np.ndarray):
                 return (
-                    torch.tensor(x, device=device, dtype=torch.float32)
+                    torch.tensor(x, dtype=torch.float32)
+                    .to(device)
                     .unsqueeze(0)
                     .permute(1, 0, 2, 3)
                 )
             return x.unsqueeze(0).permute(1, 0, 2, 3)
-        return torch.tensor(x, device=device, dtype=torch.float32)
+        return torch.tensor(x, dtype=torch.float32).to(device)
 
     def _observation_size(
         self, observation_space: spaces.Space
