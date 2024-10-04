@@ -15,7 +15,8 @@ class App(customtkinter.CTk):
         self.env_handler.generate()
 
         self.model_handler = ModelHandler("model_3000", ["v0", "v1"])
-        self.model_handler.generate_shap()
+        state = np.expand_dims(np.array(self.env_handler.env), axis=0)
+        self.model_handler.generate_shap(state)
 
         self.title("")
         self.geometry("800x800")
@@ -40,7 +41,6 @@ class App(customtkinter.CTk):
         self._update_hider_position(hider_position)
         self.result_frame.update_result()
         state = np.expand_dims(np.array(self.env_handler.env), axis=0)
-        print(state.shape)
         self.model_handler.generate_shap(state)
 
     def _update_seeker_position(self, position: tuple[int, int] | None):

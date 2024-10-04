@@ -38,8 +38,9 @@ class ModelHandler:
     ):
         self.shap.explain()
         if states is None:
-            return
-        shap_values = self.shap.shap_values(states)
+            shap_values = self.shap.shap_values()
+        else:
+            shap_values = self.shap.shap_values(states)
         plt.figure()
         self.shap.plot(shap_values, show=False)
         plt.savefig(f"gui/src/assets/{filename}")

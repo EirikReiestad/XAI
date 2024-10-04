@@ -49,7 +49,8 @@ class MultiAgentShap(MultiAgentBase):
         for agent_shap in self.agent_shaps:
             if test_states is not None:
                 shap_values.append(agent_shap.shap_values(test_states))
-            shap_values.append(agent_shap.shap_values())
+            else:
+                shap_values.append(agent_shap.shap_values())
         return shap_values
 
     def plot(
