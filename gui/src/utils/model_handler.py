@@ -41,7 +41,8 @@ class ModelHandler:
             shap_values = self.shap.shap_values()
         else:
             shap_values = self.shap.shap_values(states)
+        print(len(shap_values))
         plt.figure()
-        self.shap.plot(shap_values, show=False)
+        self.shap.plot(shap_values[0], show=False)
         plt.savefig(f"gui/src/assets/{filename}")
         plt.close()
