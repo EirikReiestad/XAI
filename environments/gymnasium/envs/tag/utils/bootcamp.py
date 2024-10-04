@@ -33,11 +33,6 @@ class Bootcamp:
         self.slow_hider_factor = 10
         self.slow_hider_step_factor = 1
 
-        self.__post_init__()
-
-    def __post_init__(self):
-        logging.info(f"Starting {self._name} bootcamp")
-
     def step(self):
         self._training_days += 1
         self._next()

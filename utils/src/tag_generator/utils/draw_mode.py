@@ -1,5 +1,6 @@
 import enum
 from environments.gymnasium.envs.tag.utils import TileType
+from utils.src.color import Color
 
 
 @enum.unique
@@ -33,11 +34,11 @@ class DrawMode(enum.Enum):
     @property
     def color(self) -> tuple[int, int, int]:
         return {
-            DrawMode.NOTHING: (255, 255, 255),
-            DrawMode.OBSTACLE: (75, 75, 75),
-            DrawMode.BOX: (175, 175, 175),
-            DrawMode.SEEKER: (0, 200, 0),
-            DrawMode.HIDER: (200, 0, 0),
+            DrawMode.NOTHING: Color.WHITE.value,
+            DrawMode.OBSTACLE: Color.BLACK.value,
+            DrawMode.BOX: Color.YELLOW.value,
+            DrawMode.SEEKER: Color.BLUE.value,
+            DrawMode.HIDER: Color.GREEN.value,
         }.get(self, (255, 255, 255))
 
     def get_highlight_color(self) -> tuple[int, int, int] | None:

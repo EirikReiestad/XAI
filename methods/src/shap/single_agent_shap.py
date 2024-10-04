@@ -1,13 +1,15 @@
 from typing import Any
 
 import gymnasium as gym
+import matplotlib.pyplot as plt
 import numpy as np
 import shap
 import torch
-from .base import SingleAgentBase
-from .utils import ShapType, sample_states
 
 import rl
+
+from .base import SingleAgentBase
+from .utils import ShapType, sample_states
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -34,22 +36,22 @@ class SingleAgentShap(SingleAgentBase):
     def explain(self) -> shap.GradientExplainer | shap.Explainer:
         if self.shap_type == ShapType.IMAGE:
             states = torch.tensor(self.background_states, device=device)
-            self.explainer = shap.GradientExplainer(
-                self.model.policy_net, states
-            )
+            self.explainer = shap.GradientExplainer(self.model.policy_net, states)
         elif self.shap_type == ShapType.BEESWARM:
             self.explainer = shap.Explainer(self.model.predict, self.background_states)
         else:
             raise ValueError(f"Invalid shap type: {self.shap_type}")
         return self.explainer
 
-    def shap_values(self) -> Any:
+    def shap_values(self, test_states: np.ndarray | None = None) -> Any:
         states = self.test_states
+        if test_states is not None:
+            states = test_states
         if self.shap_type == ShapType.IMAGE:
-            test_states = torch.tensor(states, device=device)
+            input_states = torch.tensor(states, device=device)
         else:
-            test_states = states
-        shap_values = self.explainer(test_states).values
+            input_states = states
+        shap_values = self.explainer(input_states).values
         return shap_values
 
     def plot(
@@ -58,6 +60,9 @@ class SingleAgentShap(SingleAgentBase):
         feature_names: list[str] | None = None,
         include: list[str] | None = None,
         states: np.ndarray | None = None,
+        show: bool = True,
+        folderpath: str = "",
+        filename: str = "",
     ):
         test_states = self.test_states
         if states is not None:
@@ -71,10 +76,18 @@ class SingleAgentShap(SingleAgentBase):
             test_states = test_states[:, included_indices]
             feature_names = include
 
+        if not show:
+            plt.figure()
+        plot = None
         if self.shap_type == ShapType.BEESWARM:
             mean_shap_values = shap_values.mean(axis=2)
-            shap.summary_plot(
+            plot = shap.summary_plot(
                 mean_shap_values, test_states, feature_names=feature_names
             )
         elif self.shap_type == ShapType.IMAGE:
-            shap.image_plot(shap_values, test_states)
+            plot = shap.image_plot(shap_values, test_states, show=show)
+        if not show:
+            plt.savefig(folderpath + filename)
+            plt.close()
+
+        return plot

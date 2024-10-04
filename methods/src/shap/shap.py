@@ -1,15 +1,16 @@
 from typing import Any
-import shap
 
 import gymnasium as gym
+import numpy as np
+import shap
 import torch
 
 import rl
 from environments.gymnasium.wrappers import MultiAgentEnv
-from .utils import ShapType
 
 from .multi_agent_shap import MultiAgentShap
 from .single_agent_shap import SingleAgentShap
+from .utils import ShapType
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -53,14 +54,28 @@ class Shap:
     ):
         return self.explainer.explain()
 
-    def shap_values(self) -> Any:
+    def shap_values(self, states: np.ndarray | None = None) -> Any:
+        if states is not None:
+            return self.explainer.shap_values(states)
         return self.explainer.shap_values()
 
-    def plot(self, shap_values: Any, **kwargs):
+    def plot(
+        self,
+        shap_values: Any,
+        states: np.ndarray | None = None,
+        show: bool = True,
+        folderpath: str = "",
+        filename: str = "",
+        **kwargs,
+    ):
         feature_names = kwargs.get("feature_names", None)
         include = kwargs.get("include", None)
         return self.explainer.plot(
             shap_values,
             feature_names=feature_names,
             include=include,
+            states=states,
+            show=show,
+            folderpath=folderpath,
+            filename=filename,
         )
