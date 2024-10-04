@@ -78,4 +78,5 @@ class SingleAgentShap(SingleAgentBase):
                 mean_shap_values, test_states, feature_names=feature_names
             )
         elif self.shap_type == ShapType.IMAGE:
+            print(shap_values.shape)
             return shap.image_plot(shap_values, test_states, show=show)
