@@ -1,4 +1,7 @@
 from gui import App
 
-app = App()
-app.mainloop()
+try:
+    app = App()
+    app.mainloop()
+except KeyboardInterrupt:
+    pass

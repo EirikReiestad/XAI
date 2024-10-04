@@ -59,12 +59,23 @@ class Shap:
             return self.explainer.shap_values(states)
         return self.explainer.shap_values()
 
-    def plot(self, shap_values: Any, show: bool = True, **kwargs):
+    def plot(
+        self,
+        shap_values: Any,
+        states: np.ndarray | None = None,
+        show: bool = True,
+        folderpath: str = "",
+        filename: str = "",
+        **kwargs,
+    ):
         feature_names = kwargs.get("feature_names", None)
         include = kwargs.get("include", None)
         return self.explainer.plot(
             shap_values,
             feature_names=feature_names,
             include=include,
+            states=states,
             show=show,
+            folderpath=folderpath,
+            filename=filename,
         )

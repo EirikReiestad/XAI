@@ -15,7 +15,14 @@ class ImageFrame(ctk.CTkFrame):
         self.bind("<Configure>", self._resize_image)
 
     def _resize_image(self, event):
+        image_aspect_ratio = self.image.width / self.image.height
         new_width, new_height = event.width, event.height
+
+        if new_width / new_height > image_aspect_ratio:
+            new_width = int(new_height * image_aspect_ratio)
+        else:
+            new_height = int(new_width / image_aspect_ratio)
+
         resized_image = self.image.resize((new_width, new_height))
         self.ctk_image.configure(size=(new_width, new_height))
         self.ctk_image = ctk.CTkImage(resized_image, size=(new_width, new_height))

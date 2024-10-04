@@ -1,13 +1,15 @@
 from typing import Any
 
 import gymnasium as gym
+import matplotlib.pyplot as plt
 import numpy as np
 import shap
 import torch
-from .base import SingleAgentBase
-from .utils import ShapType, sample_states
 
 import rl
+
+from .base import SingleAgentBase
+from .utils import ShapType, sample_states
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -59,6 +61,8 @@ class SingleAgentShap(SingleAgentBase):
         include: list[str] | None = None,
         states: np.ndarray | None = None,
         show: bool = True,
+        folderpath: str = "",
+        filename: str = "",
     ):
         test_states = self.test_states
         if states is not None:
@@ -72,10 +76,18 @@ class SingleAgentShap(SingleAgentBase):
             test_states = test_states[:, included_indices]
             feature_names = include
 
+        if not show:
+            plt.figure()
+        plot = None
         if self.shap_type == ShapType.BEESWARM:
             mean_shap_values = shap_values.mean(axis=2)
-            return shap.summary_plot(
+            plot = shap.summary_plot(
                 mean_shap_values, test_states, feature_names=feature_names
             )
         elif self.shap_type == ShapType.IMAGE:
-            return shap.image_plot(shap_values, test_states, show=show)
+            plot = shap.image_plot(shap_values, test_states, show=show)
+        if not show:
+            plt.savefig(folderpath + filename)
+            plt.close()
+
+        return plot

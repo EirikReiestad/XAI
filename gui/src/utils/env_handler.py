@@ -41,7 +41,7 @@ class EnvHandler:
         self.draw_mode = DrawMode.NOTHING
         self.placement_mode = DrawMode.NOTHING
 
-        self.env: list[list[int]] = []
+        self._env: list[list[int]] = []
         self.env_index = 0
         self._load_env()
 
@@ -151,3 +151,13 @@ class EnvHandler:
         if not (0 <= value[0] < self.width and 0 <= value[1] < self.height):
             return
         self._current_square = value
+
+    @property
+    def env(self) -> list[list[int]]:
+        return self._env
+
+    @env.setter
+    def env(self, value: list[list[int]]):
+        assert len(value) == self.height
+        assert all(len(row) == self.width for row in value)
+        self._env = value

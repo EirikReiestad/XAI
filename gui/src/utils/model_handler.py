@@ -1,5 +1,4 @@
 import gymnasium as gym
-import matplotlib.pyplot as plt
 import numpy as np
 
 from environments.gymnasium.wrappers import MultiAgentEnv
@@ -41,8 +40,10 @@ class ModelHandler:
             shap_values = self.shap.shap_values()
         else:
             shap_values = self.shap.shap_values(states)
-        print(len(shap_values))
-        plt.figure()
-        self.shap.plot(shap_values[0], show=False)
-        plt.savefig(f"gui/src/assets/{filename}")
-        plt.close()
+        self.shap.plot(
+            shap_values,
+            states=states,
+            show=False,
+            folderpath="gui/src/assets/",
+            filename=filename,
+        )

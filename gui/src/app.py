@@ -1,8 +1,6 @@
 import customtkinter
 import numpy as np
 
-from utils.src.tag_generator.utils import DrawMode
-
 from .components import ConfigurationFrame, ResultFrame
 from .utils import EnvHandler, ModelHandler
 
@@ -10,6 +8,12 @@ from .utils import EnvHandler, ModelHandler
 class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
+
+        self.title("")
+        self.geometry("1600x1200")
+        self.grid_rowconfigure((0, 1), weight=1)
+        self.grid_columnconfigure((0, 1), weight=1)
 
         self.env_handler = EnvHandler(10, 10)
         self.env_handler.generate()
@@ -17,16 +21,10 @@ class App(customtkinter.CTk):
         self.model_handler = ModelHandler("model_3000", ["v0", "v1"])
         state = np.expand_dims(np.array(self.env_handler.env), axis=0)
         self.model_handler.generate_shap(state)
-
-        self.title("")
-        self.geometry("800x800")
-        self.grid_rowconfigure((0, 1), weight=1)
-        self.grid_columnconfigure((0, 1), weight=1)
-
-        self.result_frame = ResultFrame(self, self.env_handler)
+        self.result_frame = ResultFrame(self)
         self.result_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nswe")
         self.configuration_frame = ConfigurationFrame(
-            self, update_result_callback=self.update_result
+            self, self.env_handler, update_result_callback=self.update_result
         )
         self.configuration_frame.grid(
             row=0, column=1, rowspan=2, padx=10, pady=10, sticky="nswe"
@@ -34,25 +32,19 @@ class App(customtkinter.CTk):
 
     def update_result(
         self,
-        seeker_position: tuple[int, int] | None = None,
-        hider_position: tuple[int, int] | None = None,
+        env: list[list] | None,
     ):
-        self._update_seeker_position(seeker_position)
-        self._update_hider_position(hider_position)
-        self.result_frame.update_result()
+        self._update_env(env)
         state = np.expand_dims(np.array(self.env_handler.env), axis=0)
         self.model_handler.generate_shap(state)
+        self.result_frame.update_result()
 
-    def _update_seeker_position(self, position: tuple[int, int] | None):
-        if position is None:
+    def _update_env(self, env: list[list] | None):
+        if env is None:
             return
-        self.env_handler.current_square = position
-        self.env_handler.placement_mode = DrawMode.SEEKER
+        self.env_handler.env = env
         self.env_handler.generate()
 
-    def _update_hider_position(self, position: tuple[int, int] | None):
-        if position is None:
-            return
-        self.env_handler.current_square = position
-        self.env_handler.placement_mode = DrawMode.HIDER
-        self.env_handler.generate()
+    def on_closing(self):
+        self.destroy()
+        self.quit()
