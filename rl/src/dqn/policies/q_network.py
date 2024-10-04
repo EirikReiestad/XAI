@@ -109,8 +109,8 @@ class QNetwork(BasePolicy):
                     .to(device)
                     .unsqueeze(0)
                     .permute(1, 0, 2, 3)
-                )
-            return x.unsqueeze(0).permute(1, 0, 2, 3)
+                ).to(device)
+            return x.unsqueeze(0).permute(1, 0, 2, 3).to(device)
         return torch.tensor(x, dtype=torch.float32).to(device)
 
     def _observation_size(
