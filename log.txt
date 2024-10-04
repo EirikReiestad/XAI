@@ -1983,3 +1983,477 @@ INFO: Learning...
 INFO: Starting BootcampName.HIDER bootcamp
 WARNING: GIF is enabled but the environment does not support RGB array rendering.
 INFO: Learning...
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Learning...
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Number of parameters: 33700
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Number of parameters: 33700
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Number of parameters: 33700
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Number of parameters: 33700
+INFO: Learning...
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Number of parameters: 33700
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Number of parameters: 33700
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Number of parameters: 33700
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Number of parameters: 33700
+INFO: Learning...
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Number of parameters: 33700
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Number of parameters: 33700
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Number of parameters: 33700
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Number of parameters: 33700
+INFO: Learning...
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Number of parameters: 33700
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Number of parameters: 33700
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Number of parameters: 33700
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Number of parameters: 33700
+INFO: Learning...
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 128, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+    (4): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1))
+    (5): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=512, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Number of parameters: 272196
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 128, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+    (4): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1))
+    (5): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=512, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Number of parameters: 272196
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 128, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+    (4): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1))
+    (5): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=512, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Number of parameters: 272196
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 128, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+    (4): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1))
+    (5): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=512, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Number of parameters: 272196
+INFO: Learning...
+ERROR: mat1 and mat2 shapes cannot be multiplied (32x16 and 512x128)
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Number of parameters: 272196
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 128, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+    (4): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1))
+    (5): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=512, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+ERROR: mat1 and mat2 shapes cannot be multiplied (32x16 and 512x128)
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Number of parameters: 272196
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 128, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+    (4): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1))
+    (5): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=512, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+ERROR: mat1 and mat2 shapes cannot be multiplied (32x16 and 512x128)
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Number of parameters: 272196
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 128, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+    (4): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1))
+    (5): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=512, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+ERROR: Given groups=1, weight of size [128, 1, 3, 3], expected input[1, 32, 10, 10] to have 1 channels, but got 32 channels instead
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Number of parameters: 272196
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 128, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+    (4): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1))
+    (5): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=512, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+ERROR: Given groups=1, weight of size [128, 1, 3, 3], expected input[1, 32, 10, 10] to have 1 channels, but got 32 channels instead
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Number of parameters: 272196
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 128, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+    (4): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1))
+    (5): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=512, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Number of parameters: 272196
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 128, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+    (4): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1))
+    (5): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=512, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+INFO: Starting BootcampName.HIDER bootcamp
+INFO: Number of parameters: 272196
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 128, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+    (4): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1))
+    (5): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=512, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...

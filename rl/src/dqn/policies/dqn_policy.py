@@ -9,13 +9,22 @@ class DQNPolicy:
         action_space: spaces.Space,
         dueling: bool = False,
     ):
-        policy_net_hidden_layers = [128, 128, 32]
-        target_net_hidden_layers = [128, 128, 32]
+        hidden_layers = [128, 64, 32]
+        conv_layers = [64, 32]
+
         self._policy_net: QNetwork = QNetwork(
-            observation_space, action_space, policy_net_hidden_layers, dueling
+            observation_space,
+            action_space,
+            hidden_layers,
+            conv_layers,
+            dueling,
         )
         self._target_net: QNetwork = QNetwork(
-            observation_space, action_space, target_net_hidden_layers, dueling
+            observation_space,
+            action_space,
+            hidden_layers,
+            conv_layers,
+            dueling,
         )
 
     @property
