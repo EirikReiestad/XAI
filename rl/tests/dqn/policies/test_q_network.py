@@ -12,7 +12,11 @@ class TestQNetwork(unittest.TestCase):
         observation_space = spaces.Box(low=0, high=1, shape=(4,), dtype=np.float32)
         action_space = spaces.Discrete(2)
         self.network = QNetwork(
-            observation_space, action_space, hidden_layers=[16, 16], dueling=True
+            observation_space,
+            action_space,
+            hidden_layers=[16, 16],
+            conv_layers=[16, 16],
+            dueling=True,
         )
 
     def test_forward(self):
@@ -23,7 +27,10 @@ class TestQNetwork(unittest.TestCase):
     def test_observation_size(self):
         observation_space = spaces.Box(low=0, high=1, shape=(4, 4), dtype=np.float32)
         network = QNetwork(
-            observation_space, spaces.Discrete(2), hidden_layers=[16, 16]
+            observation_space,
+            spaces.Discrete(2),
+            hidden_layers=[16, 16],
+            conv_layers=[16, 16],
         )
         self.assertEqual(network._observation_size(observation_space), 16)
 
@@ -31,7 +38,11 @@ class TestQNetwork(unittest.TestCase):
         observation_space = spaces.Box(low=0, high=1, shape=(4,), dtype=np.float32)
         action_space = spaces.Discrete(3)
         network = QNetwork(
-            observation_space, action_space, hidden_layers=[16, 16], dueling=True
+            observation_space,
+            action_space,
+            hidden_layers=[16, 16],
+            conv_layers=[16, 16],
+            dueling=True,
         )
         x = torch.rand(1, 4)
         output = network(x)
