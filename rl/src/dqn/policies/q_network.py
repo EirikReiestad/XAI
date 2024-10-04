@@ -65,6 +65,7 @@ class QNetwork(BasePolicy):
     def _conv_layer_output_size(
         self, input_dim: tuple[int, int] | tuple[int, int, int, int]
     ) -> int:
+        device = next(self.parameters()).device
         if len(input_dim) == 2:
             return input_dim[1]
         with torch.no_grad():
