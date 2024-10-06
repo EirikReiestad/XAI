@@ -24,6 +24,8 @@ class QNetwork(BasePolicy):
         observation_size = self._observation_size(observation_space)
         number_of_actions = action_space.n
 
+        self.conv_layers = conv_layers
+
         if self.dueling:
             self.conv_feature = self._build_conv_layers(conv_layers, observation_size)
             conv_out_size = self._conv_layer_output_size(observation_size)
@@ -63,6 +65,8 @@ class QNetwork(BasePolicy):
     def _conv_layer_output_size(
         self, input_dim: tuple[int, int] | tuple[int, int, int, int]
     ) -> int:
+        if len(self.conv_layers) == 0:
+            return int(np.prod(input_dim))
         device = next(self.parameters()).device
         if len(input_dim) == 2:
             return input_dim[1]

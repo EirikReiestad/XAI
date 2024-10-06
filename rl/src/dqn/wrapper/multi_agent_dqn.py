@@ -1,5 +1,7 @@
 import logging
+import traceback
 from itertools import count
+from typing import Any
 
 import numpy as np
 import torch
@@ -66,11 +68,17 @@ class MultiAgentDQN(MultiAgentBase):
         max_gif_rewards = [-np.inf for _ in range(self.num_agents)]
         gifs = [[] for _ in range(self.num_agents)]
 
+        total_rewards = (0, 0)
+
         try:
             for _ in range(total_timesteps):
                 self.episodes += 1
-                rollout, episode_rewards, steps, episode_data, gif = (
+                rollout, episode_rewards, steps, info, episode_data, gif = (
                     self._collect_rollouts()
+                )
+
+                total_rewards = tuple(
+                    sum(x) for x in zip(total_rewards, tuple(episode_rewards))
                 )
 
                 for agent in range(self.num_agents):
@@ -89,7 +97,12 @@ class MultiAgentDQN(MultiAgentBase):
                     log["epsilon threshold"] = self.agents[agent].eps_threshold
                     for key, value in episode_data[agent].items():
                         log[f"agent{agent}_{key}"] = value
+                    log[f"agent{agent}_reward_per_step"] = (
+                        episode_rewards[agent] / steps
+                    )
                 log["episode"] = self.episodes
+                for key, value in info.items():
+                    log[key] = value
                 self.wandb_manager.log(log)
                 results.append(rollout)
 
@@ -99,6 +112,7 @@ class MultiAgentDQN(MultiAgentBase):
                     self.save(self.episodes)
         except Exception as e:
             logging.error(e)
+            logging.error(traceback.format_exc())
             self.close()
         finally:
             self.close()
@@ -106,7 +120,7 @@ class MultiAgentDQN(MultiAgentBase):
 
     def _collect_rollouts(
         self,
-    ) -> tuple[list[RolloutReturn], list[float], int, list[dict], list]:
+    ) -> tuple[list[RolloutReturn], list[float], int, dict[str, Any], list[dict], list]:
         state, info = self.env.reset()
         state = torch.tensor(state, device=device, dtype=torch.float32).unsqueeze(0)
 
@@ -125,6 +139,7 @@ class MultiAgentDQN(MultiAgentBase):
                 full_state,
                 observation,
                 done,
+                info,
                 observations,
                 rewards,
                 terminals,
@@ -199,7 +214,7 @@ class MultiAgentDQN(MultiAgentBase):
             if done:
                 break
 
-        return rollout_returns, episode_rewards, episode_length, data, frames
+        return rollout_returns, episode_rewards, episode_length, info, data, frames
 
     def predict(self, state: torch.Tensor) -> list[np.ndarray | list[np.ndarray]]:
         return [agent.predict(state) for agent in self.agents]

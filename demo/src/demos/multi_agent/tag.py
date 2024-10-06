@@ -30,10 +30,10 @@ class TagDemo:
         )
         self.num_agents = 2
 
-        env = gym.make("TagEnv-v0", render_mode="rgb_array")
+        env = gym.make("TagEnv-v0", render_mode="human")
         model_name = "tag-v0"
         self.env = MultiAgentEnv(env)
-        wandb_config = WandBConfig(project="tag-v0-idun")
+        wandb_config = WandBConfig(project="tag-v0-local")
         self.dqn = MultiAgentDQN(
             self.env,
             self.num_agents,

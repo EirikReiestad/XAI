@@ -1,9 +1,14 @@
+import math
+
+import numpy as np
+
 from environments.gymnasium.envs.tag import rewards
 from environments.gymnasium.utils import Position
 
 
 class TagRewards:
     max_distance = 1
+    last_distance = np.inf
 
     def __init__(self):
         self.rewards = {
@@ -17,6 +22,9 @@ class TagRewards:
             "wrong_grab": rewards.WRONG_GRAB_RELEASE_REWARD,
         }
 
+    def reset(self):
+        self.last_distance = np.inf
+
     def get_tag_reward(
         self,
         agent: Position,
@@ -25,19 +33,25 @@ class TagRewards:
         radius: float = 1,
     ) -> tuple[tuple[float, float], bool]:
         distance = agent.distance_to(other_agent)
-        if distance <= radius or terminated:
-            return self.tagged_reward, True
         self.max_distance = max(self.max_distance, distance)
-        distance_rewards = (
-            (1 - distance / self.max_distance) * 0.01,
-            (distance / self.max_distance) * 0.01,
-        )
+        normalized_distance = distance / self.max_distance
+        exp_distance = math.exp(-normalized_distance)
 
-        not_tagged_reward = tuple(
-            not_tagged + dist
-            for not_tagged, dist in zip(distance_rewards, self.not_tagged_reward)
+        if distance <= self.last_distance:
+            exp_distance = -(distance - self.last_distance)
+            self.last_distance = distance
+
+        if distance <= radius or terminated:
+            tagged_reward = (
+                self.tagged_reward[0] + (1 - normalized_distance),
+                self.tagged_reward[1] + normalized_distance,
+            )
+            return tagged_reward, True
+
+        not_tagged_reward = (
+            self.not_tagged_reward[0] + (1 - normalized_distance),
+            self.not_tagged_reward[1] + normalized_distance,
         )
-        print(not_tagged_reward)
         return not_tagged_reward, False
 
     @property

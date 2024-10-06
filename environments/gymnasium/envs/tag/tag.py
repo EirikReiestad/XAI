@@ -46,7 +46,7 @@ class TagEnv(gym.Env):
         screen_width = 600
         screen_height = 600
         folder_name = "environments/gymnasium/data/tag/"
-        filename = "mazeenv-0-10-10.txt"
+        filename = "tag-0-10-10.txt"
         self.state_type = StateType.FULL
         self.bootcamp = Bootcamp()
         self.tag_radius = 1
@@ -208,6 +208,8 @@ class TagEnv(gym.Env):
         self._set_initial_positions(options)
         self._set_object_positions()
 
+        self.tag_rewards.reset()
+
         self.steps = 0
         self.steps_beyond_terminated = None
 
@@ -225,7 +227,7 @@ class TagEnv(gym.Env):
 
     def concatenate_states(
         self, states: list[np.ndarray]
-    ) -> tuple[np.ndarray, tuple[float, float], bool, bool]:
+    ) -> tuple[np.ndarray, tuple[float, float], bool, bool, int, int]:
         state, concat_terminated = self.state.concatenate_states(states)
         rewards, tag_terminated = self.tag_rewards.get_tag_reward(
             self.agents.active.position,
@@ -241,7 +243,9 @@ class TagEnv(gym.Env):
 
         terminated = concat_terminated or tag_terminated
 
-        return state, rewards, terminated, truncated
+        seeker_won = 1 if terminated else 0
+        hider_won = 0 if terminated else 1
+        return state, rewards, terminated, truncated, seeker_won, hider_won
 
     def update_state(self, state: np.ndarray) -> np.ndarray:
         self.state.validate_state(state)
