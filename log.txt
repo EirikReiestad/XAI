@@ -1839,3 +1839,175 @@ WARNING: GIF is enabled but the environment does not support RGB array rendering
 INFO: Learning...
 INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
 INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 19
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 18
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 17
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 16
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 15
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 14
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 13
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 12
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 11
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 10
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 9
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 8
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 7
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 6
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 5
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 4
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 3
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 2
+INFO: BootcampName.SLOW_HIDER bootcamp completed, starting BootcampName.COMBINED bootcamp
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 19
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 18
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 17
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 16
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 15
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 14
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 13
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 12
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 11
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 19
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 18
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 17
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 16
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 15
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 14
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 13
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 12
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 11
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 10
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 9
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 8
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 7
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 6
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 5
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 4
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 3
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 2
+INFO: BootcampName.SLOW_HIDER bootcamp completed, starting BootcampName.COMBINED bootcamp
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 19
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 18
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 17
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 16
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 15
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 14
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 13
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 12
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 11
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 10
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 9
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 8
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 7
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 6
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 5
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 4
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 3
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow hider factor: 2
+INFO: BootcampName.SLOW_HIDER bootcamp completed, starting BootcampName.COMBINED bootcamp
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.

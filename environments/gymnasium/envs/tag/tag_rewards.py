@@ -35,22 +35,22 @@ class TagRewards:
         distance = agent.distance_to(other_agent)
         self.max_distance = max(self.max_distance, distance)
         normalized_distance = distance / self.max_distance
-        exp_distance = math.exp(-normalized_distance)
+        exp_distance = 1 - math.exp(-normalized_distance)
 
-        if distance <= self.last_distance:
+        if distance <= self.last_distance and False:
             exp_distance = -(distance - self.last_distance)
             self.last_distance = distance
 
         if distance <= radius or terminated:
             tagged_reward = (
-                self.tagged_reward[0] + (1 - normalized_distance),
-                self.tagged_reward[1] + normalized_distance,
+                self.tagged_reward[0] + (1 - exp_distance),
+                self.tagged_reward[1] + exp_distance,
             )
             return tagged_reward, True
 
         not_tagged_reward = (
-            self.not_tagged_reward[0] + (1 - normalized_distance),
-            self.not_tagged_reward[1] + normalized_distance,
+            self.not_tagged_reward[0] + (1 - exp_distance),
+            self.not_tagged_reward[1] + exp_distance,
         )
         return not_tagged_reward, False
 
