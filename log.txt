@@ -2011,3 +2011,1173 @@ WARNING: No frames in gif to save.
 WARNING: No frames in gif to save.
 WARNING: No frames in gif to save.
 WARNING: No frames in gif to save.
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow factor: 20
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow factor: 20
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow factor: 20
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow factor: 20
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow factor: 20
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow factor: 20
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow factor: 20
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow factor: 20
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb

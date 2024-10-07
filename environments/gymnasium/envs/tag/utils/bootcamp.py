@@ -34,8 +34,8 @@ class Bootcamp:
     def __init__(self):
         self._name = BootcampName.HIDER
         self._training_days = 0
-        self.slow_hider_factor = 20
-        self.slow_hider_step_factor = 1
+        self.slow_factor = 20
+        self.slow_step_factor = 1
 
     def step(self):
         self._training_days += 1
@@ -44,10 +44,7 @@ class Bootcamp:
     def move_hider(self, steps: int) -> bool:
         if self._name == BootcampName.HIDER:
             return True
-        if (
-            self._name == BootcampName.SLOW_HIDER
-            and steps % self.slow_hider_factor == 0
-        ):
+        if self._name == BootcampName.SLOW_HIDER and steps % self.slow_factor == 0:
             return True
         if self._name == BootcampName.COMBINED:
             return True
@@ -58,14 +55,19 @@ class Bootcamp:
             return
         if self._name == BootcampName.COMBINED:
             return
-        if self._name == BootcampName.SLOW_HIDER:
-            self.slow_hider_factor -= self.slow_hider_step_factor
-            self._training_days = 0
-            if self.slow_hider_factor > 1:
+        if self.slow_factor > 1:
+            if self._name == BootcampName.SLOW_HIDER:
+                self._training_days = 0
                 logging.info(
-                    f"Continuing with bootcamp {self._name} with slow hider factor: {self.slow_hider_factor}"
+                    f"Continuing with bootcamp {self._name} with slow factor: {self.slow_factor}"
                 )
                 return
+            if self._name == BootcampName.SLOW_HIDER:
+                self.slow_factor -= self.slow_step_factor
+                self._training_days = 0
+                logging.info(
+                    f"Continuing with bootcamp {self._name} with slow factor: {self.slow_factor}"
+                )
         self._training_days = 0
         old_name = self._name
         self._name = BootcampName(self._name.value + 1)
