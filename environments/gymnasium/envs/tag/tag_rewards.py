@@ -57,8 +57,8 @@ class TagRewards:
             return tagged_reward, True
 
         not_tagged_reward = (
-            self.tagged_reward[0] + seeker_distance_reward,
-            self.tagged_reward[1] + hider_distance_reward,
+            self.not_tagged_reward[0] + seeker_distance_reward,
+            self.not_tagged_reward[1] + hider_distance_reward,
         )
         return not_tagged_reward, False
 
