@@ -36,7 +36,7 @@ class TagDemo:
 
         metadata = MetadataWrapper(self.env)
 
-        wandb_config = WandBConfig(project="tag-v0-local", other=metadata.get_config())
+        wandb_config = WandBConfig(project="tag-v0-idun", other=metadata.get_config())
         self.dqn = MultiAgentDQN(
             self.env,
             self.num_agents,
