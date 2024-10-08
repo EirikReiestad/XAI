@@ -316,8 +316,6 @@ class TagEnv(gym.Env):
         obj = self.agents.active.grabbed_object
         self.info["object_moved_distance"] = 0
         if obj is not None:
-            if self.agents.active_agent == AgentType.SEEKER:
-                return state
             if obj.next_position is None:
                 raise ValueError("The object should have a next position.")
             next_position = self.agents.active.position
