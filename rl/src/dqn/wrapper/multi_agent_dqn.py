@@ -68,17 +68,11 @@ class MultiAgentDQN(MultiAgentBase):
         max_gif_rewards = [-np.inf for _ in range(self.num_agents)]
         gifs = [[] for _ in range(self.num_agents)]
 
-        total_rewards = (0, 0)
-
         try:
             for _ in range(total_timesteps):
                 self.episodes += 1
                 rollout, episode_rewards, steps, info, episode_data, gif = (
                     self._collect_rollouts()
-                )
-
-                total_rewards = tuple(
-                    sum(x) for x in zip(total_rewards, tuple(episode_rewards))
                 )
 
                 for agent in range(self.num_agents):
