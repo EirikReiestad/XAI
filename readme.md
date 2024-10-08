@@ -32,4 +32,5 @@ hotfix/fix-login-bug
 - `fix:` - bug fix
 - `refactor:` - code refactoring
 - `docs:` - changes in documentation
+- `model:` - changes to the model parameters
 - `idun:` - changes to IDUN 
