@@ -42,13 +42,6 @@ class Bootcamp:
         self._training_days += 1
         self._next()
 
-    def move_agent(self, agent: AgentType, steps: int) -> bool:
-        if agent == AgentType.SEEKER:
-            return self.move_seeker(steps)
-        if agent == AgentType.HIDER:
-            return self.move_hider(steps)
-        raise ValueError(f"Unknown agent type: {agent}")
-
     def move_hider(self, steps: int) -> bool:
         if self._name == BootcampName.HIDER:
             return True
@@ -71,7 +64,7 @@ class Bootcamp:
             return True
         return False
 
-    def agent_slow_factors(self, agent: AgentType) -> int:
+    def agent_slow_factor(self, agent: AgentType) -> int:
         if agent == AgentType.SEEKER:
             return max(self.slow_factor, self.slow_seeker_factor)
         if agent == AgentType.HIDER:
