@@ -7,17 +7,15 @@ from environments.gymnasium.utils import Position
 class TagRewards:
     max_distance = 1
 
-    def __init__(self):
-        self.rewards = {
-            "tagged": rewards.TAGGED_REWARD,
-            "not_tagged": rewards.NOT_TAGGED_REWARD,
-            "move": rewards.MOVE_REWARD,
-            "end": rewards.END_REWARD,
-            "terminated": rewards.TERMINATED_REWARD,
-            "truncated": rewards.TRUNCATED_REWARD,
-            "collision": rewards.COLLISION_REWARD,
-            "wrong_grab": rewards.WRONG_GRAB_RELEASE_REWARD,
-        }
+    tagged_reward: tuple[float, float] = rewards.TAGGED_REWARD
+    not_tagged_reward: tuple[float, float] = rewards.NOT_TAGGED_REWARD
+    move_reward: tuple[float, float] = rewards.MOVE_REWARD
+    end_reward: tuple[float, float] = rewards.END_REWARD
+    terminated_reward: float = rewards.TERMINATED_REWARD
+    truncated_reward: tuple[float, float] = rewards.TRUNCATED_REWARD
+    collision_reward: float = rewards.COLLISION_REWARD
+    wrong_grab_release_reward: float = rewards.WRONG_GRAB_RELEASE_REWARD
+    distance_factor: float = rewards.DISTANCE_REWARD_FACTOR
 
     def reset(self):
         self.last_distance = 0
@@ -58,36 +56,5 @@ class TagRewards:
             "truncated": self.truncated_reward,
             "collision": self.collision_reward,
             "wrong_grab": self.wrong_grab_release_reward,
+            "distance_factor": self.distance_factor,
         }
-
-    @property
-    def tagged_reward(self):
-        return self.rewards["tagged"]
-
-    @property
-    def not_tagged_reward(self):
-        return self.rewards["not_tagged"]
-
-    @property
-    def move_reward(self):
-        return self.rewards["move"]
-
-    @property
-    def collision_reward(self):
-        return self.rewards["collision"]
-
-    @property
-    def end_reward(self):
-        return self.rewards["end"]
-
-    @property
-    def terminated_reward(self):
-        return self.rewards["terminated"]
-
-    @property
-    def truncated_reward(self):
-        return self.rewards["truncated"]
-
-    @property
-    def wrong_grab_release_reward(self):
-        return self.rewards["wrong_grab"]
