@@ -85,8 +85,9 @@ class MultiAgentDQN(MultiAgentBase):
                     if self.gif:
                         if len(gif) == 0:
                             continue
-                        if episode_rewards[agent] > max_gif_rewards[agent]:
-                            max_gif_rewards[agent] = episode_rewards[agent]
+                        average_step_rewards = episode_rewards[agent] / steps
+                        if average_step_rewards > max_gif_rewards[agent]:
+                            max_gif_rewards[agent] = average_step_rewards
                             gifs[agent] = gif
 
                 log = dict()
