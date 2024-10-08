@@ -1,6 +1,7 @@
 import enum
 import logging
 from dataclasses import dataclass
+from .agent_type import AgentType
 
 
 class BootcampName(enum.Enum):
@@ -34,31 +35,48 @@ class Bootcamp:
         self.slow_step_factor = 1
         self.slow_agent = 0
 
+        self.slow_hider_factor = 2
+        self.slow_seeker_factor = 1
+
     def step(self):
         self._training_days += 1
         self._next()
 
+    def move_agent(self, agent: AgentType, steps: int) -> bool:
+        if agent == AgentType.SEEKER:
+            return self.move_seeker(steps)
+        if agent == AgentType.HIDER:
+            return self.move_hider(steps)
+        raise ValueError(f"Unknown agent type: {agent}")
+
     def move_hider(self, steps: int) -> bool:
-        if self.slow_agent == 1:
-            return True
         if self._name == BootcampName.HIDER:
             return True
         if self._name == BootcampName.SLOW_AGENT and steps % self.slow_factor == 0:
             return True
-        if self._name == BootcampName.COMBINED:
+        if self._name == BootcampName.COMBINED and steps % self.slow_hider_factor == 0:
+            return True
+        if self.slow_agent == 1:
             return True
         return False
 
     def move_seeker(self, steps: int) -> bool:
-        if self.slow_agent == 0:
-            return True
         if self._name == BootcampName.SEEKER:
             return True
         if self._name == BootcampName.SLOW_AGENT and steps % self.slow_factor == 0:
             return True
-        if self._name == BootcampName.COMBINED:
+        if self._name == BootcampName.COMBINED and steps % self.slow_seeker_factor == 0:
+            return True
+        if self.slow_agent == 0:
             return True
         return False
+
+    def agent_slow_factors(self, agent: AgentType) -> int:
+        if agent == AgentType.SEEKER:
+            return max(self.slow_factor, self.slow_seeker_factor)
+        if agent == AgentType.HIDER:
+            return max(self.slow_factor, self.slow_hider_factor)
+        raise ValueError(f"Unknown agent type: {agent}")
 
     def _next(self):
         if self._training_days < BootcampTrainingSteps().get_days(self._name):
