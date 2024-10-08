@@ -43,28 +43,33 @@ class Bootcamp:
         self._next()
 
     def move_hider(self, steps: int) -> bool:
-        if self._name == BootcampName.HIDER:
+        if self.name == BootcampName.HIDER:
             return True
-        if self._name == BootcampName.SLOW_AGENT and steps % self.slow_factor == 0:
+        if self.name == BootcampName.SLOW_AGENT and steps % self.slow_factor == 0:
             return True
-        if self._name == BootcampName.COMBINED and steps % self.slow_hider_factor == 0:
+        if self.name == BootcampName.COMBINED and steps % self.slow_hider_factor == 0:
             return True
         if self.slow_agent == 1:
             return True
         return False
 
     def move_seeker(self, steps: int) -> bool:
-        if self._name == BootcampName.SEEKER:
+        if self.name == BootcampName.SEEKER:
             return True
-        if self._name == BootcampName.SLOW_AGENT and steps % self.slow_factor == 0:
+        if self.name == BootcampName.SLOW_AGENT and steps % self.slow_factor == 0:
             return True
-        if self._name == BootcampName.COMBINED and steps % self.slow_seeker_factor == 0:
+        if self.name == BootcampName.COMBINED and steps % self.slow_seeker_factor == 0:
             return True
         if self.slow_agent == 0:
             return True
         return False
 
     def agent_slow_factor(self, agent: AgentType) -> int:
+        if self.name == BootcampName:
+            if agent == AgentType.SEEKER:
+                return self.slow_seeker_factor
+            if agent == AgentType.HIDER:
+                return self.slow_hider_factor
         if agent == AgentType.SEEKER:
             return max(self.slow_factor, self.slow_seeker_factor)
         if agent == AgentType.HIDER:
