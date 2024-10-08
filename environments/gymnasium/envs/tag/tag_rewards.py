@@ -34,14 +34,14 @@ class TagRewards:
 
         if distance <= radius or terminated:
             tagged_reward = (
-                self.tagged_reward[0] + (1 - exp_distance),
-                self.tagged_reward[1] + exp_distance,
+                self.tagged_reward[0] + (1 - exp_distance) * self.distance_factor,
+                self.tagged_reward[1] + exp_distance * self.distance_factor,
             )
             return tagged_reward, True
 
         not_tagged_reward = (
-            self.not_tagged_reward[0] + (1 - exp_distance),
-            self.not_tagged_reward[1] + exp_distance,
+            self.not_tagged_reward[0] + (1 - exp_distance) * self.distance_factor,
+            self.not_tagged_reward[1] + exp_distance * self.distance_factor,
         )
         return not_tagged_reward, False
 
