@@ -130,6 +130,7 @@ class MultiAgentDQN(MultiAgentBase):
         episode_length = 0
 
         data = [{} for _ in range(self.num_agents)]
+        data_constant = [{} for _ in range(self.num_agents)]
 
         frames = []
 
@@ -163,10 +164,15 @@ class MultiAgentDQN(MultiAgentBase):
                 if skip:
                     continue
 
-                additional_data = infos[i].get("data")
-                if additional_data is not None:
-                    for key, value in additional_data.items():
+                data_additative = infos[i].get("data_additative")
+                if data_additative is not None:
+                    for key, value in data_additative.items():
                         data[i][key] = data[i].setdefault(key, 0) + value
+
+                data_constant = infos[i].get("data_constant")
+                if data_constant is not None:
+                    for key, value in data_constant.items():
+                        data[i][key] = value
 
                 action = torch.tensor([actions[i]], device=device)
                 reward = torch.tensor([rewards[i]], device=device)

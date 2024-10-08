@@ -127,9 +127,11 @@ class TagEnv(gym.Env):
                 True,
                 {
                     "full_state": self.state.full,
-                    "data": {
+                    "data_additative": {
                         "object_moved_distance": self.info["object_moved_distance"],
                         "collided": self.info["collided"],
+                    },
+                    "data_constant": {
                         "agent_speed": self.bootcamp.slow_factor,
                     },
                 },
@@ -161,9 +163,11 @@ class TagEnv(gym.Env):
 
         return_info = {
             "full_state": self.state.full,
-            "data": {
+            "data_additative": {
                 "object_moved_distance": self.info["object_moved_distance"],
                 "collided": self.info["collided"],
+            },
+            "data_constant": {
                 "agent_speed": self.bootcamp.slow_factor,
             },
         }
@@ -191,9 +195,11 @@ class TagEnv(gym.Env):
             {
                 "full_state": self.state.full,
                 "skip": skip,
-                "data": {
+                "data_additative": {
                     "object_moved_distance": self.info["object_moved_distance"],
                     "collided": self.info["collided"],
+                },
+                "data_constant": {
                     "agent_speed": self.bootcamp.slow_factor,
                 },
             },
