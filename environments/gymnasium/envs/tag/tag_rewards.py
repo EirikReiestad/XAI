@@ -8,7 +8,6 @@ from environments.gymnasium.utils import Position
 
 class TagRewards:
     max_distance = 1
-    last_distance = np.inf
 
     def __init__(self):
         self.rewards = {
@@ -23,7 +22,7 @@ class TagRewards:
         }
 
     def reset(self):
-        self.last_distance = np.inf
+        self.last_distance = 0
 
     def get_tag_reward(
         self,
@@ -36,10 +35,6 @@ class TagRewards:
         self.max_distance = max(self.max_distance, distance)
         normalized_distance = distance / self.max_distance
         exp_distance = 1 - math.exp(-normalized_distance)
-
-        if distance <= self.last_distance and False:
-            exp_distance = -(distance - self.last_distance)
-            self.last_distance = distance
 
         if distance <= radius or terminated:
             tagged_reward = (

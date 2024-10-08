@@ -77,9 +77,9 @@ def generate_multi_agent_states(
         for _ in count():
             predicted_actions = model.predict_actions(state)
             actions = [action.item() for action in predicted_actions]
-            (_, observation, terminated, _, _, _, truncated, _) = env.get_wrapper_attr(
-                "step_multiple"
-            )(actions)
+            (_, observation, terminated, _, _, _, _, truncated, _) = (
+                env.get_wrapper_attr("step_multiple")(actions)
+            )
 
             state = torch.tensor(
                 observation, device=device, dtype=torch.float32

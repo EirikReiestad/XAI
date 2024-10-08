@@ -3181,3 +3181,792 @@ wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
 WARNING: Error: Could not find wandb directory: ./wandb
 WARNING: Error: Could not find wandb directory: ./wandb
 WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 59, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 60, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 60, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 60, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 60, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+ERROR: You must call wandb.init() before wandb.log()
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 106, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 60, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/preinit.py", line 36, in preinit_wrapper
+    raise wandb.Error(f"You must call wandb.init() before {name}()")
+wandb.errors.errors.Error: You must call wandb.init() before wandb.log()
+
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_HIDER bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow factor: 20
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow factor: 20
+INFO: Continuing with bootcamp BootcampName.SLOW_HIDER with slow factor: 20
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_AGENT bootcamp
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_AGENT bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_AGENT bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_AGENT bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_AGENT bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_AGENT bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_AGENT bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_AGENT bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 20 for agent 0
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_AGENT bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 19 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 19 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 18 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 18 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 17 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 17 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 16 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 16 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 15 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 15 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 14 for agent 1
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_AGENT bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 19 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 19 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 18 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 18 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 17 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 17 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 16 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 16 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 15 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 15 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 14 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 14 for agent 0
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_AGENT bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 19 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 19 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 18 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 18 for agent 0
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_AGENT bootcamp
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_AGENT bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 19 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 19 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 18 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 18 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 17 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 17 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 16 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 16 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 15 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 15 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 14 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 14 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 13 for agent 1
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 13 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 12 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 12 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 11 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 11 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 10 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 10 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 9 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 9 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 8 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 8 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 7 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 7 for agent 0
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 6 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 6 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 5 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 5 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 4 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 4 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 3 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 3 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 2 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 2 for agent 0
+INFO: BootcampName.SLOW_AGENT bootcamp completed, starting BootcampName.COMBINED bootcamp
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_AGENT bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 19 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 19 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 18 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 18 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 17 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 17 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 16 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 16 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 15 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 15 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 14 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 14 for agent 0
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 13 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 13 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 12 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 12 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 11 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 11 for agent 0
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 10 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 10 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 9 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 9 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 8 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 8 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 7 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 7 for agent 0
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 6 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 6 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 5 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 5 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 4 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 4 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 3 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 3 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 2 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 2 for agent 0
+INFO: BootcampName.SLOW_AGENT bootcamp completed, starting BootcampName.COMBINED bootcamp
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_AGENT bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 19 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 19 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 18 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 18 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 17 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 17 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 16 for agent 1
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_AGENT bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 19 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 19 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 18 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 18 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 17 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 17 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 16 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 16 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 15 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 15 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 14 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 14 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 13 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 13 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 12 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 12 for agent 0
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_AGENT bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 19 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 19 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 18 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 18 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 17 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 17 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 16 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 16 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 15 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 15 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 14 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 14 for agent 0
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 13 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 13 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 12 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 12 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 11 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 11 for agent 0
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 10 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 10 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 9 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 9 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 8 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 8 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 7 for agent 1
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 7 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 6 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 6 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 5 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 5 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 4 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 4 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 3 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 3 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 2 for agent 1
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 2 for agent 0
+INFO: BootcampName.SLOW_AGENT bootcamp completed, starting BootcampName.COMBINED bootcamp
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Cleaning cache: /home/eirik/.cache/wandb/artifacts/obj 0.00390625 MB
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging 0.00390625 MB
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_AGENT bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 19 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 19 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 18 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 18 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 17 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 17 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 16 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 16 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 15 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 15 for agent 0
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 14 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 14 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 13 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 13 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 12 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 12 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 11 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 11 for agent 0
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 10 for agent 1
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_AGENT bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 19 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 19 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 18 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 18 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 17 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 17 for agent 0
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 16 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 16 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 15 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 15 for agent 0
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 14 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 14 for agent 0
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 13 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 13 for agent 0
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 12 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 12 for agent 0
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 11 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 11 for agent 0
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 10 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 10 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 9 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 9 for agent 0
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 8 for agent 1
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 8 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 7 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 7 for agent 0
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 6 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 6 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 5 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 5 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 4 for agent 1
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 4 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 3 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 3 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 2 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 2 for agent 0
+INFO: BootcampName.SLOW_AGENT bootcamp completed, starting BootcampName.COMBINED bootcamp
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Cleaning cache: /home/eirik/.cache/wandb/artifacts/obj 0.00390625 MB
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging 0.00390625 MB
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
