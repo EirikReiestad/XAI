@@ -35,7 +35,7 @@ class Bootcamp:
         self.slow_step_factor = 1
         self.slow_agent = 0
 
-        self.slow_hider_factor = 2
+        self.slow_hider_factor = 4
         self.slow_seeker_factor = 1
 
     def step(self):
