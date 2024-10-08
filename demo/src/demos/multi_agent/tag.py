@@ -1,3 +1,4 @@
+import getpass
 import logging
 from itertools import count
 
@@ -9,12 +10,12 @@ import torch
 
 from demo.src.common import EpisodeInformation
 from demo.src.plotters import Plotter
-from environments.gymnasium.wrappers import MultiAgentEnv, StateWrapper, MetadataWrapper
-from methods import Shap, SaliencyMap
+from environments.gymnasium.wrappers import MetadataWrapper, MultiAgentEnv, StateWrapper
+from methods import SaliencyMap, Shap
 from renderer import Renderer
-from rl.src.dqn.wrapper import MultiAgentDQN
 from rl.src.common.getter import get_torch_from_numpy
 from rl.src.dqn.common.q_values_map import get_q_values_map
+from rl.src.dqn.wrapper import MultiAgentDQN
 from rl.src.managers import WandBConfig
 
 is_ipython = "inline" in matplotlib.get_backend()
@@ -36,7 +37,10 @@ class TagDemo:
 
         metadata = MetadataWrapper(self.env)
 
-        wandb_config = WandBConfig(project="tag-v0-local", other=metadata.get_config())
+        current_user = getpass.getuser()
+        project = f"tag-v0-{current_user}"
+
+        wandb_config = WandBConfig(project=project, other=metadata.get_config())
         self.dqn = MultiAgentDQN(
             self.env,
             self.num_agents,
