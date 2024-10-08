@@ -132,7 +132,7 @@ class TagEnv(gym.Env):
                         "collided": self.info["collided"],
                     },
                     "data_constant": {
-                        "agent_speed": self.bootcamp.slow_factor,
+                        "slow_factor": self.bootcamp.slow_factor,
                     },
                 },
             )
@@ -168,7 +168,7 @@ class TagEnv(gym.Env):
                 "collided": self.info["collided"],
             },
             "data_constant": {
-                "agent_speed": self.bootcamp.slow_factor,
+                "slow_factor": self.bootcamp.slow_factor,
             },
         }
 
@@ -200,7 +200,7 @@ class TagEnv(gym.Env):
                     "collided": self.info["collided"],
                 },
                 "data_constant": {
-                    "agent_speed": self.bootcamp.slow_factor,
+                    "slow_factor": self.bootcamp.slow_factor,
                 },
             },
         )
