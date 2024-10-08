@@ -7,3 +7,6 @@ class MetadataWrapper(gym.Wrapper):
 
     def feature_names(self) -> list[str]:
         return self.env.get_wrapper_attr("feature_names")
+
+    def get_config(self) -> dict:
+        return self.env.get_wrapper_attr("config")

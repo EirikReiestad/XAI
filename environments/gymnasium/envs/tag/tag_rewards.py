@@ -1,7 +1,5 @@
 import math
 
-import numpy as np
-
 from environments.gymnasium.envs.tag import rewards
 from environments.gymnasium.utils import Position
 
@@ -48,6 +46,19 @@ class TagRewards:
             self.not_tagged_reward[1] + exp_distance,
         )
         return not_tagged_reward, False
+
+    @property
+    def config(self):
+        return {
+            "tagged": self.tagged_reward,
+            "not_tagged": self.not_tagged_reward,
+            "move": self.move_reward,
+            "end": self.end_reward,
+            "terminated": self.terminated_reward,
+            "truncated": self.truncated_reward,
+            "collision": self.collision_reward,
+            "wrong_grab": self.wrong_grab_release_reward,
+        }
 
     @property
     def tagged_reward(self):

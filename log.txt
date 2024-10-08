@@ -3970,3 +3970,58 @@ WARNING: No frames in gif to save.
 WARNING: No frames in gif to save.
 WARNING: No frames in gif to save.
 WARNING: No frames in gif to save.
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+INFO: Learning...
+INFO: BootcampName.HIDER bootcamp completed, starting BootcampName.SEEKER bootcamp
+INFO: BootcampName.SEEKER bootcamp completed, starting BootcampName.SLOW_AGENT bootcamp
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 19 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 19 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 18 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 18 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 17 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 17 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 16 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 16 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 15 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 15 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 14 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 14 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 13 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 13 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 12 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 12 for agent 0
+INFO: Cleaning cache: /home/eirik/.cache/wandb/artifacts/obj 0.00390625 MB
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging 0.00390625 MB
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 11 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 11 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 10 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 10 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 9 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 9 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 8 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 8 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 7 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 7 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 6 for agent 1
+INFO: Cleaning cache: /home/eirik/.cache/wandb/artifacts/obj 0.00390625 MB
+INFO: cleaning local: /home/eirik/.local/share/wandb/artifacts/staging 0.00390625 MB
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 6 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 5 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 5 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 4 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 4 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 3 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 3 for agent 0
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 2 for agent 1
+INFO: Continuing with bootcamp BootcampName.SLOW_AGENT with slow factor: 2 for agent 0
+INFO: BootcampName.SLOW_AGENT bootcamp completed, starting BootcampName.COMBINED bootcamp

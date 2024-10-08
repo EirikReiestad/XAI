@@ -130,6 +130,7 @@ class TagEnv(gym.Env):
                     "data": {
                         "object_moved_distance": self.info["object_moved_distance"],
                         "collided": self.info["collided"],
+                        "agent_speed": self.bootcamp.slow_factor,
                     },
                 },
             )
@@ -163,6 +164,7 @@ class TagEnv(gym.Env):
             "data": {
                 "object_moved_distance": self.info["object_moved_distance"],
                 "collided": self.info["collided"],
+                "agent_speed": self.bootcamp.slow_factor,
             },
         }
 
@@ -192,6 +194,7 @@ class TagEnv(gym.Env):
                 "data": {
                     "object_moved_distance": self.info["object_moved_distance"],
                     "collided": self.info["collided"],
+                    "agent_speed": self.bootcamp.slow_factor,
                 },
             },
         )
@@ -435,6 +438,13 @@ class TagEnv(gym.Env):
 
     def get_occluded_states(self) -> np.ndarray:
         return self.state.get_occluded_states()
+
+    @property
+    def config(self) -> dict:
+        rewards = self.tag_rewards.config
+        return {
+            "rewards": rewards,
+        }
 
     @property
     def num_agents(self) -> int:

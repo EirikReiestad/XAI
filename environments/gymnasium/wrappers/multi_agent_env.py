@@ -60,3 +60,7 @@ class MultiAgentEnv(gym.Wrapper):
             truncated,
             infos,
         )
+
+    @property
+    def config(self) -> dict:
+        return self.env.get_wrapper_attr("config")
