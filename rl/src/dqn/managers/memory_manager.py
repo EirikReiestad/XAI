@@ -6,7 +6,7 @@ class MemoryManager:
     def __init__(self, memory_size: int):
         self.memory_size = memory_size
 
-    def initialize(self, memory_type: str = "replay") -> ReplayMemoryBase:
+    def initialize(self, memory_type: str = "prioritized") -> ReplayMemoryBase:
         if memory_type == "replay":
             return ReplayMemory(self.memory_size)
         elif memory_type == "prioritized":
