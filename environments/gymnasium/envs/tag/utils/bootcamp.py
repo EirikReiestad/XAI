@@ -14,10 +14,10 @@ class BootcampName(enum.Enum):
 
 @dataclass
 class BootcampTrainingSteps:
-    hider = 500
-    seeker = 500
-    slow_agent = 1000
-    combined = 1000
+    hider = 5
+    seeker = 5
+    slow_agent = 10
+    combined = 10
 
     def get_days(self, name: BootcampName):
         if name == BootcampName.HIDER:
@@ -38,7 +38,7 @@ class Bootcamp:
         self._bootcamp_num = 0
         self._num_bootcamps = 4
 
-        self.initial_slow_factor = 20
+        self.initial_slow_factor = 4
         self.slow_factors: list[int] = self._get_slow_factors(
             self.initial_slow_factor, self._num_bootcamps
         )
@@ -96,8 +96,7 @@ class Bootcamp:
         if self._training_days < bootcamp_days:
             return
         if self._name == BootcampName.FINISHED:
-            if self._bootcamp_num >= self._num_bootcamps:
-                logging.info(f"Bootcamp #{self._bootcamp_num} {self._name} finished")
+            if self._bootcamp_num >= self._num_bootcamps - 1:
                 return
             old_name = self._name
             self._reset_bootcamp()

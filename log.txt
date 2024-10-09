@@ -4781,3 +4781,421 @@ INFO: QNetwork(
 )
 INFO: Learning...
 INFO: BootcampName.HIDER Bootcamp completed, starting BootcampName.SEEKER Bootcamp #0 for 500 days
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+INFO: Learning...
+INFO: BootcampName.HIDER Bootcamp completed, starting BootcampName.SEEKER Bootcamp #0 for 5 days
+INFO: BootcampName.SEEKER Bootcamp completed, starting BootcampName.SLOW_AGENT Bootcamp #0 for 10 days
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 3 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 3 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 2 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 2 for agent 0
+INFO: BootcampName.SLOW_AGENT Bootcamp completed, starting BootcampName.COMBINED Bootcamp #0 for 10 days
+INFO: Starting Bootcamp #1, starting Bootcamp #1 BootcampName.HIDER
+INFO: BootcampName.COMBINED Bootcamp completed, starting BootcampName.HIDER Bootcamp #1 for 5 days
+INFO: BootcampName.HIDER Bootcamp completed, starting BootcampName.SEEKER Bootcamp #1 for 5 days
+INFO: BootcampName.SEEKER Bootcamp completed, starting BootcampName.SLOW_AGENT Bootcamp #1 for 10 days
+INFO: Continuing with Bootcamp #1 BootcampName.SLOW_AGENT with slow factor: 3 for agent 0
+INFO: Continuing with Bootcamp #1 BootcampName.SLOW_AGENT with slow factor: 2 for agent 1
+INFO: Continuing with Bootcamp #1 BootcampName.SLOW_AGENT with slow factor: 2 for agent 0
+INFO: BootcampName.SLOW_AGENT Bootcamp completed, starting BootcampName.COMBINED Bootcamp #1 for 10 days
+INFO: Starting Bootcamp #2, starting Bootcamp #2 BootcampName.HIDER
+INFO: BootcampName.COMBINED Bootcamp completed, starting BootcampName.HIDER Bootcamp #2 for 5 days
+INFO: BootcampName.HIDER Bootcamp completed, starting BootcampName.SEEKER Bootcamp #2 for 5 days
+INFO: BootcampName.SEEKER Bootcamp completed, starting BootcampName.SLOW_AGENT Bootcamp #2 for 10 days
+INFO: Continuing with Bootcamp #2 BootcampName.SLOW_AGENT with slow factor: 2 for agent 0
+INFO: BootcampName.SLOW_AGENT Bootcamp completed, starting BootcampName.COMBINED Bootcamp #2 for 10 days
+INFO: Starting Bootcamp #3, starting Bootcamp #3 BootcampName.HIDER
+INFO: BootcampName.COMBINED Bootcamp completed, starting BootcampName.HIDER Bootcamp #3 for 5 days
+INFO: BootcampName.HIDER Bootcamp completed, starting BootcampName.SEEKER Bootcamp #3 for 5 days
+INFO: BootcampName.SEEKER Bootcamp completed, starting BootcampName.SLOW_AGENT Bootcamp #3 for 10 days
+INFO: BootcampName.SLOW_AGENT Bootcamp completed, starting BootcampName.COMBINED Bootcamp #3 for 10 days
+INFO: Starting Bootcamp #4, starting Bootcamp #4 BootcampName.HIDER
+INFO: BootcampName.COMBINED Bootcamp completed, starting BootcampName.HIDER Bootcamp #4 for 5 days
+ERROR: list index out of range
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 75, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 144, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 29, in step_multiple
+    observation, reward, terminated, trunc, info = self.env.step(action)
+                                                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/order_enforcing.py", line 56, in step
+    return self.env.step(action)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/env_checker.py", line 51, in step
+    return self.env.step(action)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 173, in step
+    "agent_slow_factor": self.bootcamp.agent_slow_factor(
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/bootcamp.py", line 91, in agent_slow_factor
+    return max(self.slow_factor, self.slow_hider_factor)
+               ^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/bootcamp.py", line 156, in slow_factor
+    return self.slow_factors[self._bootcamp_num]
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+IndexError: list index out of range
+
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+INFO: Learning...
+INFO: BootcampName.HIDER Bootcamp completed, starting BootcampName.SEEKER Bootcamp #0 for 5 days
+INFO: BootcampName.SEEKER Bootcamp completed, starting BootcampName.SLOW_AGENT Bootcamp #0 for 10 days
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 3 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 3 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 2 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 2 for agent 0
+INFO: BootcampName.SLOW_AGENT Bootcamp completed, starting BootcampName.COMBINED Bootcamp #0 for 10 days
+INFO: Starting Bootcamp #1, starting Bootcamp #1 BootcampName.HIDER
+INFO: BootcampName.COMBINED Bootcamp completed, starting BootcampName.HIDER Bootcamp #1 for 5 days
+INFO: BootcampName.HIDER Bootcamp completed, starting BootcampName.SEEKER Bootcamp #1 for 5 days
+INFO: BootcampName.SEEKER Bootcamp completed, starting BootcampName.SLOW_AGENT Bootcamp #1 for 10 days
+INFO: Continuing with Bootcamp #1 BootcampName.SLOW_AGENT with slow factor: 3 for agent 0
+INFO: Continuing with Bootcamp #1 BootcampName.SLOW_AGENT with slow factor: 2 for agent 1
+INFO: Continuing with Bootcamp #1 BootcampName.SLOW_AGENT with slow factor: 2 for agent 0
+INFO: BootcampName.SLOW_AGENT Bootcamp completed, starting BootcampName.COMBINED Bootcamp #1 for 10 days
+INFO: Starting Bootcamp #2, starting Bootcamp #2 BootcampName.HIDER
+INFO: BootcampName.COMBINED Bootcamp completed, starting BootcampName.HIDER Bootcamp #2 for 5 days
+INFO: BootcampName.HIDER Bootcamp completed, starting BootcampName.SEEKER Bootcamp #2 for 5 days
+INFO: BootcampName.SEEKER Bootcamp completed, starting BootcampName.SLOW_AGENT Bootcamp #2 for 10 days
+INFO: Continuing with Bootcamp #2 BootcampName.SLOW_AGENT with slow factor: 2 for agent 0
+INFO: BootcampName.SLOW_AGENT Bootcamp completed, starting BootcampName.COMBINED Bootcamp #2 for 10 days
+INFO: Starting Bootcamp #3, starting Bootcamp #3 BootcampName.HIDER
+INFO: BootcampName.COMBINED Bootcamp completed, starting BootcampName.HIDER Bootcamp #3 for 5 days
+INFO: BootcampName.HIDER Bootcamp completed, starting BootcampName.SEEKER Bootcamp #3 for 5 days
+INFO: BootcampName.SEEKER Bootcamp completed, starting BootcampName.SLOW_AGENT Bootcamp #3 for 10 days
+INFO: BootcampName.SLOW_AGENT Bootcamp completed, starting BootcampName.COMBINED Bootcamp #3 for 10 days
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: BootcampName.COMBINED Bootcamp completed, starting BootcampName.FINISHED Bootcamp #3 for 0 days
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
+INFO: Bootcamp #3 BootcampName.FINISHED finished
