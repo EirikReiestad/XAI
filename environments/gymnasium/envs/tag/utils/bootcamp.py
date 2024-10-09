@@ -36,7 +36,7 @@ class Bootcamp:
         self._name = BootcampName.HIDER
         self._training_days = 0
         self._bootcamp_num = 0
-        self._num_bootcamps = 5
+        self._num_bootcamps = 10
 
         self.initial_slow_factor = 20
         self.slow_factors: list[int] = self._get_slow_factors(
@@ -46,7 +46,7 @@ class Bootcamp:
         self.slow_step_factor = 1
         self.slow_agent = 0
 
-        self.slow_hider_factor = 1
+        self.slow_hider_factor = 4
         self.slow_seeker_factor = 1
 
     def step(self):
