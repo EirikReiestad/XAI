@@ -4730,3 +4730,54 @@ INFO: BootcampName.COMBINED Bootcamp completed, starting BootcampName.HIDER Boot
 INFO: BootcampName.HIDER Bootcamp completed, starting BootcampName.SEEKER Bootcamp #3 for 1 days
 INFO: BootcampName.SEEKER Bootcamp completed, starting BootcampName.SLOW_AGENT Bootcamp #3 for 10 days
 INFO: BootcampName.SLOW_AGENT Bootcamp completed, starting BootcampName.COMBINED Bootcamp #3 for 500 days
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+INFO: Learning...
+INFO: BootcampName.HIDER Bootcamp completed, starting BootcampName.SEEKER Bootcamp #0 for 500 days
+INFO: BootcampName.SEEKER Bootcamp completed, starting BootcampName.SLOW_AGENT Bootcamp #0 for 1000 days
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+INFO: Learning...
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+INFO: Learning...
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+INFO: Learning...
+INFO: BootcampName.HIDER Bootcamp completed, starting BootcampName.SEEKER Bootcamp #0 for 500 days

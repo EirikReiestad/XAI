@@ -36,7 +36,7 @@ class Bootcamp:
         self._name = BootcampName.HIDER
         self._training_days = 0
         self._bootcamp_num = 0
-        self._num_bootcamps = 4
+        self._num_bootcamps = 1
 
         self.initial_slow_factor = 10
         self.slow_factors: list[int] = self._get_slow_factors(
@@ -127,6 +127,8 @@ class Bootcamp:
         self._training_days = 0
 
     def _get_slow_factors(self, n: int, parts: int) -> list[int]:
+        if parts == 1:
+            return [10]
         parts -= 1
         avergage_slow_factor = n // parts
         result = [n]
