@@ -1,7 +1,7 @@
 #!/bin/sh
 #SBATCH --account="ie-idi"
 #SBATCH --partition=GPUQ
-#SBATCH --time=0-1:00:00
+#SBATCH --time=0-2:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --gres=gpu:1
