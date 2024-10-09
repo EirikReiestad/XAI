@@ -16,7 +16,7 @@ class BootcampName(enum.Enum):
 class BootcampTrainingSteps:
     hider = 500
     seeker = 500
-    slow_agent = 2000
+    slow_agent = 1000
     combined = 1000
 
     def get_days(self, name: BootcampName):
@@ -38,7 +38,7 @@ class Bootcamp:
         self._bootcamp_num = 0
         self._num_bootcamps = 4
 
-        self.initial_slow_factor = 10
+        self.initial_slow_factor = 20
         self.slow_factors: list[int] = self._get_slow_factors(
             self.initial_slow_factor, self._num_bootcamps
         )
