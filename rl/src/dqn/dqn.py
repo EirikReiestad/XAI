@@ -42,7 +42,7 @@ class DQN(SingleAgentBase):
         dueling: bool = False,
         double: bool = False,
         memory_size: int = 10000,
-        lr: float = 1e-3,
+        lr: float = 1e-4,
         gamma: float = 0.99,
         epsilon_start: float = 0.9,
         epsilon_end: float = 0.05,
@@ -96,7 +96,7 @@ class DQN(SingleAgentBase):
         optimizer = OptimizerManager(self.policy_net, self.hp.lr)
         self.optimizer = optimizer.initialize()
 
-        self.memory = MemoryManager(memory_size).initialize()
+        self.memory = MemoryManager(memory_size).initialize(memory_type="replay")
 
         self.double = double
         self.steps_done = 0
