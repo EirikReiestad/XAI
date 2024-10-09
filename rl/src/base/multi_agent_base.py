@@ -9,10 +9,10 @@ from rl.src.managers import WandBConfig, WandBManager
 class MultiAgentBase(ABC):
     def __init__(
         self,
-        wandb: bool = False,
+        wandb_active: bool = False,
         wandb_config: WandBConfig | None = None,
     ):
-        self.wandb_manager = WandBManager(wandb, wandb_config)
+        self.wandb_manager = WandBManager(wandb_active, wandb_config)
 
     @property
     @abstractmethod

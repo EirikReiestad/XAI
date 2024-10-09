@@ -45,7 +45,7 @@ class TagDemo:
             self.env,
             self.num_agents,
             "dqnpolicy",
-            wandb=True,
+            wandb_active=True,
             wandb_config=wandb_config,
             model_name=model_name,
             save_every_n_episodes=50,
@@ -57,11 +57,20 @@ class TagDemo:
             version_numbers=["v0", "v1"],
         )
 
-    def run(self):
+    def run(
+        self,
+        total_timesteps: int = 100000,
+        sweep: bool = True,
+        shap: bool = False,
+        show: bool = False,
+    ):
         logging.info("Learning...")
-        self.dqn.learn(100000)
-        self.shap(False)
-        self.show(False)
+        if sweep:
+            self.dqn.sweep(total_timesteps)
+        else:
+            self.dqn.learn(total_timesteps)
+        self.shap(shap)
+        self.show(show)
 
     def show(self, run: bool = True):
         if not run:

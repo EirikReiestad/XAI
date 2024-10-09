@@ -7,6 +7,7 @@ import numpy as np
 import torch
 from PIL import Image
 
+import wandb
 from environments.gymnasium.wrappers import MultiAgentEnv
 from rl.src.base import MultiAgentBase
 from rl.src.dqn import DQN
@@ -23,7 +24,7 @@ class MultiAgentDQN(MultiAgentBase):
         env: MultiAgentEnv,
         num_agents: int,
         dqn_policy: str | DQNPolicy,
-        wandb: bool = False,
+        wandb_active: bool = False,
         wandb_config: WandBConfig | None = None,
         save_every_n_episodes: int = 100,
         load_model: bool = False,
@@ -33,11 +34,12 @@ class MultiAgentDQN(MultiAgentBase):
         gif: bool = False,
         **kwargs,
     ):
-        super().__init__(wandb=wandb, wandb_config=wandb_config)
+        super().__init__(wandb_active=wandb_active, wandb_config=wandb_config)
         self.env = env
         self.num_agents = num_agents
         self.agents = [
-            DQN(env, dqn_policy, agent_id=i, **kwargs) for i in range(num_agents)
+            DQN(env, dqn_policy, agent_id=i, wandb_active=False, **kwargs)
+            for i in range(num_agents)
         ]
 
         self.save_every_n_episodes = save_every_n_episodes
@@ -48,6 +50,10 @@ class MultiAgentDQN(MultiAgentBase):
             self.load(run_path, model_artifact, version_numbers)
 
         self._init_gif(gif)
+        sweep_id = self.wandb_manager.sweep()
+        # for agent in self.agents:
+        #    agent.init_sweep()
+        wandb.agent(sweep_id, self.learn, count=1)
 
     def _init_gif(self, gif: bool) -> None:
         self.gif = gif
@@ -59,7 +65,10 @@ class MultiAgentDQN(MultiAgentBase):
         else:
             self.gif_samples = 10
 
-    def learn(self, total_timesteps: int) -> list[list[RolloutReturn]]:
+    def sweep(self, total_timesteps: int) -> None:
+        pass
+
+    def learn(self, total_timesteps: int = 100000) -> list[list[RolloutReturn]]:
         results = []
         for agent in self.agents:
             agent.policy_net.train()

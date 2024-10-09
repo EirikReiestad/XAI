@@ -7,8 +7,12 @@ from rl.src.managers import WandBConfig, WandBManager
 
 
 class SingleAgentBase(ABC):
-    def __init__(self, wandb: bool = False, wandb_config: WandBConfig | None = None):
-        self.wandb_manager = WandBManager(wandb, wandb_config)
+    def __init__(
+        self,
+        wandb_active: bool = False,
+        wandb_config: WandBConfig | None = None,
+    ):
+        self.wandb_manager = WandBManager(wandb_active, wandb_config)
 
     @abstractmethod
     def learn(self, total_timesteps: int):

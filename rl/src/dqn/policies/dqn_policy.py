@@ -7,11 +7,10 @@ class DQNPolicy:
         self,
         observation_space: spaces.Space,
         action_space: spaces.Space,
+        hidden_layers: list[int],
+        conv_layers: list[int],
         dueling: bool = False,
     ):
-        hidden_layers = [128, 128]
-        conv_layers = []
-
         self._policy_net: QNetwork = QNetwork(
             observation_space,
             action_space,

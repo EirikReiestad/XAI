@@ -170,7 +170,7 @@ class TagEnv(gym.Env):
                 "collided": self.info["collided"],
             },
             "data_constant": {
-                "agent_slow_factor": self.bootcamp.agent_slow_factor(
+                "slow_factor": self.bootcamp.agent_slow_factor(
                     self.agents.active_agent
                 ),
             },
