@@ -10,6 +10,13 @@
 #SBATCH --output=srun.out
 #SBATCH --error=srun.err
 
+if [ ! -f ./clean.sh ]; then
+  echo "No clean script found"
+else
+  echo "Cleaning up"
+  sh ./clean.sh
+fi
+
 WORKDIR=${SLURM_SUBMIT_DIR}
 cd "${WORKDIR}" || exit 1
 echo "Running from this directory: $(pwd)"
