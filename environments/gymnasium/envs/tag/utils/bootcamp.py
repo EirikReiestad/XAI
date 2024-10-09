@@ -38,7 +38,7 @@ class Bootcamp:
         self._bootcamp_num = 0
         self._num_bootcamps = 1
 
-        self.initial_slow_factor = 50
+        self.initial_slow_factor = 10
         self.slow_factors: list[int] = self._get_slow_factors(
             self.initial_slow_factor, self._num_bootcamps
         )
