@@ -96,7 +96,7 @@ class DQN(SingleAgentBase):
         optimizer = OptimizerManager(self.policy_net, self.hp.lr)
         self.optimizer = optimizer.initialize()
 
-        self.memory = MemoryManager(memory_size).initialize(memory_type="replay")
+        self.memory = MemoryManager(memory_size).initialize()
 
         self.double = double
         self.steps_done = 0
