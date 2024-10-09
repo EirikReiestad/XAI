@@ -9,13 +9,15 @@ class BootcampName(enum.Enum):
     SEEKER = 1
     SLOW_AGENT = 2
     COMBINED = 3
+    FINISHED = 4
 
 
 @dataclass
 class BootcampTrainingSteps:
     hider = 1
     seeker = 1
-    slow_agent = 500
+    slow_agent = 10
+    combined = 500
 
     def get_days(self, name: BootcampName):
         if name == BootcampName.HIDER:
@@ -24,6 +26,8 @@ class BootcampTrainingSteps:
             return self.seeker
         if name == BootcampName.SLOW_AGENT:
             return self.slow_agent
+        if name == BootcampName.COMBINED:
+            return self.combined
         return 0
 
 
@@ -31,7 +35,14 @@ class Bootcamp:
     def __init__(self):
         self._name = BootcampName.HIDER
         self._training_days = 0
-        self.slow_factor = 20
+        self._bootcamp_num = 0
+        self._num_bootcamps = 4
+
+        self.initial_slow_factor = 10
+        self.slow_factors: list[int] = self._get_slow_factors(
+            self.initial_slow_factor, self._num_bootcamps
+        )
+        self._slow_factor = 0
         self.slow_step_factor = 1
         self.slow_agent = 0
 
@@ -77,9 +88,18 @@ class Bootcamp:
         raise ValueError(f"Unknown agent type: {agent}")
 
     def _next(self):
-        if self._training_days < BootcampTrainingSteps().get_days(self._name):
+        bootcamp_days = BootcampTrainingSteps().get_days(self._name)
+        if self._training_days < bootcamp_days:
             return
-        if self._name == BootcampName.COMBINED:
+        if self._name == BootcampName.FINISHED:
+            if self._bootcamp_num >= self._num_bootcamps:
+                logging.info(f"Bootcamp #{self._bootcamp_num} {self._name} finished")
+                return
+            old_name = self._name
+            self._reset_bootcamp()
+            logging.info(
+                f"Starting Bootcamp #{self._bootcamp_num}, starting Bootcamp #{self._bootcamp_num} {self._name}"
+            )
             return
         if self._name == BootcampName.SLOW_AGENT:
             self._training_days = 0
@@ -88,13 +108,50 @@ class Bootcamp:
                 self.slow_factor -= self.slow_step_factor
             if self.slow_factor > 1:
                 logging.info(
-                    f"Continuing with bootcamp {self._name} with slow factor: {self.slow_factor} for agent {self.slow_agent}"
+                    f"Continuing with Bootcamp #{self._bootcamp_num} {self._name} with slow factor: {self.slow_factor} for agent {self.slow_agent}"
                 )
                 return
         self._training_days = 0
         old_name = self._name
         self._name = BootcampName(self._name.value + 1)
-        logging.info(f"{old_name} bootcamp completed, starting {self._name} bootcamp")
+        if self._name == BootcampName.FINISHED:
+            self._next()
+        bootcamp_days = BootcampTrainingSteps().get_days(self._name)
+        logging.info(
+            f"{old_name} Bootcamp completed, starting {self._name} Bootcamp #{self._bootcamp_num} for {bootcamp_days} days"
+        )
+
+    def _reset_bootcamp(self):
+        self._bootcamp_num += 1
+        self._name = BootcampName.HIDER
+        self._training_days = 0
+
+    def _get_slow_factors(self, n: int, parts: int) -> list[int]:
+        parts -= 1
+        avergage_slow_factor = n // parts
+        result = [n]
+        for i in range(1, parts):
+            part = result[i - 1] - avergage_slow_factor
+            assert (
+                part > 1
+            ), f"Invalid slow factor: {part}. It should be greater than 1."
+            result.append(part)
+
+        result = [int(x) for x in result]
+        result.append(1)
+
+        assert (
+            len(result) == parts + 1
+        ), f"Invalid slow factors: {result}. It should have {parts} elements."
+        return result
+
+    @property
+    def slow_factor(self):
+        return self.slow_factors[self._bootcamp_num]
+
+    @slow_factor.setter
+    def slow_factor(self, value: int):
+        self.slow_factors[self._bootcamp_num] = value
 
     @property
     def name(self):
