@@ -7,6 +7,8 @@ import torch
 
 import rl
 
+from .normalize_states import normalize_states
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
@@ -20,7 +22,7 @@ def sample_states(
     states = generate_states(env, model, num_states, sample_prob)
     background_states = states[: int(num_states * (1 - test))]
     test_states = states[int(num_states * (1 - test)) :]
-    return background_states, test_states
+    return normalize_states(background_states), normalize_states(test_states)
 
 
 def generate_states(

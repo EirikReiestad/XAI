@@ -1,8 +1,12 @@
 import gymnasium as gym
+import matplotlib.pyplot as plt
 import numpy as np
+import torch
 
 from environments.gymnasium.wrappers import MultiAgentEnv
 from methods import Shap
+from rl.src.common.getter import get_torch_from_numpy
+from rl.src.dqn.common.q_values_map import get_q_values_map
 from rl.src.dqn.wrapper import MultiAgentDQN
 from rl.src.managers import WandBConfig
 
@@ -30,7 +34,10 @@ class ModelHandler:
             model_artifact=model_artifact,
             version_numbers=version_numbers,
         )
-        self.shap = Shap(self.env, self.dqn, samples=10)
+        self.load_model()
+
+    def load_model(self, samples=10):
+        self.shap = Shap(self.env, self.dqn, samples=samples)
 
     def generate_shap(
         self, states: np.ndarray | None = None, filename: str = "shap.png"
@@ -47,3 +54,50 @@ class ModelHandler:
             folderpath="gui/src/assets/",
             filename=filename,
         )
+
+    def generate_q_values(self, states: np.ndarray):
+        for _, state in enumerate(states):
+            q_values_maps = self.get_q_values_maps(state)
+            for i, q_values_map in enumerate(q_values_maps):
+                self.generate_saliency_image(
+                    matrix=q_values_map, filename=f"gui/src/assets/saliency_{i}.png"
+                )
+
+    def get_q_values_maps(self, full_state: np.ndarray) -> list[np.ndarray]:
+        all_possible_seeker_states = self.env.unwrapped.get_all_possible_states(
+            "seeker"
+        )
+        all_possible_hider_states = self.env.unwrapped.get_all_possible_states("hider")
+
+        return [
+            self.get_agent_q_values_map(full_state, all_possible_seeker_states),
+            self.get_agent_q_values_map(full_state, all_possible_hider_states),
+        ]
+
+    def get_agent_q_values_map(
+        self, full_state: np.ndarray, all_possible_states: np.ndarray
+    ):
+        states = np.zeros(
+            (len(all_possible_states[0]), len(all_possible_states)),
+            dtype=torch.Tensor,
+        )
+
+        for i, row in enumerate(all_possible_states):
+            for j, column in enumerate(row):
+                column = np.array(column, dtype=np.float32)
+                torch_column = get_torch_from_numpy(column)
+                states[j, i] = torch_column
+
+        q_values = self.dqn.get_q_values(states, 0)
+        q_values_map = get_q_values_map(
+            states=full_state, q_values=q_values, max_q_values=True
+        )
+        return q_values_map
+
+    def generate_saliency_image(
+        self, matrix: np.ndarray, filename: str = "gui/src/assets/saliency.png"
+    ):
+        plt.imshow(matrix, cmap="hot")
+        plt.colorbar()
+        plt.savefig(filename)
+        plt.close()

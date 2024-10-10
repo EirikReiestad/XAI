@@ -9,5 +9,5 @@ class StateWrapper(gym.Wrapper):
     def get_occluded_states(self) -> np.ndarray:
         return self.env.get_wrapper_attr("get_occluded_states")()
 
-    def get_all_possible_states(self):
-        return self.env.get_wrapper_attr("get_all_possible_states")()
+    def get_all_possible_states(self, agent: str | None = None):
+        return self.env.get_wrapper_attr("get_all_possible_states")(agent)
