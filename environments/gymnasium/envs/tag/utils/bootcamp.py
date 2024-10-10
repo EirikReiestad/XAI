@@ -38,11 +38,7 @@ class Bootcamp:
         self._bootcamp_num = 0
         self._num_bootcamps = 1
 
-<<<<<<< HEAD
-        self.initial_slow_factor = 10
-=======
         self.initial_slow_factor = 20
->>>>>>> sweep
         self.slow_factors: list[int] = self._get_slow_factors(
             self.initial_slow_factor, self._num_bootcamps
         )
