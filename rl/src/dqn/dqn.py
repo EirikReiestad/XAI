@@ -47,7 +47,7 @@ class DQN(SingleAgentBase):
         epsilon_start: float = 0.9,
         epsilon_end: float = 0.05,
         epsilon_decay: int = 50000,
-        batch_size: int = 64,
+        batch_size: int = 32,
         tau: float = 0.005,
         wandb: bool = False,
         wandb_config: WandBConfig | None = None,
