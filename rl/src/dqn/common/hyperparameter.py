@@ -28,6 +28,9 @@ class DQNHyperparameter:
         self.hidden_layers = hidden_layers
         self.conv_layers = conv_layers
 
+        if wandb.run is None:
+            return
+
         wandb.config.learning_rate = self.lr
         wandb.config.gamma = self.gamma
         wandb.config.eps_start = self.eps_start

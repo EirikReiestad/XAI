@@ -62,12 +62,20 @@ class MultiAgentDQN(MultiAgentBase):
             self.gif_samples = 10
 
     def sweep(self, total_timesteps: int) -> None:
+        if self.wandb_manager.active is False:
+            logging.error("Wandb must be active to run a sweep.")
+            return
         sweep_id = self.wandb_manager.sweep()
-        # for agent in self.agents:
-        #    agent.init_sweep()
-        wandb.agent(sweep_id, self.learn, count=1)
+        for agent in self.agents:
+            agent.init_sweep()
+        wandb.agent(sweep_id, lambda: self._run_agent_sweep(total_timesteps), count=10)
 
-    def learn(self, total_timesteps: int = 100000) -> list[list[RolloutReturn]]:
+    def _run_agent_sweep(self, total_timesteps: int):
+        self.wandb_manager.reinit()
+        self.learn(total_timesteps)
+        self.env.reset(options={"full_reset": True})
+
+    def learn(self, total_timesteps: int) -> list[list[RolloutReturn]]:
         results = []
         for agent in self.agents:
             agent.policy_net.train()

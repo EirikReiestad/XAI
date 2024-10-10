@@ -30,20 +30,20 @@ class WandBConfig:
     def _get_sweep_config(self) -> dict:
         return {
             "method": "random",  # grid, random, bayes
-            #            "metric": {
-            #                "name": "agent0_reward_per_step",
-            #                "goal": "maximize",
-            #            },
+            "metric": {
+                "name": "agent0_reward_per_step",
+                "goal": "maximize",
+            },
             "parameters": {
                 "learning_rate": {"values": [1e-4, 1e-3, 1e-2]},
-                #                "gamma": {"values": [0.9, 0.95, 0.99]},
-                #                "eps_start": {"values": [1.0, 0.9]},
-                #                "eps_end": {"values": [0.1, 0.01]},
-                #                "eps_decay": {"values": [5000, 10000, 20000, 50000, 100000]},
+                "gamma": {"values": [0.9, 0.95, 0.99]},
+                "eps_start": {"values": [1.0, 0.9]},
+                "eps_end": {"values": [0.1, 0.01]},
+                "eps_decay": {"values": [5000, 10000, 20000, 50000, 100000]},
                 "batch_size": {"values": [16, 32, 64, 128]},
-                #                "tau": {"values": [0.01, 0.005]},
-                #                "hidden_layers": {"values": [1, 2, 3, 4]},
-                #                "hidden_size": {"values": [32, 64, 128, 256]},
+                "tau": {"values": [0.01, 0.005]},
+                "hidden_layers": {"values": [1, 2, 3, 4]},
+                "hidden_size": {"values": [32, 64, 128, 256]},
             },
         }
 
@@ -63,33 +63,33 @@ class WandBManager:
         if config is None:
             config = WandBConfig()
         self.config = config
-        wandb.init(
-            project=config.project,
-            name=config.run_name,
-            config=config.other,
-            reinit=True,
-            mode="online",
-            tags=config.tags,
-            dir=config.dir,
-        )
+
+        self.reinit()
 
         self.cleanup_counter = 0
         WandBManager.initialized = True
 
+    def reinit(self):
+        wandb.init(
+            project=self.config.project,
+            name=self.config.run_name,
+            config=self.config.other,
+            reinit=True,
+            mode="online",
+            tags=self.config.tags,
+            dir=self.config.dir,
+        )
+
     def sweep(self) -> str:
-        return wandb.sweep(self.config.sweep_config)
         return wandb.sweep(self.config.sweep_config, project=self.config.project)
 
     def log(self, data: dict, step: int | None = None):
         if not self.active:
             return
         if step is not None:
-            wandb.log(data, step=step, commit=False)
+            wandb.log(data, step=step)
         else:
-            wandb.log(data, commit=False)
-
-        if step is not None and step % 10 == 0:
-            wandb.log({}, commit=True)
+            wandb.log(data)
 
     def cleanup(self):
         if not self.active or not self.config.cleanup:

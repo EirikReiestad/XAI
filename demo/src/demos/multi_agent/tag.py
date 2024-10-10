@@ -66,7 +66,7 @@ class TagDemo:
     ):
         logging.info("Learning...")
         if sweep:
-            self.dqn.sweep(total_timesteps)
+            self.dqn.sweep(100)
         else:
             self.dqn.learn(total_timesteps)
         self.shap(shap)
