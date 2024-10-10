@@ -64,6 +64,7 @@ class ModelHandler:
                 )
 
     def get_q_values_maps(self, full_state: np.ndarray) -> list[np.ndarray]:
+        self.env.unwrapped.set_state(full_state)
         all_possible_seeker_states = self.env.unwrapped.get_all_possible_states(
             "seeker"
         )
@@ -97,6 +98,10 @@ class ModelHandler:
     def generate_saliency_image(
         self, matrix: np.ndarray, filename: str = "gui/src/assets/saliency.png"
     ):
+        matrix = np.flipud(matrix)
+        matrix = np.rot90(matrix)
+        matrix = np.rot90(matrix)
+        matrix = np.rot90(matrix)
         plt.imshow(matrix, cmap="hot")
         plt.colorbar()
         plt.savefig(filename)

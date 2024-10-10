@@ -68,6 +68,10 @@ class TagState:
     def full(self) -> np.ndarray:
         return self.state.full
 
+    @full.setter
+    def full(self, value: np.ndarray):
+        self.state.full = value
+
     @property
     def partial(self) -> np.ndarray:
         return self.state.partial

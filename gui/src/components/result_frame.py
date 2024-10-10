@@ -35,9 +35,9 @@ class ResultViewerFrame(ctk.CTkFrame):
         self.shap_viewer_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nswe")
 
     def update_result(self, q_values: bool):
-        if q_values:
+        if q_values == 1:
             self.q_values_viewer_frame.grid(
-                row=1, column=0, padx=10, pady=10, sticky="nswe"
+                row=0, column=0, padx=10, pady=10, sticky="nswe"
             )
             self.q_values_viewer_frame.update_image()
         else:
