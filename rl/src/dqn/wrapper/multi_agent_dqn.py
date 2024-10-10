@@ -50,10 +50,6 @@ class MultiAgentDQN(MultiAgentBase):
             self.load(run_path, model_artifact, version_numbers)
 
         self._init_gif(gif)
-        sweep_id = self.wandb_manager.sweep()
-        # for agent in self.agents:
-        #    agent.init_sweep()
-        wandb.agent(sweep_id, self.learn, count=1)
 
     def _init_gif(self, gif: bool) -> None:
         self.gif = gif
@@ -66,7 +62,10 @@ class MultiAgentDQN(MultiAgentBase):
             self.gif_samples = 10
 
     def sweep(self, total_timesteps: int) -> None:
-        pass
+        sweep_id = self.wandb_manager.sweep()
+        # for agent in self.agents:
+        #    agent.init_sweep()
+        wandb.agent(sweep_id, self.learn, count=1)
 
     def learn(self, total_timesteps: int = 100000) -> list[list[RolloutReturn]]:
         results = []
