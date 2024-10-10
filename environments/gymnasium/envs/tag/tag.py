@@ -170,7 +170,7 @@ class TagEnv(gym.Env):
                 "collided": self.info["collided"],
             },
             "data_constant": {
-                "agent_slow_factor": self.bootcamp.agent_slow_factor(
+                "slow_factor": self.bootcamp.agent_slow_factor(
                     self.agents.active_agent
                 ),
             },
@@ -214,6 +214,7 @@ class TagEnv(gym.Env):
     ) -> Tuple[np.ndarray, Dict[str, Any]]:
         super().reset(seed=seed)
         render_mode = options.get("render_mode") if options else None
+        full_reset = options.get("full_reset") if options else False
         self.render_mode = render_mode or self.render_mode
 
         self.info = {
@@ -229,6 +230,9 @@ class TagEnv(gym.Env):
 
         self.steps = 0
         self.steps_beyond_terminated = None
+
+        if full_reset:
+            self.bootcamp.reset()
 
         return_state = self.state.active_state
         return return_state, {"state_type": self.state_type.value}

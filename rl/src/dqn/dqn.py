@@ -36,7 +36,7 @@ class DQN(SingleAgentBase):
     def __init__(
         self,
         env: gym.Env,
-        policy: str | DQNPolicy,
+        dqn_policy: str | DQNPolicy,
         seed: int | None = None,
         agent_id: int = 0,
         dueling: bool = False,
@@ -49,7 +49,9 @@ class DQN(SingleAgentBase):
         epsilon_decay: int = 50000,
         batch_size: int = 32,
         tau: float = 0.005,
-        wandb: bool = False,
+        hidden_layers: list[int] = [128, 128],
+        conv_layers: list[int] = [],
+        wandb_active: bool = False,
         wandb_config: WandBConfig | None = None,
         save_model: bool = False,
         save_every_n_episodes: int = 100,
@@ -63,7 +65,21 @@ class DQN(SingleAgentBase):
         gif_path="assets/gifs",
         gif_name="dqn",
     ) -> None:
-        super().__init__(wandb, wandb_config)
+        super().__init__(wandb_active, wandb_config)
+        self.hp = DQNHyperparameter(
+            lr,
+            gamma,
+            epsilon_start,
+            epsilon_end,
+            epsilon_decay,
+            batch_size,
+            tau,
+            hidden_layers,
+            conv_layers,
+            memory_size,
+        )
+
+        logging.info(f"Hyperparameters: {self.hp}")
 
         setter.set_seed(seed)
 
@@ -76,16 +92,15 @@ class DQN(SingleAgentBase):
         self.model_name = model_name
         self.save_every_n_episodes = save_every_n_episodes
 
-        self.hp = DQNHyperparameter(
-            lr, gamma, epsilon_start, epsilon_end, epsilon_decay, batch_size, tau
-        )
         self.eps_threshold = 0
 
-        self.policy = PolicyManager(
-            policy,
-            observation_space=self.env.observation_space,
-            action_space=self.env.action_space,
-        ).policy
+        self.policy = PolicyManager().get_policy(
+            dqn_policy,
+            observation_space=env.observation_space,
+            action_space=env.action_space,
+            hidden_layers=hidden_layers,
+            conv_layers=conv_layers,
+        )
 
         self.policy_net = self.policy.policy_net
         self.target_net = self.policy.target_net
@@ -104,25 +119,26 @@ class DQN(SingleAgentBase):
 
         self._init_gif(gif, gif_path, gif_name)
 
-    def _init_gif(self, gif: bool, gif_path: str, gif_name: str) -> None:
-        self.gif = gif
-        if not os.path.exists(gif_path):
-            logging.warning(f"Directory {gif_path} does not exist.")
-            self.gif = False
-        elif self.gif and not self.wandb_manager.active:
-            logging.warning("GIF is enabled but Weights & Biases is not enabled.")
-            self.gif = False
-        elif self.gif and self.env.render_mode != "rgb_array":
-            logging.warning(
-                "GIF is enabled but the environment does not support RGB array rendering."
-            )
-            self.gif = False
-        else:
-            self.gif_samples = 10
-            self.gif_path = gif_path
-            self.gif_name = gif_name
+    def reset(self) -> None:
+        self.steps_done = 0
+        self.episodes = 0
+        self.eps_threshold = 0
 
-    def learn(self, total_timesteps: int):
+    def init_sweep(self) -> None:
+        self.hp.init_sweep()
+        self.policy = PolicyManager().get_policy(
+            "dqnpolicy",
+            observation_space=self.env.observation_space,
+            action_space=self.env.action_space,
+            hidden_layers=self.hp.hidden_layers,
+            conv_layers=self.hp.conv_layers,
+        )
+        self.optimizer = OptimizerManager(
+            self.policy.policy_net, self.hp.lr
+        ).initialize()
+        self.memory = MemoryManager(self.hp.memory_size).initialize()
+
+    def learn(self, episodes: int) -> None:
         self.policy_net.train()
         self.target_net.eval()
         max_gif_reward = -float("inf")
@@ -131,7 +147,7 @@ class DQN(SingleAgentBase):
         frames = []
 
         try:
-            for _ in range(total_timesteps):
+            for _ in range(episodes):
                 self.episodes += 1
                 _, episode_rewards, steps, gif_frames = self._collect_rollout()
 
@@ -504,3 +520,21 @@ class DQN(SingleAgentBase):
         self.target_net.eval()
 
         self.steps_done = metadata["steps_done"]
+
+    def _init_gif(self, gif: bool, gif_path: str, gif_name: str) -> None:
+        self.gif = gif
+        if not os.path.exists(gif_path):
+            logging.warning(f"Directory {gif_path} does not exist.")
+            self.gif = False
+        elif self.gif and not self.wandb_manager.active:
+            logging.warning("GIF is enabled but Weights & Biases is not enabled.")
+            self.gif = False
+        elif self.gif and self.env.render_mode != "rgb_array":
+            logging.warning(
+                "GIF is enabled but the environment does not support RGB array rendering."
+            )
+            self.gif = False
+        else:
+            self.gif_samples = 10
+            self.gif_path = gif_path
+            self.gif_name = gif_name

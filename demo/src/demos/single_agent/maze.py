@@ -26,24 +26,26 @@ class MazeDemo:
         )
         self.plotter = Plotter(plot_agent=True)
         self.env = gym.make("MazeEnv-v0", render_mode="rgb_array")
-
-    def run(self):
         wandb_config = WandBConfig(project="maze-v0-local")
-
-        dqn = DQN(
+        self.dqn = DQN(
             self.env,
             "dqnpolicy",
-            wandb=True,
+            wandb_active=True,
             wandb_config=wandb_config,
-            save_model=False,
-            load_model=True,
+            save_model=True,
+            load_model=False,
             run_path="eirikreiestad-ntnu/maze-v0-local",
             model_artifact="model_200",
         )
-        dqn.learn(1)
 
-        self.env = gym.make("MazeEnv-v0", render_mode="human")
+    def run(self, num_episodes=1000):
+        self.dqn.learn(num_episodes)
 
+        self.show(False)
+
+    def show(self, show: bool = True):
+        if not show:
+            return
         plt.ion()
 
         self.env.reset()
@@ -58,7 +60,7 @@ class MazeDemo:
                 rewards = 0
 
                 for t in count():
-                    action = dqn.predict_action(state)
+                    action = self.dqn.predict_action(state)
                     observation, reward, terminated, truncated, _ = self.env.step(
                         action.item()
                     )

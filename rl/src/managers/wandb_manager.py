@@ -25,10 +25,43 @@ class WandBConfig:
         self.dir: str = dir
         self.cleanup: bool = cleanup
         self.cleanup_period = cleanup_period
+        self.sweep_config = self._get_sweep_config()
+
+    def _get_sweep_config(self) -> dict:
+        return {
+            "method": "bayes",  # grid, random, bayes
+            "metric": {
+                "name": "agent0_reward_per_step",
+                "goal": "maximize",
+            },
+            "parameters": {
+                "learning_rate": {"values": [1e-4, 1e-3, 1e-2]},
+                "gamma": {"values": [0.9, 0.95, 0.99]},
+                "eps_start": {"values": [1.0, 0.9]},
+                "eps_end": {"values": [0.1, 0.01]},
+                "eps_decay": {"values": [5000, 10000, 20000, 50000, 100000]},
+                "batch_size": {"values": [16, 32, 64, 128]},
+                "tau": {"values": [0.01, 0.005]},
+                "hidden_layers": {
+                    "values": [
+                        [128, 128],
+                        [256, 128],
+                        [128, 64],
+                        [128, 128, 64],
+                        [256, 128, 64],
+                    ]
+                },
+                "memory_size": {"values": [10000, 50000]},
+            },
+        }
 
 
 class WandBManager:
+    initialized = False
+
     def __init__(self, active: bool, config: WandBConfig | None):
+        if self.initialized:
+            active = False
         self.active = active
         if not active:
             return
@@ -38,17 +71,25 @@ class WandBManager:
         if config is None:
             config = WandBConfig()
         self.config = config
-        wandb.init(
-            project=config.project,
-            name=config.run_name,
-            config=config.other,
-            reinit=True,
-            mode="online",
-            tags=config.tags,
-            dir=config.dir,
-        )
+
+        self.reinit()
 
         self.cleanup_counter = 0
+        WandBManager.initialized = True
+
+    def reinit(self):
+        wandb.init(
+            project=self.config.project,
+            name=self.config.run_name,
+            config=self.config.other,
+            reinit=True,
+            mode="online",
+            tags=self.config.tags,
+            dir=self.config.dir,
+        )
+
+    def sweep(self) -> str:
+        return wandb.sweep(self.config.sweep_config, project=self.config.project)
 
     def log(self, data: dict, step: int | None = None):
         if not self.active:

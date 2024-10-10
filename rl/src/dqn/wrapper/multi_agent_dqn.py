@@ -7,6 +7,7 @@ import numpy as np
 import torch
 from PIL import Image
 
+import wandb
 from environments.gymnasium.wrappers import MultiAgentEnv
 from rl.src.base import MultiAgentBase
 from rl.src.dqn import DQN
@@ -23,7 +24,7 @@ class MultiAgentDQN(MultiAgentBase):
         env: MultiAgentEnv,
         num_agents: int,
         dqn_policy: str | DQNPolicy,
-        wandb: bool = False,
+        wandb_active: bool = False,
         wandb_config: WandBConfig | None = None,
         save_every_n_episodes: int = 100,
         load_model: bool = False,
@@ -33,11 +34,12 @@ class MultiAgentDQN(MultiAgentBase):
         gif: bool = False,
         **kwargs,
     ):
-        super().__init__(wandb=wandb, wandb_config=wandb_config)
+        super().__init__(wandb_active=wandb_active, wandb_config=wandb_config)
         self.env = env
         self.num_agents = num_agents
         self.agents = [
-            DQN(env, dqn_policy, agent_id=i, **kwargs) for i in range(num_agents)
+            DQN(env, dqn_policy, agent_id=i, wandb_active=False, **kwargs)
+            for i in range(num_agents)
         ]
 
         self.save_every_n_episodes = save_every_n_episodes
@@ -49,6 +51,9 @@ class MultiAgentDQN(MultiAgentBase):
 
         self._init_gif(gif)
 
+    def reset(self) -> None:
+        self.episodes = 0
+
     def _init_gif(self, gif: bool) -> None:
         self.gif = gif
         if self.gif and self.env.render_mode != "rgb_array":
@@ -59,7 +64,22 @@ class MultiAgentDQN(MultiAgentBase):
         else:
             self.gif_samples = 10
 
-    def learn(self, total_timesteps: int) -> list[list[RolloutReturn]]:
+    def sweep(self, total_timesteps: int) -> None:
+        if self.wandb_manager.active is False:
+            logging.error("Wandb must be active to run a sweep.")
+            return
+        sweep_id = self.wandb_manager.sweep()
+        for agent in self.agents:
+            agent.init_sweep()
+        wandb.agent(sweep_id, lambda: self._run_agent_sweep(total_timesteps), count=10)
+
+    def _run_agent_sweep(self, total_timesteps: int):
+        self.wandb_manager.reinit()
+        self.learn(total_timesteps)
+        self.env.reset(options={"full_reset": True})
+        self.reset()
+
+    def learn(self, episodes: int) -> list[list[RolloutReturn]]:
         results = []
         for agent in self.agents:
             agent.policy_net.train()
@@ -69,7 +89,7 @@ class MultiAgentDQN(MultiAgentBase):
         gifs = [[] for _ in range(self.num_agents)]
 
         try:
-            for _ in range(total_timesteps):
+            for _ in range(episodes):
                 self.episodes += 1
                 rollout, episode_rewards, steps, info, episode_data, gif = (
                     self._collect_rollouts()
