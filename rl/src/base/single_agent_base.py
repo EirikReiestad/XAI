@@ -15,7 +15,7 @@ class SingleAgentBase(ABC):
         self.wandb_manager = WandBManager(wandb_active, wandb_config)
 
     @abstractmethod
-    def learn(self, total_timesteps: int):
+    def learn(self, episodes: int):
         raise NotImplementedError
 
     @abstractmethod

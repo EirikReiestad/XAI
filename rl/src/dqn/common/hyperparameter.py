@@ -17,6 +17,7 @@ class DQNHyperparameter:
         tau: float,
         hidden_layers: list[int],
         conv_layers: list[int],
+        memory_size: int,
     ) -> None:
         self.lr: float = lr
         self.gamma: float = gamma
@@ -27,6 +28,7 @@ class DQNHyperparameter:
         self.tau: float = tau
         self.hidden_layers = hidden_layers
         self.conv_layers = conv_layers
+        self.memory_size = memory_size
 
         if wandb.run is None:
             return
@@ -40,6 +42,7 @@ class DQNHyperparameter:
         wandb.config.tau = self.tau
         wandb.config.hidden_layers = self.hidden_layers
         wandb.config.conv_layers = self.conv_layers
+        wandb.config.memory_size = self.memory_size
 
     def init_sweep(self) -> None:
         self.lr = wandb.config.learning_rate

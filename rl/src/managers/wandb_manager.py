@@ -29,7 +29,7 @@ class WandBConfig:
 
     def _get_sweep_config(self) -> dict:
         return {
-            "method": "random",  # grid, random, bayes
+            "method": "bayes",  # grid, random, bayes
             "metric": {
                 "name": "agent0_reward_per_step",
                 "goal": "maximize",
@@ -42,8 +42,16 @@ class WandBConfig:
                 "eps_decay": {"values": [5000, 10000, 20000, 50000, 100000]},
                 "batch_size": {"values": [16, 32, 64, 128]},
                 "tau": {"values": [0.01, 0.005]},
-                "hidden_layers": {"values": [1, 2, 3, 4]},
-                "hidden_size": {"values": [32, 64, 128, 256]},
+                "hidden_layers": {
+                    "values": [
+                        [128, 128],
+                        [256, 128],
+                        [128, 64],
+                        [128, 128, 64],
+                        [256, 128, 64],
+                    ]
+                },
+                "memory_size": {"values": [10000, 50000]},
             },
         }
 

@@ -76,6 +76,7 @@ class DQN(SingleAgentBase):
             tau,
             hidden_layers,
             conv_layers,
+            memory_size,
         )
 
         logging.info(f"Hyperparameters: {self.hp}")
@@ -127,8 +128,9 @@ class DQN(SingleAgentBase):
             hidden_layers=self.hp.hidden_layers,
             conv_layers=self.hp.conv_layers,
         )
+        self.memory = MemoryManager(self.hp.memory_size).initialize()
 
-    def learn(self, total_timesteps: int) -> None:
+    def learn(self, episodes: int) -> None:
         self.policy_net.train()
         self.target_net.eval()
         max_gif_reward = -float("inf")
@@ -137,7 +139,7 @@ class DQN(SingleAgentBase):
         frames = []
 
         try:
-            for _ in range(total_timesteps):
+            for _ in range(episodes):
                 self.episodes += 1
                 _, episode_rewards, steps, gif_frames = self._collect_rollout()
 

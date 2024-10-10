@@ -59,16 +59,17 @@ class TagDemo:
 
     def run(
         self,
-        total_timesteps: int = 100000,
+        episodes: int = 100000,
+        num_sweep_episodes: int = 1500,
         sweep: bool = True,
         shap: bool = False,
         show: bool = False,
     ):
         logging.info("Learning...")
         if sweep:
-            self.dqn.sweep(100)
+            self.dqn.sweep(num_sweep_episodes)
         else:
-            self.dqn.learn(total_timesteps)
+            self.dqn.learn(episodes)
         self.shap(shap)
         self.show(show)
 

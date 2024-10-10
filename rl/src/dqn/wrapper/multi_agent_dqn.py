@@ -75,7 +75,7 @@ class MultiAgentDQN(MultiAgentBase):
         self.learn(total_timesteps)
         self.env.reset(options={"full_reset": True})
 
-    def learn(self, total_timesteps: int) -> list[list[RolloutReturn]]:
+    def learn(self, episodes: int) -> list[list[RolloutReturn]]:
         results = []
         for agent in self.agents:
             agent.policy_net.train()
@@ -85,7 +85,7 @@ class MultiAgentDQN(MultiAgentBase):
         gifs = [[] for _ in range(self.num_agents)]
 
         try:
-            for _ in range(total_timesteps):
+            for _ in range(episodes):
                 self.episodes += 1
                 rollout, episode_rewards, steps, info, episode_data, gif = (
                     self._collect_rollouts()

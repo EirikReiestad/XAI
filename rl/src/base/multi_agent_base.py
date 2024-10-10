@@ -20,7 +20,7 @@ class MultiAgentBase(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def learn(self, total_timesteps: int):
+    def learn(self, episodes: int):
         raise NotImplementedError
 
     @abstractmethod
