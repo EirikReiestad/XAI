@@ -7,7 +7,7 @@ class DQNPolicy:
         self,
         observation_space: spaces.Space,
         action_space: spaces.Space,
-        dueling: bool = False,
+        dueling: bool = True,
     ):
         hidden_layers = [128, 128]
         conv_layers = []

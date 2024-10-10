@@ -40,7 +40,7 @@ class DQN(SingleAgentBase):
         seed: int | None = None,
         agent_id: int = 0,
         dueling: bool = False,
-        double: bool = False,
+        double: bool = True,
         memory_size: int = 10000,
         lr: float = 1e-4,
         gamma: float = 0.99,
