@@ -13,7 +13,8 @@ class App(customtkinter.CTk):
         self.title("")
         self.geometry("1600x1200")
         self.grid_rowconfigure((0, 1), weight=1)
-        self.grid_columnconfigure((0, 1), weight=1)
+        self.grid_columnconfigure(0, weight=2)
+        self.grid_columnconfigure(1, weight=1)
 
         self.env_handler = EnvHandler(10, 10)
         self.env_handler.generate()
@@ -24,20 +25,29 @@ class App(customtkinter.CTk):
         self.result_frame = ResultFrame(self)
         self.result_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nswe")
         self.configuration_frame = ConfigurationFrame(
-            self, self.env_handler, update_result_callback=self.update_result
+            self,
+            self.env_handler,
+            update_result_callback=self.update_result,
+            update_image_callback=self.update_image,
         )
-        self.configuration_frame.grid(
-            row=0, column=1, rowspan=2, padx=10, pady=10, sticky="nswe"
-        )
+        self.configuration_frame.grid(row=0, column=2, padx=10, pady=10, sticky="nswe")
 
     def update_result(
         self,
         env: list[list] | None,
+        show_q_values: bool,
     ):
         self._update_env(env)
         state = np.expand_dims(np.array(self.env_handler.env), axis=0)
         self.model_handler.generate_shap(state)
-        self.result_frame.update_result()
+        self.model_handler.generate_q_values(state)
+        self.result_frame.update_result(q_values=show_q_values)
+
+    def update_image(
+        self,
+        show_q_values: bool,
+    ):
+        self.result_frame.update_result(q_values=show_q_values)
 
     def _update_env(self, env: list[list] | None):
         if env is None:

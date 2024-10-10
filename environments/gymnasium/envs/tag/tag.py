@@ -443,7 +443,15 @@ class TagEnv(gym.Env):
             )
         self.objects = Objects(obstacle_objects, box_objects)
 
-    def get_all_possible_states(self) -> np.ndarray:
+    def get_all_possible_states(self, agent: str | None = None) -> np.ndarray:
+        if agent is not None and agent == "seeker":
+            return self.state.get_all_possible_states(
+                AgentType.SEEKER, AgentType.HIDER, self.objects
+            )
+        if agent is not None and agent == "hider":
+            return self.state.get_all_possible_states(
+                AgentType.HIDER, AgentType.SEEKER, self.objects
+            )
         return self.state.get_all_possible_states(
             self.agents.active_agent, self.agents.inactive_agent, self.objects
         )
