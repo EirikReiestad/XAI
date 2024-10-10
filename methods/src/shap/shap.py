@@ -10,7 +10,7 @@ from environments.gymnasium.wrappers import MultiAgentEnv
 
 from .multi_agent_shap import MultiAgentShap
 from .single_agent_shap import SingleAgentShap
-from .utils import ShapType
+from .utils import ShapType, normalize_states
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -56,6 +56,7 @@ class Shap:
 
     def shap_values(self, states: np.ndarray | None = None) -> Any:
         if states is not None:
+            states = normalize_states(states)
             return self.explainer.shap_values(states)
         return self.explainer.shap_values()
 

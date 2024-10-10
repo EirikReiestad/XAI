@@ -27,7 +27,7 @@ class SingleAgentShap(SingleAgentBase):
         self.model = model
         if states is None:
             self.background_states, self.test_states = sample_states(
-                env, model, samples
+                env, model, num_states=samples
             )
         else:
             self.background_states, self.test_states = states

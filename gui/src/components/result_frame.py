@@ -7,50 +7,61 @@ class ResultFrame(ctk.CTkFrame):
     def __init__(self, master: ctk.CTkFrame | ctk.CTk):
         super().__init__(master)
         self.grid_columnconfigure((0, 1), weight=1)
-        self.grid_rowconfigure((0, 1), weight=1)
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=3)
 
-        self.env_viewer_frame = EnvViewerFrame(self)
-        self.env_viewer_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nswe")
-        self.shap_viewer_frame = ShapViewerFrame(self)
-        self.shap_viewer_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nswe")
+        self.result_viewer_frame = ResultViewerFrame(self)
+        self.result_viewer_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nswe")
 
     def update_result(
         self,
+        q_values: bool,
     ):
-        self.env_viewer_frame.update_image()
-        self.shap_viewer_frame.update_image()
+        self.result_viewer_frame.update_result(q_values)
 
 
-class EnvViewerFrame(ctk.CTkFrame):
+class ResultViewerFrame(ctk.CTkFrame):
+    def __init__(self, master: ctk.CTkFrame | ctk.CTk):
+        super().__init__(master)
+        self.grid_columnconfigure((0, 1), weight=1)
+        self.grid_rowconfigure((0, 1), weight=1)
+        self.q_values_viewer_frame = DoubleViewerFrame(
+            self, "saliency_0.png", "saliency_1.png"
+        )
+        self.q_values_viewer_frame.grid(
+            row=0, column=0, padx=10, pady=10, sticky="nswe"
+        )
+        self.shap_viewer_frame = DoubleViewerFrame(self, "0shap.png", "1shap.png")
+        self.shap_viewer_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nswe")
+
+    def update_result(self, q_values: bool):
+        if q_values:
+            self.q_values_viewer_frame.grid(
+                row=1, column=0, padx=10, pady=10, sticky="nswe"
+            )
+            self.q_values_viewer_frame.update_image()
+        else:
+            self.q_values_viewer_frame.grid_forget()
+
+
+class DoubleViewerFrame(ctk.CTkFrame):
     def __init__(
         self,
         master: ctk.CTkFrame,
+        image_0: str,
+        image_1: str,
     ):
         super().__init__(master)
-        self.grid_columnconfigure(0, weight=1)
-        self.grid_rowconfigure(0, weight=1)
-
-        self.image_frame = ImageFrame(self, "image.png")
-        self.image_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nswe")
-
-    def update_image(self):
-        self.image_frame.update_image("image.png")
-
-
-class ShapViewerFrame(ctk.CTkFrame):
-    def __init__(
-        self,
-        master: ctk.CTkFrame,
-    ):
-        super().__init__(master)
+        self.image_0 = image_0
+        self.image_1 = image_1
         self.grid_columnconfigure((0, 1), weight=1)
         self.grid_rowconfigure(0, weight=1)
 
-        self.image_frame_0 = ImageFrame(self, "0shap.png")
+        self.image_frame_0 = ImageFrame(self, self.image_0)
         self.image_frame_0.grid(row=0, column=0, padx=10, pady=10, sticky="nswe")
-        self.image_frame_1 = ImageFrame(self, "1shap.png")
+        self.image_frame_1 = ImageFrame(self, self.image_1)
         self.image_frame_1.grid(row=0, column=1, padx=10, pady=10, sticky="nswe")
 
     def update_image(self):
-        self.image_frame_0.update_image("0shap.png")
-        self.image_frame_1.update_image("1shap.png")
+        self.image_frame_0.update_image(self.image_0)
+        self.image_frame_1.update_image(self.image_0)
