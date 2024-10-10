@@ -51,6 +51,9 @@ class MultiAgentDQN(MultiAgentBase):
 
         self._init_gif(gif)
 
+    def reset(self) -> None:
+        self.episodes = 0
+
     def _init_gif(self, gif: bool) -> None:
         self.gif = gif
         if self.gif and self.env.render_mode != "rgb_array":
@@ -74,6 +77,7 @@ class MultiAgentDQN(MultiAgentBase):
         self.wandb_manager.reinit()
         self.learn(total_timesteps)
         self.env.reset(options={"full_reset": True})
+        self.reset()
 
     def learn(self, episodes: int) -> list[list[RolloutReturn]]:
         results = []

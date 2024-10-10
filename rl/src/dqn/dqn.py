@@ -119,6 +119,11 @@ class DQN(SingleAgentBase):
 
         self._init_gif(gif, gif_path, gif_name)
 
+    def reset(self) -> None:
+        self.steps_done = 0
+        self.episodes = 0
+        self.eps_threshold = 0
+
     def init_sweep(self) -> None:
         self.hp.init_sweep()
         self.policy = PolicyManager().get_policy(
@@ -128,6 +133,9 @@ class DQN(SingleAgentBase):
             hidden_layers=self.hp.hidden_layers,
             conv_layers=self.hp.conv_layers,
         )
+        self.optimizer = OptimizerManager(
+            self.policy.policy_net, self.hp.lr
+        ).initialize()
         self.memory = MemoryManager(self.hp.memory_size).initialize()
 
     def learn(self, episodes: int) -> None:
