@@ -45,6 +45,10 @@ class MultiAgentDQN(MultiAgentBase):
         self.save_every_n_episodes = save_every_n_episodes
 
         self.episodes = 0
+        self.seeker_won = 0
+
+        self.early_stopping_patience = 500
+        self.early_stopping_criteria = 0.05
 
         if load_model:
             self.load(run_path, model_artifact, version_numbers)
@@ -53,6 +57,7 @@ class MultiAgentDQN(MultiAgentBase):
 
     def reset(self) -> None:
         self.episodes = 0
+        self.seeker_won = 0
         for agent in self.agents:
             agent.reset()
 
@@ -123,6 +128,16 @@ class MultiAgentDQN(MultiAgentBase):
                 self.wandb_manager.log(log)
                 results.append(rollout)
 
+                seeker_won = info.get("seeker_won")
+                if seeker_won is not None:
+                    self.seeker_won += seeker_won
+                else:
+                    logging.warning("Seeker won not found in info.")
+
+                if self._early_stopping():
+                    logging.info(f"Early stopping at episode {self.episodes}")
+                    break
+
                 if self.episodes % self.save_every_n_episodes == 0:
                     max_gif_rewards = [-np.inf for _ in range(self.num_agents)]
                     self._save_gifs_local(gifs)
@@ -134,6 +149,13 @@ class MultiAgentDQN(MultiAgentBase):
         finally:
             self.close()
             return results
+
+    def _early_stopping(self) -> bool:
+        if self.episodes < self.early_stopping_patience:
+            return False
+        if self.seeker_won / self.episodes < self.early_stopping_criteria:
+            return True
+        return False
 
     def _collect_rollouts(
         self,

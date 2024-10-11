@@ -61,7 +61,7 @@ class TagDemo:
         self,
         episodes: int = 100000,
         num_sweep_episodes: int = 1500,
-        sweep: bool = True,
+        sweep: bool = False,
         shap: bool = False,
         show: bool = False,
     ):
