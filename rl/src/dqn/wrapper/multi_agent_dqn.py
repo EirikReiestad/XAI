@@ -78,7 +78,7 @@ class MultiAgentDQN(MultiAgentBase):
         sweep_id = self.wandb_manager.sweep()
         for agent in self.agents:
             agent.init_sweep()
-        wandb.agent(sweep_id, lambda: self._run_agent_sweep(total_timesteps), count=10)
+        wandb.agent(sweep_id, lambda: self._run_agent_sweep(total_timesteps), count=100)
 
     def _run_agent_sweep(self, total_timesteps: int):
         self.wandb_manager.reinit()
