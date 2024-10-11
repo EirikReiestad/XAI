@@ -45,10 +45,11 @@ class MultiAgentDQN(MultiAgentBase):
         self.save_every_n_episodes = save_every_n_episodes
 
         self.episodes = 0
-        self.seeker_won = 0
+        self.seeker_won = []
 
-        self.early_stopping_patience = 500
-        self.early_stopping_criteria = 0.05
+        self.early_stopping_patience = 1000
+        self.early_stopping_average = 100
+        self.early_stopping_criteria = 0.1
 
         if load_model:
             self.load(run_path, model_artifact, version_numbers)
@@ -57,7 +58,7 @@ class MultiAgentDQN(MultiAgentBase):
 
     def reset(self) -> None:
         self.episodes = 0
-        self.seeker_won = 0
+        self.seeker_won = []
         for agent in self.agents:
             agent.reset()
 
@@ -130,7 +131,7 @@ class MultiAgentDQN(MultiAgentBase):
 
                 seeker_won = info.get("seeker_won")
                 if seeker_won is not None:
-                    self.seeker_won += seeker_won
+                    self.seeker_won.append(seeker_won)
                 else:
                     logging.warning("Seeker won not found in info.")
 
@@ -153,7 +154,10 @@ class MultiAgentDQN(MultiAgentBase):
     def _early_stopping(self) -> bool:
         if self.episodes < self.early_stopping_patience:
             return False
-        if self.seeker_won / self.episodes < self.early_stopping_criteria:
+        if (
+            self.seeker_won[-self.early_stopping_average] / self.early_stopping_average
+            < self.early_stopping_criteria
+        ):
             return True
         return False
 
