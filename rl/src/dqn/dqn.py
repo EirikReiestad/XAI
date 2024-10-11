@@ -79,8 +79,6 @@ class DQN(SingleAgentBase):
             memory_size,
         )
 
-        logging.info(f"Hyperparameters: {self.hp}")
-
         setter.set_seed(seed)
 
         self.env = env
@@ -139,6 +137,8 @@ class DQN(SingleAgentBase):
         self.memory = MemoryManager(self.hp.memory_size).initialize()
 
     def learn(self, episodes: int) -> None:
+        logging.info(f"Hyperparameters: {self.hp}")
+
         self.policy_net.train()
         self.target_net.eval()
         max_gif_reward = -float("inf")

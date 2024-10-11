@@ -1,15 +1,10 @@
 from rl.src.dqn.base import ReplayMemoryBase
 from rl.src.dqn.components.memory import PrioritizedReplayMemory, ReplayMemory
-import wandb
 
 
 class MemoryManager:
     def __init__(self, memory_size: int):
         self.memory_size = memory_size
-
-        if wandb.run is None:
-            return
-        wandb.config.memory_size = memory_size
 
     def initialize(self, memory_type: str = "prioritized") -> ReplayMemoryBase:
         if memory_type == "replay":

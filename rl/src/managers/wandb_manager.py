@@ -51,6 +51,7 @@ class WandBConfig:
                         [256, 128, 64],
                     ]
                 },
+                "conv_layers": {"values": [[]]},
                 "memory_size": {"values": [10000, 50000]},
             },
         }
@@ -89,7 +90,8 @@ class WandBManager:
         )
 
     def sweep(self) -> str:
-        return wandb.sweep(self.config.sweep_config, project=self.config.project)
+        sweep_id = wandb.sweep(self.config.sweep_config, project=self.config.project)
+        return sweep_id
 
     def log(self, data: dict, step: int | None = None):
         if not self.active:
