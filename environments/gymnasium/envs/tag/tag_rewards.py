@@ -23,7 +23,8 @@ class TagRewards:
     move_away_reward: tuple[float, float] = rewards.MOVE_AWAY_REWARD
 
     def reset(self):
-        self.last_distance = 0
+        self.last_distance = np.inf
+        self.max_distance = 1
 
     def get_tag_reward(
         self,
