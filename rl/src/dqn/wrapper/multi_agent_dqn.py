@@ -47,8 +47,8 @@ class MultiAgentDQN(MultiAgentBase):
         self.episodes = 0
         self.seeker_won = []
 
-        self.early_stopping_patience = 1000
-        self.early_stopping_average = 100
+        self.early_stopping_patience = 10
+        self.early_stopping_average = 10
         self.early_stopping_criteria = 0.1
 
         if load_model:
@@ -96,6 +96,9 @@ class MultiAgentDQN(MultiAgentBase):
         max_gif_rewards = [-np.inf for _ in range(self.num_agents)]
         gifs = [[] for _ in range(self.num_agents)]
 
+        rewards = [[], []]
+        average_steps = 100
+
         try:
             for _ in range(episodes):
                 self.episodes += 1
@@ -114,6 +117,8 @@ class MultiAgentDQN(MultiAgentBase):
 
                 log = dict()
                 for agent in range(self.num_agents):
+                    average_reward = np.mean(rewards[agent][-average_steps:])
+                    log[f"agent{agent}_average_reward_{average_steps}"] = average_reward
                     log[f"agent{agent}_reward"] = episode_rewards[agent]
                     log["steps_done"] = self.agents[agent].steps_done
                     log[f"agent{agent}_episode_steps"] = steps

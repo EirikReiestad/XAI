@@ -31,7 +31,7 @@ class WandBConfig:
         return {
             "method": "bayes",  # grid, random, bayes
             "metric": {
-                "name": "agent0_reward_per_step",
+                "name": "agent0_average_reward",
                 "goal": "maximize",
             },
             "parameters": {
