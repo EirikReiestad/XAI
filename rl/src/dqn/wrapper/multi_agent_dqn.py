@@ -155,7 +155,8 @@ class MultiAgentDQN(MultiAgentBase):
         if self.episodes < self.early_stopping_patience:
             return False
         if (
-            self.seeker_won[-self.early_stopping_average] / self.early_stopping_average
+            sum(self.seeker_won[-self.early_stopping_average :])
+            / self.early_stopping_average
             < self.early_stopping_criteria
         ):
             return True
