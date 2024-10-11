@@ -42,6 +42,7 @@ class ResultViewerFrame(ctk.CTkFrame):
             self.q_values_viewer_frame.update_image()
         else:
             self.q_values_viewer_frame.grid_forget()
+        self.shap_viewer_frame.update_image()
 
 
 class DoubleViewerFrame(ctk.CTkFrame):
@@ -64,4 +65,4 @@ class DoubleViewerFrame(ctk.CTkFrame):
 
     def update_image(self):
         self.image_frame_0.update_image(self.image_0)
-        self.image_frame_1.update_image(self.image_0)
+        self.image_frame_1.update_image(self.image_1)

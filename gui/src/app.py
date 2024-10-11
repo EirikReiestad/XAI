@@ -19,7 +19,7 @@ class App(customtkinter.CTk):
         self.env_handler = EnvHandler(10, 10)
         self.env_handler.generate()
 
-        self.model_handler = ModelHandler("model_3000", ["v0", "v1"])
+        self.model_handler = ModelHandler("model_2450", ["v20", "v21"], shap_samples=10)
         state = np.expand_dims(np.array(self.env_handler.env), axis=0)
         self.model_handler.generate_shap(state)
         self.result_frame = ResultFrame(self)
@@ -35,12 +35,19 @@ class App(customtkinter.CTk):
     def update_result(
         self,
         env: list[list] | None,
+        model_artifact: str,
+        model_version_numbers: list[str],
+        shap_samples: int,
         show_q_values: bool,
     ):
         self._update_env(env)
         state = np.expand_dims(np.array(self.env_handler.env), axis=0)
+
+        if show_q_values:
+            self.model_handler.update_model(model_artifact, model_version_numbers)
+            self.model_handler.generate_q_values(state)
+        self.model_handler.update_shap(shap_samples)
         self.model_handler.generate_shap(state)
-        self.model_handler.generate_q_values(state)
         self.result_frame.update_result(q_values=show_q_values)
 
     def update_image(

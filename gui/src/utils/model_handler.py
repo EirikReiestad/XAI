@@ -1,3 +1,5 @@
+import logging
+
 import gymnasium as gym
 import matplotlib.pyplot as plt
 import numpy as np
@@ -12,29 +14,67 @@ from rl.src.managers import WandBConfig
 
 
 class ModelHandler:
-    def __init__(self, model_artifact: str, version_numbers: list[str]):
+    def __init__(
+        self, model_artifact: str, version_numbers: list[str], shap_samples: int
+    ):
         self.num_agents = 2
 
         env = gym.make("TagEnv-v0", render_mode="rgb_array")
-        model_name = "tag-v0"
+        self.model_name = "tag-v0"
+        self.model_artifact = model_artifact
+        self.version_numbers = version_numbers
         self.env = MultiAgentEnv(env)
-        wandb_config = WandBConfig(project="gui")
+        self.wandb_config = WandBConfig(project="gui")
+        self.load_dqn(
+            self.wandb_config, self.model_name, model_artifact, version_numbers
+        )
+        self.shap_samples = shap_samples
+        self.load_model(shap_samples)
+
+    def load_dqn(
+        self,
+        wandb_config: WandBConfig,
+        model_name: str,
+        model_artifact: str,
+        version_numbers: list[str],
+    ):
         self.dqn = MultiAgentDQN(
             self.env,
             self.num_agents,
             "dqnpolicy",
-            wandb_active=False,
+            wandb_active=True,
             wandb_config=wandb_config,
             model_name=model_name,
             save_every_n_episodes=100,
             save_model=False,
             load_model=True,
             gif=False,
-            run_path="eirikreiestad-ntnu/tag-v0-idun",
+            run_path="eirikreiestad-ntnu/tag-v0-eirre",
             model_artifact=model_artifact,
             version_numbers=version_numbers,
         )
-        self.load_model()
+
+    def update_model(
+        self,
+        model_artifact: str,
+        version_numbers: list[str],
+    ):
+        if (
+            self.model_artifact != model_artifact
+            or self.version_numbers != version_numbers
+        ) and model_artifact != "":
+            self.model_artifact = model_artifact
+            self.version_numbers = version_numbers
+            logging.info("Loading model")
+            self.load_dqn(
+                self.wandb_config, self.model_name, model_artifact, version_numbers
+            )
+
+    def update_shap(self, samples: int):
+        if self.shap_samples != samples:
+            self.shap_samples = samples
+            logging.info("Loading SHAP")
+            self.load_model(samples)
 
     def load_model(self, samples=10):
         self.shap = Shap(self.env, self.dqn, samples=samples)

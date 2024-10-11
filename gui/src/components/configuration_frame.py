@@ -1,3 +1,5 @@
+import logging
+
 import customtkinter as ctk
 
 from gui.src.utils import EnvHandler
@@ -26,11 +28,16 @@ class ConfigurationFrame(ctk.CTkFrame):
             self, env_handler
         )
         self.env_matrix_configuration_frame.grid(
-            row=2, column=0, padx=10, pady=10, sticky="nse"
+            row=1, column=0, padx=10, pady=10, sticky="nse"
         )
 
-        self.button = ctk.CTkButton(self, text="Update", command=self.update)
-        self.button.grid(row=3, column=0, padx=10, pady=10, sticky="nswe")
+        self.model_chooser_frame = ModelChooserFrame(self)
+        self.model_chooser_frame.grid(row=2, column=0, padx=10, pady=10, sticky="nswe")
+
+        self.shap_configuration_frame = ShapConfigurationFrame(self)
+        self.shap_configuration_frame.grid(
+            row=3, column=0, padx=10, pady=10, sticky="nswe"
+        )
 
         self.checkbox = ctk.CTkCheckBox(
             self,
@@ -40,9 +47,14 @@ class ConfigurationFrame(ctk.CTkFrame):
         )
         self.checkbox.grid(row=4, column=0, padx=10, pady=10, sticky="nswe")
 
+        self.button = ctk.CTkButton(self, text="Update", command=self.update)
+        self.button.grid(row=5, column=0, padx=10, pady=10, sticky="nswe")
+
     def update(self):
         self.update_result_callback(
             self.env_matrix_configuration_frame.get_env_matrix(),
+            *self.model_chooser_frame.get_model(),
+            self.shap_configuration_frame.get_shap_samples(),
             show_q_values=self.checkbox.get(),
         )
         self.env_viewer_frame.update_image()
@@ -51,6 +63,54 @@ class ConfigurationFrame(ctk.CTkFrame):
         self.update_image_callback(
             show_q_values=self.checkbox.get(),
         )
+
+
+class ShapConfigurationFrame(ctk.CTkFrame):
+    def __init__(
+        self,
+        master: ctk.CTkFrame,
+    ):
+        super().__init__(master)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+        self.label = ctk.CTkLabel(self, text="SHAP Samples")
+        self.shap_entry = ctk.CTkEntry(self, placeholder_text="10")
+        self.shap_entry.grid(row=0, column=0, padx=10, pady=10, sticky="nswe")
+
+    def get_shap_samples(self) -> int:
+        if self.shap_entry.get() == "":
+            value = self.shap_entry._placeholder_text
+            if value == "" or value is None:
+                logging.error("SHAP Samples is empty")
+                return 10
+            try:
+                return int(value)
+            except ValueError:
+                logging.error("SHAP Samples is not an integer")
+        return int(self.shap_entry.get())
+
+
+class ModelChooserFrame(ctk.CTkFrame):
+    def __init__(
+        self,
+        master: ctk.CTkFrame,
+    ):
+        super().__init__(master)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+
+        self.model_entry = ctk.CTkEntry(
+            self, placeholder_text="model artifact", width=40
+        )
+        self.model_entry.grid(row=0, column=0, padx=10, pady=10, sticky="nswe")
+
+        self.x_entry = ctk.CTkEntry(self, placeholder_text="v0", width=40)
+        self.x_entry.grid(row=0, column=1, sticky="nswe", padx=10, pady=10)
+        self.y_entry = ctk.CTkEntry(self, placeholder_text="v1", width=40)
+        self.y_entry.grid(row=0, column=2, sticky="nswe", padx=10, pady=10)
+
+    def get_model(self) -> tuple[str, list[str]]:
+        return self.model_entry.get(), [self.x_entry.get(), self.y_entry.get()]
 
 
 class EnvViewerFrame(ctk.CTkFrame):
