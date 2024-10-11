@@ -8927,3 +8927,56 @@ INFO: BootcampName.HIDER Bootcamp completed, starting BootcampName.SEEKER Bootca
 INFO: Early stopping at episode 10
 INFO: BootcampName.HIDER Bootcamp completed, starting BootcampName.SEEKER Bootcamp #0 for 500 days
 INFO: Early stopping at episode 10
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+INFO: Learning...
+INFO: BootcampName.HIDER Bootcamp completed, starting BootcampName.SEEKER Bootcamp #0 for 500 days
+INFO: Early stopping at episode 10
+INFO: BootcampName.HIDER Bootcamp completed, starting BootcampName.SEEKER Bootcamp #0 for 500 days
+ERROR: [Errno 32] Broken pipe
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 134, in learn
+    self.wandb_manager.log(log)
+  File "/home/eirik/Projects/XAI/rl/src/managers/wandb_manager.py", line 102, in log
+    wandb.log(data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/wandb_run.py", line 452, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/wandb_run.py", line 403, in wrapper_fn
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/wandb_run.py", line 393, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/wandb_run.py", line 1933, in log
+    self._log(data=data, step=step, commit=commit)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/wandb_run.py", line 1652, in _log
+    self._partial_history_callback(data, step, commit)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/wandb_run.py", line 1524, in _partial_history_callback
+    self._backend.interface.publish_partial_history(
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/interface/interface.py", line 647, in publish_partial_history
+    self._publish_partial_history(partial_history)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/interface/interface_shared.py", line 89, in _publish_partial_history
+    self._publish(rec)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/interface/interface_sock.py", line 51, in _publish
+    self._sock_client.send_record_publish(record)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/sock_client.py", line 225, in send_record_publish
+    self.send_server_request(server_req)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/sock_client.py", line 157, in send_server_request
+    self._send_message(msg)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/sock_client.py", line 154, in _send_message
+    self._sendall_with_error_handle(header + data)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/wandb/sdk/lib/sock_client.py", line 132, in _sendall_with_error_handle
+    sent = self._sock.send(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+BrokenPipeError: [Errno 32] Broken pipe
+
