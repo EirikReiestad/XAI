@@ -78,6 +78,7 @@ class SingleAgentShap(SingleAgentBase):
 
         if not show:
             plt.figure()
+            plt.close()
         plot = None
         if self.shap_type == ShapType.BEESWARM:
             mean_shap_values = shap_values.mean(axis=2)
