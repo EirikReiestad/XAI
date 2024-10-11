@@ -8602,3 +8602,34 @@ INFO: QNetwork(
 INFO: Hyperparameters: lr=0.0001, gamma=0.99, eps_start=0.9, eps_end=0.05, eps_decay=50000, batch_size=32, tau=0.005,hidden_layers=[128, 128], conv_layers=[]
 INFO: Learning...
 INFO: BootcampName.HIDER Bootcamp completed, starting BootcampName.SEEKER Bootcamp #0 for 500 days
+INFO: Hyperparameters: lr=0.0001, gamma=0.99, eps_start=0.9, eps_end=0.05, eps_decay=50000, batch_size=32, tau=0.005,hidden_layers=[128, 128], conv_layers=[]
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+INFO: Hyperparameters: lr=0.0001, gamma=0.99, eps_start=0.9, eps_end=0.05, eps_decay=50000, batch_size=32, tau=0.005,hidden_layers=[128, 128], conv_layers=[]
+INFO: Learning...
+INFO: BootcampName.HIDER Bootcamp completed, starting BootcampName.SEEKER Bootcamp #0 for 500 days
+INFO: BootcampName.SEEKER Bootcamp completed, starting BootcampName.SLOW_AGENT Bootcamp #0 for 1000 days
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 9 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 9 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 8 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 8 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 7 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 7 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 6 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 6 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 5 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 5 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 4 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 4 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 3 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 3 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 2 for agent 1
