@@ -35,24 +35,20 @@ class WandBConfig:
                 "goal": "maximize",
             },
             "parameters": {
-                "learning_rate": {"values": [1e-4, 1e-3, 1e-2]},
-                "gamma": {"values": [0.9, 0.95, 0.99]},
-                "eps_start": {"values": [1.0, 0.9]},
-                "eps_end": {"values": [0.1, 0.01]},
-                "eps_decay": {"values": [5000, 10000, 20000, 50000, 100000]},
-                "batch_size": {"values": [16, 32, 64, 128]},
-                "tau": {"values": [0.01, 0.005]},
+                "learning_rate": {"values": [1e-4]},
+                "gamma": {"values": [0.9]},
+                "eps_start": {"values": [0.9]},
+                "eps_end": {"values": [0.05]},
+                "eps_decay": {"values": [50000]},
+                "batch_size": {"values": [32]},
+                "tau": {"values": [0.005]},
                 "hidden_layers": {
                     "values": [
                         [128, 128],
-                        [256, 128],
-                        [128, 64],
-                        [128, 128, 64],
-                        [256, 128, 64],
                     ]
                 },
                 "conv_layers": {"values": [[]]},
-                "memory_size": {"values": [10000, 50000]},
+                "memory_size": {"values": [50000]},
             },
         }
 
