@@ -132,7 +132,6 @@ class DQN(SingleAgentBase):
         self.optimizer = OptimizerManager(
             self.policy.policy_net, self.hp.lr
         ).initialize()
-        return
         self.memory = MemoryManager(self.hp.memory_size).initialize()
 
     def init_sweep(self) -> None:
