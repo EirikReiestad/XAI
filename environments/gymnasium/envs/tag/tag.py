@@ -3,6 +3,7 @@
 __credits__ = ["Eirik Reiestad"]
 
 import logging
+import time
 from typing import Any, Dict, Optional, Tuple
 
 import gymnasium as gym
@@ -256,6 +257,8 @@ class TagEnv(gym.Env):
             concat_terminated,
             self.tag_radius,
         )
+        print(rewards)
+        time.sleep(5)
         truncated = False
         if self.steps >= self.max_steps:
             rewards = self.tag_rewards.end_reward
