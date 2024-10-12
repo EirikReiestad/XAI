@@ -129,10 +129,10 @@ class DQN(SingleAgentBase):
             hidden_layers=self.hp.hidden_layers,
             conv_layers=self.hp.conv_layers,
         )
-        return
         self.optimizer = OptimizerManager(
             self.policy.policy_net, self.hp.lr
         ).initialize()
+        return
         self.memory = MemoryManager(self.hp.memory_size).initialize()
 
     def init_sweep(self) -> None:
