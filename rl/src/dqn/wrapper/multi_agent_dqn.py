@@ -82,10 +82,11 @@ class MultiAgentDQN(MultiAgentBase):
     def _run_agent_sweep(self, total_timesteps: int):
         self.wandb_manager.reinit()
         for agent in self.agents:
+            break
             agent.init_sweep()
-        self.reset()
+        # self.env.reset(options={"full_reset": True})
+        # self.reset()
         self.learn(total_timesteps)
-        self.env.reset(options={"full_reset": True})
 
     def learn(self, episodes: int) -> list[list[RolloutReturn]]:
         results = []
