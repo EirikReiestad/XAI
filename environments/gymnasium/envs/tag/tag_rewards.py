@@ -41,8 +41,6 @@ class TagRewards:
         seeker_distance_reward = exp_distance * self.distance_factor
         hider_distance_reward = (1 - exp_distance) * self.distance_factor
 
-        print(seeker_distance_reward, hider_distance_reward)
-
         if distance < self.last_distance:
             self.last_distance = distance
             seeker_distance_reward += self.move_towards_reward[0]
