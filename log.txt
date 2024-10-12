@@ -9421,3 +9421,67 @@ INFO: QNetwork(
 )
 WARNING: GIF is enabled but the environment does not support RGB array rendering.
 INFO: Learning...
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: display Surface quit
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 107, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 202, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 44, in step_multiple
+    ) = self.get_wrapper_attr("concatenate_states")(full_states)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 263, in concatenate_states
+    self.render(self.render_mode)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 241, in render
+    return self.tag_renderer.render(self.state.full, render_mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_renderer.py", line 78, in render
+    self.screen.blit(surf, (0, 0))
+pygame.error: display Surface quit
+
+INFO: Number of parameters: 30085
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=100, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+INFO: Learning...
+INFO: BootcampName.HIDER Bootcamp completed, starting BootcampName.SEEKER Bootcamp #0 for 500 days
+INFO: BootcampName.SEEKER Bootcamp completed, starting BootcampName.SLOW_AGENT Bootcamp #0 for 1000 days
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 9 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 9 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 8 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 8 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 7 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 7 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 6 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 6 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 5 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 5 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 4 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 4 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 3 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 3 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 2 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 2 for agent 0
+INFO: BootcampName.SLOW_AGENT Bootcamp completed, starting BootcampName.COMBINED Bootcamp #0 for 1000 days
+INFO: BootcampName.COMBINED Bootcamp completed, starting BootcampName.FINISHED Bootcamp #0 for 0 days

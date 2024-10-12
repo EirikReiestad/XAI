@@ -31,7 +31,7 @@ class TagDemo:
         )
         self.num_agents = 2
 
-        env = gym.make("TagEnv-v0", render_mode="human")
+        env = gym.make("TagEnv-v0", render_mode="rgb_array")
         model_name = "tag-v0"
         self.env = MultiAgentEnv(env)
 
@@ -61,7 +61,7 @@ class TagDemo:
         self,
         episodes: int = 100000,
         num_sweep_episodes: int = 2500,
-        sweep: bool = True,
+        sweep: bool = False,
         shap: bool = False,
         show: bool = False,
     ):
