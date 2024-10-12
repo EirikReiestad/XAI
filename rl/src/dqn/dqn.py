@@ -92,8 +92,9 @@ class DQN(SingleAgentBase):
 
         self.eps_threshold = 0
 
+        self.dqn_policy = dqn_policy
         self.policy = PolicyManager().get_policy(
-            dqn_policy,
+            self.dqn_policy,
             observation_space=env.observation_space,
             action_space=env.action_space,
             hidden_layers=hidden_layers,
@@ -118,14 +119,12 @@ class DQN(SingleAgentBase):
         self._init_gif(gif, gif_path, gif_name)
 
     def reset(self) -> None:
+        return
         self.steps_done = 0
         self.episodes = 0
         self.eps_threshold = 0
-
-    def init_sweep(self) -> None:
-        self.hp.init_sweep()
         self.policy = PolicyManager().get_policy(
-            "dqnpolicy",
+            self.dqn_policy,
             observation_space=self.env.observation_space,
             action_space=self.env.action_space,
             hidden_layers=self.hp.hidden_layers,
@@ -135,6 +134,9 @@ class DQN(SingleAgentBase):
             self.policy.policy_net, self.hp.lr
         ).initialize()
         self.memory = MemoryManager(self.hp.memory_size).initialize()
+
+    def init_sweep(self) -> None:
+        self.hp.init_sweep()
 
     def learn(self, episodes: int) -> None:
         logging.info(f"Hyperparameters: {self.hp}")

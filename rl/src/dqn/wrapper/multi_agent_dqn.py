@@ -81,9 +81,9 @@ class MultiAgentDQN(MultiAgentBase):
 
     def _run_agent_sweep(self, total_timesteps: int):
         self.wandb_manager.reinit()
-        self.reset()
         for agent in self.agents:
             agent.init_sweep()
+        self.reset()
         self.learn(total_timesteps)
         self.env.reset(options={"full_reset": True})
 
