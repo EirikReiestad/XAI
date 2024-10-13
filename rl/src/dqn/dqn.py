@@ -132,7 +132,6 @@ class DQN(SingleAgentBase):
             hidden_layers=self.hidden_layers,
             conv_layers=self.conv_layers,
         )
-        return
         self.optimizer = OptimizerManager(
             self.policy.policy_net, self.hp.lr
         ).initialize()
