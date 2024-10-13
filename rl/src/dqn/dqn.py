@@ -129,21 +129,19 @@ class DQN(SingleAgentBase):
             self.dqn_policy,
             observation_space=self.env.observation_space,
             action_space=self.env.action_space,
-            hidden_layers=self.hidden_layers,
-            conv_layers=self.conv_layers,
+            hidden_layers=self.hp.hidden_layers,
+            conv_layers=self.hp.conv_layers,
         )
         self.optimizer = OptimizerManager(
             self.policy.policy_net, self.hp.lr
         ).initialize()
         self.memory = MemoryManager(self.hp.memory_size).initialize()
-        return
 
     def init_sweep(self) -> None:
         self.hp.init_sweep()
-
-    def learn(self, episodes: int) -> None:
         logging.info(f"Hyperparameters: {self.hp}")
 
+    def learn(self, episodes: int) -> None:
         self.policy_net.train()
         self.target_net.eval()
         max_gif_reward = -float("inf")
