@@ -59,6 +59,7 @@ class MultiAgentDQN(MultiAgentBase):
     def reset(self) -> None:
         self.episodes = 0
         self.seeker_won = []
+        return
         for agent in self.agents:
             agent.reset()
 
