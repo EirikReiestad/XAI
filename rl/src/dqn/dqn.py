@@ -125,7 +125,6 @@ class DQN(SingleAgentBase):
         self.steps_done = 0
         self.episodes = 0
         self.eps_threshold = 0
-        return
         self.policy = PolicyManager().get_policy(
             self.dqn_policy,
             observation_space=self.env.observation_space,
@@ -133,9 +132,9 @@ class DQN(SingleAgentBase):
             hidden_layers=self.hp.hidden_layers,
             conv_layers=self.hp.conv_layers,
         )
-        self.optimizer = OptimizerManager(
-            self.policy.policy_net, self.hp.lr
-        ).initialize()
+        self.policy_net = self.policy.policy_net
+        self.target_net = self.policy.target_net
+        self.optimizer = OptimizerManager(self.policy_net, self.hp.lr).initialize()
         self.memory = MemoryManager(self.hp.memory_size).initialize()
 
     def init_sweep(self) -> None:
