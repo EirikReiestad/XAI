@@ -77,14 +77,14 @@ class MultiAgentDQN(MultiAgentBase):
             logging.error("Wandb must be active to run a sweep.")
             return
         sweep_id = self.wandb_manager.sweep()
-        wandb.agent(sweep_id, lambda: self._run_agent_sweep(total_timesteps), count=1)
+        wandb.agent(sweep_id, lambda: self._run_agent_sweep(total_timesteps), count=100)
 
     def _run_agent_sweep(self, total_timesteps: int):
         self.wandb_manager.reinit()
         for agent in self.agents:
             agent.init_sweep()
         self.env.reset(options={"full_reset": True})
-        # self.reset()
+        self.reset()
         self.learn(total_timesteps)
 
     def learn(self, episodes: int) -> list[list[RolloutReturn]]:
