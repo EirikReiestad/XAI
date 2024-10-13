@@ -60,7 +60,7 @@ class TagDemo:
     def run(
         self,
         episodes: int = 100000,
-        num_sweep_episodes: int = 100,
+        num_sweep_episodes: int = 2500,
         sweep: bool = True,
         shap: bool = False,
         show: bool = False,
