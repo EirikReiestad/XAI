@@ -31,8 +31,8 @@ class DQNHyperparameter:
         self.memory_size = memory_size
 
     def init_sweep(self) -> None:
-        return
         self.lr = wandb.config.learning_rate
+        return
         self.gamma = wandb.config.gamma
         self.eps_start = wandb.config.eps_start
         self.eps_end = wandb.config.eps_end
