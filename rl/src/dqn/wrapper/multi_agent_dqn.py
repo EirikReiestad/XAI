@@ -47,9 +47,9 @@ class MultiAgentDQN(MultiAgentBase):
         self.episodes = 0
         self.seeker_won = []
 
-        self.early_stopping_patience = 1000
+        self.early_stopping_patience = [500, 100]
         self.early_stopping_average = 100
-        self.early_stopping_criteria = 0.1
+        self.early_stopping_criteria = [0.05, 0.1]
 
         if load_model:
             self.load(run_path, model_artifact, version_numbers)
@@ -161,14 +161,15 @@ class MultiAgentDQN(MultiAgentBase):
             return results
 
     def _early_stopping(self) -> bool:
-        if self.episodes < self.early_stopping_patience:
-            return False
-        if (
-            sum(self.seeker_won[-self.early_stopping_average :])
-            / self.early_stopping_average
-            < self.early_stopping_criteria
-        ):
-            return True
+        for i in range(len(self.early_stopping_patience)):
+            if self.episodes < self.early_stopping_patience[i]:
+                continue
+            if (
+                sum(self.seeker_won[-self.early_stopping_average :])
+                / self.early_stopping_average
+                < self.early_stopping_criteria[i]
+            ):
+                return True
         return False
 
     def _collect_rollouts(
