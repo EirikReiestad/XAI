@@ -84,7 +84,7 @@ class MultiAgentDQN(MultiAgentBase):
         for agent in self.agents:
             agent.init_sweep()
         self.env.reset(options={"full_reset": True})
-        # self.reset()
+        self.reset()
         self.learn(total_timesteps)
 
     def learn(self, episodes: int) -> list[list[RolloutReturn]]:
