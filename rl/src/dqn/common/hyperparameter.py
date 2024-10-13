@@ -32,7 +32,6 @@ class DQNHyperparameter:
 
     def init_sweep(self) -> None:
         self.lr = wandb.config.learning_rate
-        return
         self.gamma = wandb.config.gamma
         self.eps_start = wandb.config.eps_start
         self.eps_end = wandb.config.eps_end
@@ -41,6 +40,7 @@ class DQNHyperparameter:
         self.tau = wandb.config.tau
         self.hidden_layers = wandb.config.hidden_layers
         self.conv_layers = wandb.config.conv_layers
+        return
 
     def __str__(self) -> str:
         return (
