@@ -125,6 +125,7 @@ class DQN(SingleAgentBase):
         self.steps_done = 0
         self.episodes = 0
         self.eps_threshold = 0
+        return
         self.policy = PolicyManager().get_policy(
             self.dqn_policy,
             observation_space=self.env.observation_space,

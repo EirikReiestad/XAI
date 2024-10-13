@@ -35,7 +35,6 @@ class DQNHyperparameter:
         self.eps_decay = wandb.config.eps_decay
         self.batch_size = wandb.config.batch_size
         self.hidden_layers = wandb.config.hidden_layers
-        return
         self.conv_layers = wandb.config.conv_layers
         self.eps_start = wandb.config.eps_start
         self.eps_end = wandb.config.eps_end
