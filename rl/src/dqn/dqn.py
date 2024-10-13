@@ -101,6 +101,9 @@ class DQN(SingleAgentBase):
             conv_layers=conv_layers,
         )
 
+        self.hidden_layers = hidden_layers
+        self.conv_layers = conv_layers
+
         self.policy_net = self.policy.policy_net
         self.target_net = self.policy.target_net
 
@@ -126,8 +129,8 @@ class DQN(SingleAgentBase):
             self.dqn_policy,
             observation_space=self.env.observation_space,
             action_space=self.env.action_space,
-            hidden_layers=self.hp.hidden_layers,
-            conv_layers=self.hp.conv_layers,
+            hidden_layers=self.hidden_layers,
+            conv_layers=self.conv_layers,
         )
         return
         self.optimizer = OptimizerManager(
