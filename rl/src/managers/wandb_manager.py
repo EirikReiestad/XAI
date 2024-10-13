@@ -39,7 +39,7 @@ class WandBConfig:
                 "gamma": {"values": [0.9, 0.95, 0.99]},
                 "eps_start": {"values": [1.0, 0.9]},
                 "eps_end": {"values": [0.1, 0.05, 0.01]},
-                "eps_decay": {"values": [5000, 10000, 20000, 50000, 100000]},
+                "eps_decay": {"values": [10000, 20000, 50000, 100000]},
                 "batch_size": {"values": [16, 32, 64, 128]},
                 "tau": {"values": [0.01, 0.005]},
                 "hidden_layers": {
