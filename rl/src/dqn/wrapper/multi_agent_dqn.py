@@ -84,7 +84,7 @@ class MultiAgentDQN(MultiAgentBase):
         for agent in self.agents:
             break
             agent.init_sweep()
-        # self.env.reset(options={"full_reset": True})
+        self.env.reset(options={"full_reset": True})
         # self.reset()
         self.learn(total_timesteps)
 
