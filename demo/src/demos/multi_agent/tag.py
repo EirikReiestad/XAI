@@ -48,7 +48,7 @@ class TagDemo:
             wandb_active=True,
             wandb_config=wandb_config,
             model_name=model_name,
-            save_every_n_episodes=50,
+            save_every_n_episodes=100,
             save_model=True,
             load_model=False,
             gif=True,
