@@ -51,7 +51,7 @@ class DQN(SingleAgentBase):
         tau: float = 0.005,
         hidden_layers: list[int] = [512, 512],
         conv_layers: list[int] = [32, 32],
-        train_frequency: int = 1000,
+        train_frequency: int = 20,
         optimize_method: str = "hard",  # "hard" or "soft"
         wandb_active: bool = False,
         wandb_config: WandBConfig | None = None,
