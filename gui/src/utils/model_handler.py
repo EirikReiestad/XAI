@@ -19,7 +19,7 @@ class ModelHandler:
             self.env,
             self.num_agents,
             "dqnpolicy",
-            wandb=False,
+            wandb_active=False,
             wandb_config=wandb_config,
             model_name=model_name,
             save_every_n_episodes=100,
