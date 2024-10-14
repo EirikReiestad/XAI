@@ -48,9 +48,15 @@ class TagDemo:
             wandb_active=False,
             wandb_config=wandb_config,
             model_name=model_name,
+<<<<<<< HEAD
             save_every_n_episodes=50,
             save_model=False,
             load_model=True,
+=======
+            save_every_n_episodes=100,
+            save_model=True,
+            load_model=False,
+>>>>>>> a4f1204 (model: save every n episodes from 50 to 100)
             gif=True,
             run_path="eirikreiestad-ntnu/tag-v0-eirre",
             model_artifact="model_1550",
