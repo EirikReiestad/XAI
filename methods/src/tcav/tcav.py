@@ -19,15 +19,18 @@ class TCAV:
             layer.register_forward_hook(self._module_hook)
 
     def run(self, concept: str):
-        positive_dataset = self.env.get_concept_inputs(concept, samples=1000)
-        negative_dataset = self.env.get_concept_inputs("random", samples=1000)
-        test_dataset = self.env.get_concept_inputs(concept, samples=200)
+        positive_dataset, positive_labels = self.env.get_concept_inputs(
+            concept, samples=1000
+        )
+        negative_dataset, negative_labels = self.env.get_concept_inputs(
+            "random", samples=1000
+        )
+        test_dataset, test_labels = self.env.get_concept_inputs(concept, samples=200)
 
         positive_activations = self._compute_activations(positive_dataset)
         negative_activations = self._compute_activations(negative_dataset)
 
-        test_dataset.requires_grad_(True)
-        test_activations = self._compute_activations(test_dataset)
+        test_activations = self._compute_activations(test_dataset, requires_grad=True)
 
         for layer in self.policy.children():
             linear_classifier = self.train_linear_classifier(
@@ -54,9 +57,10 @@ class TCAV:
             "input": input.detach(),
         }
 
-    def _compute_activations(self, inputs: torch.Tensor):
+    def _compute_activations(self, inputs: list[torch.Tensor], requires_grad=False):
+        torch_inputs = torch.stack(inputs).requires_grad_(requires_grad)
         self.activations.clear()
-        _ = self.policy(inputs)
+        _ = self.policy(torch_inputs)
         return self.activations
 
     def train_linear_classifier(
