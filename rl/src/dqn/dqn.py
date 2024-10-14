@@ -51,6 +51,8 @@ class DQN(SingleAgentBase):
         tau: float = 0.005,
         hidden_layers: list[int] = [128, 128],
         conv_layers: list[int] = [],
+        train_frequency: int = 1000,
+        optimize_method: str = "hard",  # "hard" or "soft"
         wandb_active: bool = False,
         wandb_config: WandBConfig | None = None,
         save_model: bool = False,
@@ -89,6 +91,9 @@ class DQN(SingleAgentBase):
         self.model_path = model_path
         self.model_name = model_name
         self.save_every_n_episodes = save_every_n_episodes
+
+        self.train_frequency = train_frequency
+        self.optimize_method = optimize_method
 
         self.eps_threshold = 0
 
@@ -282,9 +287,14 @@ class DQN(SingleAgentBase):
         ):
             self.memory.push(state, action, next_state, reward)
 
-        self._optimize_model()
+        if self.steps_done % self.train_frequency == 0:
+            self._optimize_model()
 
-        self._soft_update_target_net()
+        if self.optimize_method == "soft":
+            self._soft_update_target_net()
+        else:
+            if self.steps_done % self.train_frequency == 0:
+                self._hard_update_target_net()
 
     def predict(self, states: torch.Tensor) -> list[np.ndarray] | np.ndarray:
         for state in states:
@@ -387,6 +397,10 @@ class DQN(SingleAgentBase):
         if len(self.memory) < self.hp.batch_size:
             return False
         return True
+
+    def _hard_update_target_net(self) -> None:
+        """Hard update the target network parameters."""
+        self.target_net.load_state_dict(self.policy_net.state_dict())
 
     def _soft_update_target_net(self) -> None:
         """Soft update the target network parameters."""
