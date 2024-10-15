@@ -31,14 +31,15 @@ class TagDemo:
         )
         self.num_agents = 2
 
-        env = gym.make("TagEnv-v0", render_mode="human")
+        current_user = getpass.getuser()
+        project = f"tag-v0-{current_user}"
+
+        render_mode = "rgb_array" if not current_user == "eirre" else "rgb_array"
+        env = gym.make("TagEnv-v0", render_mode=render_mode)
         model_name = "tag-v0"
         self.env = MultiAgentEnv(env)
 
         metadata = MetadataWrapper(self.env)
-
-        current_user = getpass.getuser()
-        project = f"tag-v0-{current_user}"
 
         wandb_config = WandBConfig(project=project, other=metadata.get_config())
         self.dqn = MultiAgentDQN(
