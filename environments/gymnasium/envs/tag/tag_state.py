@@ -35,6 +35,7 @@ class TagState:
 =======
         self.random_seeker_position = True
         self.random_hider_position = True
+        self.random_box_position = True
         self._init_states(filename)
         self._init_dimensions()
 >>>>>>> 300c75a (feat: extract height and width from file)
@@ -43,19 +44,18 @@ class TagState:
     def init_full_state(self):
         init_state = self._init_full_state
 
-        def random_agent_position(state: np.ndarray, agent: AgentType) -> np.ndarray:
-            removed_agent_state = FullStateDataModifier.remove_agent(state, agent)
-            random_position = FullStateDataExtractor.get_random_position(
-                removed_agent_state, TileType.EMPTY
-            )
-            return FullStateDataModifier.place_agent(
-                removed_agent_state, random_position, agent
-            )
-
         if self.random_seeker_position:
-            init_state = random_agent_position(init_state, AgentType.SEEKER)
+            init_state = FullStateDataModifier.random_agent_position(
+                init_state, AgentType.SEEKER
+            )
         if self.random_hider_position:
-            init_state = random_agent_position(init_state, AgentType.HIDER)
+            init_state = FullStateDataModifier.random_agent_position(
+                init_state, AgentType.HIDER
+            )
+        if self.random_box_position:
+            init_state = FullStateDataModifier.random_objects_position(
+                init_state, TileType.BOX
+            )
 
         self.validate_state(init_state)
         return init_state

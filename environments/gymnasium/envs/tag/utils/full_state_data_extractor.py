@@ -32,6 +32,16 @@ class FullStateDataExtractor:
         return agent_position
 
     @staticmethod
+    def get_object_positions(
+        state: np.ndarray, object_type: TileType
+    ) -> list[Position]:
+        positions = []
+        object_positions = np.where(state == object_type.value)
+        for object_position in object_positions:
+            positions.append(Position(x=object_position[1], y=object_position[0]))
+        return positions
+
+    @staticmethod
     def agent_exist(state: np.ndarray, agent: AgentType) -> bool:
         agent_tile_type = AGENT_TILE_TYPE.get(agent)
         if agent_tile_type is None:
