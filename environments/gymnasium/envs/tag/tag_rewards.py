@@ -1,6 +1,7 @@
 import math
 
 import numpy as np
+import time
 
 from environments.gymnasium.envs.tag import rewards
 from environments.gymnasium.utils import Position
@@ -36,10 +37,12 @@ class TagRewards:
         distance = agent.distance_to(other_agent)
         self.max_distance = max(self.max_distance, distance)
         normalized_distance = distance / self.max_distance
-        exp_distance = 1 - math.exp(-normalized_distance)
+        exp_distance = math.exp(-normalized_distance)
 
-        seeker_distance_reward = exp_distance * self.distance_factor
-        hider_distance_reward = (1 - exp_distance) * self.distance_factor
+        distance_reward = (1 - normalized_distance) - 0.5
+
+        seeker_distance_reward = distance_reward * self.distance_factor
+        hider_distance_reward = -distance_reward * self.distance_factor
 
         if distance < self.last_distance:
             self.last_distance = distance
