@@ -14,10 +14,10 @@ class BootcampName(enum.Enum):
 
 @dataclass
 class BootcampTrainingSteps:
-    hider = 1000
-    seeker = 1000
-    slow_agent = 3000
-    combined = 5000
+    hider = 0
+    seeker = 0
+    slow_agent = 0
+    combined = 0
 
     def get_days(self, name: BootcampName):
         if name == BootcampName.HIDER:
@@ -46,7 +46,7 @@ class Bootcamp:
         self.slow_step_factor = 1
         self.slow_agent = 0
 
-        self.slow_hider_factor = 1
+        self.slow_hider_factor = 2
         self.slow_seeker_factor = 1
 
     def reset(self):

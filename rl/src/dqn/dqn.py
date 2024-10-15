@@ -41,17 +41,17 @@ class DQN(SingleAgentBase):
         agent_id: int = 0,
         dueling: bool = False,
         double: bool = True,
-        memory_size: int = 50000,
-        lr: float = 1e-3,
+        memory_size: int = 10000,
+        lr: float = 1e-4,
         gamma: float = 0.99,
         epsilon_start: float = 0.9,
         epsilon_end: float = 0.05,
-        epsilon_decay: int = 50000,
-        batch_size: int = 32,
+        epsilon_decay: int = 1000,
+        batch_size: int = 128,
         tau: float = 0.005,
-        hidden_layers: list[int] = [512, 512],
-        conv_layers: list[int] = [32, 32],
-        train_frequency: int = 20,
+        hidden_layers: list[int] = [128, 128],
+        conv_layers: list[int] = [],
+        train_frequency: int = 4,
         optimize_method: str = "hard",  # "hard" or "soft"
         wandb_active: bool = False,
         wandb_config: WandBConfig | None = None,
@@ -148,7 +148,7 @@ class DQN(SingleAgentBase):
 
     def learn(self, episodes: int) -> None:
         self.policy_net.train()
-        self.target_net.eval()
+        self.target_net.train()
         max_gif_reward = -float("inf")
 
         max_gif_reward = -np.inf

@@ -1,3 +1,4 @@
+import getpass
 import logging
 from itertools import count
 
@@ -26,11 +27,13 @@ class CartPoleDemo:
         )
         self.plotter = Plotter(plot_agent=True)
         self.env = gym.make("CartPole-v1", render_mode="rgb_array")
-        wandb_config = WandBConfig(project="cartpole-v1-local")
+        current_user = getpass.getuser()
+        project = f"tag-v0-{current_user}"
+        wandb_config = WandBConfig(project=project)
         self.dqn = DQN(
             self.env,
             "dqnpolicy",
-            wandb=True,
+            wandb_active=True,
             save_model=False,
             wandb_config=wandb_config,
             gif=True,
@@ -38,7 +41,14 @@ class CartPoleDemo:
 
     def run(self):
         logging.info("Learning...")
-        self.dqn.learn(1000)
+        self.dqn.learn(500)
+
+        self.shape(False)
+        self.show(False)
+
+    def shape(self, show: bool = False):
+        if not show:
+            return
 
         logging.info("Initializing Shap...")
         self.shap = Shap(self.env, self.dqn)
@@ -53,8 +63,6 @@ class CartPoleDemo:
                 "Pole Velocity",
             ],
         )
-
-        self.show(False)
 
     def show(self, run: bool = True):
         if not run:
