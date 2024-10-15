@@ -58,7 +58,7 @@ class TagEnv(gym.Env):
         self.tag_radius = 1
         self.tag_head_start = 0
         self.max_steps = 200
-        self.freeze_hider = False
+        self.freeze_hider = True
         self.terminate_out_of_bounds = False
 
         FileHandler.file_exist(folder_name, filename)
@@ -138,6 +138,7 @@ class TagEnv(gym.Env):
                 and self.agents.active_agent == AgentType.HIDER
             )
         ):
+            self.bootcamp.step()
             return self._handle_agent_switch(True)
 
         if self.steps >= self.max_steps:
