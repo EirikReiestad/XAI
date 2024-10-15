@@ -106,6 +106,7 @@ class Bootcamp:
             return
         if self._name == BootcampName.FINISHED:
             if self._bootcamp_num >= self._num_bootcamps - 1:
+                self.slow_agent = 0
                 return
             old_name = self._name
             self._reset_bootcamp()

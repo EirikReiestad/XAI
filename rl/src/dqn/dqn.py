@@ -387,7 +387,7 @@ class DQN(SingleAgentBase):
 
         self.optimizer.zero_grad()
         loss.backward()
-        torch.nn.utils.clip_grad_value_(self.policy_net.parameters(), 10)
+        torch.nn.utils.clip_grad_value_(self.policy_net.parameters(), 1)
         self.optimizer.step()
 
         self.memory.update_priorities(indices, td_errors.squeeze(1).detach().numpy())
