@@ -56,7 +56,6 @@ class TagEnv(gym.Env):
         self.freeze_hider = False
         self.terminate_out_of_bounds = False
 
-        folder_name = "environments/gymnasium/data/tag/"
         FileHandler.file_exist(folder_name, filename)
 
         self.tag_renderer = TagRenderer(
