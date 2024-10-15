@@ -41,12 +41,10 @@ class TagEnv(gym.Env):
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 50}
 
     def __init__(self, render_mode: Optional[str] = "rgb_array"):
-        self.height = 10
-        self.width = 10
         screen_width = 600
         screen_height = 600
         folder_name = "environments/gymnasium/data/tag/"
-        filename = "tag-0-10-10.txt"
+        filename = "tag-0-7-7.txt"
         self.state_type = StateType.FULL
         self.bootcamp = Bootcamp()
         self.tag_radius = 1
@@ -57,20 +55,17 @@ class TagEnv(gym.Env):
 
         FileHandler.file_exist(folder_name, filename)
 
-        self.tag_renderer = TagRenderer(
-            self.width, self.height, screen_width, screen_height
-        )
-        self.render_mode = render_mode
-
         filename = folder_name + filename
         self.state = TagState(
-            self.width,
-            self.height,
             screen_width,
             screen_height,
             self.state_type,
             filename,
         )
+        self.tag_renderer = TagRenderer(
+            self.state.width, self.state.height, screen_width, screen_height
+        )
+        self.render_mode = render_mode
         self._init_spaces()
         self.tag_rewards = TagRewards()
 
@@ -400,7 +395,7 @@ class TagEnv(gym.Env):
                 options.get(
                     "hider",
                     generate_random_position(
-                        self.width, self.height, [seeker_position]
+                        self.state.width, self.state.height, [seeker_position]
                     ),
                 )
             )
