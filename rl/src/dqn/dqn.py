@@ -42,7 +42,7 @@ class DQN(SingleAgentBase):
         dueling: bool = False,
         double: bool = True,
         memory_size: int = 50000,
-        lr: float = 1e-2,
+        lr: float = 1e-5,
         gamma: float = 0.99,
         epsilon_start: float = 0.9,
         epsilon_end: float = 0.05,
