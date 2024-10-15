@@ -10954,3 +10954,119 @@ INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 2 fo
 INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 2 for agent 0
 INFO: BootcampName.SLOW_AGENT Bootcamp completed, starting BootcampName.COMBINED Bootcamp #0 for 0 days
 INFO: BootcampName.COMBINED Bootcamp completed, starting BootcampName.FINISHED Bootcamp #0 for 0 days
+INFO: Number of parameters: 83205
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=512, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+INFO: Learning...
+INFO: BootcampName.HIDER Bootcamp completed, starting BootcampName.SEEKER Bootcamp #0 for 0 days
+INFO: BootcampName.SEEKER Bootcamp completed, starting BootcampName.SLOW_AGENT Bootcamp #0 for 0 days
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 9 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 9 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 8 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 8 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 7 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 7 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 6 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 6 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 5 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 5 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 4 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 4 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 3 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 3 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 2 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 2 for agent 0
+INFO: BootcampName.SLOW_AGENT Bootcamp completed, starting BootcampName.COMBINED Bootcamp #0 for 0 days
+INFO: BootcampName.COMBINED Bootcamp completed, starting BootcampName.FINISHED Bootcamp #0 for 0 days
+INFO: Number of parameters: 83205
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=512, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER Bootcamp completed, starting BootcampName.SEEKER Bootcamp #0 for 0 days
+INFO: BootcampName.SEEKER Bootcamp completed, starting BootcampName.SLOW_AGENT Bootcamp #0 for 0 days
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 9 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 9 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 8 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 8 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 7 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 7 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 6 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 6 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 5 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 5 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 4 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 4 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 3 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 3 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 2 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 2 for agent 0
+INFO: BootcampName.SLOW_AGENT Bootcamp completed, starting BootcampName.COMBINED Bootcamp #0 for 0 days
+INFO: BootcampName.COMBINED Bootcamp completed, starting BootcampName.FINISHED Bootcamp #0 for 0 days
+INFO: Number of parameters: 54533
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: BootcampName.HIDER Bootcamp completed, starting BootcampName.SEEKER Bootcamp #0 for 0 days
+INFO: BootcampName.SEEKER Bootcamp completed, starting BootcampName.SLOW_AGENT Bootcamp #0 for 0 days
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 9 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 9 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 8 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 8 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 7 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 7 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 6 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 6 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 5 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 5 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 4 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 4 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 3 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 3 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 2 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 2 for agent 0
+INFO: BootcampName.SLOW_AGENT Bootcamp completed, starting BootcampName.COMBINED Bootcamp #0 for 0 days
+INFO: BootcampName.COMBINED Bootcamp completed, starting BootcampName.FINISHED Bootcamp #0 for 0 days
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
