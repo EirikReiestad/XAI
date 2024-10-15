@@ -49,9 +49,9 @@ class DQN(SingleAgentBase):
         epsilon_decay: int = 10000,
         batch_size: int = 64,
         tau: float = 0.005,
-        hidden_layers: list[int] = [128],
-        conv_layers: list[int] = [32, 32],
-        train_frequency: int = 20,
+        hidden_layers: list[int] = [128, 128],
+        conv_layers: list[int] = [32],
+        train_frequency: int = 4,
         optimize_method: str = "hard",  # "hard" or "soft"
         wandb_active: bool = False,
         wandb_config: WandBConfig | None = None,
