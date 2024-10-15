@@ -71,7 +71,7 @@ class MultiAgentDQN(MultiAgentBase):
             )
             self.gif = False
         else:
-            self.gif_samples = 10
+            self.gif_samples = 3
 
     def sweep(self, total_timesteps: int) -> None:
         if self.wandb_manager.active is False:

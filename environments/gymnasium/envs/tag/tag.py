@@ -42,15 +42,10 @@ class TagEnv(gym.Env):
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 50}
 
     def __init__(self, render_mode: Optional[str] = "rgb_array"):
-<<<<<<< HEAD
         self.height = 10
         self.width = 10
         self.screen_width = 600
         self.screen_height = 600
-=======
-        screen_width = 600
-        screen_height = 600
->>>>>>> 300c75a (feat: extract height and width from file)
         folder_name = "environments/gymnasium/data/tag/"
         filename = "tag-0-5-5.txt"
         self.state_type = StateType.FULL
@@ -63,35 +58,17 @@ class TagEnv(gym.Env):
 
         FileHandler.file_exist(folder_name, filename)
 
-<<<<<<< HEAD
-        self.tag_renderer = TagRenderer(
-            self.width, self.height, self.screen_width, self.screen_height
-        )
-        self.render_mode = render_mode
-
         filename = folder_name + filename
         self.state = TagState(
-            self.width,
-            self.height,
             self.screen_width,
             self.screen_height,
             self.state_type,
             filename,
         )
-
-=======
-        filename = folder_name + filename
-        self.state = TagState(
-            screen_width,
-            screen_height,
-            self.state_type,
-            filename,
-        )
         self.tag_renderer = TagRenderer(
-            self.state.width, self.state.height, screen_width, screen_height
+            self.state.width, self.state.height, self.screen_width, self.screen_height
         )
         self.render_mode = render_mode
->>>>>>> 300c75a (feat: extract height and width from file)
         self._init_spaces()
         self.tag_rewards = TagRewards()
 
