@@ -76,6 +76,7 @@ class TagEnv(gym.Env):
         self.info = {
             "object_moved_distance": 0,
             "collided": 0,
+            "wrong_grab_release": 0,
         }
 
     def step(self, action: int) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
@@ -123,6 +124,7 @@ class TagEnv(gym.Env):
                     "data_additative": {
                         "object_moved_distance": self.info["object_moved_distance"],
                         "collided": self.info["collided"],
+                        "wrong_grab_release": self.info["wrong_grab_release"],
                     },
                     "data_constant": {
                         "slow_factor": self.bootcamp.agent_slow_factor(
@@ -161,6 +163,7 @@ class TagEnv(gym.Env):
             "data_additative": {
                 "object_moved_distance": self.info["object_moved_distance"],
                 "collided": self.info["collided"],
+                "wrong_grab_release": self.info["wrong_grab_release"],
             },
             "data_constant": {
                 "slow_factor": self.bootcamp.agent_slow_factor(
@@ -195,6 +198,7 @@ class TagEnv(gym.Env):
                 "data_additative": {
                     "object_moved_distance": self.info["object_moved_distance"],
                     "collided": self.info["collided"],
+                    "wrong_grab_release": self.info["wrong_grab_release"],
                 },
                 "agent_slow_factor": self.bootcamp.agent_slow_factor(
                     self.agents.active_agent
@@ -210,10 +214,7 @@ class TagEnv(gym.Env):
         full_reset = options.get("full_reset") if options else False
         self.render_mode = render_mode or self.render_mode
 
-        self.info = {
-            "object_moved_distance": 0,
-            "collided": 0,
-        }
+        self.info = {"object_moved_distance": 0, "collided": 0, "wrong_grab_release": 0}
 
         self.state.reset()
         self._set_initial_positions(options)
@@ -279,12 +280,14 @@ class TagEnv(gym.Env):
         if action == ActionType.GRAB_RELEASE:
             if self.agents.active.grabbed_object is not None:
                 release = self._release_entity()
-                reward += (
-                    self.tag_rewards.wrong_grab_release_reward if not release else 0
-                )
+                if not release:
+                    self.info["wrong_grab_release"] = 1
+                    reward += self.tag_rewards.wrong_grab_release_reward
             else:
                 grab = self._grab_entity()
-                reward += self.tag_rewards.wrong_grab_release_reward if not grab else 0
+                if not grab:
+                    self.info["wrong_grab_release"] = 1
+                    reward += self.tag_rewards.wrong_grab_release_reward
         new_full_state, move_reward = self._move_agent(self.state.full, action)
         reward += move_reward
         if new_full_state is None:
