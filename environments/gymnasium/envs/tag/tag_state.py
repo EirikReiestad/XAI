@@ -19,22 +19,25 @@ from utils import Color
 class TagState:
     def __init__(
         self,
-        width: int,
-        height: int,
         screen_width: int,
         screen_height: int,
         state_type: StateType,
         filename: str,
     ):
-        self.width = width
-        self.height = height
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.state_type = state_type
+<<<<<<< HEAD
         self.random_seeker_position = False
         self.random_hider_position = False
         self.random_box_position = False
         self.init_states(filename)
+=======
+        self.random_seeker_position = True
+        self.random_hider_position = True
+        self._init_states(filename)
+        self._init_dimensions()
+>>>>>>> 300c75a (feat: extract height and width from file)
 
     @property
     def init_full_state(self):
@@ -100,7 +103,7 @@ class TagState:
             *box_names,
         ]
 
-    def init_states(self, filename: str):
+    def _init_states(self, filename: str):
         self.init_full_state = self._load_env_from_file(filename)
         full_state = self.init_full_state
         partial_state = np.ndarray(self.partial_state_size, dtype=np.uint8)
@@ -112,6 +115,10 @@ class TagState:
             rgb=rgb_state,
             active=self.state_type,
         )
+
+    def _init_dimensions(self):
+        self.width = self.init_full_state.shape[1]
+        self.height = self.init_full_state.shape[0]
 
     def reset(self):
         self.state.full = self.init_full_state
