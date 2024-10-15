@@ -69,7 +69,7 @@ class Bootcamp:
             return True
         if self.name == BootcampName.COMBINED and steps % self.slow_hider_factor == 0:
             return True
-        if self.name == BootcampName.FINISHED and steps % self.slow_seeker_factor == 0:
+        if self.name == BootcampName.FINISHED and steps % self.slow_hider_factor == 0:
             return True
         if self.slow_agent == 1:
             return True
