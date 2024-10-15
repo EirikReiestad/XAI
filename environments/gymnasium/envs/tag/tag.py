@@ -51,7 +51,7 @@ class TagEnv(gym.Env):
         self.bootcamp = Bootcamp()
         self.tag_radius = 1
         self.tag_head_start = 0
-        self.max_steps = 400
+        self.max_steps = 200
         self.freeze_hider = False
         self.terminate_out_of_bounds = False
 
