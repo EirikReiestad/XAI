@@ -50,7 +50,7 @@ class DQN(SingleAgentBase):
         batch_size: int = 128,
         tau: float = 0.005,
         hidden_layers: list[int] = [128, 128],
-        conv_layers: list[int] = [],
+        conv_layers: list[int] = [32, 32],
         train_frequency: int = 4,
         optimize_method: str = "hard",  # "hard" or "soft"
         wandb_active: bool = False,
