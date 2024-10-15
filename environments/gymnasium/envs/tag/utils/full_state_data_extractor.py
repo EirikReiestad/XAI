@@ -37,8 +37,15 @@ class FullStateDataExtractor:
     ) -> list[Position]:
         positions = []
         object_positions = np.where(state == object_type.value)
-        for object_position in object_positions:
-            positions.append(Position(x=object_position[1], y=object_position[0]))
+        if len(object_positions) == 0:
+            return positions
+        if len(object_positions[0]) == 1:
+            positions.append(
+                Position(x=object_positions[1][0], y=object_positions[0][0])
+            )
+            return positions
+        for y, x in zip(object_positions[0], object_positions[1]):
+            positions.append(Position(x, y))
         return positions
 
     @staticmethod
