@@ -27,18 +27,11 @@ class TagState:
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.state_type = state_type
-<<<<<<< HEAD
-        self.random_seeker_position = False
-        self.random_hider_position = False
-        self.random_box_position = False
-        self.init_states(filename)
-=======
         self.random_seeker_position = True
         self.random_hider_position = True
         self.random_box_position = True
         self._init_states(filename)
         self._init_dimensions()
->>>>>>> 300c75a (feat: extract height and width from file)
 
     @property
     def init_full_state(self):
