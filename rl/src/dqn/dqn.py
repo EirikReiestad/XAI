@@ -46,7 +46,7 @@ class DQN(SingleAgentBase):
         gamma: float = 0.99,
         epsilon_start: float = 0.9,
         epsilon_end: float = 0.05,
-        epsilon_decay: int = 10000,
+        epsilon_decay: int = 50000,
         batch_size: int = 32,
         tau: float = 0.005,
         hidden_layers: list[int] = [128, 128],
