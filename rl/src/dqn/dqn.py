@@ -41,13 +41,13 @@ class DQN(SingleAgentBase):
         agent_id: int = 0,
         dueling: bool = False,
         double: bool = True,
-        memory_size: int = 10000,
+        memory_size: int = 50000,
         lr: float = 1e-4,
         gamma: float = 0.99,
         epsilon_start: float = 0.9,
         epsilon_end: float = 0.05,
         epsilon_decay: int = 10000,
-        batch_size: int = 32,
+        batch_size: int = 64,
         tau: float = 0.005,
         hidden_layers: list[int] = [128],
         conv_layers: list[int] = [32, 32],
@@ -149,7 +149,6 @@ class DQN(SingleAgentBase):
     def learn(self, episodes: int) -> None:
         self.policy_net.train()
         self.target_net.train()
-        max_gif_reward = -float("inf")
 
         max_gif_reward = -np.inf
         frames = []
@@ -388,7 +387,7 @@ class DQN(SingleAgentBase):
 
         self.optimizer.zero_grad()
         loss.backward()
-        torch.nn.utils.clip_grad_value_(self.policy_net.parameters(), 100)
+        torch.nn.utils.clip_grad_value_(self.policy_net.parameters(), 10)
         self.optimizer.step()
 
         self.memory.update_priorities(indices, td_errors.squeeze(1).detach().numpy())
@@ -531,7 +530,7 @@ class DQN(SingleAgentBase):
         if not path.endswith(".pt"):
             path += ".pt"
 
-        self.policy_net.load_state_dict(torch.load(path, weights_only=True))
+        self.policy_net.load_state_dict(torch.load(path))
         self.target_net.load_state_dict(self.policy_net.state_dict())
         self.policy_net.eval()
         self.target_net.eval()
