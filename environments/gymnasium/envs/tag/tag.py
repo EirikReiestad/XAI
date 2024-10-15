@@ -84,6 +84,13 @@ class TagEnv(gym.Env):
             raise ValueError(f"Invalid action {action}")
         self.steps += 1
         if (
+            self.steps >= self.tag_head_start
+            and self.freeze_hider
+            and self.agents.active_agent == AgentType.HIDER
+        ):
+            self.bootcamp.step()
+            return self._handle_agent_switch(True)
+        if (
             (
                 self.bootcamp.name in [BootcampName.HIDER]
                 and self.agents.active_agent == AgentType.SEEKER
@@ -104,13 +111,7 @@ class TagEnv(gym.Env):
                 self.steps < self.tag_head_start
                 and self.agents.active_agent == AgentType.SEEKER
             )
-            or (
-                self.steps >= self.tag_head_start
-                and self.freeze_hider
-                and self.agents.active_agent == AgentType.HIDER
-            )
         ):
-            self.bootcamp.step()
             return self._handle_agent_switch(True)
 
         if self.steps >= self.max_steps:
