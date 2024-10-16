@@ -13124,3 +13124,22 @@ INFO: QNetwork(
 )
 WARNING: GIF is enabled but the environment does not support RGB array rendering.
 INFO: Learning...
+INFO: Number of parameters: 480453
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=800, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
