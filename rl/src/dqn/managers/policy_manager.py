@@ -10,11 +10,12 @@ class PolicyManager:
         action_space: gym.Space,
         hidden_layers: list[int],
         conv_layers: list[int],
+        dueling: bool,
     ) -> DQNPolicy:
         if isinstance(policy, str):
             if policy.lower() == "dqnpolicy":
                 return DQNPolicy(
-                    observation_space, action_space, hidden_layers, conv_layers
+                    observation_space, action_space, hidden_layers, conv_layers, dueling
                 )
             raise ValueError(f"Unknown policy: {policy}")
         return policy

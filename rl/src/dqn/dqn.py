@@ -41,7 +41,7 @@ class DQN(SingleAgentBase):
         agent_id: int = 0,
         dueling: bool = False,
         double: bool = True,
-        memory_size: int = 10000,
+        memory_size: int = 100000,
         lr: float = 1e-3,
         gamma: float = 0.99,
         epsilon_start: float = 0.9,
@@ -87,7 +87,8 @@ class DQN(SingleAgentBase):
         self.env = env
         self.n_actions = env.action_space.n
         self.agent_id = agent_id
-
+        self.dueling = dueling
+        self.double = double
         self.save_model = save_model
         self.model_path = model_path
         self.model_name = model_name
@@ -106,6 +107,7 @@ class DQN(SingleAgentBase):
             action_space=env.action_space,
             hidden_layers=hidden_layers,
             conv_layers=conv_layers,
+            dueling=dueling,
         )
 
         self.hidden_layers = hidden_layers
@@ -122,7 +124,6 @@ class DQN(SingleAgentBase):
 
         self.memory = MemoryManager(memory_size).initialize()
 
-        self.double = double
         self.steps_done = 0
         self.episodes = 0
 
@@ -138,6 +139,7 @@ class DQN(SingleAgentBase):
             action_space=self.env.action_space,
             hidden_layers=self.hp.hidden_layers,
             conv_layers=self.hp.conv_layers,
+            dueling=self.dueling,
         )
         self.policy_net = self.policy.policy_net
         self.target_net = self.policy.target_net
