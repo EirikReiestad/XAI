@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import logging
 import numpy as np
 from environments.gymnasium.utils.state_type import StateType
 
@@ -22,6 +23,9 @@ class State:
         elif self.active == StateType.RGB and self.rgb is None:
             raise ValueError("RGB state is required.")
 
+        if self.active == StateType.PARTIAL:
+            logging.warning("Partial state is not normalized.")
+
     @property
     def active_state(self) -> np.ndarray:
         """Returns the active state based on the `active` type."""
@@ -34,3 +38,10 @@ class State:
                 return self.rgb
             case _:
                 raise ValueError("Invalid state type.")
+
+    @property
+    def normalized_state(self) -> np.ndarray:
+        """Returns the normalized state based on the `active` type."""
+        if self.active == StateType.FULL:
+            return self.full / self.full.max()
+        return self.active_state

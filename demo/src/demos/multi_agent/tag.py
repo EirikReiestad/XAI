@@ -23,7 +23,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 class TagDemo:
-    """Demo for the CartPole-v1 environment."""
+    """Demo for the Tag-v0 environment."""
 
     def __init__(self) -> None:
         self.episode_information = EpisodeInformation(
@@ -34,7 +34,7 @@ class TagDemo:
         current_user = getpass.getuser()
         project = f"tag-v0-{current_user}"
 
-        render_mode = "human" if not current_user == "eirre" else "rgb_array"
+        render_mode = "rgb_array" if not current_user == "eirre" else "rgb_array"
         env = gym.make("TagEnv-v0", render_mode=render_mode)
         model_name = "tag-v0"
         self.env = MultiAgentEnv(env)

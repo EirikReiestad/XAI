@@ -37,6 +37,7 @@ class TagRenderer:
         if self.post_init_screen:
             return
         pg.display.init()
+        pg.display.set_caption("")
         self.screen = pg.display.set_mode((self.screen_width, self.screen_height))
         self.post_init_screen = True
 
