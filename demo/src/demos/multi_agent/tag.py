@@ -23,7 +23,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 class TagDemo:
-    """Demo for the CartPole-v1 environment."""
+    """Demo for the Tag-v0 environment."""
 
     def __init__(self) -> None:
         self.episode_information = EpisodeInformation(

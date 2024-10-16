@@ -52,7 +52,7 @@ class TagEnv(gym.Env):
         self.bootcamp = Bootcamp()
         self.tag_radius = 1
         self.tag_head_start = 0
-        self.freeze_hider = False
+        self.freeze_hider = True
         self.terminate_out_of_bounds = False
 
         FileHandler.file_exist(folder_name, filename)
@@ -65,7 +65,7 @@ class TagEnv(gym.Env):
             filename,
         )
 
-        self.max_steps = self.state.width * self.state.height * 3
+        self.max_steps = self.state.width * self.state.height * 10
 
         self.tag_renderer = TagRenderer(
             self.state.width, self.state.height, self.screen_width, self.screen_height
@@ -89,7 +89,6 @@ class TagEnv(gym.Env):
     def step(self, action: int) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
         if not self.action_space.contains(action):
             raise ValueError(f"Invalid action {action}")
-        self.steps += 1
         if (
             self.steps >= self.tag_head_start
             and self.freeze_hider
@@ -97,6 +96,7 @@ class TagEnv(gym.Env):
         ):
             self.bootcamp.step()
             return self._handle_agent_switch(True)
+        self.steps += 1
         if (
             (
                 self.bootcamp.name in [BootcampName.HIDER]
@@ -124,7 +124,7 @@ class TagEnv(gym.Env):
         if self.steps >= self.max_steps:
             reward = self.tag_rewards.terminated_reward
             return (
-                self.state.active_state,
+                self.state.normalized_state,
                 reward,
                 True,
                 True,
@@ -185,7 +185,7 @@ class TagEnv(gym.Env):
         self.bootcamp.step()
 
         return (
-            self.state.active_state,
+            self.state.normalized_state,
             reward,
             terminated,
             False,
@@ -197,7 +197,7 @@ class TagEnv(gym.Env):
     ) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
         self.agents.set_next_agent()
         return (
-            self.state.active_state,
+            self.state.normalized_state,
             0,
             False,
             False,
@@ -237,7 +237,7 @@ class TagEnv(gym.Env):
         if full_reset:
             self.bootcamp.reset()
 
-        return_state = self.state.active_state
+        return_state = self.state.normalized_state
         return return_state, {"state_type": self.state_type.value}
 
     def render(self, render_mode: Optional[str] = None) -> Optional[np.ndarray]:
@@ -279,10 +279,10 @@ class TagEnv(gym.Env):
             self.agents.inactive.position,
             self.objects,
         )
-        return self.state.active_state
+        return self.state.normalized_state
 
     def get_active_state(self) -> np.ndarray:
-        return self.state.active_state
+        return self.state.normalized_state
 
     def _do_action(self, action: ActionType) -> tuple[Optional[np.ndarray], float]:
         reward = 0

@@ -28,8 +28,8 @@ class TagState:
         self.screen_height = screen_height
         self.state_type = state_type
         self.random_seeker_position = False
-        self.random_hider_position = False
-        self.random_box_position = False
+        self.random_hider_position = True
+        self.random_box_position = True
         self._init_states(filename)
         self._init_dimensions()
 
@@ -60,6 +60,10 @@ class TagState:
     @property
     def active_state(self) -> np.ndarray:
         return self.state.active_state
+
+    @property
+    def normalized_state(self) -> np.ndarray:
+        return self.state.normalized_state
 
     @property
     def full(self) -> np.ndarray:
