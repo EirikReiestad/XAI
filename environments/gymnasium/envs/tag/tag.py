@@ -124,7 +124,7 @@ class TagEnv(gym.Env):
         if self.steps >= self.max_steps:
             reward = self.tag_rewards.terminated_reward
             return (
-                self.state.normalized_state,
+                self.state.active_state,
                 reward,
                 True,
                 True,
@@ -185,7 +185,7 @@ class TagEnv(gym.Env):
         self.bootcamp.step()
 
         return (
-            self.state.normalized_state,
+            self.state.active_state,
             reward,
             terminated,
             False,
@@ -197,7 +197,7 @@ class TagEnv(gym.Env):
     ) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
         self.agents.set_next_agent()
         return (
-            self.state.normalized_state,
+            self.state.active_state,
             0,
             False,
             False,
@@ -237,7 +237,7 @@ class TagEnv(gym.Env):
         if full_reset:
             self.bootcamp.reset()
 
-        return_state = self.state.normalized_state
+        return_state = self.state.active_state
         return return_state, {"state_type": self.state_type.value}
 
     def render(self, render_mode: Optional[str] = None) -> Optional[np.ndarray]:
@@ -279,10 +279,10 @@ class TagEnv(gym.Env):
             self.agents.inactive.position,
             self.objects,
         )
-        return self.state.normalized_state
+        return self.state.active_state
 
     def get_active_state(self) -> np.ndarray:
-        return self.state.normalized_state
+        return self.state.active_state
 
     def _do_action(self, action: ActionType) -> tuple[Optional[np.ndarray], float]:
         reward = 0
@@ -464,8 +464,6 @@ class TagEnv(gym.Env):
         FileHandler.file_exist(folder_name, filename)
         filename = folder_name + filename
         self.state = TagState(
-            self.width,
-            self.height,
             self.screen_width,
             self.screen_height,
             self.state_type,

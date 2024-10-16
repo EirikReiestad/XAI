@@ -42,16 +42,17 @@ class DQN(SingleAgentBase):
         dueling: bool = False,
         double: bool = True,
         memory_size: int = 10000,
-        lr: float = 1e-4,
+        lr: float = 1e-3,
         gamma: float = 0.99,
         epsilon_start: float = 0.9,
         epsilon_end: float = 0.05,
-        epsilon_decay: int = 10000,
-        batch_size: int = 32,
+        epsilon_decay: int = 5000,
+        batch_size: int = 64,
         tau: float = 0.005,
         hidden_layers: list[int] = [512],
         conv_layers: list[int] = [32, 32],
-        train_frequency: int = 10,
+        train_frequency: int = 16,
+        update_target_frequency: int = 1000,
         optimize_method: str = "hard",  # "hard" or "soft"
         wandb_active: bool = False,
         wandb_config: WandBConfig | None = None,
@@ -93,6 +94,7 @@ class DQN(SingleAgentBase):
         self.save_every_n_episodes = save_every_n_episodes
 
         self.train_frequency = train_frequency
+        self.update_target_frequency = update_target_frequency
         self.optimize_method = optimize_method
 
         self.eps_threshold = 0
@@ -292,7 +294,7 @@ class DQN(SingleAgentBase):
         if self.optimize_method == "soft":
             self._soft_update_target_net()
         else:
-            if self.steps_done % self.train_frequency == 0:
+            if self.steps_done % self.update_target_frequency == 0:
                 self._hard_update_target_net()
 
     def predict(self, states: torch.Tensor) -> list[np.ndarray] | np.ndarray:
@@ -387,7 +389,11 @@ class DQN(SingleAgentBase):
 
         self.optimizer.zero_grad()
         loss.backward()
+<<<<<<< HEAD
         torch.nn.utils.clip_grad_value_(self.policy_net.parameters(), 10)
+=======
+        # torch.nn.utils.clip_grad_value_(self.policy_net.parameters(), 100)
+>>>>>>> 88755ce (model)
         self.optimizer.step()
 
         self.memory.update_priorities(indices, td_errors.squeeze(1).detach().numpy())
