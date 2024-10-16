@@ -45,13 +45,13 @@ class DQN(SingleAgentBase):
         lr: float = 1e-3,
         gamma: float = 0.99,
         epsilon_start: float = 0.9,
-        epsilon_end: float = 0.05,
+        epsilon_end: float = 0.1,
         epsilon_decay: int = 5000,
-        batch_size: int = 64,
+        batch_size: int = 32,
         tau: float = 0.005,
-        hidden_layers: list[int] = [512],
-        conv_layers: list[int] = [32, 32],
-        train_frequency: int = 16,
+        hidden_layers: list[int] = [64, 64, 32],
+        conv_layers: list[int] = [],
+        train_frequency: int = 10,
         update_target_frequency: int = 1000,
         optimize_method: str = "hard",  # "hard" or "soft"
         wandb_active: bool = False,
@@ -344,6 +344,11 @@ class DQN(SingleAgentBase):
             device=device,
             dtype=torch.bool,
         )
+
+        if len(non_final_mask) == 0:
+            logging.warning("No non-final states in the batch.")
+            return
+
         non_final_next_states = torch.cat(
             [s for s in batch.next_state if s is not None]
         )
