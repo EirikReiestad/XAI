@@ -44,7 +44,7 @@ class DQN(SingleAgentBase):
         memory_size: int = 100000,
         lr: float = 1e-3,
         gamma: float = 0.99,
-        epsilon_start: float = 0.9,
+        epsilon_start: float = 1.0,
         epsilon_end: float = 0.1,
         epsilon_decay: int = 100000,
         batch_size: int = 64,
