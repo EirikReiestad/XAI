@@ -12595,4 +12595,403 @@ ERROR: Traceback (most recent call last):
 RuntimeError: torch.cat(): expected a non-empty list of Tensors
 
 WARNING: Error: Could not find wandb directory: ./wandb
+<<<<<<< HEAD
 >>>>>>> 88755ce (model)
+=======
+INFO: Number of parameters: 77796
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (4): ReLU()
+    (5): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=128, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+ERROR: torch.cat(): expected a non-empty list of Tensors
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 253, in _collect_rollouts
+    self.agents[i].train(
+  File "/home/eirik/Projects/XAI/rl/src/dqn/dqn.py", line 292, in train
+    self._optimize_model()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/dqn.py", line 347, in _optimize_model
+RuntimeError: torch.cat(): expected a non-empty list of Tensors
+
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 77796
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (4): ReLU()
+    (5): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=128, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+INFO: Number of parameters: 77796
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (4): ReLU()
+    (5): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=128, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+ERROR: torch.cat(): expected a non-empty list of Tensors
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 253, in _collect_rollouts
+    self.agents[i].train(
+  File "/home/eirik/Projects/XAI/rl/src/dqn/dqn.py", line 292, in train
+  File "/home/eirik/Projects/XAI/rl/src/dqn/dqn.py", line 351, in _optimize_model
+    f"No next states in batch for agent {self.agent_id}."
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: torch.cat(): expected a non-empty list of Tensors
+
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 77796
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (4): ReLU()
+    (5): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=128, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+INFO: Number of parameters: 77796
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (4): ReLU()
+    (5): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=128, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+INFO: Number of parameters: 77796
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (4): ReLU()
+    (5): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=128, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+INFO: Number of parameters: 77796
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (4): ReLU()
+    (5): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=128, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+INFO: Number of parameters: 77796
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (4): ReLU()
+    (5): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=128, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+INFO: Number of parameters: 77796
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (4): ReLU()
+    (5): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=128, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+INFO: Number of parameters: 77796
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (4): ReLU()
+    (5): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=128, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+INFO: Number of parameters: 77796
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (4): ReLU()
+    (5): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=128, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+INFO: Number of parameters: 77796
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (4): ReLU()
+    (5): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=128, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+INFO: Number of parameters: 77796
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (4): ReLU()
+    (5): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=128, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+INFO: Number of parameters: 77796
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (4): ReLU()
+    (5): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=128, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+INFO: Number of parameters: 77796
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (4): ReLU()
+    (5): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=128, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+ERROR: cannot access local variable 'non_final_next_states' where it is not associated with a value
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 253, in _collect_rollouts
+    self.agents[i].train(
+  File "/home/eirik/Projects/XAI/rl/src/dqn/dqn.py", line 292, in train
+    self._optimize_model()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/dqn.py", line 373, in _optimize_model
+    self.policy_net(non_final_next_states).max(1)[1].unsqueeze(1)
+                    ^^^^^^^^^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'non_final_next_states' where it is not associated with a value
+
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 4580
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=36, out_features=64, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=64, out_features=32, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+ERROR: Next state cannot be None.
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 253, in _collect_rollouts
+    self.agents[i].train(
+  File "/home/eirik/Projects/XAI/rl/src/dqn/dqn.py", line 290, in train
+    raise ValueError("Next state cannot be None.")
+ValueError: Next state cannot be None.
+
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 4580
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=36, out_features=64, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=64, out_features=32, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Number of parameters: 4580
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=36, out_features=64, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=64, out_features=32, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+ERROR: Next state cannot be None.
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 253, in _collect_rollouts
+    self.agents[i].train(
+  File "/home/eirik/Projects/XAI/rl/src/dqn/dqn.py", line 291, in train
+    raise ValueError("Next state cannot be None.")
+ValueError: Next state cannot be None.
+
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 4580
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=36, out_features=64, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=64, out_features=32, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+INFO: Number of parameters: 4580
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=36, out_features=64, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=64, out_features=32, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+INFO: Number of parameters: 8740
+INFO: QNetwork(
+  (conv_feature): Sequential()
+  (fc_feature): Sequential(
+    (0): Linear(in_features=36, out_features=64, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=64, out_features=64, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=64, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+>>>>>>> b953503 (feat: advanced env)
