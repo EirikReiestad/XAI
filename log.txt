@@ -12430,3 +12430,160 @@ INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 2 fo
 INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 2 for agent 0
 INFO: BootcampName.SLOW_AGENT Bootcamp completed, starting BootcampName.COMBINED Bootcamp #0 for 0 days
 INFO: BootcampName.COMBINED Bootcamp completed, starting BootcampName.FINISHED Bootcamp #0 for 0 days
+INFO: Number of parameters: 77796
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (4): ReLU()
+    (5): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=128, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+INFO: BootcampName.HIDER Bootcamp completed, starting BootcampName.SEEKER Bootcamp #0 for 0 days
+INFO: BootcampName.SEEKER Bootcamp completed, starting BootcampName.SLOW_AGENT Bootcamp #0 for 0 days
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 9 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 9 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 8 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 8 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 7 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 7 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 6 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 6 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 5 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 5 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 4 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 4 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 3 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 3 for agent 0
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 2 for agent 1
+INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 2 for agent 0
+INFO: BootcampName.SLOW_AGENT Bootcamp completed, starting BootcampName.COMBINED Bootcamp #0 for 0 days
+INFO: BootcampName.COMBINED Bootcamp completed, starting BootcampName.FINISHED Bootcamp #0 for 0 days
+ERROR: torch.cat(): expected a non-empty list of Tensors
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 253, in _collect_rollouts
+    self.agents[i].train(
+  File "/home/eirik/Projects/XAI/rl/src/dqn/dqn.py", line 290, in train
+    self._optimize_model()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/dqn.py", line 345, in _optimize_model
+    non_final_next_states = torch.cat(
+                            ^^^^^^^^^^
+RuntimeError: torch.cat(): expected a non-empty list of Tensors
+
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 77796
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (4): ReLU()
+    (5): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=128, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+ERROR: 5 is not a valid BootcampName
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 206, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 29, in step_multiple
+    observation, reward, terminated, trunc, info = self.env.step(action)
+                                                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/common.py", line 393, in step
+    return super().step(action)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/core.py", line 322, in step
+    return self.env.step(action)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/common.py", line 285, in step
+    return self.env.step(action)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 92, in step
+    self.bootcamp.step()
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/bootcamp.py", line 63, in step
+    self._next()
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/bootcamp.py", line 107, in _next
+    self._next()
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/bootcamp.py", line 107, in _next
+    self._next()
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/bootcamp.py", line 107, in _next
+    self._next()
+  [Previous line repeated 1 more time]
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/bootcamp.py", line 106, in _next
+    self._name = BootcampName(self._name.value + 1)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/enum.py", line 717, in __call__
+    return cls.__new__(cls, value)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/enum.py", line 1133, in __new__
+    raise ve_exc
+ValueError: 5 is not a valid BootcampName
+
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 77796
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (4): ReLU()
+    (5): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=128, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+INFO: Number of parameters: 77796
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (3): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (4): ReLU()
+    (5): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=128, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=4, bias=True)
+  )
+)
+INFO: Learning...
+ERROR: torch.cat(): expected a non-empty list of Tensors
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 253, in _collect_rollouts
+    self.agents[i].train(
+  File "/home/eirik/Projects/XAI/rl/src/dqn/dqn.py", line 290, in train
+    self._optimize_model()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/dqn.py", line 345, in _optimize_model
+    non_final_next_states = torch.cat(
+                            ^^^^^^^^^^
+RuntimeError: torch.cat(): expected a non-empty list of Tensors
+
+WARNING: Error: Could not find wandb directory: ./wandb

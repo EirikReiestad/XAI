@@ -102,6 +102,11 @@ class Bootcamp:
 
     def _next(self):
         bootcamp_days = BootcampTrainingSteps().get_days(self._name)
+        if bootcamp_days == 0:
+            if self._name == BootcampName.FINISHED:
+                return
+            self._name = BootcampName(self._name.value + 1)
+            self._next()
         if self._training_days < bootcamp_days:
             return
         if self._name == BootcampName.FINISHED:
