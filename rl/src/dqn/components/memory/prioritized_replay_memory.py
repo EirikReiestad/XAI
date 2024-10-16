@@ -27,7 +27,12 @@ class PrioritizedReplayMemory(ReplayMemoryBase):
             priorities = self.priorities
         else:
             priorities = self.priorities[: self.position]
-        probabilities = priorities / priorities.sum()
+
+        if priorities.sum() == 0:
+            probabilities = np.ones_like(priorities) / len(priorities)
+        else:
+            probabilities = priorities / priorities.sum()
+
         indices = np.random.choice(len(self.memory), batch_size, p=probabilities)
         transitions = [self.memory[idx] for idx in indices]
         total = len(self.memory)
