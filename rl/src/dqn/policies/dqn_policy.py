@@ -11,6 +11,9 @@ class DQNPolicy:
         conv_layers: list[int],
         dueling: bool = False,
     ):
+        self.observation_space = observation_space
+        self.action_space = action_space
+
         self._policy_net: QNetwork = QNetwork(
             observation_space,
             action_space,

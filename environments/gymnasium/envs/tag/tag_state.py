@@ -115,16 +115,16 @@ class TagState:
     def reset(self):
         self.state.full = self.init_full_state
         seeker_position = FullStateDataExtractor.get_agent_position(
-            self.init_full_state, AgentType.SEEKER
+            self.state.full, AgentType.SEEKER
         )
         hider_position = FullStateDataExtractor.get_agent_position(
-            self.init_full_state, AgentType.HIDER
+            self.state.full, AgentType.HIDER
         )
         obstacle_positions = FullStateDataExtractor.get_positions(
-            self.init_full_state, TileType.OBSTACLE
+            self.state.full, TileType.OBSTACLE
         )
         box_positions = FullStateDataExtractor.get_positions(
-            self.init_full_state, TileType.BOX
+            self.state.full, TileType.BOX
         )
         obstacles = [
             Object(ObjectType.OBSTACLE, position, False)

@@ -9,11 +9,11 @@ from PIL import Image
 
 import wandb
 from environments.gymnasium.wrappers import MultiAgentEnv
+from managers import WandBConfig
 from rl.src.base import MultiAgentBase
 from rl.src.dqn import DQN
 from rl.src.dqn.components.types import Rollout, RolloutReturn
 from rl.src.dqn.policies import DQNPolicy
-from rl.src.managers import WandBConfig
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 

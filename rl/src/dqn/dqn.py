@@ -14,9 +14,9 @@ import torch
 import torch.nn as nn
 from PIL import Image
 
+from managers import WandBConfig, WandBManager
 from rl.src.base import SingleAgentBase
 from rl.src.common import checker, setter
-from rl.src.managers import WandBConfig, WandBManager
 
 from .common.hyperparameter import DQNHyperparameter
 from .components.types import Rollout, RolloutReturn, Transition
@@ -514,6 +514,7 @@ class DQN(SingleAgentBase):
             return
 
         path = f"{artifact_dir}/{self.model_name}"
+        print(path)
         if not path.endswith(".pt"):
             path += ".pt"
 

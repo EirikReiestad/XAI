@@ -16,7 +16,7 @@ from renderer import Renderer
 from rl.src.common.getter import get_torch_from_numpy
 from rl.src.dqn.common.q_values_map import get_q_values_map
 from rl.src.dqn.wrapper import MultiAgentDQN
-from rl.src.managers import WandBConfig
+from managers import WandBConfig
 
 is_ipython = "inline" in matplotlib.get_backend()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -45,23 +45,23 @@ class TagDemo:
             self.env,
             self.num_agents,
             "dqnpolicy",
-            wandb_active=True,
+            wandb_active=False,
             wandb_config=wandb_config,
             model_name=model_name,
             save_every_n_episodes=50,
-            save_model=True,
-            load_model=False,
+            save_model=False,
+            load_model=True,
             gif=True,
-            run_path="eirikreiestad-ntnu/tag-v0-idun",
-            model_artifact="model_3000",
-            version_numbers=["v0", "v1"],
+            run_path="eirikreiestad-ntnu/tag-v0-eirre",
+            model_artifact="model_1550",
+            version_numbers=["v42", "v43"],
         )
 
     def run(
         self,
         episodes: int = 100000,
         num_sweep_episodes: int = 2500,
-        sweep: bool = True,
+        sweep: bool = False,
         shap: bool = False,
         show: bool = False,
     ):

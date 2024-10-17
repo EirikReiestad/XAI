@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 import numpy as np
 import torch
 
-from rl.src.managers import WandBConfig, WandBManager
+from managers import WandBManager, WandBConfig
 
 
 class SingleAgentBase(ABC):

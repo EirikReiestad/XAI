@@ -90,10 +90,10 @@ class QNetwork(BasePolicy):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         device = next(self.parameters()).device
-
         x = self._alter_input_shape(x)
 
         x = self.conv_feature(x)
+
         x = torch.flatten(x, start_dim=1)
         x = x.to(device)
         x = self.fc_feature(x)

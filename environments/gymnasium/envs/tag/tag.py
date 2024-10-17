@@ -20,6 +20,7 @@ from .env_utils import EnvUtils
 from .tag_renderer import TagRenderer
 from .tag_rewards import TagRewards
 from .tag_state import TagState
+from .tag_concepts import TagConcepts, Concept
 from .utils import (
     AGENT_TILE_TYPE,
     ActionType,
@@ -75,6 +76,8 @@ class TagEnv(gym.Env):
         )
         self._init_spaces()
         self.tag_rewards = TagRewards()
+
+        self.tag_concepts = TagConcepts(self.state, self.num_actions)
 
         self.steps = 0
         self.steps_beyond_terminated = None
@@ -451,6 +454,11 @@ class TagEnv(gym.Env):
     def get_occluded_states(self) -> np.ndarray:
         return self.state.get_occluded_states()
 
+    def get_concept_data(
+        self, concept: str, samples: int
+    ) -> tuple[list[np.ndarray], list[str]]:
+        return self.tag_concepts.get_concept_data(concept, samples)
+
     @property
     def config(self) -> dict:
         rewards = self.tag_rewards.config
@@ -477,3 +485,16 @@ class TagEnv(gym.Env):
     @render_mode.setter
     def render_mode(self, mode: str | None):
         self.tag_renderer.render_mode = mode
+
+    @property
+    def concepts(self) -> dict:
+        return self.tag_concepts.get_concepts_dict()
+
+    @property
+    def concept_names(self) -> list[str]:
+        return self.tag_concepts.concept_names
+
+    def get_concept(
+        self, concept: str, samples: int
+    ) -> tuple[list[np.ndarray], list[str]]:
+        return self.tag_concepts.get_concept(concept, samples)
