@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 INFO: Number of parameters: 177348
 INFO: QNetwork(
@@ -13074,3 +13075,5 @@ INFO: QNetwork(
 WARNING: GIF is enabled but the environment does not support RGB array rendering.
 INFO: Learning...
 >>>>>>> d248804 (feat: all in)
+=======
+>>>>>>> 3ffcdcd (feat: created cav scores)

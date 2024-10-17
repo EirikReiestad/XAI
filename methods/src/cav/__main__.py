@@ -9,15 +9,15 @@ model_name = "tag-v0"
 models = [
     "model_50:v76",
     "model_350:v72",
-    # "model_650:v69",
-    # "model_950:v54",
-    # "model_1250:v50",
-    # "model_1550:v42",
-    # "model_1850:v24",
-    # "model_2150:v20",
-    # "model_2450:v20",
-    # "model_2750:v19",
-    # "model_3050:v16",
+    "model_650:v69",
+    #    "model_950:v54",
+    #    "model_1250:v50",
+    #    "model_1550:v42",
+    #    "model_1850:v24",
+    #    "model_2150:v20",
+    #    "model_2450:v20",
+    #    "model_2750:v19",
+    #    "model_3050:v16",
 ]
 
 gym = gym.make("TagEnv-v0")
