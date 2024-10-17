@@ -145,7 +145,7 @@ class Bootcamp:
 
     def _get_slow_factors(self, n: int, parts: int) -> list[int]:
         if parts == 1:
-            return [10]
+            return [n]
         parts -= 1
         avergage_slow_factor = n // parts
         result = [n]
