@@ -12,7 +12,6 @@ artifacts/
 
 !rl/models/.gitkeep
 !models/.gitkeep
-!assets/gifs/.gitkeep
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
