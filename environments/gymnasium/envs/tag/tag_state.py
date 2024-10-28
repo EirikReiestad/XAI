@@ -58,7 +58,9 @@ class TagState:
         self._init_full_state = value
 
     @property
-    def active_state(self) -> np.ndarray:
+    def active_state(self, normalized: bool = True) -> np.ndarray:
+        if normalized:
+            return self.state.normalized_state
         return self.state.active_state
 
     @property

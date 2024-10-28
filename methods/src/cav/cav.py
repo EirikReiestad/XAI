@@ -3,6 +3,7 @@ import torch
 import numpy as np
 import torch.nn as nn
 from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
 
 
 class CAV:
@@ -48,10 +49,10 @@ class CAV:
             )
 
     def _compute_cav(
-        self, layer, positive_activations: dict, negaive_activations: dict
+        self, layer, positive_activations: dict, negative_activations: dict
     ):
         pos_act = positive_activations["output"].numpy()
-        neg_act = negaive_activations["output"].numpy()
+        neg_act = negative_activations["output"].numpy()
 
         pos_act = pos_act.reshape(pos_act.shape[0], -1)
         neg_act = neg_act.reshape(neg_act.shape[0], -1)
@@ -62,9 +63,13 @@ class CAV:
         combined_activations = np.concatenate([pos_act, neg_act])
         combined_labels = np.concatenate([pos_labels, neg_labels])
 
-        idx = np.random.permutation(combined_activations.shape[0])
-        combined_activations = combined_activations[idx]
-        combined_labels = combined_labels[idx]
+        # TODO: Enable when working
+        # idx = np.random.permutation(combined_activations.shape[0])
+        # combined_activations = combined_activations[idx]
+        # combined_labels = combined_labels[idx]
+
+        scaler = StandardScaler()
+        combined_activations = scaler.fit_transform(combined_activations)
 
         regressor = LogisticRegression()
         regressor.fit(combined_activations, combined_labels)

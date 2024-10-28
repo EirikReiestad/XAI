@@ -51,6 +51,7 @@ class Models:
         artifact_dir, metadata = self.wandb_manager.load_model(
             self._run_id, self._model_artifact, self._version_number
         )
+        print(f"Artifact dir: {artifact_dir}")
         if artifact_dir is None or metadata is None:
             raise Exception(f"Model not found, {traceback.format_exc}")
         self._metadata = metadata
@@ -63,6 +64,14 @@ class Models:
         self._model.target_net.load_state_dict(self._model.policy_net.state_dict())
         self._model.policy_net.eval()
         self._model.target_net.eval()
+
+        self._save_locally()
+
+    def _save_locally(self):
+        path = f"models/latest/{self._model_artifact}/{self._version_number}"
+        if not path.endswith(".pt"):
+            path += ".pt"
+        torch.save(self._model.policy_net.state_dict(), path)
 
     def has_next(self):
         return self._model_idx < len(self._model_artifacts)

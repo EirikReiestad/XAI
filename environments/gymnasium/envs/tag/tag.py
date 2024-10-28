@@ -47,7 +47,7 @@ class TagEnv(gym.Env):
         self.screen_width = 600
         self.screen_height = 600
         folder_name = "environments/gymnasium/data/tag/"
-        filename = "tag-0-7.txt"
+        filename = "tag-0-10-10.txt"
         self.state_type = StateType.FULL
         self.bootcamp = Bootcamp()
         self.tag_radius = 1
@@ -467,16 +467,6 @@ class TagEnv(gym.Env):
     def get_concept(
         self, concept: str, samples: int
     ) -> tuple[list[np.ndarray], list[str]]:
-        filename = "concept_env.txt"
-        folder_name = "environments/gymnasium/data/tag/"
-        FileHandler.file_exist(folder_name, filename)
-        filename = folder_name + filename
-        self.state = TagState(
-            self.screen_width,
-            self.screen_height,
-            self.state_type,
-            filename,
-        )
         return self.tag_concepts.get_concept(concept, samples)
 
     @property
@@ -492,7 +482,7 @@ class TagEnv(gym.Env):
 
     @property
     def num_actions(self) -> int:
-        return 4
+        return 5
 
     @property
     def feature_names(self) -> list[str]:

@@ -49,8 +49,8 @@ class DQN(SingleAgentBase):
         epsilon_decay: int = 5000,
         batch_size: int = 64,
         tau: float = 0.005,
-        hidden_layers: list[int] = [512],
-        conv_layers: list[int] = [32, 32],
+        hidden_layers: list[int] = [128, 128],
+        conv_layers: list[int] = [],
         train_frequency: int = 16,
         update_target_frequency: int = 1000,
         optimize_method: str = "hard",  # "hard" or "soft"

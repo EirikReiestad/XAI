@@ -10,8 +10,10 @@ env_wrapped = CAVWrapper(env)
 concepts = env_wrapped.get_concepts()
 logging.info(f"Concepts: {concepts}")
 
-data_handler = DataHandler()
-data_handler.generate_data(env_wrapped, concept="box-block-middle", n_samples=1000)
-data_handler.save("box-block-middle.csv")
+concept = "random"
 
-data_handler.load_data_from_path("random.csv")
+data_handler = DataHandler()
+data_handler.generate_data(env_wrapped, concept=concept, n_samples=1000)
+data_handler.save(f"{concept}.csv")
+
+data_handler.load_data_from_path(f"{concept}.csv")

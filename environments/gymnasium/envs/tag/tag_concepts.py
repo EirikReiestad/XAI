@@ -36,14 +36,14 @@ class TagConcepts:
     ) -> tuple[list[np.ndarray], list[str]]:
         if concept not in self.concept_names:
             raise ValueError(f"Concept {concept} not found in environment.")
-        if concept == "box-block-middle":
-            return self._get_box_block_middle_concept(samples)
+        if concept == "box-block":
+            return self._get_box_block_concept(samples)
         elif concept == "random":
             return self._get_random_concept(samples)
         else:
             raise NotImplementedError(f"Concept {concept} is not implemented yet.")
 
-    def _get_box_block_middle_concept(
+    def _get_box_block_concept(
         self, samples: int
     ) -> tuple[list[np.ndarray], list[str]]:
         self.state.random_seeker_position = True
@@ -60,6 +60,7 @@ class TagConcepts:
     def _get_random_concept(self, samples: int) -> tuple[list[np.ndarray], list[str]]:
         self.state.random_seeker_position = True
         self.state.random_hider_position = True
+        self.state.random_box_position = True
         states = []
         labels = []
         for _ in range(samples):

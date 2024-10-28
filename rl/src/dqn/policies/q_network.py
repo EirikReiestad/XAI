@@ -58,7 +58,6 @@ class QNetwork(BasePolicy):
         for hidden_dim in conv_layers:
             layers.append(nn.Conv2d(input_size, hidden_dim, kernel_size=3, stride=1))
             layers.append(nn.ReLU())
-            layers.append(nn.BatchNorm2d(hidden_dim))
             input_size = hidden_dim
         return nn.Sequential(*layers)
 

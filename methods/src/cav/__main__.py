@@ -20,12 +20,17 @@ models = [
     #    "model_3050:v16",
 ]
 
+positive_concept = "box-block"
+negative_concept = "random"
+
 gym = gym.make("TagEnv-v0")
 observation_space = gym.observation_space
 action_space = gym.action_space
 
 model = DQNPolicy(observation_space, action_space, [128, 128], [])
 models = Models(model, project_folder, model_name, models)
-analysis = Analysis(models, "random.csv", "random.csv")
+print("test")
+
+analysis = Analysis(models, positive_concept + ".csv", negative_concept + ".csv")
 analysis.run()
 analysis.plot()
