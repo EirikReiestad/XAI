@@ -67,9 +67,11 @@ class Models:
     def has_next(self):
         return self._model_idx < len(self._model_artifacts)
 
+    @property
     def current_model_name(self):
         return self._model_artifact
 
+    @property
     def current_model_steps(self):
         if "steps_done" not in self._metadata:
             logging.error("No steps_done in metadata.")
