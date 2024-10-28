@@ -23,6 +23,8 @@ The parameters can be changed in the [dqn](./rl/src/dqn/dqn.py) or when creating
 
 __Note__: GUI loads the models from WandB, so WandB is required.
 
+Because I am lazy, there is no labels. The left figure represents the seeker (agent 0) and the right figure represents the hider (agent 1).
+
 #### Run the environment generator
 `poetry run python utils`
 

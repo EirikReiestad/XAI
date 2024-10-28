@@ -544,11 +544,10 @@ class DQN(SingleAgentBase):
             return
 
         path = f"{artifact_dir}/{self.model_name}"
-        print(path)
         if not path.endswith(".pt"):
             path += ".pt"
 
-        self.policy_net.load_state_dict(torch.load(path))
+        self.policy_net.load_state_dict(torch.load(path, weights_only=True))
         self.target_net.load_state_dict(self.policy_net.state_dict())
         self.policy_net.eval()
         self.target_net.eval()

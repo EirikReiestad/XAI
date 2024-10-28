@@ -73,11 +73,19 @@ class EnvHandler:
         with open(filename, "r") as f:
             env = [list(map(int, line.strip())) for line in f]
             if len(env) != self.height or any(len(row) != self.width for row in env):
-                logging.error(f"No data: Failed to read tag from file {filename}.")
+                logging.error(f"Wrong data: Failed to read tag from file {filename}.")
+                logging.error(
+                    f"Expected dimensions: {self.width}x{self.height}, got {len(env)}x{len(env[0])}."
+                )
                 return
             self.env = env
 
     def _save_env(self, filename: str):
+        if len(self.env) != self.height or any(
+            len(row) != self.width for row in self.env
+        ):
+            logging.error(f"Invalid tag: Failed to save tag to file {filename}.")
+            return
         with open(filename, "w") as f:
             for row in self.env:
                 f.write("".join(map(str, row)) + "\n")
