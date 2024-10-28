@@ -7,30 +7,30 @@ poetry install
 
 ### Run the project
 #### Run the demo
-´poetry run python demo´
+`poetry run python demo`
 
 [tag demo](./demo/src/demos/multi_agent/tag.py)
 
 __Note__: 
-- WandB is used for logging. If you do not have an account or do not want to use it, the ´wandb_active´ parameter for ´MultiAgentDQN´ should be set to False.
-- ´render_mode´ should be set to False if you do not want to render the environment.
+- WandB is used for logging. If you do not have an account or do not want to use it, the `wandb_active` parameter for `MultiAgentDQN` should be set to False.
+- `render_mode` should be set to False if you do not want to render the environment.
 
 ##### DQN
 The parameters can be changed in the [dqn](./rl/src/dqn/dqn.py) or when creating the DQN object.
 
 #### Run the GUI
-'poetry run python gui'
+`poetry run python gui`
 
 __Note__: GUI loads the models from WandB, so WandB is required.
 
 #### Run the environment generator
-´poetry run python utils´
+`poetry run python utils`
 
 #### Run the data handler (generate data)
-´poetry run python data_handler´
+`poetry run python data_handler`
 
 #### Run the CAV generator and plotter
-´poetry run python methods/src/cav/´
+`poetry run python methods/src/cav/`
 
 __Note__: CAV generator loads the models from WandB, so WandB is required.
 
@@ -41,7 +41,7 @@ __Note__: CAV generator loads the models from WandB, so WandB is required.
   - Dueling is enabled but the model does not support it.
 
 ## Test
-´poetry run python -m unittest discover´
+`poetry run python -m unittest discover`
 
 ## Naming conventions for git
 ### Git branch prefixes
