@@ -192,6 +192,9 @@ class TagEnv(gym.Env):
             return_info,
         )
 
+    def set_state(self, state: np.ndarray) -> np.ndarray:
+        return self.update_state(state)
+
     def _handle_agent_switch(
         self, skip: bool
     ) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
