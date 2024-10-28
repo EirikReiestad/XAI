@@ -39,18 +39,20 @@ class DQN(SingleAgentBase):
         dqn_policy: str | DQNPolicy,
         seed: int | None = None,
         agent_id: int = 0,
-        dueling: bool = False,
+        dueling: bool = True,
         double: bool = True,
         memory_size: int = 100000,
         lr: float = 1e-3,
         gamma: float = 0.99,
-        epsilon_start: float = 0.9,
+        epsilon_start: float = 1.0,
         epsilon_end: float = 0.05,
-        epsilon_decay: int = 5000,
+        epsilon_decay: int = 100000,
+        slow_decay_point: float = 0.4,
+        slow_decay_factor: float = 10,
         batch_size: int = 64,
         tau: float = 0.005,
         hidden_layers: list[int] = [128, 128],
-        conv_layers: list[int] = [],
+        conv_layers: list[int] = [64, 32],
         train_frequency: int = 16,
         update_target_frequency: int = 1000,
         optimize_method: str = "hard",  # "hard" or "soft"
@@ -99,6 +101,9 @@ class DQN(SingleAgentBase):
         self.optimize_method = optimize_method
 
         self.eps_threshold = 0
+
+        self.slow_decay_point = slow_decay_point
+        self.slow_decay_factor = slow_decay_factor
 
         self.dqn_policy = dqn_policy
         self.policy = PolicyManager().get_policy(
@@ -317,6 +322,9 @@ class DQN(SingleAgentBase):
             self.hp.eps_start - self.hp.eps_end
         ) * math.exp(-self.steps_done / self.hp.eps_decay)
         self.steps_done += 1
+
+        if self.eps_threshold < self.slow_decay_point:
+            self.hp.eps_decay *= self.slow_decay_factor
 
         if random.random() > self.eps_threshold:
             with torch.no_grad():

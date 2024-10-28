@@ -386,7 +386,7 @@ class TagEnv(gym.Env):
 
         if self.state_type.value == "full":
             self.observation_space = spaces.Box(
-                low=0, high=8, shape=self.state.full.shape, dtype=np.uint8
+                low=0, high=8, shape=self.state.full.shape, dtype=np.float64
             )
         elif self.state_type.value == "partial":
             self.observation_space = spaces.Box(

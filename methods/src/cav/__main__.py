@@ -29,7 +29,6 @@ action_space = gym.action_space
 
 model = DQNPolicy(observation_space, action_space, [128, 128], [])
 models = Models(model, project_folder, model_name, models)
-print("test")
 
 analysis = Analysis(models, positive_concept + ".csv", negative_concept + ".csv")
 analysis.run()
