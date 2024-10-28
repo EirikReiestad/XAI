@@ -20,7 +20,7 @@ from .env_utils import EnvUtils
 from .tag_renderer import TagRenderer
 from .tag_rewards import TagRewards
 from .tag_state import TagState
-from .tag_concepts import TagConcepts, Concept
+from .tag_concepts import TagConcepts
 from .utils import (
     AGENT_TILE_TYPE,
     ActionType,
@@ -44,8 +44,8 @@ class TagEnv(gym.Env):
     def __init__(self, render_mode: Optional[str] = "rgb_array"):
         self.height = 10
         self.width = 10
-        screen_width = 600
-        screen_height = 600
+        self.screen_width = 600
+        self.screen_height = 600
         folder_name = "environments/gymnasium/data/tag/"
         filename = "tag-0-10-10.txt"
         self.state_type = StateType.FULL
@@ -61,7 +61,7 @@ class TagEnv(gym.Env):
         FileHandler.file_exist(folder_name, filename)
 
         self.tag_renderer = TagRenderer(
-            self.width, self.height, screen_width, screen_height
+            self.width, self.height, self.screen_width, self.screen_height
         )
         self.render_mode = render_mode
 
@@ -69,11 +69,12 @@ class TagEnv(gym.Env):
         self.state = TagState(
             self.width,
             self.height,
-            screen_width,
-            screen_height,
+            self.screen_width,
+            self.screen_height,
             self.state_type,
             filename,
         )
+
         self._init_spaces()
         self.tag_rewards = TagRewards()
 
@@ -454,10 +455,22 @@ class TagEnv(gym.Env):
     def get_occluded_states(self) -> np.ndarray:
         return self.state.get_occluded_states()
 
-    def get_concept_data(
+    def get_concept(
         self, concept: str, samples: int
     ) -> tuple[list[np.ndarray], list[str]]:
-        return self.tag_concepts.get_concept_data(concept, samples)
+        filename = "concept_env.txt"
+        folder_name = "environments/gymnasium/data/tag/"
+        FileHandler.file_exist(folder_name, filename)
+        filename = folder_name + filename
+        self.state = TagState(
+            self.width,
+            self.height,
+            self.screen_width,
+            self.screen_height,
+            self.state_type,
+            filename,
+        )
+        return self.tag_concepts.get_concept(concept, samples)
 
     @property
     def config(self) -> dict:
@@ -493,8 +506,3 @@ class TagEnv(gym.Env):
     @property
     def concept_names(self) -> list[str]:
         return self.tag_concepts.concept_names
-
-    def get_concept(
-        self, concept: str, samples: int
-    ) -> tuple[list[np.ndarray], list[str]]:
-        return self.tag_concepts.get_concept(concept, samples)

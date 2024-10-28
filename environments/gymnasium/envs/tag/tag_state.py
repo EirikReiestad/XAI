@@ -33,6 +33,7 @@ class TagState:
         self.state_type = state_type
         self.random_seeker_position = False
         self.random_hider_position = False
+        self.random_box_position = False
         self.init_states(filename)
 
     @property
