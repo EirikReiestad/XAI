@@ -1,4 +1,5 @@
 import getpass
+import logging
 import traceback
 
 import torch
@@ -52,6 +53,7 @@ class Models:
         )
         if artifact_dir is None or metadata is None:
             raise Exception(f"Model not found, {traceback.format_exc}")
+        self._metadata = metadata
 
         path = f"{artifact_dir}/{self._model_name}"
         if not path.endswith(".pt"):
@@ -67,6 +69,12 @@ class Models:
 
     def current_model_name(self):
         return self._model_artifact
+
+    def current_model_steps(self):
+        if "steps_done" not in self._metadata:
+            logging.error("No steps_done in metadata.")
+            return 0
+        return self._metadata["steps_done"]
 
     @property
     def policy_net(self):

@@ -32,7 +32,7 @@ class Analysis:
             self._cav_scores[self._models.current_model_name] = cav.cav_scores
             self._models.next()
 
-    def plot(self):
+    def plot(self, save_path: str = "cav_plot.png"):
         matrix = np.array(
             [list(scores.values()) for scores in self._cav_scores.values()]
         )
@@ -62,3 +62,5 @@ class Analysis:
         ax1.set_zlabel("CAV Score")
 
         plt.show()
+
+        fig.savefig(save_path)
