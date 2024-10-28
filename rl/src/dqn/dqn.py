@@ -44,6 +44,7 @@ class DQN(SingleAgentBase):
         memory_size: int = 100000,
         lr: float = 1e-3,
         gamma: float = 0.99,
+<<<<<<< HEAD
         epsilon_start: float = 0.9,
         epsilon_end: float = 0.05,
         epsilon_decay: int = 5000,
@@ -53,6 +54,17 @@ class DQN(SingleAgentBase):
         conv_layers: list[int] = [32, 32],
         train_frequency: int = 16,
         update_target_frequency: int = 1000,
+=======
+        epsilon_start: float = 1.0,
+        epsilon_end: float = 0.01,
+        epsilon_decay: int = 500000,
+        batch_size: int = 64,
+        tau: float = 0.005,
+        hidden_layers: list[int] = [128, 128],
+        conv_layers: list[int] = [],
+        train_frequency: int = 10,
+        update_target_frequency: int = 2000,
+>>>>>>> main
         optimize_method: str = "hard",  # "hard" or "soft"
         wandb_active: bool = False,
         wandb_config: WandBConfig | None = None,
@@ -346,6 +358,11 @@ class DQN(SingleAgentBase):
             device=device,
             dtype=torch.bool,
         )
+
+        if len(non_final_mask) == 0:
+            logging.warning("No non-final states in the batch.")
+            return
+
         non_final_next_states = torch.cat(
             [s for s in batch.next_state if s is not None]
         )
@@ -392,10 +409,14 @@ class DQN(SingleAgentBase):
         self.optimizer.zero_grad()
         loss.backward()
 <<<<<<< HEAD
+<<<<<<< HEAD
         torch.nn.utils.clip_grad_value_(self.policy_net.parameters(), 10)
 =======
         # torch.nn.utils.clip_grad_value_(self.policy_net.parameters(), 100)
 >>>>>>> 88755ce (model)
+=======
+        # torch.nn.utils.clip_grad_value_(self.policy_net.parameters(), 100)
+>>>>>>> main
         self.optimizer.step()
 
         self.memory.update_priorities(indices, td_errors.squeeze(1).detach().numpy())

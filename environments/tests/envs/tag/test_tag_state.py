@@ -11,8 +11,6 @@ from environments.gymnasium.envs.tag.tag_state import TagState
 
 class TestTagState(unittest.TestCase):
     def setUp(self):
-        self.width = 5
-        self.height = 5
         self.screen_width = 300
         self.screen_height = 300
         self.state_type = StateType.FULL
@@ -24,8 +22,6 @@ class TestTagState(unittest.TestCase):
             f.write(map)
 
         self.tag_state = TagState(
-            self.width,
-            self.height,
             self.screen_width,
             self.screen_height,
             self.state_type,
@@ -52,7 +48,8 @@ class TestTagState(unittest.TestCase):
 
     def test_update(self):
         new_full_state = (
-            np.ones((self.height, self.width), dtype=np.uint8) * TileType.OBSTACLE.value
+            np.ones((self.tag_state.height, self.tag_state.width), dtype=np.uint8)
+            * TileType.OBSTACLE.value
         )
         seeker_position = Position(5, 5)
         hider_position = Position(6, 6)
@@ -66,14 +63,19 @@ class TestTagState(unittest.TestCase):
 
     @unittest.skip("Not implemented")
     def test_concatenate_states(self):
-        state1 = np.zeros((self.height, self.width), dtype=np.uint8)
-        state1[0] = [i for i in range(self.width)]
-        state2 = np.ones((self.height, self.width), dtype=np.uint8) * TileType.BOX.value
-        state2[-1] = [i for i in range(self.width)]
+        state1 = np.zeros((self.tag_state.height, self.tag_state.width), dtype=np.uint8)
+        state1[0] = [i for i in range(self.tag_state.width)]
+        state2 = (
+            np.ones((self.tag_state.height, self.tag_state.width), dtype=np.uint8)
+            * TileType.BOX.value
+        )
+        state2[-1] = [i for i in range(self.tag_state.width)]
         concatenated_state, is_same = self.tag_state.concatenate_states(
             [state1, state2]
         )
-        self.assertEqual(concatenated_state.shape, (self.height, self.width))
+        self.assertEqual(
+            concatenated_state.shape, (self.tag_state.height, self.tag_state.width)
+        )
         self.assertIsInstance(is_same, bool)
 
     def test_get_obstacle_positions(self):

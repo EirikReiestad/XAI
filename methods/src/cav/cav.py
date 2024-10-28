@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from data_handler import DataHandler
 import torch
 import numpy as np
@@ -109,3 +110,13 @@ class CAV:
     @property
     def cav_scores(self) -> dict:
         return self._cav_scores
+=======
+from torch import nn
+
+
+class CAV:
+    def __init__(self, model: nn.Module):
+        pass
+
+    def compute_cav(self):
+>>>>>>> main

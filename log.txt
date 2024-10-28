@@ -11697,8 +11697,11 @@ INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 2 fo
 INFO: BootcampName.SLOW_AGENT Bootcamp completed, starting BootcampName.COMBINED Bootcamp #0 for 0 days
 INFO: BootcampName.COMBINED Bootcamp completed, starting BootcampName.FINISHED Bootcamp #0 for 0 days
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 5944ba2 (model: tag)
 =======
+=======
+>>>>>>> main
 INFO: Number of parameters: 83076
 INFO: QNetwork(
   (conv_feature): Sequential(
@@ -12437,8 +12440,11 @@ INFO: Continuing with Bootcamp #0 BootcampName.SLOW_AGENT with slow factor: 2 fo
 INFO: BootcampName.SLOW_AGENT Bootcamp completed, starting BootcampName.COMBINED Bootcamp #0 for 0 days
 INFO: BootcampName.COMBINED Bootcamp completed, starting BootcampName.FINISHED Bootcamp #0 for 0 days
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> d11a0db (model)
 =======
+=======
+>>>>>>> main
 INFO: Number of parameters: 77796
 INFO: QNetwork(
   (conv_feature): Sequential(
@@ -12597,8 +12603,11 @@ RuntimeError: torch.cat(): expected a non-empty list of Tensors
 
 WARNING: Error: Could not find wandb directory: ./wandb
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 88755ce (model)
 =======
+=======
+>>>>>>> main
 INFO: Number of parameters: 77796
 INFO: QNetwork(
   (conv_feature): Sequential(
@@ -12996,8 +13005,11 @@ WARNING: No frames in gif to save.
 WARNING: No frames in gif to save.
 WARNING: No frames in gif to save.
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> b953503 (feat: advanced env)
 =======
+=======
+>>>>>>> main
 INFO: Number of parameters: 332964
 INFO: QNetwork(
   (conv_feature): Sequential(
@@ -13074,6 +13086,169 @@ INFO: QNetwork(
 )
 WARNING: GIF is enabled but the environment does not support RGB array rendering.
 INFO: Learning...
+<<<<<<< HEAD
 >>>>>>> d248804 (feat: all in)
 =======
 >>>>>>> 3ffcdcd (feat: created cav scores)
+=======
+INFO: Number of parameters: 480420
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=800, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=4, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Number of parameters: 480453
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=800, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+INFO: Number of parameters: 480453
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=800, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 480453
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=800, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 480453
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=800, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 480453
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=800, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 480453
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=800, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 480453
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=800, out_features=512, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=512, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=32, bias=True)
+    (5): ReLU()
+    (6): Linear(in_features=32, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+>>>>>>> main

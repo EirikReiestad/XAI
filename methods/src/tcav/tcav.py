@@ -3,13 +3,21 @@ import torch.nn as nn
 from torch.optim.adamw import AdamW
 import numpy as np
 
+<<<<<<< HEAD
 from environments.gymnasium.wrappers import CAVWrapper
+=======
+from environments.gymnasium.wrappers import TCAVWrapper
+>>>>>>> main
 
 from .linear_classifier import LinearClassifier
 
 
 class TCAV:
+<<<<<<< HEAD
     def __init__(self, env: CAVWrapper, policy: nn.Module) -> None:
+=======
+    def __init__(self, env: TCAVWrapper, policy: nn.Module) -> None:
+>>>>>>> main
         self.env = env
         self.policy = policy
         self.num_layers = len(list(policy.children()))
