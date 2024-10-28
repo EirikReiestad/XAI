@@ -51,7 +51,6 @@ class Models:
         artifact_dir, metadata = self.wandb_manager.load_model(
             self._run_id, self._model_artifact, self._version_number
         )
-        print(f"Artifact dir: {artifact_dir}")
         if artifact_dir is None or metadata is None:
             raise Exception(f"Model not found, {traceback.format_exc}")
         self._metadata = metadata

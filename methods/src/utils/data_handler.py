@@ -31,5 +31,3 @@ if __name__ == "__main__":
     negative_path = "data/negative_samples.csv"
     data_handler = DataHandler()
     data_handler.load_data_from_path(positive_path, negative_path)
-    print(data_handler.data.positive_samples)
-    print(data_handler.data.negative_samples)

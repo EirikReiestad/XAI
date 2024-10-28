@@ -44,7 +44,6 @@ class SingleAgentShap(SingleAgentBase):
         return self.explainer
 
     def shap_values(self, test_states: np.ndarray | None = None) -> Any:
-        print(test_states)
         states = self.test_states
         if test_states is not None:
             states = test_states

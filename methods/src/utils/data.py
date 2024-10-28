@@ -77,5 +77,3 @@ class Data:
 
 if __name__ == "__main__":
     data = Data("data/positive_samples.csv", "data/negative_samples.csv")
-    print(data.positive_samples)
-    print(data.negative_samples)
