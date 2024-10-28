@@ -42,15 +42,10 @@ class TagEnv(gym.Env):
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 50}
 
     def __init__(self, render_mode: Optional[str] = "rgb_array"):
-<<<<<<< HEAD
         self.height = 10
         self.width = 10
         self.screen_width = 600
         self.screen_height = 600
-=======
-        screen_width = 600
-        screen_height = 600
->>>>>>> main
         folder_name = "environments/gymnasium/data/tag/"
         filename = "tag-0-7.txt"
         self.state_type = StateType.FULL
@@ -64,13 +59,8 @@ class TagEnv(gym.Env):
 
         filename = folder_name + filename
         self.state = TagState(
-<<<<<<< HEAD
             self.screen_width,
             self.screen_height,
-=======
-            screen_width,
-            screen_height,
->>>>>>> main
             self.state_type,
             filename,
         )
@@ -78,11 +68,7 @@ class TagEnv(gym.Env):
         self.max_steps = self.state.width * self.state.height * 10
 
         self.tag_renderer = TagRenderer(
-<<<<<<< HEAD
             self.state.width, self.state.height, self.screen_width, self.screen_height
-=======
-            self.state.width, self.state.height, screen_width, screen_height
->>>>>>> main
         )
         self.render_mode = render_mode
         self._init_spaces()
