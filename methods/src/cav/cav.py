@@ -14,12 +14,19 @@ class CAV:
 
         self._load_data(positive_sample_path, negative_sample_path)
 
-        for layer in self._model.children():
-            layer.register_forward_hook(self._module_hook)
+        self._register_hooks()
 
         self._activations = {}
         self._cavs = {}
         self._cav_scores = {}
+
+    def _register_hooks(self):
+        for name, layer in self._model.named_children():
+            if not isinstance(layer, nn.Sequential):
+                layer.register_forward_hook(self._module_hook)
+                continue
+            for sub_layer in layer:
+                sub_layer.register_forward_hook(self._module_hook)
 
     def _load_data(self, positive_sample_path: str, negative_sample_path: str):
         positive_data = DataHandler()
@@ -83,20 +90,20 @@ class CAV:
         return mean_cav_score
 
     def _compute_activations(self, inputs: list[np.ndarray], requires_grad=False):
+        self._activations.clear()
+
         torch_inputs = torch.stack(
             [torch.tensor(input_array, dtype=torch.float32) for input_array in inputs]
         ).requires_grad_(requires_grad)
-
-        self._activations.clear()
         _ = self._model(torch_inputs)
         return self._activations
 
     def _module_hook(self, module: nn.Module, input, output):
         self._activations[module] = {
-            "output": output.detach(),
             "input": input[
                 0
             ].detach(),  # TODO: Fix this please future Eirik. It should not be indexed.
+            "output": output.detach(),
         }
 
     @property
