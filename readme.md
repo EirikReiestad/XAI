@@ -6,10 +6,26 @@ pip install poetry
 poetry install
 
 ### Run the project
-poetry run python demo
+#### Run the demo
+´poetry run python demo´
+
+[tag demo](./demo/src/demos/multi_agent/tag.py)
+
+__Note__: 
+- WandB is used for logging. If you do not have an account or do not want to use it, the ´wandb_active´ parameter for ´MultiAgentDQN´ should be set to False.
+- ´render_mode´ should be set to False if you do not want to render the environment.
+
+#### Run the environment generator
+´poetry run python utils´
+
+#### Run the data handler (generate data)
+´poetry run python data_handler´
+
+#### Run the CAV generator and plotter
+´poetry run python methods/src/cav/´
 
 ## Test
-poetry run python -m unittest discover
+´poetry run python -m unittest discover´
 
 ## Naming conventions for git
 ### Git branch prefixes

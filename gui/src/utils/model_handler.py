@@ -10,7 +10,7 @@ from methods import Shap
 from rl.src.common.getter import get_torch_from_numpy
 from rl.src.dqn.common.q_values_map import get_q_values_map
 from rl.src.dqn.wrapper import MultiAgentDQN
-from rl.src.managers import WandBConfig
+from managers.src.wandb_manager import WandBConfig
 
 
 class ModelHandler:

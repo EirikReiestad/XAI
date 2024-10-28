@@ -46,7 +46,7 @@ class TagDemo:
             self.env,
             self.num_agents,
             "dqnpolicy",
-            wandb_active=True,
+            wandb_active=False,
             wandb_config=wandb_config,
             model_name=model_name,
             save_every_n_episodes=100,
@@ -86,7 +86,7 @@ class TagDemo:
         self.plotter = Plotter(plot_agent=True)
         self.env = StateWrapper(self.env)
 
-        for i_episode in range(10000):
+        for i_episode in count():
             self.dqn.learn(1)
             state, _ = self.env.reset()
             state = torch.tensor(state, device=device, dtype=torch.float32).unsqueeze(0)

@@ -39,7 +39,7 @@ class DQN(SingleAgentBase):
         dqn_policy: str | DQNPolicy,
         seed: int | None = None,
         agent_id: int = 0,
-        dueling: bool = True,
+        dueling: bool = False,
         double: bool = True,
         memory_size: int = 100000,
         lr: float = 1e-3,
@@ -52,7 +52,7 @@ class DQN(SingleAgentBase):
         batch_size: int = 64,
         tau: float = 0.005,
         hidden_layers: list[int] = [128, 128],
-        conv_layers: list[int] = [64, 32],
+        conv_layers: list[int] = [],
         train_frequency: int = 16,
         update_target_frequency: int = 1000,
         optimize_method: str = "hard",  # "hard" or "soft"
