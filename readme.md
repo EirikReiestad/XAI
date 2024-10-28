@@ -15,6 +15,14 @@ __Note__:
 - WandB is used for logging. If you do not have an account or do not want to use it, the ´wandb_active´ parameter for ´MultiAgentDQN´ should be set to False.
 - ´render_mode´ should be set to False if you do not want to render the environment.
 
+##### DQN
+The parameters can be changed in the [dqn](./rl/src/dqn/dqn.py) or when creating the DQN object.
+
+#### Run the GUI
+'poetry run python gui'
+
+__Note__: GUI loads the models from WandB, so WandB is required.
+
 #### Run the environment generator
 ´poetry run python utils´
 
@@ -23,6 +31,14 @@ __Note__:
 
 #### Run the CAV generator and plotter
 ´poetry run python methods/src/cav/´
+
+__Note__: CAV generator loads the models from WandB, so WandB is required.
+
+### Errors that may occur
+- If you get model shape error, there can be multiple reasons for this.
+  - The environment is the wrong shape.
+  - Hidden layers / convolution layers are the wrong shape.
+  - Dueling is enabled but the model does not support it.
 
 ## Test
 ´poetry run python -m unittest discover´
