@@ -46,7 +46,7 @@ class TagDemo:
             self.env,
             self.num_agents,
             "dqnpolicy",
-            wandb_active=False,
+            wandb_active=True,
             wandb_config=wandb_config,
             model_name=model_name,
             save_every_n_episodes=100,
@@ -60,7 +60,7 @@ class TagDemo:
 
     def run(
         self,
-        episodes: int = 100000,
+        episodes: int = 1000000,
         num_sweep_episodes: int = 2500,
         sweep: bool = False,
         shap: bool = False,
