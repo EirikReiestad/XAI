@@ -33,6 +33,17 @@ class TagState:
         self._init_states(filename)
         self._init_dimensions()
 
+    def remove_box(self):
+        new_full_state, _ = FullStateDataModifier.remove_objects(
+            self.state.full, TileType.BOX
+        )
+        self.update(
+            new_full_state,
+            self.get_agent_position(AgentType.SEEKER),
+            self.get_agent_position(AgentType.HIDER),
+            Objects([], []),
+        )
+
     @property
     def init_full_state(self):
         init_state = self._init_full_state
@@ -60,12 +71,12 @@ class TagState:
     @property
     def active_state(self, normalized: bool = True) -> np.ndarray:
         if normalized:
-            return self.state.normalized_state
+            return self.state.normalized_full_state
         return self.state.active_state
 
     @property
-    def normalized_state(self) -> np.ndarray:
-        return self.state.normalized_state
+    def normalized_full_state(self) -> np.ndarray:
+        return self.state.normalized_full_state
 
     @property
     def full(self) -> np.ndarray:

@@ -17,11 +17,41 @@ class Analysis:
         self._models = models
         self._positive_sample_path = positive_sample_path
         self._negative_sample_path = negative_sample_path
-
         self._cav_scores = {}
         self._model_steps = {}
 
-    def run(self):
+        self._total_cav_scores = {}
+        self._average_cav_scores = {}
+
+    def run(self, averages: int = 10):
+        for _ in range(averages):
+            self._run_cav()
+            self._add_total_cav_scores()
+
+        self._calculate_average_cav_scores(averages)
+
+    def _add_total_cav_scores(self):
+        for model, layers in self._cav_scores.items():
+            if model not in self._total_cav_scores:
+                self._total_cav_scores[model] = {}
+            for (
+                layer,
+                score,
+            ) in layers.items():
+                if layer not in self._total_cav_scores:
+                    self._total_cav_scores[model][layer] = 0
+                self._total_cav_scores[model][layer] += score
+
+    def _calculate_average_cav_scores(self, n: int):
+        for model, layers in self._cav_scores.items():
+            self._average_cav_scores[model] = {}
+            for (
+                layer,
+                score,
+            ) in layers.items():
+                self._average_cav_scores[model][layer] = score / n
+
+    def _run_cav(self):
         while True:
             cav = CAV(
                 self._models.policy_net,
@@ -40,13 +70,12 @@ class Analysis:
 
     def plot(self, save_path: str = "cav_plot.png"):
         matrix = np.array(
-            [list(scores.values()) for scores in self._cav_scores.values()]
+            [list(scores.values()) for scores in self._average_cav_scores.values()]
         )
         steps = [f"{step:.1e}" for step in self._model_steps.values()]
         if len(matrix) == 0:
             logging.error("No CAV scores found.")
             return
-        matrix_flat = matrix.flatten()
 
         fig = plt.figure()
         ax1 = fig.add_subplot(projection="3d")
@@ -56,12 +85,7 @@ class Analysis:
         _xx, _yy = np.meshgrid(_x, _y)
         x, y = _xx.ravel(), _yy.ravel()
 
-        top = matrix_flat
-        bottom = np.zeros_like(top)
-        width = depth = 1
-
-        ax1.bar3d(x, y, bottom, width, depth, top, shade=True)
-
+        ax1.plot_surface(_xx, _yy, matrix, cmap="coolwarm", edgecolor="k")
         ax1.set_zlim(0, 1)
         ax1.set_title("CAV Scores")
         ax1.set_xlabel("Layer")

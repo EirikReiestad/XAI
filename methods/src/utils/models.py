@@ -64,8 +64,6 @@ class Models:
         self._model.policy_net.eval()
         self._model.target_net.eval()
 
-        self._save_locally()
-
     def _save_locally(self):
         path = f"models/latest/{self._model_artifact}/{self._version_number}"
         if not path.endswith(".pt"):
