@@ -104,6 +104,7 @@ class DQN(SingleAgentBase):
 
         self.slow_decay_point = slow_decay_point
         self.slow_decay_factor = slow_decay_factor
+        self.updated_slow_decay = False
 
         self.dqn_policy = dqn_policy
         self.policy = PolicyManager().get_policy(
@@ -323,9 +324,13 @@ class DQN(SingleAgentBase):
         ) * math.exp(-self.steps_done / self.hp.eps_decay)
         self.steps_done += 1
 
-        if self.eps_threshold < self.slow_decay_point:
+        if (
+            self.eps_threshold < self.slow_decay_point
+            and self.updated_slow_decay is False
+        ):
             self.hp.eps_start = self.slow_decay_point
             self.hp.eps_decay *= self.slow_decay_factor
+            self.updated_slow_decay = True
 
         if random.random() > self.eps_threshold:
             with torch.no_grad():
