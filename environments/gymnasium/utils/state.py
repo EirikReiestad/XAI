@@ -11,6 +11,8 @@ class State:
     rgb: np.ndarray
     active: StateType
 
+    max_value: float = 4.0
+
     def __post_init__(self):
         if not isinstance(self.active, StateType):
             raise ValueError("Invalid state type.")
@@ -40,8 +42,6 @@ class State:
                 raise ValueError("Invalid state type.")
 
     @property
-    def normalized_state(self) -> np.ndarray:
+    def normalized_full_state(self) -> np.ndarray:
         """Returns the normalized state based on the `active` type."""
-        if self.active == StateType.FULL:
-            return self.full / self.full.max()
-        return self.active_state
+        return self.full / self.max_value

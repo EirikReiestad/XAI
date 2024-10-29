@@ -27,6 +27,8 @@ class CAV:
                 layer.register_forward_hook(self._module_hook)
                 continue
             for sub_layer in layer:
+                if not isinstance(sub_layer, nn.Linear | nn.Conv2d):
+                    continue
                 sub_layer.register_forward_hook(self._module_hook)
 
     def _load_data(self, positive_sample_path: str, negative_sample_path: str):
@@ -63,15 +65,14 @@ class CAV:
         combined_activations = np.concatenate([pos_act, neg_act])
         combined_labels = np.concatenate([pos_labels, neg_labels])
 
-        # TODO: Enable when working
-        # idx = np.random.permutation(combined_activations.shape[0])
-        # combined_activations = combined_activations[idx]
-        # combined_labels = combined_labels[idx]
+        idx = np.random.permutation(combined_activations.shape[0])
+        combined_activations = combined_activations[idx]
+        combined_labels = combined_labels[idx]
 
         scaler = StandardScaler()
         combined_activations = scaler.fit_transform(combined_activations)
 
-        regressor = LogisticRegression()
+        regressor = LogisticRegression(max_iter=500)
         regressor.fit(combined_activations, combined_labels)
 
         self._cav = regressor.coef_
@@ -82,17 +83,18 @@ class CAV:
         test_data, test_labels = self._test_positive_data.get_data_lists()
         test_activations = self._compute_activations(test_data)
         for layer in self._activations.keys():
-            self._compute_cav_score(layer, test_activations[layer])
+            self._binary_concept_score(layer, test_activations[layer])
 
-    def _compute_cav_score(self, layer, test_activations: dict):
+    def _binary_concept_score(self, layer, test_activations: dict):
         layer_activations = test_activations["output"].numpy()
         batch_size = layer_activations.shape[0]
         layer_activations_flat = layer_activations.reshape(batch_size, -1)
         cav_score = layer_activations_flat @ self._cavs[layer].T
-        cav_score = np.maximum(cav_score - 0.5, 0)
-        mean_cav_score = np.mean(cav_score)
-        self._cav_scores[layer] = mean_cav_score
-        return mean_cav_score
+        binary_score = np.where(cav_score > 0, 1, 0)
+        mean_binary_score = np.mean(binary_score)
+        cav_score = np.maximum(mean_binary_score, 0)
+        self._cav_scores[layer] = cav_score
+        return cav_score
 
     def _compute_activations(self, inputs: list[np.ndarray], requires_grad=False):
         self._activations.clear()
@@ -101,7 +103,7 @@ class CAV:
             [torch.tensor(input_array, dtype=torch.float32) for input_array in inputs]
         ).requires_grad_(requires_grad)
         _ = self._model(torch_inputs)
-        return self._activations
+        return self._activations.copy()
 
     def _module_hook(self, module: nn.Module, input, output):
         self._activations[module] = {
