@@ -20,6 +20,10 @@ class TagConcepts:
             "The box does not exist in the environment.",
         ),
         Concept(
+            "seeker-next-to-hider",
+            "The seeker is next to the hider. The seeker should be able to catch the hider.",
+        ),
+        Concept(
             "random", "An arbitrary concept that does not have a specific meaning."
         ),
     ]
@@ -44,10 +48,27 @@ class TagConcepts:
             return self._get_box_block_concept(samples)
         elif concept == "box-not-exist":
             return self._get_box_not_exist_concept(samples)
+        elif concept == "seeker-next-to-hider":
+            return self._get_seeker_next_to_hider_concept(samples)
         elif concept == "random":
             return self._get_random_concept(samples)
         else:
             raise NotImplementedError(f"Concept {concept} is not implemented yet.")
+
+    def _get_seeker_next_to_hider_concept(
+        self, samples: int
+    ) -> tuple[list[np.ndarray], list[str]]:
+        self.state.random_seeker_position = True
+        self.state.random_hider_position = True
+        self.state.random_box_position = True
+        states = []
+        labels = []
+        for _ in range(samples):
+            self.state.reset()
+            self.state.place_seeker_next_to_hider()
+            states.append(self.state.normalized_full_state)
+            labels.append(np.random.randint(self.num_actions))
+        return states, labels
 
     def _get_box_not_exist_concept(
         self, samples: int

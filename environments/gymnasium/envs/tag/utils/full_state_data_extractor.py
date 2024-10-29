@@ -13,6 +13,20 @@ from environments.gymnasium.utils import Position
 @dataclass
 class FullStateDataExtractor:
     @staticmethod
+    def get_empty_positions_around_position(state: np.ndarray, position: Position):
+        """Only adjacent positions, not diagonals."""
+        empty_positions = []
+        for dx, dy in [(0, 1), (1, 0), (0, -1), (-1, 0)]:
+            new_position = Position(position.x + dx, position.y + dy)
+            if (
+                0 <= new_position.x < state.shape[1]
+                and 0 <= new_position.y < state.shape[0]
+                and state[new_position.row_major_order] == TileType.EMPTY.value
+            ):
+                empty_positions.append(new_position)
+        return empty_positions
+
+    @staticmethod
     def get_agent_position(state: np.ndarray, agent: AgentType) -> Position:
         agent_tile_type = AGENT_TILE_TYPE.get(agent)
         if agent_tile_type is None:

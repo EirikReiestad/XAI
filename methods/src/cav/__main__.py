@@ -20,7 +20,7 @@ models = [
     "model_3050:v16",
 ]
 
-positive_concept = "box-block"
+positive_concept = "seeker-next-to-hider"
 negative_concept = "random1"
 
 gym = gym.make("TagEnv-v0")

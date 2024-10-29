@@ -33,6 +33,17 @@ class TagState:
         self._init_states(filename)
         self._init_dimensions()
 
+    def place_seeker_next_to_hider(self):
+        new_full_state = FullStateDataModifier.place_seeker_next_to_hider(
+            self.state.full
+        )
+        self.update(
+            new_full_state,
+            self.get_agent_position(AgentType.SEEKER),
+            self.get_agent_position(AgentType.HIDER),
+            Objects([], []),
+        )
+
     def remove_box(self):
         new_full_state, _ = FullStateDataModifier.remove_objects(
             self.state.full, TileType.BOX

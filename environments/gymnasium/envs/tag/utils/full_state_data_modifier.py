@@ -14,6 +14,26 @@ from environments.gymnasium.utils import Position
 @dataclass
 class FullStateDataModifier:
     @staticmethod
+    def place_seeker_next_to_hider(state: np.ndarray) -> np.ndarray:
+        new_state = state.copy()
+        hider_position = FullStateDataExtractor.get_agent_position(
+            state, AgentType.HIDER
+        )
+        empty_positions_around_position = (
+            FullStateDataExtractor.get_empty_positions_around_position(
+                state, hider_position
+            )
+        )
+        removed_seeker_position = FullStateDataModifier.remove_agent(
+            new_state, AgentType.SEEKER
+        )
+        random_position = np.random.choice(empty_positions_around_position)
+        placed_seeker = FullStateDataModifier.place_agent(
+            removed_seeker_position, random_position, AgentType.SEEKER
+        )
+        return placed_seeker
+
+    @staticmethod
     def remove_agent(state: np.ndarray, agent: AgentType) -> np.ndarray:
         new_state = state.copy()
         agent_position = FullStateDataExtractor.get_agent_position(state, agent)
