@@ -42,17 +42,17 @@ class DQN(SingleAgentBase):
         dueling: bool = False,
         double: bool = True,
         memory_size: int = 100000,
-        lr: float = 1e-3,
+        lr: float = 1e-4,
         gamma: float = 0.99,
         epsilon_start: float = 1.0,
         epsilon_end: float = 0.05,
-        epsilon_decay: int = 100000,
+        epsilon_decay: int = 1000000,
         slow_decay_point: float = 0.4,
         slow_decay_factor: float = 10,
         batch_size: int = 64,
         tau: float = 0.005,
         hidden_layers: list[int] = [128, 128],
-        conv_layers: list[int] = [],
+        conv_layers: list[int] = [32, 32],
         train_frequency: int = 16,
         update_target_frequency: int = 1000,
         optimize_method: str = "hard",  # "hard" or "soft"
@@ -324,6 +324,7 @@ class DQN(SingleAgentBase):
         self.steps_done += 1
 
         if self.eps_threshold < self.slow_decay_point:
+            self.hp.eps_start = self.slow_decay_point
             self.hp.eps_decay *= self.slow_decay_factor
 
         if random.random() > self.eps_threshold:
