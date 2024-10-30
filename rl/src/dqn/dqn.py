@@ -188,6 +188,7 @@ class DQN(SingleAgentBase):
                     max_gif_reward = -float("inf")
                     self.save_gif_local(frames)
                     self.save(self.episodes)
+                torch.cuda.empty_cache()
         except Exception as e:
             logging.error(f"Error: {e}")
             self.close()
