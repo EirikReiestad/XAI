@@ -35,29 +35,42 @@ class CAV:
         positive_data = DataHandler()
         positive_data.load_data_from_path(positive_sample_path)
 
-        self._positive_data, self._test_positive_data = positive_data.split(0.8)
+        self._positive_data, self._test_positive_data = positive_data.split(0.7)
 
-        self._negative_data = DataHandler()
-        self._negative_data.load_data_from_path(negative_sample_path)
+        negative_data = DataHandler()
+        negative_data.load_data_from_path(negative_sample_path)
+
+        self._negative_data, self._test_negative_data = negative_data.split(0.7)
 
     def compute_cavs(self):
         positive_data, positive_labels = self._positive_data.get_data_lists()
         negative_data, negative_labels = self._negative_data.get_data_lists()
+        test_data, test_labels = self._test_positive_data.get_data_lists()
         positive_activations = self._compute_activations(positive_data)
         negative_activations = self._compute_activations(negative_data)
+        test_activations = self._compute_activations(test_data)
         for layer in self._activations.keys():
             self._compute_cav(
-                layer, positive_activations[layer], negative_activations[layer]
+                layer,
+                positive_activations[layer],
+                negative_activations[layer],
+                test_activations[layer],
             )
 
     def _compute_cav(
-        self, layer, positive_activations: dict, negative_activations: dict
+        self,
+        layer,
+        positive_activations: dict,
+        negative_activations: dict,
+        test_activations: dict,
     ):
         pos_act = positive_activations["output"].numpy()
         neg_act = negative_activations["output"].numpy()
 
         pos_act = pos_act.reshape(pos_act.shape[0], -1)
         neg_act = neg_act.reshape(neg_act.shape[0], -1)
+
+        assert pos_act.shape[1] == neg_act.shape[1]
 
         pos_labels = np.ones(pos_act.shape[0])
         neg_labels = np.zeros(neg_act.shape[0])
@@ -72,11 +85,14 @@ class CAV:
         scaler = StandardScaler()
         combined_activations = scaler.fit_transform(combined_activations)
 
-        regressor = LogisticRegression(max_iter=500)
-        regressor.fit(combined_activations, combined_labels)
+        self.regressor = LogisticRegression(max_iter=200)
+        self.regressor.fit(combined_activations, combined_labels)
 
-        self._cav = regressor.coef_
+        self._cav = self.regressor.coef_
         self._cavs[layer] = self._cav
+
+        self._binary_concept_score(layer, test_activations)
+
         return self._cav
 
     def compute_cav_scores(self):
@@ -87,14 +103,15 @@ class CAV:
 
     def _binary_concept_score(self, layer, test_activations: dict):
         layer_activations = test_activations["output"].numpy()
-        batch_size = layer_activations.shape[0]
-        layer_activations_flat = layer_activations.reshape(batch_size, -1)
-        cav_score = layer_activations_flat @ self._cavs[layer].T
-        binary_score = np.where(cav_score > 0, 1, 0)
-        mean_binary_score = np.mean(binary_score)
-        cav_score = np.maximum(mean_binary_score, 0)
-        self._cav_scores[layer] = cav_score
-        return cav_score
+
+        layer_act = layer_activations.reshape(layer_activations.shape[0], -1)
+        labels = np.ones(layer_act.shape[0])
+
+        scaler = StandardScaler()
+        scaled_act = scaler.fit_transform(layer_act)
+
+        self._cav_scores[layer] = self.regressor.score(scaled_act, labels)
+        return self._cav_scores[layer]
 
     def _compute_activations(self, inputs: list[np.ndarray], requires_grad=False):
         self._activations.clear()
@@ -107,9 +124,7 @@ class CAV:
 
     def _module_hook(self, module: nn.Module, input, output):
         self._activations[module] = {
-            "input": input[
-                0
-            ].detach(),  # TODO: Fix this please future Eirik. It should not be indexed.
+            "input": input[0].detach(),
             "output": output.detach(),
         }
 

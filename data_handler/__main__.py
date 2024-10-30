@@ -10,8 +10,8 @@ env_wrapped = CAVWrapper(env)
 concepts = env_wrapped.get_concepts()
 logging.info(f"Concepts: {concepts}")
 
-concept = "seeker-next-to-hider"
+concept = "random"
 
 data_handler = DataHandler()
 data_handler.generate_data(env_wrapped, concept=concept, n_samples=1000)
-data_handler.save(f"{concept}.csv")
+data_handler.save(f"{concept}0.csv")

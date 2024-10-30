@@ -6,6 +6,8 @@ import numpy as np
 from methods.src.cav import CAV
 from methods.src.utils import Models
 
+np.random.seed(None)
+
 
 class Analysis:
     def __init__(
@@ -66,8 +68,8 @@ class Analysis:
                 self._negative_sample_path,
             )
             cav.compute_cavs()
-            cav.compute_cav_scores()
-            self._cav_scores[self._models.current_model_idx] = cav.cav_scores
+            # cav.compute_cav_scores()
+            self._cav_scores[self._models.current_model_idx] = cav.cav_scores.copy()
             self._model_steps[self._models.current_model_idx] = (
                 self._models.current_model_steps
             )

@@ -103,6 +103,48 @@ class TagConcepts:
             )  # TODO: This should be changed to the correct action
         return states, labels
 
+    def _get_fully_random_concept(
+        self, samples: int
+    ) -> tuple[list[np.ndarray], list[str]]:
+        state_shape = self.state.normalized_full_state.shape
+
+        num_obstacles = self.state._num_obstacles
+        num_seekers = 1
+        num_hiders = 1
+        num_boxes = self.state._num_boxes
+
+        empty_state = np.zeros(state_shape)
+
+        self.state.random_seeker_position = True
+        self.state.random_hider_position = True
+        self.state.random_box_position = True
+        states = []
+        labels = []
+        for _ in range(samples):
+            new_state = empty_state.copy()
+            indices = np.random.choice(
+                new_state.size,
+                num_seekers + num_hiders + num_boxes + num_obstacles,
+                replace=False,
+            )
+            np.put(new_state, indices[:num_obstacles], 1)
+            np.put(new_state, indices[num_obstacles : num_obstacles + num_seekers], 2)
+            np.put(
+                new_state,
+                indices[
+                    num_obstacles + num_seekers : num_obstacles
+                    + num_seekers
+                    + num_hiders
+                ],
+                3,
+            )
+            np.put(new_state, indices[num_obstacles + num_seekers + num_hiders :], 4)
+            self.state.init_full_state = new_state
+            self.state.reset()
+            states.append(self.state.normalized_full_state)
+            labels.append(np.random.randint(self.num_actions))
+        return states, labels
+
     def _get_random_concept(self, samples: int) -> tuple[list[np.ndarray], list[str]]:
         self.state.random_seeker_position = True
         self.state.random_hider_position = True

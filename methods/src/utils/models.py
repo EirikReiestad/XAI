@@ -15,7 +15,7 @@ class Models:
     ):
         self._extract_models()
         self._model = model
-        self._model_idx = 0
+        self.reset()
         self.next()
 
     def reset(self):
