@@ -1,10 +1,10 @@
-import getpass
+import json
 import logging
-import traceback
+import os
+import re
 
 import torch
 
-from managers import WandBConfig, WandBManager
 from rl.src.dqn.policies import DQNPolicy
 
 
@@ -12,77 +12,84 @@ class Models:
     def __init__(
         self,
         model: DQNPolicy,
-        project_folder: str,
-        model_name: str,
-        models: list[str],
     ):
-        current_user = getpass.getuser()
-        project = f"{current_user}"
-        wandb_config = WandBConfig(project=project)
-        self.wandb_manager = WandBManager(active=False, config=wandb_config)
-
-        self._model_name = model_name
-        self._run_id = f"eirikreiestad-ntnu/{project_folder}"
-        self._extract_model_names(models)
-        self._model_idx = 0
-
+        self._extract_models()
         self._model = model
+        self._model_idx = 0
         self.next()
 
-    def _extract_model_names(self, model_names: list[str]):
-        model_artifacts = []
-        version_numbers = []
+    def reset(self):
+        self._model_idx = 0
+        self._load_model()
 
-        for model_name in model_names:
-            split = model_name.split(":")
-            model_artifacts.append(split[0])
-            version_numbers.append(split[1])
+    def _extract_models(self):
+        model_folder = os.path.join("models", "latest")
+        metadata_folder = os.path.join("models", "metadata")
 
-        self._model_artifacts = model_artifacts
-        self._version_numbers = version_numbers
+        self.pt_files = []
+        self.metadata = []
+
+        for root, _, files in os.walk(model_folder):
+            for file in files:
+                if file.endswith(".pt"):
+                    pt_file_path = os.path.join(root, file)
+                    self.pt_files.append(pt_file_path)
+
+        for root, _, files in os.walk(metadata_folder):
+            for file in files:
+                if file.endswith(".json"):
+                    json_file_path = os.path.join(root, file)
+                    with open(json_file_path, "r") as f:
+                        json_data = json.load(f)
+                        self.metadata.append((json_file_path, json_data))
+
+        combined = []
+
+        def extract_model_number(path):
+            match = re.search(r"model_(\d+)", path)
+            return int(match.group(1)) if match else float("inf")
+
+        for pt_file in self.pt_files:
+            model_number = extract_model_number(pt_file)
+            metadata_entry = next(
+                (
+                    m
+                    for m in self.metadata
+                    if extract_model_number(m[0]) == model_number
+                ),
+                None,
+            )
+            combined.append((pt_file, metadata_entry))
+
+        combined.sort(key=lambda x: extract_model_number(x[0]))
+
+        self.pt_files = [item[0] for item in combined]
+        self.metadata = [item[1][1] for item in combined if item[1] is not None]
+
+        assert len(self.pt_files) == len(self.metadata)
 
     def next(self):
-        self._model_artifact = self._model_artifacts[self._model_idx]
-        self._version_number = self._version_numbers[self._model_idx]
         self._load_model()
         self._model_idx += 1
 
     def _load_model(self):
-        artifact_dir, metadata = self.wandb_manager.load_model(
-            self._run_id, self._model_artifact, self._version_number
+        self._model.policy_net.load_state_dict(
+            torch.load(self.pt_files[self._model_idx], weights_only=True)
         )
-        if artifact_dir is None or metadata is None:
-            raise Exception(f"Model not found, {traceback.format_exc}")
-        self._metadata = metadata
-
-        path = f"{artifact_dir}/{self._model_name}"
-        if not path.endswith(".pt"):
-            path += ".pt"
-
-        self._model.policy_net.load_state_dict(torch.load(path, weights_only=True))
         self._model.target_net.load_state_dict(self._model.policy_net.state_dict())
         self._model.policy_net.eval()
         self._model.target_net.eval()
 
-    def _save_locally(self):
-        path = f"models/latest/{self._model_artifact}/{self._version_number}"
-        if not path.endswith(".pt"):
-            path += ".pt"
-        torch.save(self._model.policy_net.state_dict(), path)
-
     def has_next(self):
-        return self._model_idx < len(self._model_artifacts)
-
-    @property
-    def current_model_name(self):
-        return self._model_artifact
+        return self._model_idx < len(self.pt_files) - 1
 
     @property
     def current_model_steps(self):
-        if "steps_done" not in self._metadata:
+        if "steps_done" not in self.metadata[self._model_idx]:
             logging.error("No steps_done in metadata.")
+            logging.error(self.metadata[self._model_idx])
             return 0
-        return self._metadata["steps_done"]
+        return self.metadata[self._model_idx]["steps_done"]
 
     @property
     def policy_net(self):
@@ -95,3 +102,7 @@ class Models:
     @property
     def model(self):
         return self._model
+
+    @property
+    def current_model_idx(self):
+        return self._model_idx

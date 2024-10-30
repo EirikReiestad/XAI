@@ -24,11 +24,18 @@ class Analysis:
         self._average_cav_scores = {}
 
     def run(self, averages: int = 10):
-        for _ in range(averages):
+        for i in range(averages):
+            self._reset()
+            self._models.reset()
+            logging.info(f"Running CAV {i + 1}/{averages}")
             self._run_cav()
             self._add_total_cav_scores()
 
         self._calculate_average_cav_scores(averages)
+
+    def _reset(self):
+        self._cav_scores = {}
+        self._model_steps = {}
 
     def _add_total_cav_scores(self):
         for model, layers in self._cav_scores.items():
@@ -38,12 +45,12 @@ class Analysis:
                 layer,
                 score,
             ) in layers.items():
-                if layer not in self._total_cav_scores:
+                if layer not in self._total_cav_scores[model]:
                     self._total_cav_scores[model][layer] = 0
                 self._total_cav_scores[model][layer] += score
 
     def _calculate_average_cav_scores(self, n: int):
-        for model, layers in self._cav_scores.items():
+        for model, layers in self._total_cav_scores.items():
             self._average_cav_scores[model] = {}
             for (
                 layer,
@@ -60,8 +67,8 @@ class Analysis:
             )
             cav.compute_cavs()
             cav.compute_cav_scores()
-            self._cav_scores[self._models.current_model_name] = cav.cav_scores
-            self._model_steps[self._models.current_model_name] = (
+            self._cav_scores[self._models.current_model_idx] = cav.cav_scores
+            self._model_steps[self._models.current_model_idx] = (
                 self._models.current_model_steps
             )
             if not self._models.has_next():
