@@ -12,8 +12,9 @@ class Models:
     def __init__(
         self,
         model: DQNPolicy,
+        folder_suffix: str = "",
     ):
-        self._extract_models()
+        self._extract_models(folder_suffix)
         self._model = model
         self.reset()
         self.next()
@@ -22,9 +23,16 @@ class Models:
         self._model_idx = 0
         self._load_model()
 
-    def _extract_models(self):
-        model_folder = os.path.join("models", "latest")
-        metadata_folder = os.path.join("models", "metadata")
+    def _extract_models(self, folder_suffix: str):
+        model_folder = os.path.join("models", "latest" + folder_suffix)
+        metadata_folder = os.path.join("models", "metadata" + folder_suffix)
+
+        assert os.path.exists(
+            model_folder
+        ), f"Model folder {model_folder} does not exist."
+        assert os.path.exists(
+            metadata_folder
+        ), f"Metadata folder {metadata_folder} does not exist."
 
         self.pt_files = []
         self.metadata = []

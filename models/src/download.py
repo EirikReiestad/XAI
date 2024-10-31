@@ -12,7 +12,12 @@ from rl.src.dqn.policies import DQNPolicy
 
 class ModelDownloader:
     def __init__(
-        self, model: DQNPolicy, project_folder: str, model_name: str, models: list[str]
+        self,
+        model: DQNPolicy,
+        project_folder: str,
+        model_name: str,
+        models: list[str],
+        folder_suffix: str = "",
     ):
         current_user = getpass.getuser()
         project = f"{current_user}"
@@ -24,13 +29,14 @@ class ModelDownloader:
         self._extract_model_names(models)
 
         self._model = model
+        self.folder_suffix = folder_suffix
 
         self._clean_models()
 
     def _clean_models(self):
-        model_folder = os.path.join("models", "latest")
+        model_folder = os.path.join("models", "latest" + self.folder_suffix)
         shutil.rmtree(model_folder, ignore_errors=True)
-        metadata_folder = os.path.join("models", "metadata")
+        metadata_folder = os.path.join("models", "metadata" + self.folder_suffix)
         shutil.rmtree(metadata_folder, ignore_errors=True)
 
     def _extract_model_names(self, model_names: list[str]):
@@ -71,7 +77,9 @@ class ModelDownloader:
         self._save_locally(model_artifact, version_number, metadata)
 
     def _save_locally(self, model_artifact: str, version_number: str, metadata: dict):
-        folder_path = os.path.join("models", "latest", model_artifact)
+        folder_path = os.path.join(
+            "models", "latest" + self.folder_suffix, model_artifact
+        )
         os.makedirs(folder_path, exist_ok=True)
 
         path = os.path.join(folder_path, version_number)
@@ -79,7 +87,9 @@ class ModelDownloader:
 
         torch.save(self._model.policy_net.state_dict(), path)
 
-        folder_path = os.path.join("models", "metadata", model_artifact)
+        folder_path = os.path.join(
+            "models", "metadata" + self.folder_suffix, model_artifact
+        )
         os.makedirs(folder_path, exist_ok=True)
         path = os.path.join(folder_path, version_number)
         path += ".json"

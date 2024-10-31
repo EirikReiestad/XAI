@@ -2,11 +2,10 @@ import logging
 
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib import cm
 
 from methods.src.cav import CAV
 from methods.src.utils import Models
-
-np.random.seed(None)
 
 
 class Analysis:
@@ -38,6 +37,7 @@ class Analysis:
     def _reset(self):
         self._cav_scores = {}
         self._model_steps = {}
+        np.random.seed(0)
 
     def _add_total_cav_scores(self):
         for model, layers in self._cav_scores.items():
@@ -68,7 +68,6 @@ class Analysis:
                 self._negative_sample_path,
             )
             cav.compute_cavs()
-            # cav.compute_cav_scores()
             self._cav_scores[self._models.current_model_idx] = cav.cav_scores.copy()
             self._model_steps[self._models.current_model_idx] = (
                 self._models.current_model_steps
@@ -77,35 +76,80 @@ class Analysis:
                 break
             self._models.next()
 
-    def plot(self, save_path: str = "cav_plot.png"):
-        matrix = np.array(
-            [list(scores.values()) for scores in self._average_cav_scores.values()]
-        )
-        steps = [f"{step:.1e}" for step in self._model_steps.values()]
-        if len(matrix) == 0:
-            logging.error("No CAV scores found.")
-            return
+    @property
+    def scores(self):
+        return self._average_cav_scores.copy()
+
+    @property
+    def steps(self):
+        return self._model_steps.copy()
+
+    @staticmethod
+    def plot(
+        scores: list[dict],
+        steps: list[dict],
+        folder_path: str = "assets/figures",
+        filename: str = "cav_plot.png",
+        labels: list[str] | None = None,
+        title: str = "Plot",
+        show: bool = True,
+    ):
+        matrices = []
+        for score in scores:
+            matrix = np.array([list(s.values()) for s in score.values()])
+            matrices.append(np.array(matrix))
+
+        use_labels = True
+        if labels is None:
+            use_labels = False
+            labels = [str(i) for i in range(len(matrices))]
+
+        assert len(labels) == len(matrices)
+        save_path = f"{folder_path}/{filename}"
+
+        model_steps = [f"{step:.1e}" for step in steps[0].values()]
 
         fig = plt.figure()
         ax1 = fig.add_subplot(projection="3d")
 
-        _x = np.arange(matrix.shape[1])
-        _y = np.arange(matrix.shape[0])
+        _x = np.arange(matrices[0].shape[1])
+        _y = np.arange(matrices[0].shape[0])
         _xx, _yy = np.meshgrid(_x, _y)
-        x, y = _xx.ravel(), _yy.ravel()
 
-        ax1.plot_surface(_xx, _yy, matrix, cmap="coolwarm", edgecolor="k")
+        for i, (matrix, label) in enumerate(zip(matrices, labels)):
+            cmap = cm.get_cmap("viridis")
+            color = cmap(i / len(matrices))
+            ax1.plot_surface(
+                _xx,
+                _yy,
+                matrix,
+                edgecolor="k",
+                color=color,
+                alpha=0.5,
+                shade=True,
+                label=label,
+            )
+            if use_labels:
+                ax1.text2D(
+                    0.05,
+                    0.05 - i * 0.05,
+                    label,
+                    transform=ax1.transAxes,
+                    fontsize=10,
+                    color=color,
+                )
+
         ax1.set_zlim(0, 1)
-        ax1.set_title("CAV Scores")
+        ax1.set_title(title)
         ax1.set_xlabel("Layer")
         ax1.set_ylabel("Steps")
         ax1.set_zlabel("CAV Score")
 
-        ax1.set_xticks(np.arange(matrix.shape[1]))
-        ax1.set_xticklabels([str(i) for i in range(1, matrix.shape[1] + 1)])
-        ax1.set_yticks(np.arange(len(steps)))
-        ax1.set_yticklabels(steps)
+        ax1.set_xticks(np.arange(matrices[0].shape[1]))
+        ax1.set_xticklabels([str(i) for i in range(1, matrices[0].shape[1] + 1)])
+        ax1.set_yticks(np.arange(len(model_steps)))
+        ax1.set_yticklabels(model_steps)
 
-        plt.show()
-
+        if show:
+            plt.show()
         fig.savefig(save_path)

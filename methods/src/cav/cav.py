@@ -21,6 +21,8 @@ class CAV:
         self._cavs = {}
         self._cav_scores = {}
 
+        np.random.seed(None)
+
     def _register_hooks(self):
         for name, layer in self._model.named_children():
             if not isinstance(layer, nn.Sequential):
@@ -85,7 +87,12 @@ class CAV:
         scaler = StandardScaler()
         combined_activations = scaler.fit_transform(combined_activations)
 
-        self.regressor = LogisticRegression(max_iter=200)
+        # randomized_combined_activations = np.random.permutation(combined_activations)
+        # combined_activations = randomized_combined_activations
+
+        self.regressor = LogisticRegression(max_iter=200, warm_start=True)
+        self.regressor.coef_ = np.random.rand(1, combined_activations.shape[1])
+        self.regressor.intercept_ = np.random.rand(1)
         self.regressor.fit(combined_activations, combined_labels)
 
         self._cav = self.regressor.coef_

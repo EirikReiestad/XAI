@@ -500,8 +500,8 @@ class TagEnv(gym.Env):
         self.tag_renderer.render_mode = mode
 
     @property
-    def concepts(self) -> dict:
-        return self.tag_concepts.get_concepts_dict()
+    def concepts(self) -> str:
+        return str(self.tag_concepts)
 
     @property
     def concept_names(self) -> list[str]:

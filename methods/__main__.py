@@ -1,3 +1,4 @@
-from methods.src.cav import CAV
+import runpy
 
-__all__ = ["CAV"]
+if __name__ == "__main__":
+    runpy.run_path("methods/src/cav/__main__.py")
