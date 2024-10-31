@@ -34,6 +34,28 @@ class FullStateDataModifier:
         return placed_seeker
 
     @staticmethod
+    def place_agent_next_to_box(state: np.ndarray, agent: AgentType) -> np.ndarray:
+        new_state = state.copy()
+        removed_agent_state = FullStateDataModifier.remove_agent(new_state, agent)
+
+        box_positions = FullStateDataExtractor.get_object_positions(
+            removed_agent_state, TileType.BOX
+        )
+        box_position = np.random.choice(np.array(box_positions))
+
+        empty_positions_around_position = (
+            FullStateDataExtractor.get_empty_positions_around_position(
+                state, box_position
+            )
+        )
+
+        random_position = np.random.choice(empty_positions_around_position)
+        placed_agent_state = FullStateDataModifier.place_agent(
+            removed_agent_state, random_position, agent
+        )
+        return placed_agent_state
+
+    @staticmethod
     def remove_agent(state: np.ndarray, agent: AgentType) -> np.ndarray:
         new_state = state.copy()
         agent_position = FullStateDataExtractor.get_agent_position(state, agent)

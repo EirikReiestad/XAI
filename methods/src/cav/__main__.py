@@ -7,7 +7,7 @@ from methods.src.cav import Analysis
 from methods.src.utils import Models
 from rl.src.dqn.policies import DQNPolicy
 
-negative_concept = "random0"
+negative_concept = "random_negative"
 
 gym = gym.make("TagEnv-v0")
 observation_space = gym.observation_space
@@ -15,8 +15,6 @@ action_space = gym.action_space
 
 env = CAVWrapper(gym)
 concept_names = env.get_concept_names()
-concept_names.remove("random")
-concept_names.append("random1")
 
 
 def plot(positive_concept: str, negative_concept: str, observation_space, action_space):

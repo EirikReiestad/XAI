@@ -3,6 +3,8 @@ from typing import Callable, List, Tuple
 
 import numpy as np
 
+from environments.gymnasium.envs.tag.utils import AgentType
+
 from .tag_state import Position, TagState
 
 
@@ -28,29 +30,45 @@ class TagConcepts:
             Concept(
                 "box-block",
                 "A block that can be pushed around by the agent. It should be blocking thee path between the agents.",
-                self._get_box_block_concept,
+                self._get_box_block,
             ),
             Concept(
                 "box-not-block",
                 "A block that can be pushed around by the agent. It should not be blocking the path between the agents.",
-                self._get_box_not_block_concept,
+                self._get_box_not_block,
                 "Assuming the entrance is at position (5, 4).",
             ),
             Concept(
                 "box-not-exist",
                 "The box does not exist in the environment.",
-                self._get_box_not_exist_concept,
+                self._get_box_not_exist,
                 "This requires manually removing the box from the environment.",
             ),
             Concept(
-                "seeker-next-to-hider",
+                "agents-close",
                 "The seeker is next to the hider. The seeker should be able to catch the hider.",
-                self._get_seeker_next_to_hider_concept,
+                self._get_agents_close,
+            ),
+            Concept(
+                "agents-far-apart",
+                "The seeker and the hider are far apart. The seeker should not be able to catch the hider.",
+                self._get_agents_far_apart,
+                "This has a ratio variable which can be adjusted in the source code.",
+            ),
+            Concept(
+                "hider-close-to-box",
+                "The hider is close to the box. The hider should be able to push the box.",
+                self._get_hider_close_to_box,
+            ),
+            Concept(
+                "seeker-close-to-box",
+                "The seeker is close to the box. The seeker should be able to push the box.",
+                self._get_seeker_close_to_box,
             ),
             Concept(
                 "random",
                 "An arbitrary concept that does not have a specific meaning.",
-                self._get_random_concept,
+                self._get_random,
             ),
         ]
 
@@ -71,9 +89,7 @@ class TagConcepts:
         else:
             raise NotImplementedError(f"Concept {concept} is not implemented yet.")
 
-    def _get_seeker_next_to_hider_concept(
-        self, samples: int
-    ) -> tuple[list[np.ndarray], list[str]]:
+    def _get_agents_close(self, samples: int) -> tuple[list[np.ndarray], list[str]]:
         self._state.random_seeker_position = True
         self._state.random_hider_position = True
         self._state.random_box_position = True
@@ -86,9 +102,54 @@ class TagConcepts:
             labels.append(np.random.randint(self._num_actions))
         return states, labels
 
-    def _get_box_not_exist_concept(
+    def _get_agents_far_apart(self, samples: int) -> tuple[list[np.ndarray], list[str]]:
+        self._state.random_seeker_position = True
+        self._state.random_hider_position = True
+        self._state.random_box_position = True
+        states = []
+        labels = []
+        distance_ratio = self._state.width // 2
+        for _ in range(samples):
+            while True:
+                self._state.reset()
+                if self._state.agent_distance < distance_ratio:
+                    continue
+                states.append(self._state.normalized_full_state)
+                labels.append(np.random.randint(self._num_actions))
+                break
+        return states, labels
+
+    def _get_hider_close_to_box(
         self, samples: int
     ) -> tuple[list[np.ndarray], list[str]]:
+        self._state.random_seeker_position = True
+        self._state.random_hider_position = True
+        self._state.random_box_position = True
+        states = []
+        labels = []
+        for _ in range(samples):
+            self._state.reset()
+            self._state.place_agent_next_to_box(agent_type=AgentType.HIDER)
+            states.append(self._state.normalized_full_state)
+            labels.append(np.random.randint(self._num_actions))
+        return states, labels
+
+    def _get_seeker_close_to_box(
+        self, samples: int
+    ) -> tuple[list[np.ndarray], list[str]]:
+        self._state.random_seeker_position = True
+        self._state.random_hider_position = True
+        self._state.random_box_position = True
+        states = []
+        labels = []
+        for _ in range(samples):
+            self._state.reset()
+            self._state.place_agent_next_to_box(agent_type=AgentType.SEEKER)
+            states.append(self._state.normalized_full_state)
+            labels.append(np.random.randint(self._num_actions))
+        return states, labels
+
+    def _get_box_not_exist(self, samples: int) -> tuple[list[np.ndarray], list[str]]:
         self._state.random_seeker_position = True
         self._state.random_hider_position = True
         self._state.random_box_position = False
@@ -104,9 +165,7 @@ class TagConcepts:
             )  # TODO: This should be changed to the correct action
         return states, labels
 
-    def _get_box_block_concept(
-        self, samples: int
-    ) -> tuple[list[np.ndarray], list[str]]:
+    def _get_box_block(self, samples: int) -> tuple[list[np.ndarray], list[str]]:
         self._state.random_seeker_position = True
         self._state.random_hider_position = True
         self._state.random_box_position = False
@@ -120,9 +179,7 @@ class TagConcepts:
             )  # TODO: This should be changed to the correct action
         return states, labels
 
-    def _get_box_not_block_concept(
-        self, samples: int
-    ) -> tuple[list[np.ndarray], list[str]]:
+    def _get_box_not_block(self, samples: int) -> tuple[list[np.ndarray], list[str]]:
         self._state.random_seeker_position = True
         self._state.random_hider_position = True
         self._state.random_box_position = True
@@ -139,9 +196,7 @@ class TagConcepts:
             labels.append(np.random.randint(self._num_actions))
         return states, labels
 
-    def _get_fully_random_concept(
-        self, samples: int
-    ) -> tuple[list[np.ndarray], list[str]]:
+    def _get_fully_random(self, samples: int) -> tuple[list[np.ndarray], list[str]]:
         state_shape = self._state.normalized_full_state.shape
 
         num_obstacles = self._state._num_obstacles
@@ -181,7 +236,7 @@ class TagConcepts:
             labels.append(np.random.randint(self._num_actions))
         return states, labels
 
-    def _get_random_concept(self, samples: int) -> tuple[list[np.ndarray], list[str]]:
+    def _get_random(self, samples: int) -> tuple[list[np.ndarray], list[str]]:
         self._state.random_seeker_position = True
         self._state.random_hider_position = True
         self._state.random_box_position = True

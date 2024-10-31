@@ -33,28 +33,6 @@ class TagState:
         self._init_states(filename)
         self._init_dimensions()
 
-    def place_seeker_next_to_hider(self):
-        new_full_state = FullStateDataModifier.place_seeker_next_to_hider(
-            self.state.full
-        )
-        self.update(
-            new_full_state,
-            self.get_agent_position(AgentType.SEEKER),
-            self.get_agent_position(AgentType.HIDER),
-            Objects([], []),
-        )
-
-    def remove_box(self):
-        new_full_state, _ = FullStateDataModifier.remove_objects(
-            self.state.full, TileType.BOX
-        )
-        self.update(
-            new_full_state,
-            self.get_agent_position(AgentType.SEEKER),
-            self.get_agent_position(AgentType.HIDER),
-            Objects([], []),
-        )
-
     @property
     def init_full_state(self):
         init_state = self._init_full_state
@@ -245,6 +223,7 @@ class TagState:
         goal_direction = [goal_distance.x, goal_distance.y]
 
         distance = np.linalg.norm(goal_direction)
+
         distance_normalized = np.clip(
             distance / np.sqrt(self.height**2 + self.width**2) * 255, 0, 255
         )
@@ -399,6 +378,39 @@ class TagState:
     def _create_empty_partial_state(self):
         return np.ndarray(self.partial_state_size, dtype=np.uint8)
 
+    def place_seeker_next_to_hider(self):
+        new_full_state = FullStateDataModifier.place_seeker_next_to_hider(
+            self.state.full
+        )
+        self.update(
+            new_full_state,
+            self.get_agent_position(AgentType.SEEKER),
+            self.get_agent_position(AgentType.HIDER),
+            Objects([], []),
+        )
+
+    def place_agent_next_to_box(self, agent_type: AgentType):
+        new_full_state = FullStateDataModifier.place_agent_next_to_box(
+            self.state.full, agent_type
+        )
+        self.update(
+            new_full_state,
+            self.get_agent_position(AgentType.SEEKER),
+            self.get_agent_position(AgentType.HIDER),
+            Objects([], []),
+        )
+
+    def remove_box(self):
+        new_full_state, _ = FullStateDataModifier.remove_objects(
+            self.state.full, TileType.BOX
+        )
+        self.update(
+            new_full_state,
+            self.get_agent_position(AgentType.SEEKER),
+            self.get_agent_position(AgentType.HIDER),
+            Objects([], []),
+        )
+
     @property
     def full_state_size(self) -> tuple[int, int]:
         return self.init_full_state.shape[0], self.init_full_state.shape[1]
@@ -452,3 +464,16 @@ class TagState:
         return len(
             FullStateDataExtractor.get_positions(self.init_full_state, TileType.BOX)
         )
+
+    @property
+    def agent_distance(self) -> float:
+        seeker_position = FullStateDataExtractor.get_agent_position(
+            self.state.full, AgentType.SEEKER
+        )
+        hider_position = FullStateDataExtractor.get_agent_position(
+            self.state.full, AgentType.HIDER
+        )
+        distance_vector = seeker_position - hider_position
+        distance = np.linalg.norm(distance_vector.tuple)
+
+        return float(distance)
