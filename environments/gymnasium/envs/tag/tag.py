@@ -47,7 +47,7 @@ class TagEnv(gym.Env):
         self.screen_width = 600
         self.screen_height = 600
         folder_name = "environments/gymnasium/data/tag/"
-        filename = "tag-0-10-10.txt"
+        filename = "has-0-10-10.txt"
         self.state_type = StateType.FULL
         self.bootcamp = Bootcamp()
         self.tag_radius = 1
@@ -65,7 +65,7 @@ class TagEnv(gym.Env):
             filename,
         )
 
-        self.max_steps = self.state.width * self.state.height * 10
+        self.max_steps = self.state.width * self.state.height * 100
 
         self.tag_renderer = TagRenderer(
             self.state.width, self.state.height, self.screen_width, self.screen_height
@@ -256,9 +256,11 @@ class TagEnv(gym.Env):
         self, states: list[np.ndarray]
     ) -> tuple[np.ndarray, tuple[float, float], bool, bool, int, int]:
         state, concat_terminated = self.state.concatenate_states(states)
+        has_direct_sight, sight_positions = self.state.has_direct_sight(state)
         rewards, tag_terminated = self.tag_rewards.get_tag_reward(
             self.agents.active.position,
             self.agents.inactive.position,
+            has_direct_sight,
             concat_terminated,
             self.tag_radius,
         )
@@ -266,7 +268,9 @@ class TagEnv(gym.Env):
         if self.steps >= self.max_steps:
             rewards = self.tag_rewards.end_reward
             truncated = True
-        self.render(self.render_mode)
+
+        self.tag_renderer.direct_sight_positions = sight_positions
+        self.render()
 
         terminated = concat_terminated or tag_terminated
 

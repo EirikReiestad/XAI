@@ -4,22 +4,25 @@ import numpy as np
 import pygame as pg
 
 from environments.gymnasium.envs.tag.utils import TileType
+from environments.gymnasium.utils import Position
 from utils import Color
 
 
 class TagRenderer:
-    metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 120}
+    metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 20}
 
     def __init__(self, width: int, height: int, screen_width: int, screen_height: int):
-        self.width = width
-        self.height = height
-        self.screen_width = screen_width
-        self.screen_height = screen_height
+        self._width = width
+        self._height = height
+        self._screen_width = screen_width
+        self._screen_height = screen_height
         self._render_mode = None
 
         self._init_render()
-        self.post_init_screen = False
-        self.post_init_surface = False
+        self._post_init_screen = False
+        self._post_init_surface = False
+
+        self._direct_sight_positions = []
 
     def _init_render(self):
         """Initializes rendering settings."""
@@ -28,18 +31,18 @@ class TagRenderer:
         self.is_open = True
 
     def _init_surface(self):
-        if self.post_init_surface:
+        if self._post_init_surface:
             return
-        self.surface = pg.Surface((self.screen_width, self.screen_height))
-        self.post_init_surface = True
+        self.surface = pg.Surface((self._screen_width, self._screen_height))
+        self._post_init_surface = True
 
     def _init_screen(self):
-        if self.post_init_screen:
+        if self._post_init_screen:
             return
         pg.display.init()
         pg.display.set_caption("")
-        self.screen = pg.display.set_mode((self.screen_width, self.screen_height))
-        self.post_init_screen = True
+        self.screen = pg.display.set_mode((self._screen_width, self._screen_height))
+        self._post_init_screen = True
 
     @property
     def render_mode(self) -> str | None:
@@ -57,15 +60,20 @@ class TagRenderer:
         self._render_mode = render_mode
 
     def render(
-        self, state: np.ndarray, render_mode: Optional[str] = None
+        self,
+        state: np.ndarray,
+        render_mode: Optional[str] = None,
     ) -> Optional[np.ndarray]:
         self.render_mode = render_mode
 
-        color_matrix = np.full((self.height, self.width, 3), Color.WHITE.value)
+        color_matrix = np.full((self._height, self._width, 3), Color.WHITE.value)
         self.apply_color_masks(color_matrix, state)
 
+        for position in self._direct_sight_positions:
+            color_matrix[*position.row_major_order] = Color.LIGHT_GRAY.value
+
         surf = pg.surfarray.make_surface(color_matrix)
-        surf = pg.transform.scale(surf, (self.screen_height, self.screen_width))
+        surf = pg.transform.scale(surf, (self._screen_height, self._screen_width))
         surf = pg.transform.flip(surf, True, False)
         surf = pg.transform.rotate(surf, 90)
 
@@ -96,3 +104,14 @@ class TagRenderer:
         color_matrix[full_state == TileType.BOX.value] = Color.YELLOW.value
         color_matrix[full_state == TileType.SEEKER.value] = Color.BLUE.value
         color_matrix[full_state == TileType.HIDER.value] = Color.GREEN.value
+
+    @property
+    def direct_sight_positions(self):
+        return self._direct_sight_positions
+
+    @direct_sight_positions.setter
+    def direct_sight_positions(self, direct_sight_positions: list[Position]):
+        assert all(
+            isinstance(position, Position) for position in direct_sight_positions
+        )
+        self._direct_sight_positions = direct_sight_positions

@@ -27,6 +27,43 @@ class FullStateDataExtractor:
         return empty_positions
 
     @staticmethod
+    def has_direct_sight(state: np.ndarray) -> tuple[bool, list[Position]]:
+        matrix = state.copy()
+
+        seeker_position = FullStateDataExtractor.get_agent_position(
+            state, AgentType.SEEKER
+        )
+        hider_position = FullStateDataExtractor.get_agent_position(
+            state, AgentType.HIDER
+        )
+
+        x0, y0 = map(int, seeker_position.tuple)
+        x1, y1 = map(int, hider_position.tuple)
+        dx, dy = abs(x1 - x0), abs(y1 - y0)
+        sx, sy = (1 if x0 < x1 else -1), (1 if y0 < y1 else -1)
+        err = dx - dy
+
+        positions = []
+
+        while (x0, y0) != (x1, y1):
+            if matrix[y0][x0] not in [
+                TileType.EMPTY.value,
+                TileType.SEEKER.value,
+                TileType.HIDER.value,
+            ]:
+                return False, []
+            positions.append(Position(x=x0, y=y0))
+            e2 = 2 * err
+            if e2 > -dy:
+                err -= dy
+                x0 += sx
+            if e2 < dx:
+                err += dx
+                y0 += sy
+
+        return matrix[y1][x1] != 1, positions[1:]
+
+    @staticmethod
     def get_agent_position(state: np.ndarray, agent: AgentType) -> Position:
         agent_tile_type = AGENT_TILE_TYPE.get(agent)
         if agent_tile_type is None:
