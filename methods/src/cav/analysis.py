@@ -18,10 +18,14 @@ class Analysis:
         self._models = models
         self._positive_sample_path = positive_sample_path
         self._negative_sample_path = negative_sample_path
+
         self._cav_scores = {}
+        self._tcav_scores = {}
+
         self._model_steps = {}
 
         self._total_cav_scores = {}
+        self._total_tcav_scores = {}
         self._average_cav_scores = {}
 
     def run(self, averages: int = 10):
@@ -31,12 +35,14 @@ class Analysis:
             logging.info(f"Running CAV {i + 1}/{averages}")
             self._run_cav()
             self._add_total_cav_scores()
+            self._add_total_tcav_scores()
 
         self._calculate_average_cav_scores(averages)
 
     def _reset(self):
-        self._cav_scores = {}
-        self._model_steps = {}
+        self._cavs = {}
+        self._binary_concept_scores = {}
+        self._tcav_scores = {}
         np.random.seed(0)
 
     def _add_total_cav_scores(self):
@@ -50,6 +56,18 @@ class Analysis:
                 if layer not in self._total_cav_scores[model]:
                     self._total_cav_scores[model][layer] = 0
                 self._total_cav_scores[model][layer] += score
+
+    def _add_total_tcav_scores(self):
+        for model, layers in self._tcav_scores.items():
+            if model not in self._total_tcav_scores:
+                self._total_tcav_scores[model] = {}
+                for (
+                    layer,
+                    score,
+                ) in layers.items():
+                    if layer not in self._total_tcav_scores[model]:
+                        self._total_tcav_scores[model][layer] = 0
+                    self._total_tcav_scores[model][layer] += score
 
     def _calculate_average_cav_scores(self, n: int):
         for model, layers in self._total_cav_scores.items():
@@ -67,8 +85,11 @@ class Analysis:
                 self._positive_sample_path,
                 self._negative_sample_path,
             )
-            cav.compute_cavs()
-            self._cav_scores[self._models.current_model_idx] = cav.cav_scores.copy()
+            cavs, binary_concept_scores, tcav_scores = cav.compute_cavs()
+            self._cav_scores[self._models.current_model_idx] = (
+                binary_concept_scores.copy()
+            )
+            self._tcav_scores[self._models.current_model_idx] = tcav_scores.copy()
             self._model_steps[self._models.current_model_idx] = (
                 self._models.current_model_steps
             )
@@ -77,8 +98,12 @@ class Analysis:
             self._models.next()
 
     @property
-    def scores(self):
+    def cav_scores(self):
         return self._average_cav_scores.copy()
+
+    @property
+    def tcav_scores(self):
+        return self._total_tcav_scores.copy()
 
     @property
     def steps(self):
@@ -143,7 +168,7 @@ class Analysis:
         ax1.set_title(title)
         ax1.set_xlabel("Layer")
         ax1.set_ylabel("Steps")
-        ax1.set_zlabel("CAV Score")
+        ax1.set_zlabel("Score")
 
         ax1.set_xticks(np.arange(matrices[0].shape[1]))
         ax1.set_xticklabels([str(i) for i in range(1, matrices[0].shape[1] + 1)])

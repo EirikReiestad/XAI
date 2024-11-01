@@ -15,10 +15,24 @@ action_space = gym.action_space
 
 env = CAVWrapper(gym)
 concept_names = env.get_concept_names()
+concept_names = ["random"]
 
 
-def plot(positive_concept: str, negative_concept: str, observation_space, action_space):
-    scores = []
+def plot(positive_concept: str, cav_scores: list, steps: list):
+    Analysis.plot(
+        cav_scores,
+        steps,
+        filename=f"{positive_concept}.png",
+        title=positive_concept,
+        show=True,
+    )
+
+
+def analyse(
+    positive_concept: str, negative_concept: str, observation_space, action_space
+):
+    cav_scores = []
+    tcav_scores = []
     steps = []
 
     for suffix in ["0", "1"]:
@@ -28,18 +42,16 @@ def plot(positive_concept: str, negative_concept: str, observation_space, action
             models, positive_concept + ".csv", negative_concept + ".csv"
         )
         analysis.run(averages=1)
-        scores.append(analysis.scores)
+        cav_scores.append(analysis.cav_scores)
+        tcav_scores.append(analysis.tcav_scores)
         steps.append(analysis.steps)
 
-    Analysis.plot(
-        scores,
-        steps,
-        filename=f"{positive_concept}.png",
-        title=positive_concept,
-        show=False,
-    )
+    return cav_scores, tcav_scores, steps
 
 
 for concept in concept_names:
     logging.info(f"Running CAV for concept {concept}")
-    plot(concept, negative_concept, observation_space, action_space)
+    cav_scores, tcav_scores, steps = analyse(
+        concept, negative_concept, observation_space, action_space
+    )
+    plot(concept, tcav_scores, steps)
