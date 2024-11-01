@@ -480,7 +480,12 @@ class DQN(SingleAgentBase):
         if not self.save_model:
             return
         torch.save(self.policy_net.state_dict(), path)
-        metadata = {"steps_done": self.steps_done}
+        metadata = {
+            "steps_done": self.steps_done,
+            "hidden_layers": self.hp.hidden_layers,
+            "conv_layers": self.hp.conv_layers,
+            "dueling": self.dueling,
+        }
         if wandb_manager is not None:
             wandb_manager.save_model(path, step=episode, metadata=metadata)
         else:
@@ -554,12 +559,30 @@ class DQN(SingleAgentBase):
         if not path.endswith(".pt"):
             path += ".pt"
 
+        self.hp.hidden_layers = metadata.get("hidden_layers", self.hp.hidden_layers)
+        self.hp.conv_layers = metadata.get("conv_layers", self.hp.conv_layers)
+        self.dueling = metadata.get("dueling", self.dueling)
+
+        self._create_networks()
+
         self.policy_net.load_state_dict(torch.load(path, weights_only=True))
         self.target_net.load_state_dict(self.policy_net.state_dict())
         self.policy_net.eval()
         self.target_net.eval()
 
         self.steps_done = metadata["steps_done"]
+
+    def _create_networks(self) -> None:
+        self.policy = PolicyManager().get_policy(
+            self.dqn_policy,
+            observation_space=self.env.observation_space,
+            action_space=self.env.action_space,
+            hidden_layers=self.hp.hidden_layers,
+            conv_layers=self.hp.conv_layers,
+            dueling=self.dueling,
+        )
+        self.policy_net = self.policy.policy_net
+        self.target_net = self.policy.target_net
 
     def _init_gif(self, gif: bool, gif_path: str, gif_name: str) -> None:
         self.gif = gif
