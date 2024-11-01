@@ -27,8 +27,8 @@ class TagState:
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.state_type = state_type
-        self.random_seeker_position = False
-        self.random_hider_position = False
+        self.random_seeker_position = True
+        self.random_hider_position = True
         self.random_box_position = False
         self._init_states(filename)
         self._init_dimensions()
@@ -164,8 +164,12 @@ class TagState:
         )
         self.state.rgb = self._create_rgb_state()
 
-    def get_agent_position(self, agent: AgentType) -> Position:
-        return FullStateDataExtractor.get_agent_position(self.state.full, agent)
+    def get_agent_position(
+        self, agent: AgentType, state: np.ndarray | None = None
+    ) -> Position:
+        if state is None:
+            return FullStateDataExtractor.get_agent_position(self.state.full, agent)
+        return FullStateDataExtractor.get_agent_position(state, agent)
 
     def get_initial_agent_position(self, agent: AgentType) -> Position:
         if self.init_full_state is None:
@@ -410,6 +414,9 @@ class TagState:
             self.get_agent_position(AgentType.HIDER),
             Objects([], []),
         )
+
+    def has_direct_sight(self, state: np.ndarray) -> tuple[bool, list[Position]]:
+        return FullStateDataExtractor.has_direct_sight(state)
 
     @property
     def full_state_size(self) -> tuple[int, int]:

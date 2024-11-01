@@ -1,7 +1,6 @@
 import math
 
 import numpy as np
-import time
 
 from environments.gymnasium.envs.tag import rewards
 from environments.gymnasium.utils import Position
@@ -13,6 +12,7 @@ class TagRewards:
 
     tagged_reward: tuple[float, float] = rewards.TAGGED_REWARD
     not_tagged_reward: tuple[float, float] = rewards.NOT_TAGGED_REWARD
+    can_see_reward: tuple[float, float] = rewards.CAN_SEE_REWARD
     move_reward: tuple[float, float] = rewards.MOVE_REWARD
     end_reward: tuple[float, float] = rewards.END_REWARD
     terminated_reward: float = rewards.TERMINATED_REWARD
@@ -31,8 +31,25 @@ class TagRewards:
         self,
         agent: Position,
         other_agent: Position,
+        has_direct_sight: bool,
         terminated: bool,
         radius: float = 1,
+    ) -> tuple[tuple[float, float], bool]:
+        distance_reward, tagged = self._get_distance_reward(
+            agent, other_agent, terminated, radius
+        )
+        can_see_reward = (0, 0)
+        if has_direct_sight:
+            can_see_reward = self.can_see_reward
+
+        reward = (
+            distance_reward[0] + can_see_reward[0],
+            distance_reward[1] + can_see_reward[1],
+        )
+        return reward, tagged
+
+    def _get_distance_reward(
+        self, agent: Position, other_agent: Position, terminated: bool, radius: float
     ) -> tuple[tuple[float, float], bool]:
         distance = agent.distance_to(other_agent)
         self.max_distance = max(self.max_distance, distance)
@@ -59,7 +76,6 @@ class TagRewards:
                 self.tagged_reward[1] + hider_distance_reward,
             )
             return tagged_reward, True
-
         not_tagged_reward = (
             self.not_tagged_reward[0] + seeker_distance_reward,
             self.not_tagged_reward[1] + hider_distance_reward,
