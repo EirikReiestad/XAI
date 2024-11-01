@@ -1,6 +1,6 @@
 #!/bin/sh
 #SBATCH --account="ie-idi"
-#SBATCH --partition=GPUQ
+#SBATCH --partition=CPUQ
 #SBATCH --time=0-100:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
