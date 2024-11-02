@@ -47,7 +47,7 @@ class TagEnv(gym.Env):
         self.screen_width = 600
         self.screen_height = 600
         folder_name = "environments/gymnasium/data/tag/"
-        filename = "tag-0-10-10.txt"
+        filename = "has-0-10-10.txt"
         self.state_type = StateType.FULL
         self.bootcamp = Bootcamp()
         self.tag_radius = 1
