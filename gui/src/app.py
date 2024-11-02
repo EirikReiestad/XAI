@@ -3,6 +3,7 @@ import numpy as np
 
 from .components import ConfigurationFrame, ResultFrame
 from .utils import EnvHandler, ModelHandler
+from methods.src.cav import CAV
 
 
 class App(customtkinter.CTk):
@@ -20,6 +21,12 @@ class App(customtkinter.CTk):
         self.env_handler.generate()
 
         self.model_handler = ModelHandler("model_20", ["v0", "v1"], shap_samples=10)
+        self.cav = CAV(
+            self.model_handler.dqn,
+            "data/positive_samples.npy",
+            "data/negative_samples.npy",
+        )
+
         state = np.expand_dims(np.array(self.env_handler.env), axis=0)
         self.model_handler.generate_shap(state)
         self.result_frame = ResultFrame(self)
