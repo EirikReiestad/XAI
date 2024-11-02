@@ -21,11 +21,6 @@ class App(customtkinter.CTk):
         self.env_handler.generate()
 
         self.model_handler = ModelHandler("model_20", ["v0", "v1"], shap_samples=10)
-        self.cav = CAV(
-            self.model_handler.dqn,
-            "data/positive_samples.npy",
-            "data/negative_samples.npy",
-        )
 
         state = np.expand_dims(np.array(self.env_handler.env), axis=0)
         self.model_handler.generate_shap(state)
@@ -46,6 +41,7 @@ class App(customtkinter.CTk):
         model_version_numbers: list[str],
         shap_samples: int,
         show_q_values: bool,
+        show_tcav: bool,
     ):
         self._update_env(env)
         state = np.expand_dims(np.array(self.env_handler.env), axis=0)
@@ -55,13 +51,22 @@ class App(customtkinter.CTk):
             self.model_handler.generate_q_values(state)
         self.model_handler.update_shap(shap_samples)
         self.model_handler.generate_shap(state)
-        self.result_frame.update_result(q_values=show_q_values)
+        binary_concept_score = None
+        tcav_score = None
+        if show_tcav:
+            _, binary_concept_score, tcav_score = self.model_handler.generate_cav(state)
+        self.result_frame.update_result(
+            show_q_values=show_q_values,
+            show_tcav=show_tcav,
+            binary_concept_score=binary_concept_score,
+            tcav_score=tcav_score,
+        )
 
     def update_image(
         self,
         show_q_values: bool,
     ):
-        self.result_frame.update_result(q_values=show_q_values)
+        self.result_frame.update_result(show_q_values=show_q_values)
 
     def _update_env(self, env: list[list] | None):
         if env is None:

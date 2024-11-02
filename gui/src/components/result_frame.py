@@ -11,16 +11,28 @@ class ResultFrame(ctk.CTkFrame):
         self.grid_rowconfigure(1, weight=3)
 
         self.result_viewer_frame = ResultViewerFrame(self)
-        self.result_viewer_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nswe")
+        self.result_viewer_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nswe")
 
         self.result_info_frame = ResultInfoFrame(self)
-        self.result_info_frame.grid(row=0, column=1, padx=10, pady=10, sticky="nswe")
 
     def update_result(
         self,
-        q_values: bool,
+        show_q_values: bool,
+        show_tcav: bool = False,
+        binary_concept_score: dict[str, float] | None = None,
+        tcav_score: dict[str, float] | None = None,
     ):
-        self.result_viewer_frame.update_result(q_values)
+        self.result_viewer_frame.update_result(show_q_values)
+        self.result_info_frame.update_concept(
+            show_tcav, binary_concept_score, tcav_score
+        )
+
+        if not show_tcav:
+            self.result_info_frame.grid_forget()
+        else:
+            self.result_info_frame.grid(
+                row=0, column=1, padx=10, pady=10, sticky="nswe"
+            )
 
 
 class ResultInfoFrame(ctk.CTkFrame):
@@ -29,6 +41,17 @@ class ResultInfoFrame(ctk.CTkFrame):
         self.grid_columnconfigure((0, 1), weight=1)
         self.grid_rowconfigure((0, 1), weight=1)
         self.concept_viewer_frame = ConceptViewerFrame(self)
+        self.concept_viewer_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nswe")
+
+    def update_concept(
+        self,
+        show_tcav: bool,
+        binary_concept_score: dict[str, float] | None,
+        tcav_score: dict[str, float] | None,
+    ):
+        if not show_tcav or binary_concept_score is None or tcav_score is None:
+            return
+        self.concept_viewer_frame.update_concept(binary_concept_score, tcav_score)
 
 
 class ResultViewerFrame(ctk.CTkFrame):
@@ -61,9 +84,20 @@ class ConceptViewerFrame(ctk.CTkFrame):
         super().__init__(master)
         self.grid_columnconfigure((0, 1), weight=1)
         self.grid_rowconfigure((0, 1), weight=1)
+        self.concept_infos = [ctk.CTkLabel(self, text="")]
 
-    def update_concept(self):
-        pass
+    def update_concept(
+        self, binary_concept_score: dict[str, float], tcav_score: dict[str, float]
+    ):
+        concept_infos = []
+        for layer, score in tcav_score.items():
+            concept_infos.append(f"{layer}: {score}")
+
+        self.concept_infos = [
+            ctk.CTkLabel(self, text=concept_info) for concept_info in concept_infos
+        ]
+        for i, concept_info in enumerate(self.concept_infos):
+            concept_info.grid(row=i, column=0, padx=10, pady=10, sticky="nswe")
 
 
 class DoubleViewerFrame(ctk.CTkFrame):

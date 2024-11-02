@@ -39,13 +39,21 @@ class ConfigurationFrame(ctk.CTkFrame):
             row=3, column=0, padx=10, pady=10, sticky="nswe"
         )
 
-        self.checkbox = ctk.CTkCheckBox(
+        self.checkbox_q_values = ctk.CTkCheckBox(
             self,
             text="Show Q-Values",
             command=self.update_image,
             variable=ctk.BooleanVar(value=True),
         )
-        self.checkbox.grid(row=4, column=0, padx=10, pady=10, sticky="nswe")
+        self.checkbox_q_values.grid(row=4, column=0, padx=10, pady=10, sticky="nswe")
+
+        self.checkbox_tcav = ctk.CTkCheckBox(
+            self,
+            text="Show TCAV",
+            command=self.update_image,
+            variable=ctk.BooleanVar(value=False),
+        )
+        self.checkbox_tcav.grid(row=4, column=1, padx=10, pady=10, sticky="nswe")
 
         self.button = ctk.CTkButton(self, text="Update", command=self.update)
         self.button.grid(row=5, column=0, padx=10, pady=10, sticky="nswe")
@@ -55,13 +63,14 @@ class ConfigurationFrame(ctk.CTkFrame):
             self.env_matrix_configuration_frame.get_env_matrix(),
             *self.model_chooser_frame.get_model(),
             self.shap_configuration_frame.get_shap_samples(),
-            show_q_values=self.checkbox.get(),
+            show_q_values=self.checkbox_q_values.get(),
+            show_tcav=self.checkbox_tcav.get(),
         )
         self.env_viewer_frame.update_image()
 
     def update_image(self):
         self.update_image_callback(
-            show_q_values=self.checkbox.get(),
+            show_q_values=self.checkbox_q_values.get(),
         )
 
 

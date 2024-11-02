@@ -53,4 +53,4 @@ for concept in concept_names:
     cav_scores, tcav_scores, steps = analyse(
         concept, negative_concept, observation_space, action_space
     )
-    plot(concept, tcav_scores, steps)
+    plot(concept, cav_scores, steps)

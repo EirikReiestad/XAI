@@ -1,11 +1,11 @@
 import logging
-import os
 import torch.nn as nn
 
 import gymnasium as gym
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
+from data_handler.src.utils.data import Sample
 
 from environments.gymnasium.wrappers import MultiAgentEnv
 from managers.src.wandb_manager import WandBConfig
@@ -33,40 +33,12 @@ class ModelHandler:
         )
         self.shap_samples = shap_samples
 
-        positive_samples = "random"
-        negative_samples = "negative_samples"
-        self._save_path_cav = "gui/data/cav/"
+        positive_samples = "random.csv"
+        negative_samples = "random_negative.csv"
 
         self._cav = CAV(self._model, positive_samples, negative_samples)
-        self._cavs = self._load_cavs(self._save_path_cav)
-
-        self.tcav_scores = self._tcav_scores(self._cavs)
 
         self.load_model(shap_samples)
-
-    def _tcav_scores(self, cavs: dict) -> dict:
-        for layer, cav in cavs.items():
-            tcav_scores = {}
-            for key, value in cav.items():
-                tcav_scores[key] = self._cav.tcav_score(value)
-                return tcav_scores
-
-    def _save_cavs(self, path: str):
-        if not os.path.exists(path):
-            os.makedirs(path)
-
-        for name, cav in self._cavs.items():
-            for key, value in cav.items():
-                np.save(f"{path}/{name}_{key}.npy", value)
-
-    def _load_cavs(self, path: str) -> dict:
-        cavs = {}
-        for name in os.listdir(path):
-            cav = {}
-            for key in os.listdir(f"{path}/{name}"):
-                cav[key] = np.load(f"{path}/{name}/{key}")
-                self._cavs[name] = cav
-        return cavs
 
     @property
     def _model(
@@ -137,6 +109,11 @@ class ModelHandler:
             folderpath="gui/src/assets/",
             filename=filename,
         )
+
+    def generate_cav(self, state: np.ndarray):
+        state_samples = [Sample("0", state, "0")]
+        cavs, binary_concept_scores, tcav_scores = self._cav.compute_cavs(state_samples)
+        return cavs, binary_concept_scores, tcav_scores
 
     def generate_q_values(self, states: np.ndarray):
         for _, state in enumerate(states):

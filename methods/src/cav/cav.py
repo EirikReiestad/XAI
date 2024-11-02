@@ -8,6 +8,9 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 
 from data_handler import DataHandler
+from data_handler.src.utils.data import Sample
+
+from typing import Optional
 
 warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
@@ -47,10 +50,18 @@ class CAV:
 
         self._negative_data, self._test_negative_data = negative_data.split(0.7)
 
-    def compute_cavs(self) -> tuple[dict, dict, dict]:
+    def compute_cavs(
+        self, custom_test_data: Optional[list[Sample]] = None
+    ) -> tuple[dict, dict, dict]:
         positive_data, positive_labels = self._positive_data.get_data_lists()
         negative_data, negative_labels = self._negative_data.get_data_lists()
         test_data, test_labels = self._test_positive_data.get_data_lists()
+
+        if custom_test_data:
+            test_data_handler = DataHandler()
+            test_data_handler.load_samples(custom_test_data)
+            test_data, test_labels = test_data_handler.get_data_lists()
+
         positive_activations, positive_output = self._compute_activations(
             positive_data, requires_grad=True
         )
