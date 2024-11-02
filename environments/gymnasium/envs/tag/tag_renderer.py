@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 
 import numpy as np
@@ -6,6 +7,8 @@ import pygame as pg
 from environments.gymnasium.envs.tag.utils import TileType
 from environments.gymnasium.utils import Position
 from utils import Color
+
+from .utils import ActionType
 
 
 class TagRenderer:
@@ -23,6 +26,29 @@ class TagRenderer:
         self._post_init_surface = False
 
         self._direct_sight_positions = []
+        self.seeker_action = ActionType.UP
+        self.hider_action = ActionType.UP
+        self._scale = (
+            self._screen_height // self._height,
+            self._screen_width // self._width,
+        )
+
+        self._load_sprites()
+
+    def _load_sprites(self):
+        try:
+            seeker_sprite = pg.image.load("assets/sprites/tom.png")
+            hider_sprite = pg.image.load("assets/sprites/jerry.png")
+
+            scaled_seeker_sprite = pg.transform.scale(seeker_sprite, self._scale)
+            scaled_hider_sprite = pg.transform.scale(hider_sprite, self._scale)
+            self._seeker_sprite = scaled_seeker_sprite
+            self._hider_sprite = scaled_hider_sprite
+            self._hider_sprite = pg.transform.flip(scaled_hider_sprite, True, False)
+        except FileNotFoundError:
+            logging.warning("Sprites not found. Rendering without sprites.")
+            self._seeker_sprite = None
+            self._hider_sprite = None
 
     def _init_render(self):
         """Initializes rendering settings."""
@@ -77,6 +103,8 @@ class TagRenderer:
         surf = pg.transform.flip(surf, True, False)
         surf = pg.transform.rotate(surf, 90)
 
+        surf = self._apply_sprites(surf, state)
+
         if self.render_mode == "rgb_array":
             self._init_surface()
             self.surface.blit(surf, (0, 0))
@@ -91,6 +119,32 @@ class TagRenderer:
             return None
         else:
             raise ValueError(f"Invalid render mode {self.render_mode}")
+
+    def _apply_sprites(self, surf: pg.Surface, state: np.ndarray):
+        if self._seeker_sprite is not None:
+            seeker_position = np.argwhere(state == TileType.SEEKER.value)[0]
+            sprite = self._transform_sprite(self._seeker_sprite, self.seeker_action)
+            surf.blit(
+                sprite,
+                seeker_position[::-1] * self._scale[0],
+            )
+        if self._hider_sprite is not None:
+            hider_position = np.argwhere(state == TileType.HIDER.value)[0]
+            sprite = self._transform_sprite(self._hider_sprite, self.hider_action)
+            surf.blit(sprite, hider_position[::-1] * self._scale[0])
+        return surf
+
+    def _transform_sprite(self, sprite: pg.Surface, action: ActionType):
+        if action == ActionType.UP:
+            return pg.transform.rotate(sprite, -90)
+        elif action == ActionType.DOWN:
+            return pg.transform.rotate(sprite, 90)
+        elif action == ActionType.LEFT:
+            return pg.transform.rotate(sprite, 0)
+        elif action == ActionType.RIGHT:
+            return pg.transform.flip(sprite, True, False)
+        else:
+            return sprite
 
     def close(self):
         if hasattr(self, "screen") and self.screen:

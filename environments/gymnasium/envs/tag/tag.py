@@ -151,6 +151,7 @@ class TagEnv(gym.Env):
 
         if not terminated:
             action_type = ActionType(action)
+            self._update_render_action(action_type)
             self.info["collided"] = 0
             new_full_state, reward = self._do_action(action_type)
             collided = new_full_state is None
@@ -196,6 +197,14 @@ class TagEnv(gym.Env):
             False,
             return_info,
         )
+
+    def _update_render_action(self, action: ActionType):
+        if action == ActionType.GRAB_RELEASE:
+            return
+        if self.agents.active_agent == AgentType.SEEKER:
+            self.tag_renderer.seeker_action = action
+        else:
+            self.tag_renderer.hider_action = action
 
     def set_state(self, state: np.ndarray) -> np.ndarray:
         return self.update_state(state)

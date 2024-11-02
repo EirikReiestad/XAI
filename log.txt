@@ -14221,3 +14221,570 @@ WARNING: GIF is enabled but the environment does not support RGB array rendering
 INFO: Learning...
 WARNING: No frames in gif to save.
 WARNING: No frames in gif to save.
+INFO: Number of parameters: 174309
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: 'TagRenderer' object has no attribute '_seeker_sprite'
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 206, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 44, in step_multiple
+    ) = self.get_wrapper_attr("concatenate_states")(full_states)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 284, in concatenate_states
+    self.render()
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 258, in render
+    return self.tag_renderer.render(self.state.full, render_mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_renderer.py", line 91, in render
+    self.apply_color_masks(color_matrix, state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_renderer.py", line 128, in apply_color_masks
+    if self._seeker_sprite is not None or self._hider_sprite is not None:
+       ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'TagRenderer' object has no attribute '_seeker_sprite'
+
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 174309
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: 'TagRenderer' object has no attribute '_seeker_sprite'
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 206, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 44, in step_multiple
+    ) = self.get_wrapper_attr("concatenate_states")(full_states)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 284, in concatenate_states
+    self.render()
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 258, in render
+    return self.tag_renderer.render(self.state.full, render_mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_renderer.py", line 91, in render
+    self.apply_color_masks(color_matrix, state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_renderer.py", line 129, in apply_color_masks
+    if self._seeker_sprite is not None or self._hider_sprite is not None:
+       ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'TagRenderer' object has no attribute '_seeker_sprite'
+
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 174309
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: int() argument must be a string, a bytes-like object or a real number, not 'pygame.surface.Surface'
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 206, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 44, in step_multiple
+    ) = self.get_wrapper_attr("concatenate_states")(full_states)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 284, in concatenate_states
+    self.render()
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 258, in render
+    return self.tag_renderer.render(self.state.full, render_mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_renderer.py", line 86, in render
+    self.apply_color_masks(color_matrix, state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_renderer.py", line 123, in apply_color_masks
+    color_matrix[full_state == TileType.SEEKER.value] = self._seeker_sprite
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: int() argument must be a string, a bytes-like object or a real number, not 'pygame.surface.Surface'
+
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 174309
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 174309
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 174309
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 174309
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 174309
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 174309
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 174309
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: No video mode has been set
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 206, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 44, in step_multiple
+    ) = self.get_wrapper_attr("concatenate_states")(full_states)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 284, in concatenate_states
+    self.render()
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 258, in render
+    return self.tag_renderer.render(self.state.full, render_mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_renderer.py", line 105, in render
+    surf = self._apply_sprites(surf, state)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_renderer.py", line 126, in _apply_sprites
+    self._seeker_sprite.convert_alpha(),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pygame.error: No video mode has been set
+
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 174309
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: No video mode has been set
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 206, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 44, in step_multiple
+    ) = self.get_wrapper_attr("concatenate_states")(full_states)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 284, in concatenate_states
+    self.render()
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 258, in render
+    return self.tag_renderer.render(self.state.full, render_mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_renderer.py", line 105, in render
+    surf = self._apply_sprites(surf, state)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_renderer.py", line 130, in _apply_sprites
+    self._seeker_sprite.convert_alpha(),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pygame.error: No video mode has been set
+
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 174309
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: No video mode has been set
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 206, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 44, in step_multiple
+    ) = self.get_wrapper_attr("concatenate_states")(full_states)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 284, in concatenate_states
+    self.render()
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 258, in render
+    return self.tag_renderer.render(self.state.full, render_mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_renderer.py", line 105, in render
+    surf = self._apply_sprites(surf, state)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_renderer.py", line 127, in _apply_sprites
+    self._seeker_sprite.convert_alpha(),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pygame.error: No video mode has been set
+
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 174309
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 174309
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: No video mode has been set
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 206, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 44, in step_multiple
+    ) = self.get_wrapper_attr("concatenate_states")(full_states)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 284, in concatenate_states
+    self.render()
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 258, in render
+    return self.tag_renderer.render(self.state.full, render_mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_renderer.py", line 105, in render
+    surf = self._apply_sprites(surf, state)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_renderer.py", line 126, in _apply_sprites
+    self._seeker_sprite.convert_alpha(),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pygame.error: No video mode has been set
+
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 174309
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 174309
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 174309
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 174309
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 174309
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: 'TagRenderer' object has no attribute '_seeker_action'
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 206, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 44, in step_multiple
+    ) = self.get_wrapper_attr("concatenate_states")(full_states)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 293, in concatenate_states
+    self.render()
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 267, in render
+    return self.tag_renderer.render(self.state.full, render_mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_renderer.py", line 106, in render
+    surf = self._apply_sprites(surf, state)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_renderer.py", line 126, in _apply_sprites
+    sprite = self._transform_sprite(self._seeker_sprite, self._seeker_action)
+                                                         ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'TagRenderer' object has no attribute '_seeker_action'
+
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 174309
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 174309
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
