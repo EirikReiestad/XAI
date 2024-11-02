@@ -15,16 +15,15 @@ action_space = gym.action_space
 
 env = CAVWrapper(gym)
 concept_names = env.get_concept_names()
-concept_names = ["random"]
 
 
 def plot(positive_concept: str, cav_scores: list, steps: list):
     Analysis.plot(
         cav_scores,
         steps,
-        filename=f"{positive_concept}.png",
+        filename=f"{positive_concept}-tcav.png",
         title=positive_concept,
-        show=True,
+        show=False,
     )
 
 
