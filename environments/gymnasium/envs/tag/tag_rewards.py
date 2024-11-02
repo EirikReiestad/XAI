@@ -12,7 +12,7 @@ class TagRewards:
 
     tagged_reward: tuple[float, float] = rewards.TAGGED_REWARD
     not_tagged_reward: tuple[float, float] = rewards.NOT_TAGGED_REWARD
-    can_see_reward: tuple[float, float] = rewards.CAN_SEE_REWARD
+    has_direct_sight: tuple[float, float] = rewards.HAS_DIRECT_SIGHT
     move_reward: tuple[float, float] = rewards.MOVE_REWARD
     end_reward: tuple[float, float] = rewards.END_REWARD
     terminated_reward: float = rewards.TERMINATED_REWARD
@@ -38,13 +38,13 @@ class TagRewards:
         distance_reward, tagged = self._get_distance_reward(
             agent, other_agent, terminated, radius
         )
-        can_see_reward = (0, 0)
+        has_direct_sight_reward = (0, 0)
         if has_direct_sight:
-            can_see_reward = self.can_see_reward
+            has_direct_sight_reward = self.has_direct_sight
 
         reward = (
-            distance_reward[0] + can_see_reward[0],
-            distance_reward[1] + can_see_reward[1],
+            distance_reward[0] + has_direct_sight_reward[0],
+            distance_reward[1] + has_direct_sight_reward[1],
         )
         return reward, tagged
 

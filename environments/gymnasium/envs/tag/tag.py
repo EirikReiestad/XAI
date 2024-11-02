@@ -47,7 +47,7 @@ class TagEnv(gym.Env):
         self.screen_width = 600
         self.screen_height = 600
         folder_name = "environments/gymnasium/data/tag/"
-        filename = "tag-0-10-10.txt"
+        filename = "has-0-10-10.txt"
         self.state_type = StateType.FULL
         self.bootcamp = Bootcamp()
         self.tag_radius = 1
@@ -65,7 +65,7 @@ class TagEnv(gym.Env):
             filename,
         )
 
-        self.max_steps = self.state.width * self.state.height * 100
+        self.max_steps = self.state.width * self.state.height * 1
 
         self.tag_renderer = TagRenderer(
             self.state.width, self.state.height, self.screen_width, self.screen_height
@@ -84,6 +84,7 @@ class TagEnv(gym.Env):
             "object_moved_distance": 0,
             "collided": 0,
             "wrong_grab_release": 0,
+            "has_direct_sight": 0,
         }
 
     def step(self, action: int) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
@@ -134,6 +135,7 @@ class TagEnv(gym.Env):
                         "object_moved_distance": self.info["object_moved_distance"],
                         "collided": self.info["collided"],
                         "wrong_grab_release": self.info["wrong_grab_release"],
+                        "has_direct_sight": self.info["has_direct_sight"],
                     },
                     "data_constant": {
                         "slow_factor": self.bootcamp.agent_slow_factor(
@@ -154,6 +156,8 @@ class TagEnv(gym.Env):
             collided = new_full_state is None
             if not collided and new_full_state is not None:
                 self.update_state(new_full_state)
+                has_direct_sight, _ = self.state.has_direct_sight(new_full_state)
+                self.info["has_direct_sight"] = 1 if has_direct_sight else 0
             terminated = collided or terminated
         elif self.steps_beyond_terminated is None:
             self.steps_beyond_terminated = 0
@@ -173,6 +177,7 @@ class TagEnv(gym.Env):
                 "object_moved_distance": self.info["object_moved_distance"],
                 "collided": self.info["collided"],
                 "wrong_grab_release": self.info["wrong_grab_release"],
+                "has_direct_sight": self.info["has_direct_sight"],
             },
             "data_constant": {
                 "slow_factor": self.bootcamp.agent_slow_factor(
@@ -211,6 +216,7 @@ class TagEnv(gym.Env):
                     "object_moved_distance": self.info["object_moved_distance"],
                     "collided": self.info["collided"],
                     "wrong_grab_release": self.info["wrong_grab_release"],
+                    "has_direct_sight": self.info["has_direct_sight"],
                 },
                 "agent_slow_factor": self.bootcamp.agent_slow_factor(
                     self.agents.active_agent
@@ -226,7 +232,12 @@ class TagEnv(gym.Env):
         full_reset = options.get("full_reset") if options else False
         self.render_mode = render_mode or self.render_mode
 
-        self.info = {"object_moved_distance": 0, "collided": 0, "wrong_grab_release": 0}
+        self.info = {
+            "object_moved_distance": 0,
+            "collided": 0,
+            "wrong_grab_release": 0,
+            "has_direct_sight": 0,
+        }
 
         self.state.reset()
         self._set_initial_positions(options)
