@@ -39,16 +39,24 @@ class TagRenderer:
         try:
             seeker_sprite = pg.image.load("assets/sprites/tom.png")
             hider_sprite = pg.image.load("assets/sprites/jerry.png")
+            box_sprite = pg.image.load("assets/sprites/cheese.png")
+            obstacle_sprite = pg.image.load("assets/sprites/bush.png")
 
             scaled_seeker_sprite = pg.transform.scale(seeker_sprite, self._scale)
             scaled_hider_sprite = pg.transform.scale(hider_sprite, self._scale)
+            scaled_box_sprite = pg.transform.scale(box_sprite, self._scale)
+            obstacle_sprite = pg.transform.scale(obstacle_sprite, self._scale)
             self._seeker_sprite = scaled_seeker_sprite
             self._hider_sprite = scaled_hider_sprite
             self._hider_sprite = pg.transform.flip(scaled_hider_sprite, True, False)
+            self._box_sprite = scaled_box_sprite
+            self._obstacle_sprite = obstacle_sprite
         except FileNotFoundError:
             logging.warning("Sprites not found. Rendering without sprites.")
             self._seeker_sprite = None
             self._hider_sprite = None
+            self._box_sprite = None
+            self._obstacle_sprite = None
 
     def _init_render(self):
         """Initializes rendering settings."""
@@ -132,6 +140,16 @@ class TagRenderer:
             hider_position = np.argwhere(state == TileType.HIDER.value)[0]
             sprite = self._transform_sprite(self._hider_sprite, self.hider_action)
             surf.blit(sprite, hider_position[::-1] * self._scale[0])
+        if self._box_sprite is not None:
+            box_positions = np.argwhere(state == TileType.BOX.value)
+            for box_position in box_positions:
+                surf.blit(self._box_sprite, box_position[::-1] * self._scale[0])
+        if self._obstacle_sprite is not None:
+            obstacle_positions = np.argwhere(state == TileType.OBSTACLE.value)
+            for obstacle_position in obstacle_positions:
+                surf.blit(
+                    self._obstacle_sprite, obstacle_position[::-1] * self._scale[0]
+                )
         return surf
 
     def _transform_sprite(self, sprite: pg.Surface, action: ActionType):
