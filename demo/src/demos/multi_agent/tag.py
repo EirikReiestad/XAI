@@ -46,16 +46,16 @@ class TagDemo:
             self.env,
             self.num_agents,
             "dqnpolicy",
-            wandb_active=True,
+            wandb_active=False,
             wandb_config=wandb_config,
             model_name=model_name,
             save_every_n_episodes=100,
             save_model=True,
-            load_model=False,
+            load_model=True,
             gif=True,
             run_path="eirikreiestad-ntnu/tag-v0-eirre",
-            model_artifact="model_1550",
-            version_numbers=["v42", "v43"],
+            model_artifact="model_8500",
+            version_numbers=["v22", "v23"],
         )
 
     def run(
