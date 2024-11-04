@@ -64,7 +64,7 @@ class ModelHandler:
             save_model=False,
             load_model=True,
             gif=False,
-            run_path="eirikreiestad-ntnu/tag-v0-eirik",
+            run_path="eirikreiestad-ntnu/tag-v0-eirre",
             model_artifact=model_artifact,
             version_numbers=version_numbers,
         )

@@ -20,7 +20,7 @@ class App(customtkinter.CTk):
         self.env_handler = EnvHandler(10, 10)
         self.env_handler.generate()
 
-        self.model_handler = ModelHandler("model_20", ["v0", "v1"], shap_samples=10)
+        self.model_handler = ModelHandler("model_6500", ["v40", "v41"], shap_samples=10)
 
         state = np.expand_dims(np.array(self.env_handler.env), axis=0)
         self.model_handler.generate_shap(state)
