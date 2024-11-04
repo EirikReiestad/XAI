@@ -43,7 +43,6 @@ class TagRewards:
             distance_reward[0] + has_direct_sight_reward[0],
             distance_reward[1] + has_direct_sight_reward[1],
         )
-        print(reward)
         return (
             reward,
             tagged,
