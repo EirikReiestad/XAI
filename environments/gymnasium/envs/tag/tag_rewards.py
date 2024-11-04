@@ -36,20 +36,32 @@ class TagRewards:
         radius: float = 1,
     ) -> tuple[tuple[float, float], bool]:
         distance_reward, tagged = self._get_distance_reward(
-            agent, other_agent, terminated, radius
+            agent, other_agent, has_direct_sight, terminated, radius
         )
-        has_direct_sight_reward = (0, 0)
-        if has_direct_sight:
-            has_direct_sight_reward = self.has_direct_sight
-
+        has_direct_sight_reward = self._get_direct_sight_reward(has_direct_sight)
         reward = (
             distance_reward[0] + has_direct_sight_reward[0],
             distance_reward[1] + has_direct_sight_reward[1],
         )
-        return reward, tagged
+        print(reward)
+        return (
+            reward,
+            tagged,
+        )
+
+    def _get_direct_sight_reward(self, has_direct_sight: bool) -> tuple[float, float]:
+        has_direct_sight_reward = (0, 0)
+        if has_direct_sight:
+            has_direct_sight_reward = self.has_direct_sight
+        return has_direct_sight_reward
 
     def _get_distance_reward(
-        self, agent: Position, other_agent: Position, terminated: bool, radius: float
+        self,
+        agent: Position,
+        other_agent: Position,
+        has_direct_sight: bool,
+        terminated: bool,
+        radius: float,
     ) -> tuple[tuple[float, float], bool]:
         distance = agent.distance_to(other_agent)
         self.max_distance = max(self.max_distance, distance)
@@ -69,6 +81,9 @@ class TagRewards:
             self.last_distance = distance
             seeker_distance_reward += self.move_away_reward[0]
             hider_distance_reward += self.move_away_reward[1]
+
+        seeker_distance_reward *= int(has_direct_sight)
+        hider_distance_reward *= int(has_direct_sight)
 
         if distance <= radius or terminated:
             tagged_reward = (
