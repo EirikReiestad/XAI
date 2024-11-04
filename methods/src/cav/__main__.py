@@ -16,7 +16,7 @@ action_space = gym.action_space
 env = CAVWrapper(gym)
 concept_names = env.get_concept_names()
 concept_names = ["box-block", "box-not-block", "box-not-exist"]
-concept_names = ["random", "hider-exists", "seeker-exists"]
+concept_names = ["random"]
 
 
 def plot(positive_concept: str, cav_scores: list, steps: list, prefix: str = ""):
@@ -36,7 +36,7 @@ def analyse(
     tcav_scores = []
     steps = []
 
-    for suffix in ["0", "1"]:
+    for suffix in ["0"]:
         model = DQNPolicy(observation_space, action_space, [128, 128], [32, 32])
         models = Models(model, folder_suffix=suffix)
         analysis = Analysis(
