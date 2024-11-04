@@ -47,12 +47,12 @@ class TagEnv(gym.Env):
         self.screen_width = 600
         self.screen_height = 600
         folder_name = "environments/gymnasium/data/tag/"
-        filename = "has-0-10-10.txt"
+        filename = "advanced-tag-0-10-10.txt"
         self.state_type = StateType.FULL
         self.bootcamp = Bootcamp()
         self.tag_radius = 1
         self.tag_head_start = 0
-        self.freeze_hider = False
+        self.freeze_hider = True
         self.terminate_out_of_bounds = False
 
         FileHandler.file_exist(folder_name, filename)
