@@ -47,7 +47,7 @@ class TagEnv(gym.Env):
         self.screen_width = 600
         self.screen_height = 600
         folder_name = "environments/gymnasium/data/tag/"
-        filename = "clean-env-0-10-10.txt"
+        filename = "advanced-tag-0-10-10.txt"
         self.state_type = StateType.FULL
         self.bootcamp = Bootcamp()
         self.tag_radius = 1
@@ -65,7 +65,7 @@ class TagEnv(gym.Env):
             filename,
         )
 
-        self.max_steps = self.state.width * self.state.height * 5
+        self.max_steps = self.state.width * self.state.height * 4
 
         self.tag_renderer = TagRenderer(
             self.state.width, self.state.height, self.screen_width, self.screen_height
