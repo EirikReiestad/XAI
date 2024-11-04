@@ -356,6 +356,10 @@ class DQN(SingleAgentBase):
         transitions, indices, weights = self.memory.sample(self.hp.batch_size)
         batch = Transition(*zip(*transitions))
 
+        if all(s is None for s in batch.next_state):
+            logging.warning("All next states are None.")
+            return
+
         non_final_mask = torch.tensor(
             tuple(map(lambda s: s is not None, batch.next_state)),
             device=device,
