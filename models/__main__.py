@@ -53,7 +53,7 @@ models1 = [
     # "model_9400:v17",
 ]
 
-models = models0
+models = models1
 
 gym = gym.make("TagEnv-v0")
 observation_space = gym.observation_space
