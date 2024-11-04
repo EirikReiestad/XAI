@@ -415,6 +415,22 @@ class TagState:
             Objects([], []),
         )
 
+    def remove_agent(self, agent_type: AgentType):
+        new_full_state = FullStateDataModifier.remove_agent(self.state.full, agent_type)
+        if agent_type == AgentType.SEEKER:
+            return self.update(
+                new_full_state,
+                Position(-1, -1),
+                self.get_agent_position(AgentType.HIDER),
+                Objects([], []),
+            )
+        return self.update(
+            new_full_state,
+            self.get_agent_position(AgentType.SEEKER),
+            Position(-1, -1),
+            Objects([], []),
+        )
+
     def has_direct_sight(self, state: np.ndarray) -> tuple[bool, list[Position]]:
         return FullStateDataExtractor.has_direct_sight(state)
 

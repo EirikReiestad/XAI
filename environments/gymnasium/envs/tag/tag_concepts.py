@@ -70,6 +70,16 @@ class TagConcepts:
                 "An arbitrary concept that does not have a specific meaning.",
                 self._get_random,
             ),
+            Concept(
+                "seeker-exists",
+                "The seeker exists in the environment.",
+                self._get_seeker_exists,
+            ),
+            Concept(
+                "hider-exists",
+                "The hider exists in the environment.",
+                self._get_hider_exists,
+            ),
         ]
 
     @property
@@ -193,6 +203,32 @@ class TagConcepts:
             normalized_state = self._state.normalized_full_state
             normalized_state[*block_position.row_major_order] = 0.0
             states.append(normalized_state)
+            labels.append(np.random.randint(self._num_actions))
+        return states, labels
+
+    def _get_seeker_exists(self, samples: int) -> tuple[list[np.ndarray], list[str]]:
+        self._state.random_seeker_position = False
+        self._state.random_hider_position = True
+        self._state.random_box_position = True
+        states = []
+        labels = []
+        for _ in range(samples):
+            self._state.reset()
+            self._state.remove_agent(agent_type=AgentType.SEEKER)
+            states.append(self._state.normalized_full_state)
+            labels.append(np.random.randint(self._num_actions))
+        return states, labels
+
+    def _get_hider_exists(self, samples: int) -> tuple[list[np.ndarray], list[str]]:
+        self._state.random_seeker_position = True
+        self._state.random_hider_position = False
+        self._state.random_box_position = True
+        states = []
+        labels = []
+        for _ in range(samples):
+            self._state.reset()
+            self._state.remove_agent(agent_type=AgentType.HIDER)
+            states.append(self._state.normalized_full_state)
             labels.append(np.random.randint(self._num_actions))
         return states, labels
 
