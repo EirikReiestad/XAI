@@ -509,7 +509,7 @@ class TagEnv(gym.Env):
 
     @property
     def num_actions(self) -> int:
-        return 5
+        return 4
 
     @property
     def feature_names(self) -> list[str]:
