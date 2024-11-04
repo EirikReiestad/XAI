@@ -7,62 +7,52 @@ from rl.src.dqn.policies import DQNPolicy
 
 project_folder = "tag-v0-eirre"
 model_name = "tag-v0"
+
 models0 = [
-    "model_100:v371",
-    # "model_500:v262",
-    "model_1000:v203",
-    # "model_1500:v130",
-    "model_2000:v83",
-    # "model_2500:v78",
-    "model_3000:v56",
-    # "model_3500:v42",
+    "model_100:v434",
+    "model_1000:v229",
+    "model_2000:v111",
+    "model_3000:v86",
     "model_4000:v34",
-    # "model_4500:v30",
-    "model_5000:v28",
-    # "model_5500:v28",
-    "model_6000:v27",
-    # "model_6500:v28",
-    "model_7000:v28",
-    # "model_7500:v18",
-    "model_8000:v18",
-    # "model_8500:v14",
-    "model_9000:v16",
-    # "model_9400:v16",
+    "model_5000:v62",
+    "model_6000:v56",
+    "model_7000:v52",
+    "model_8000:v40",
+    "model_9000:v32",
+    "model_10000:v19",
+    "model_11000:v24",
+    "model_12000:v22",
+    "model_13000:v22",
+]
+
+models0 = [
+    "model_100:v434",
+    "model_300:v401",
+    "model_500:v310",
+    "model_700:v292",
+    "model_900:v267",
 ]
 
 models1 = [
-    "model_100:v372",
-    # "model_500:v263",
-    "model_1000:v204",
-    # "model_1500:v131",
-    "model_2000:v84",
-    # "model_2500:v79",
-    "model_3000:v57",
-    # "model_3500:v43",
-    "model_4000:v35",
-    # "model_4500:v31",
-    "model_5000:v29",
-    # "model_5500:v29",
-    "model_6000:v28",
-    # "model_6500:v29",
-    "model_7000:v29",
-    # "model_7500:v19",
-    "model_8000:v19",
-    # "model_8500:v15",
-    "model_9000:v17",
-    # "model_9400:v17",
+    "model_100:v435",
+    "model_300:v402",
+    "model_500:v311",
+    "model_700:v293",
+    "model_900:v268",
 ]
 
-models = models1
+
+models = [models0, models1]
 
 gym = gym.make("TagEnv-v0")
 observation_space = gym.observation_space
 action_space = gym.action_space
 
-model = DQNPolicy(observation_space, action_space, [128, 128], [32, 32])
+for i, model in enumerate(models):
+    dqn_model = DQNPolicy(observation_space, action_space, [128, 128], [32, 32])
 
-model_downloader = ModelDownloader(
-    model, project_folder, model_name, models, folder_suffix="1"
-)
-logging.info("Downloading models")
-model_downloader.download()
+    model_downloader = ModelDownloader(
+        dqn_model, project_folder, model_name, model, folder_suffix=str(i)
+    )
+    logging.info("Downloading models")
+    model_downloader.download()

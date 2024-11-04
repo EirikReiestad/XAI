@@ -10,8 +10,9 @@ env_wrapped = CAVWrapper(env)
 concepts = env_wrapped.get_concepts()
 logging.info(f"Concepts: {concepts}")
 
-concept = "seeker-close-to-box"
+concepts = ["random", "agents-far-apart", "agents-close"]
 
-data_handler = DataHandler()
-data_handler.generate_data(env_wrapped, concept=concept, n_samples=1000)
-data_handler.save(f"{concept}.csv")
+for concept in concepts:
+    data_handler = DataHandler()
+    data_handler.generate_data(env_wrapped, concept=concept, n_samples=1000)
+    data_handler.save(f"{concept}.csv")
