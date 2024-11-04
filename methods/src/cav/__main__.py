@@ -15,6 +15,7 @@ action_space = gym.action_space
 
 env = CAVWrapper(gym)
 concept_names = env.get_concept_names()
+concept_names = ["box-block", "box-not-block", "box-not-exist"]
 
 
 def plot(positive_concept: str, cav_scores: list, steps: list, prefix: str = ""):
@@ -40,7 +41,7 @@ def analyse(
         analysis = Analysis(
             models, positive_concept + ".csv", negative_concept + ".csv"
         )
-        analysis.run(averages=10)
+        analysis.run(averages=1)
         cav_scores.append(analysis.cav_scores)
         tcav_scores.append(analysis.tcav_scores)
         steps.append(analysis.steps)
@@ -54,4 +55,3 @@ for concept in concept_names:
         concept, negative_concept, observation_space, action_space
     )
     plot(concept, cav_scores, steps)
-    plot(concept, tcav_scores, steps, prefix="_tcav")

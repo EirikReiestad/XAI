@@ -1,4 +1,5 @@
 #!/bin/sh
 
-# Clean log files
-rm srun.out srun.err log.txt
+timestamp=$(date +"%Y%m%d_%H%M%S")
+mkdir -p logs
+mv srun.out srun.err log.txt "logs/${timestamp}_"

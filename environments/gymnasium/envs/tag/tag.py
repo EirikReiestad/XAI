@@ -65,7 +65,7 @@ class TagEnv(gym.Env):
             filename,
         )
 
-        self.max_steps = self.state.width * self.state.height * 5
+        self.max_steps = self.state.width * self.state.height * 2
 
         self.tag_renderer = TagRenderer(
             self.state.width, self.state.height, self.screen_width, self.screen_height

@@ -182,5 +182,5 @@ class CAV:
     def _module_hook(self, module: nn.Module, input, output):
         self._activations[module] = {
             "input": input[0],
-            "output": output,
+            "output": input[0],
         }
