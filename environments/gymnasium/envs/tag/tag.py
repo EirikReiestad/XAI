@@ -138,6 +138,7 @@ class TagEnv(gym.Env):
         self._set_object_positions()
         self._tag_rewards.reset()
         self._steps, self._steps_beyond_terminated = 0, None
+        self._agent_handler.reset()
 
         return self._state.active_state, {"state_type": self._state.state_type.value}
 
@@ -415,7 +416,7 @@ class TagEnv(gym.Env):
             EnvUtils.is_box(new_state, new_agent_position)
             and self._agent_handler.agents.active_agent == AgentType.HIDER
         ):
-            self._agent_handler.hider_slow_factor = 1
+            self._agent_handler.move_in_box()
 
         return self._move_agent_within_bounds(
             new_state, new_agent_position
