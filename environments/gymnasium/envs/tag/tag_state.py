@@ -478,17 +478,21 @@ class TagState:
         obstacle_positions = FullStateDataExtractor.get_positions(
             seeker_state, TileType.OBSTACLE
         )
+        # NOTE: This need to be changed if we are allowed to drag the boxes
         hider_box_positions = FullStateDataExtractor.get_positions(
             hider_state, TileType.BOX
         )
+        seeker_box_positions = FullStateDataExtractor.get_positions(
+            seeker_state, TileType.BOX
+        )
 
         state = np.zeros((self.height, self.width), dtype=np.float32)
+        for box_position in hider_box_positions + seeker_box_positions:
+            state[*box_position.row_major_order] = TileType.BOX.value
         state[*seeker_position.row_major_order] = TileType.SEEKER.value
         state[*hider_position.row_major_order] = TileType.HIDER.value
         for obstacle_position in obstacle_positions:
             state[*obstacle_position.row_major_order] = TileType.OBSTACLE.value
-        for box_position in hider_box_positions:
-            state[*box_position.row_major_order] = TileType.BOX.value
 
         if seeker_position == hider_position:
             return state, True

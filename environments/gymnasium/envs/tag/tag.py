@@ -225,7 +225,7 @@ class TagEnv(gym.Env):
 
     @property
     def num_actions(self) -> int:
-        return 5
+        return 4
 
     @property
     def render_mode(self) -> str | None:
@@ -260,6 +260,7 @@ class TagEnv(gym.Env):
         action_type = ActionType(action)
         self._update_render_action(action_type)
         self._info["collided"] = 0
+        print(self._state.full, action_type)
         new_full_state, reward = self._do_action(action_type)
         collided = new_full_state is None
         if not collided and new_full_state is not None:
@@ -412,10 +413,14 @@ class TagEnv(gym.Env):
             self._info["collided"] = 1
             return state, self._tag_rewards.collision_reward
 
-        if (
-            EnvUtils.is_box(new_state, new_agent_position)
-            and self._agent_handler.agents.active_agent == AgentType.HIDER
-        ):
+        if EnvUtils.is_box(new_state, new_agent_position):
+            grabbed_object = self._agent_handler.agents.active.grabbed_object
+            if (
+                grabbed_object is not None
+                and grabbed_object.position == new_agent_position
+            ):
+                self._info["collided"] = 1
+                return state, self._tag_rewards.collision_reward
             self._agent_handler.move_in_box()
 
         return self._move_agent_within_bounds(
