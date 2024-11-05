@@ -434,6 +434,39 @@ class TagState:
     def has_direct_sight(self, state: np.ndarray) -> tuple[bool, list[Position]]:
         return FullStateDataExtractor.has_direct_sight(state)
 
+    def place_agent_to_direct_sight(self):
+        new_full_state = self.state.full.copy()
+
+        while True:
+            new_full_state = FullStateDataModifier.random_agent_position(
+                new_full_state, AgentType.SEEKER
+            )
+            new_full_state = FullStateDataModifier.random_agent_position(
+                new_full_state, AgentType.HIDER
+            )
+            has_direct_sight, _ = self.has_direct_sight(new_full_state)
+            if has_direct_sight:
+                break
+
+        return self.update(
+            new_full_state,
+            self.get_agent_position(AgentType.SEEKER, new_full_state),
+            self.get_agent_position(AgentType.HIDER, new_full_state),
+            Objects([], []),
+        )
+
+    def place_agents_far_apart(self):
+        radius = self.height // 2
+        new_full_state = FullStateDataModifier.place_agents_far_apart(
+            self.state.full, radius
+        )
+        self.update(
+            new_full_state,
+            self.get_agent_position(AgentType.SEEKER),
+            self.get_agent_position(AgentType.HIDER),
+            Objects([], []),
+        )
+
     @property
     def full_state_size(self) -> tuple[int, int]:
         return self.init_full_state.shape[0], self.init_full_state.shape[1]

@@ -19,4 +19,4 @@ for concept in concepts:
     data_handler = DataHandler()
     data_handler.generate_data(env_wrapped, concept=concept, n_samples=100000)
     data_handler.show_random_sample(4)
-    data_handler.save(f"{concept}_negative.csv")
+    data_handler.save(f"{concept}.csv")

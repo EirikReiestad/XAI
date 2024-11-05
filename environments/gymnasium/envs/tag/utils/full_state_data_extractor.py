@@ -123,3 +123,11 @@ class FullStateDataExtractor:
     @staticmethod
     def is_empty_tile(state: np.ndarray, position: Position) -> bool:
         return state[position.row_major_order] == TileType.EMPTY.value
+
+    @staticmethod
+    def get_empty_positions(state: np.ndarray) -> list[Position]:
+        empty_positions = np.where(state == TileType.EMPTY.value)
+        empty_positions = [
+            Position(x=x, y=y) for x, y in zip(empty_positions[1], empty_positions[0])
+        ]
+        return empty_positions

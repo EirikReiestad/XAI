@@ -14,6 +14,33 @@ from environments.gymnasium.utils import Position
 @dataclass
 class FullStateDataModifier:
     @staticmethod
+    def place_agents_far_apart(state: np.ndarray, radius: float) -> np.ndarray:
+        new_state = state.copy()
+        removed_agents_state = FullStateDataModifier.remove_agents(
+            new_state, [AgentType.HIDER, AgentType.SEEKER]
+        )
+        empty_positions = FullStateDataExtractor.get_empty_positions(
+            removed_agents_state
+        )
+
+        np.random.shuffle(np.array(empty_positions))
+
+        for i, hider_position in enumerate(empty_positions):
+            for seeker_position in empty_positions[i + 1 :]:
+                if (
+                    np.linalg.norm(np.array(hider_position) - np.array(seeker_position))
+                    >= radius
+                ):
+                    seeker_state = FullStateDataModifier.place_agent(
+                        new_state, seeker_position, AgentType.SEEKER
+                    )
+                    hidder_state = FullStateDataModifier.place_agent(
+                        seeker_state, hider_position, AgentType.HIDER
+                    )
+                    return hidder_state
+        raise ValueError("Could not place agents far apart")
+
+    @staticmethod
     def place_seeker_next_to_hider(state: np.ndarray) -> np.ndarray:
         new_state = state.copy()
         hider_position = FullStateDataExtractor.get_agent_position(
