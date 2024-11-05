@@ -85,7 +85,7 @@ class TagEnv(gym.Env):
     def step(self, action: int) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
         assert self.action_space.contains(action), f"Invalid action {action}"
 
-        if not self._agent_handler.can_move():
+        if not self._agent_handler.can_move(self._steps):
             return self._handle_agent_switch(True)
         self._steps += 1
 
