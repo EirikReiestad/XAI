@@ -6,9 +6,12 @@ from .utils.agents import Agent, DualAgents
 
 class AgentHandler:
     def __init__(self) -> None:
-        self._seeker_slow_factor = 1
-        self._hider_slow_factor = 1
         self._freeze_hider = False
+        self.reset()
+
+    def reset(self) -> None:
+        self._seeker_slow_factor = 1
+        self._hider_slow_factor = 2
 
     def set_agents(self, seeker_position: Position, hider_position: Position) -> None:
         seeker = Agent(seeker_position)
@@ -25,6 +28,10 @@ class AgentHandler:
         if self._freeze_hider and self.agents.active_agent == AgentType.HIDER:
             return False
         return True
+
+    def move_in_box(self):
+        if self.agents.active_agent == AgentType.HIDER:
+            self._hider_slow_factor = 1
 
     @property
     def seeker_slow_factor(self) -> int:
