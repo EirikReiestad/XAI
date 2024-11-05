@@ -260,7 +260,6 @@ class TagEnv(gym.Env):
         action_type = ActionType(action)
         self._update_render_action(action_type)
         self._info["collided"] = 0
-        print(self._state.full, action_type)
         new_full_state, reward = self._do_action(action_type)
         collided = new_full_state is None
         if not collided and new_full_state is not None:

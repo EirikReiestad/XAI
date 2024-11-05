@@ -1,3 +1,4 @@
+import logging
 import os
 from dataclasses import dataclass
 
@@ -100,7 +101,7 @@ class Data:
 
         for _ in range(n_samples):
             sample = random.choice(self.samples)
-            print(sample)
+            logging.info(sample)
 
     def __str__(self) -> str:
         return str(self.samples)
