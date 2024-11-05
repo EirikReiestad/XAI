@@ -110,6 +110,7 @@ class TagEnv(gym.Env):
         else:
             self._steps_beyond_terminated = None
 
+        self._poststep()
         return_info = self._generate_return_info()
         self._agent_handler.agents.set_next_agent()
 
@@ -439,7 +440,6 @@ class TagEnv(gym.Env):
             ):
                 self._info["collided"] = 1
                 return state, self._tag_rewards.collision_reward
-            print("EAT BOX")
             self._agent_handler.move_in_box()
             self._info["eat_box"] = 1
 
