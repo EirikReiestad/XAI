@@ -10,8 +10,9 @@ env_wrapped = CAVWrapper(env)
 concepts = env_wrapped.get_concepts()
 logging.info(f"Concepts: {concepts}")
 concept_names = env_wrapped.get_concept_names()
+concept_names = ["agents-close", "agents-far-apart"]
 
-for concept in concepts:
+for concept in concept_names:
     logging.info(f"{'='*5} Generating data for concept: {concept}{'='*5}")
     data_handler = DataHandler()
     data_handler.generate_data(env_wrapped, concept=concept, n_samples=10000)

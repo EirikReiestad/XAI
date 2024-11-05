@@ -52,7 +52,7 @@ class TagEnv(gym.Env):
         self._steps_beyond_terminated = None
 
         folder_name = "environments/gymnasium/data/tag/"
-        filename = "advanced-tag-0-10-10.txt"
+        filename = "maze-tag-0-10-10.txt"
         FileHandler.file_exist(folder_name, filename)
         filename = folder_name + filename
 
@@ -225,7 +225,7 @@ class TagEnv(gym.Env):
 
     @property
     def num_actions(self) -> int:
-        return 4
+        return 5
 
     @property
     def render_mode(self) -> str | None:

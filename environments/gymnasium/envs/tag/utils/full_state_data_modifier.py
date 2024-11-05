@@ -28,7 +28,9 @@ class FullStateDataModifier:
         for i, hider_position in enumerate(empty_positions):
             for seeker_position in empty_positions[i + 1 :]:
                 if (
-                    np.linalg.norm(np.array(hider_position) - np.array(seeker_position))
+                    np.linalg.norm(
+                        np.array(hider_position.tuple) - np.array(seeker_position.tuple)
+                    )
                     >= radius
                 ):
                     seeker_state = FullStateDataModifier.place_agent(
@@ -54,7 +56,7 @@ class FullStateDataModifier:
         removed_seeker_position = FullStateDataModifier.remove_agent(
             new_state, AgentType.SEEKER
         )
-        random_position = np.random.choice(empty_positions_around_position)
+        random_position = np.random.choice(np.array(empty_positions_around_position))
         placed_seeker = FullStateDataModifier.place_agent(
             removed_seeker_position, random_position, AgentType.SEEKER
         )

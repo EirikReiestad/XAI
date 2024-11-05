@@ -15,14 +15,7 @@ action_space = gym.action_space
 
 env = CAVWrapper(gym)
 concept_names = env.get_concept_names()
-concept_names = [
-    "random",
-    "agents-far-apart",
-    "agents-close",
-    "seeker-exists",
-    "hider-exists",
-    "has-sight",
-]
+concept_names = ["agents-close", "agents-far-apart"]
 
 
 def plot(positive_concept: str, cav_scores: list, steps: list, prefix: str = ""):

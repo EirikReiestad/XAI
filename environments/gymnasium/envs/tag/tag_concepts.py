@@ -5,7 +5,7 @@ import numpy as np
 
 from environments.gymnasium.envs.tag.utils import AgentType
 
-from .tag_state import Position, TagState
+from .tag_state import TagState
 
 
 @dataclass
@@ -147,10 +147,16 @@ class TagConcepts:
         )
 
     def _get_has_direct_sight(self, samples: int) -> tuple[list[np.ndarray], list[str]]:
-        return self._generate_samples(samples, self._state.place_agent_with_direct_sight)
+        return self._generate_samples(
+            samples, self._state.place_agent_with_direct_sight
+        )
 
-    def _get_has_no_direct_sight(self, samples: int) -> tuple[list[np.ndarray], list[str]]:
-        return self._generate_samples(samples, self._state.place_agent_with_direct_sight)
+    def _get_has_no_direct_sight(
+        self, samples: int
+    ) -> tuple[list[np.ndarray], list[str]]:
+        return self._generate_samples(
+            samples, self._state.place_agent_with_direct_sight
+        )
 
     def _get_random(self, samples: int) -> tuple[list[np.ndarray], list[str]]:
         return self._generate_samples(samples, lambda: None)
