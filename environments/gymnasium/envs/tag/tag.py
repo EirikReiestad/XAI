@@ -47,7 +47,7 @@ class TagEnv(gym.Env):
         self._tag_head_start = 0
         self._terminate_out_of_bounds = False
         self._max_steps = self._width * self._height * 4
-        self._render_mode = render_mode
+        self.render_mode = render_mode
         self._steps = 0
         self._steps_beyond_terminated = None
 
@@ -129,7 +129,7 @@ class TagEnv(gym.Env):
         self, *, seed: Optional[int] = None, options: Optional[Dict[str, Any]] = None
     ) -> Tuple[np.ndarray, Dict[str, Any]]:
         super().reset(seed=seed)
-        self._render_mode = options.get("render_mode") if options else self._render_mode
+        self.render_mode = options.get("render_mode") if options else self.render_mode
 
         self._init_step()
 
@@ -143,7 +143,7 @@ class TagEnv(gym.Env):
         return self._state.active_state, {"state_type": self._state.state_type.value}
 
     def render(self, render_mode: Optional[str] = None) -> Optional[np.ndarray]:
-        render_mode = render_mode or self._render_mode
+        render_mode = render_mode or self.render_mode
         return self._tag_renderer.render(self._state.full, render_mode)
 
     def close(self):
@@ -226,14 +226,6 @@ class TagEnv(gym.Env):
     @property
     def num_actions(self) -> int:
         return 4
-
-    @property
-    def render_mode(self) -> str | None:
-        return self._tag_renderer.render_mode
-
-    @render_mode.setter
-    def render_mode(self, mode: str | None):
-        self._tag_renderer.render_mode = mode
 
     @property
     def concepts(self) -> str:
