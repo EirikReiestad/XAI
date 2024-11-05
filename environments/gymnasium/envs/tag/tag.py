@@ -80,10 +80,14 @@ class TagEnv(gym.Env):
             "collided": 0,
             "wrong_grab_release": 0,
             "has_direct_sight": 0,
+            "distance_to_agent": 0.0,
+            "eat_box": 0,
         }
 
     def step(self, action: int) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
         assert self.action_space.contains(action), f"Invalid action {action}"
+
+        self._init_step()
 
         if not self._agent_handler.can_move(self._steps):
             return self._handle_agent_switch(True)
@@ -109,6 +113,8 @@ class TagEnv(gym.Env):
         return_info = self._generate_return_info()
         self._agent_handler.agents.set_next_agent()
 
+        self._prestep()
+
         return (
             self._state.active_state,
             reward,
@@ -126,12 +132,7 @@ class TagEnv(gym.Env):
         super().reset(seed=seed)
         self._render_mode = options.get("render_mode") if options else self._render_mode
 
-        self._info = {
-            "object_moved_distance": 0,
-            "collided": 0,
-            "wrong_grab_release": 0,
-            "has_direct_sight": 0,
-        }
+        self._init_step()
 
         self._state.reset()
         self._set_initial_positions(options)
@@ -243,6 +244,19 @@ class TagEnv(gym.Env):
     def concept_names(self) -> list[str]:
         return self._tag_concepts.concept_names
 
+    def _prestep(self):
+        self._info["distance_to_agent"] = self._state.agent_distance
+
+    def _init_step(self):
+        self._info = {
+            "object_moved_distance": 0,
+            "collided": 0,
+            "wrong_grab_release": 0,
+            "has_direct_sight": 0,
+            "distance_to_agent": 0.0,
+            "eat_box": 0,
+        }
+
     def _increment_termination_steps(self):
         if self._steps_beyond_terminated is None:
             self._steps_beyond_terminated = 0
@@ -259,13 +273,12 @@ class TagEnv(gym.Env):
     def _perform_action(self, action: int) -> Tuple[float, bool]:
         action_type = ActionType(action)
         self._update_render_action(action_type)
-        self._info["collided"] = 0
         new_full_state, reward = self._do_action(action_type)
         collided = new_full_state is None
         if not collided and new_full_state is not None:
             self.update_state(new_full_state)
             has_direct_sight, _ = self._state.has_direct_sight(new_full_state)
-            self._info["has_direct_sight"] = 1 if has_direct_sight else 0
+            self._info["has_direct_sight"] = int(has_direct_sight)
         return reward, collided
 
     def _end_episode(self) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
@@ -282,6 +295,10 @@ class TagEnv(gym.Env):
                     "collided": self._info["collided"],
                     "wrong_grab_release": self._info["wrong_grab_release"],
                     "has_direct_sight": self._info["has_direct_sight"],
+                    "eat_box": self._info["eat_box"],
+                },
+                "data_average": {
+                    "distance_to_agent": self._info["distance_to_agent"],
                 },
                 "data_constant": {
                     "slow_factor": self._agent_handler.agent_slow_factor(
@@ -322,6 +339,10 @@ class TagEnv(gym.Env):
                     "collided": self._info["collided"],
                     "wrong_grab_release": self._info["wrong_grab_release"],
                     "has_direct_sight": self._info["has_direct_sight"],
+                    "eat_box": self._info["eat_box"],
+                },
+                "data_average": {
+                    "distance_to_agent": self._info["distance_to_agent"],
                 },
                 "agent_slow_factor": self._agent_handler.agent_slow_factor(
                     self._agent_handler.agents.active_agent
@@ -421,6 +442,7 @@ class TagEnv(gym.Env):
                 self._info["collided"] = 1
                 return state, self._tag_rewards.collision_reward
             self._agent_handler.move_in_box()
+            self._info["eat_box"] = 1
 
         return self._move_agent_within_bounds(
             new_state, new_agent_position

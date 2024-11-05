@@ -186,6 +186,7 @@ class MultiAgentDQN(MultiAgentBase):
         episode_length = 0
 
         data = [{} for _ in range(self.num_agents)]
+        data_average = [{} for _ in range(self.num_agents)]
         data_constant = [{} for _ in range(self.num_agents)]
 
         frames = []
@@ -224,6 +225,11 @@ class MultiAgentDQN(MultiAgentBase):
                 if data_additative is not None:
                     for key, value in data_additative.items():
                         data[i][key] = data[i].setdefault(key, 0) + value
+
+                data_average_rollout = infos[i].get("data_average")
+                if data_average_rollout is not None:
+                    for key, value in data_average_rollout.items():
+                        data_average[i][key] = data[i].setdefault(key, 0) + value
 
                 data_constant = infos[i].get("data_constant")
                 if data_constant is not None:
@@ -276,6 +282,10 @@ class MultiAgentDQN(MultiAgentBase):
 
             if done:
                 break
+
+        for i in range(self.num_agents):
+            for key, value in data_average[i].items():
+                data[i][key] = value / episode_length
 
         return rollout_returns, episode_rewards, episode_length, info, data, frames
 
