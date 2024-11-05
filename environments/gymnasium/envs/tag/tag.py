@@ -113,8 +113,6 @@ class TagEnv(gym.Env):
         return_info = self._generate_return_info()
         self._agent_handler.agents.set_next_agent()
 
-        self._prestep()
-
         return (
             self._state.active_state,
             reward,
@@ -244,7 +242,7 @@ class TagEnv(gym.Env):
     def concept_names(self) -> list[str]:
         return self._tag_concepts.concept_names
 
-    def _prestep(self):
+    def _poststep(self):
         self._info["distance_to_agent"] = self._state.agent_distance
 
     def _init_step(self):
@@ -441,6 +439,7 @@ class TagEnv(gym.Env):
             ):
                 self._info["collided"] = 1
                 return state, self._tag_rewards.collision_reward
+            print("EAT BOX")
             self._agent_handler.move_in_box()
             self._info["eat_box"] = 1
 
@@ -542,6 +541,10 @@ class TagEnv(gym.Env):
                 "collided": self._info["collided"],
                 "wrong_grab_release": self._info["wrong_grab_release"],
                 "has_direct_sight": self._info["has_direct_sight"],
+                "eat_box": self._info["eat_box"],
+            },
+            "data_average": {
+                "distance_to_agent": self._info["distance_to_agent"],
             },
             "data_constant": {
                 "slow_factor": self._agent_handler.agent_slow_factor(
