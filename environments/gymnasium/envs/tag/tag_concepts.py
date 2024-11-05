@@ -55,11 +55,6 @@ class TagConcepts:
                 self._get_seeker_close_to_box,
             ),
             Concept(
-                "random",
-                "An arbitrary concept that does not have a specific meaning.",
-                self._get_random,
-            ),
-            Concept(
                 "seeker-exists",
                 "The seeker exists in the environment.",
                 self._get_seeker_exists,
@@ -70,9 +65,19 @@ class TagConcepts:
                 self._get_hider_exists,
             ),
             Concept(
-                "has-sight",
+                "has-direct-sight",
                 "The seeker has a direct line of sight to the hider.",
                 self._get_has_direct_sight,
+            ),
+            Concept(
+                "has-no-direct-sight",
+                "The seeker does not have a direct line of sight to the hider.",
+                self._get_has_no_direct_sight,
+            ),
+            Concept(
+                "random",
+                "An arbitrary concept that does not have a specific meaning.",
+                self._get_random,
             ),
         ]
 
@@ -142,7 +147,10 @@ class TagConcepts:
         )
 
     def _get_has_direct_sight(self, samples: int) -> tuple[list[np.ndarray], list[str]]:
-        return self._generate_samples(samples, self._state.place_agent_to_direct_sight)
+        return self._generate_samples(samples, self._state.place_agent_with_direct_sight)
+
+    def _get_has_no_direct_sight(self, samples: int) -> tuple[list[np.ndarray], list[str]]:
+        return self._generate_samples(samples, self._state.place_agent_with_direct_sight)
 
     def _get_random(self, samples: int) -> tuple[list[np.ndarray], list[str]]:
         return self._generate_samples(samples, lambda: None)

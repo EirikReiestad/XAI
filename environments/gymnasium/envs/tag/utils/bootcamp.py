@@ -47,7 +47,7 @@ class Bootcamp:
         self.slow_agent = 0
 
         self._slow_seeker_factor = 1
-        self._slow_hider_factor = 2
+        self._slow_hider_factor = 100
 
     def reset(self):
         self._name = BootcampName.HIDER

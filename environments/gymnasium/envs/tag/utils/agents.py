@@ -75,8 +75,7 @@ class DualAgents:
     def active_agent(self, agent: AgentType | int):
         if isinstance(agent, int):
             agent = AgentType(agent)
-        if agent not in AgentType:
-            raise ValueError(f"Invalid agent type {agent}")
+        assert isinstance(agent, AgentType), f"Invalid agent type {agent}"
 
         inactive_agent = (
             AgentType.SEEKER if agent == AgentType.HIDER else AgentType.HIDER

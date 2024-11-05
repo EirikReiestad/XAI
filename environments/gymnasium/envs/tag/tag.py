@@ -15,19 +15,17 @@ from environments.gymnasium.utils import (
     StateType,
     generate_random_position,
 )
+
 from .env_utils import EnvUtils
+from .tag_concepts import TagConcepts
 from .tag_renderer import TagRenderer
 from .tag_rewards import TagRewards
 from .tag_state import TagState
-from .tag_concepts import TagConcepts
+from .agent_handler import AgentHandler
 from .utils import (
     AGENT_TILE_TYPE,
     ActionType,
-    Agent,
     AgentType,
-    Bootcamp,
-    BootcampName,
-    DualAgents,
     Object,
     Objects,
     ObjectType,
@@ -45,11 +43,8 @@ class TagEnv(gym.Env):
         self._width = 10
         self._screen_width = 600
         self._screen_height = 600
-        self._state_type = StateType.FULL
-        self._bootcamp = Bootcamp()
         self._tag_radius = 1
         self._tag_head_start = 0
-        self._freeze_hider = False
         self._terminate_out_of_bounds = False
         self._max_steps = self._width * self._height * 4
         self._render_mode = render_mode
@@ -61,10 +56,11 @@ class TagEnv(gym.Env):
         FileHandler.file_exist(folder_name, filename)
         filename = folder_name + filename
 
+        self._agent_handler = AgentHandler()
         self._state = TagState(
             self._screen_width,
             self._screen_height,
-            self._state_type,
+            StateType.FULL,
             filename,
         )
         self._tag_renderer = TagRenderer(
@@ -89,13 +85,12 @@ class TagEnv(gym.Env):
     def step(self, action: int) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
         assert self.action_space.contains(action), f"Invalid action {action}"
 
-        if self._is_initial_switch_needed():
-            self._bootcamp.step()
-            return self._handle_agent_switch(False)
+        if not self._agent_handler.can_move():
+            return self._handle_agent_switch(True)
         self._steps += 1
 
         if self._is_switch_required():
-            return self._handle_agent_switch(False)
+            return self._handle_agent_switch(True)
 
         if self._steps >= self._max_steps:
             return self._end_episode()
@@ -112,8 +107,7 @@ class TagEnv(gym.Env):
             self._steps_beyond_terminated = None
 
         return_info = self._generate_return_info()
-        self._agents.set_next_agent()
-        self._bootcamp.step()
+        self._agent_handler.agents.set_next_agent()
 
         return (
             self._state.active_state,
@@ -144,11 +138,8 @@ class TagEnv(gym.Env):
         self._set_object_positions()
         self._tag_rewards.reset()
         self._steps, self._steps_beyond_terminated = 0, None
-        self._bootcamp.slow_hider_factor = 2
-        if options.get("full_reset", False) if options else False:
-            self._bootcamp.reset()
 
-        return self._state.active_state, {"state_type": self._state_type.value}
+        return self._state.active_state, {"state_type": self._state.state_type.value}
 
     def render(self, render_mode: Optional[str] = None) -> Optional[np.ndarray]:
         render_mode = render_mode or self._render_mode
@@ -158,7 +149,7 @@ class TagEnv(gym.Env):
         self._tag_renderer.close()
 
     def set_active_agent(self, agent: AgentType):
-        self._agents.active_agent = agent
+        self._agent_handler.agents.active_agent = agent
 
     def concatenate_states(
         self, states: list[np.ndarray]
@@ -166,8 +157,8 @@ class TagEnv(gym.Env):
         state, concat_terminated = self._state.concatenate_states(states)
         has_direct_sight, sight_positions = self._state.has_direct_sight(state)
         rewards, tag_terminated = self._tag_rewards.get_tag_reward(
-            self._agents.active.position,
-            self._agents.inactive.position,
+            self._agent_handler.agents.active.position,
+            self._agent_handler.agents.inactive.position,
             has_direct_sight,
             concat_terminated,
             self._tag_radius,
@@ -188,8 +179,8 @@ class TagEnv(gym.Env):
         self._state.validate_state(state)
         self._state.update(
             state,
-            self._agents.active.position,
-            self._agents.inactive.position,
+            self._agent_handler.agents.active.position,
+            self._agent_handler.agents.inactive.position,
             self.objects,
         )
         return self._state.active_state
@@ -207,7 +198,9 @@ class TagEnv(gym.Env):
                 AgentType.HIDER, AgentType.SEEKER, self.objects
             )
         return self._state.get_all_possible_states(
-            self._agents.active_agent, self._agents.inactive_agent, self.objects
+            self._agent_handler.agents.active_agent,
+            self._agent_handler.agents.inactive_agent,
+            self.objects,
         )
 
     def get_occluded_states(self) -> np.ndarray:
@@ -232,10 +225,6 @@ class TagEnv(gym.Env):
     @property
     def num_actions(self) -> int:
         return 5
-
-    @property
-    def feature_names(self) -> list[str]:
-        return self._state.feature_names
 
     @property
     def render_mode(self) -> str | None:
@@ -294,48 +283,23 @@ class TagEnv(gym.Env):
                     "has_direct_sight": self._info["has_direct_sight"],
                 },
                 "data_constant": {
-                    "slow_factor": self._bootcamp.agent_slow_factor(
-                        self._agents.active_agent
+                    "slow_factor": self._agent_handler.agent_slow_factor(
+                        self._agent_handler.agents.active_agent
                     ),
                 },
             },
         )
 
-    def _is_initial_switch_needed(self) -> bool:
-        return (
-            self._steps >= self._tag_head_start
-            and self._freeze_hider
-            and self._agents.active_agent == AgentType.HIDER
-        )
-
     def _is_switch_required(self) -> bool:
         return (
-            (
-                self._bootcamp.name in [BootcampName.HIDER]
-                and self._agents.active_agent == AgentType.SEEKER
-            )
-            or (
-                self._bootcamp.name in [BootcampName.SEEKER]
-                and self._agents.active_agent == AgentType.HIDER
-            )
-            or (
-                self._agents.active_agent == AgentType.HIDER
-                and not self._bootcamp.move_hider(self._steps)
-            )
-            or (
-                self._agents.active_agent == AgentType.SEEKER
-                and not self._bootcamp.move_seeker(self._steps)
-            )
-            or (
-                self._steps < self._tag_head_start
-                and self._agents.active_agent == AgentType.SEEKER
-            )
+            self._steps < self._tag_head_start
+            and self._agent_handler.agents.active_agent == AgentType.SEEKER
         )
 
     def _update_render_action(self, action: ActionType):
         if action == ActionType.GRAB_RELEASE:
             return
-        if self._agents.active_agent == AgentType.SEEKER:
+        if self._agent_handler.agents.active_agent == AgentType.SEEKER:
             self._tag_renderer.seeker_action = action
         else:
             self._tag_renderer.hider_action = action
@@ -343,7 +307,7 @@ class TagEnv(gym.Env):
     def _handle_agent_switch(
         self, skip: bool
     ) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
-        self._agents.set_next_agent()
+        self._agent_handler.agents.set_next_agent()
         return (
             self._state.active_state,
             0,
@@ -358,8 +322,8 @@ class TagEnv(gym.Env):
                     "wrong_grab_release": self._info["wrong_grab_release"],
                     "has_direct_sight": self._info["has_direct_sight"],
                 },
-                "agent_slow_factor": self._bootcamp.agent_slow_factor(
-                    self._agents.active_agent
+                "agent_slow_factor": self._agent_handler.agent_slow_factor(
+                    self._agent_handler.agents.active_agent
                 ),
             },
         )
@@ -368,7 +332,7 @@ class TagEnv(gym.Env):
         reward = 0
 
         if action == ActionType.GRAB_RELEASE:
-            if self._agents.active.grabbed_object is not None:
+            if self._agent_handler.agents.active.grabbed_object is not None:
                 if not self._release_entity():
                     self._info["wrong_grab_release"] = 1
                     reward += self._tag_rewards.wrong_grab_release_reward
@@ -387,26 +351,27 @@ class TagEnv(gym.Env):
     def _grab_entity(self) -> bool:
         for obj in self.objects.boxes:
             if (
-                self._agents.active.position.distance_to(obj.position) <= 1
+                self._agent_handler.agents.active.position.distance_to(obj.position)
+                <= 1
                 and obj.can_grab()
             ):
                 obj.grabbed = True
-                obj.next_position = self._agents.active.position
-                self._agents.active.grab(obj)
+                obj.next_position = self._agent_handler.agents.active.position
+                self._agent_handler.agents.active.grab(obj)
                 return True
         return False
 
     def _release_entity(self):
-        return self._agents.active.release()
+        return self._agent_handler.agents.active.release()
 
     def _move_grabbed_object(self, state: np.ndarray) -> Optional[np.ndarray]:
-        obj = self._agents.active.grabbed_object
+        obj = self._agent_handler.agents.active.grabbed_object
         self._info["object_moved_distance"] = 0
 
         if obj is None or obj.next_position is None:
             return state
 
-        next_position = self._agents.active.position
+        next_position = self._agent_handler.agents.active.position
 
         if obj.next_position == next_position:
             return state
@@ -414,7 +379,7 @@ class TagEnv(gym.Env):
         if EnvUtils.is_within_bounds(state, obj.next_position):
             state[*obj.position.row_major_order] = TileType.EMPTY.value
             obj.position = obj.next_position
-            obj.next_position = self._agents.active.position
+            obj.next_position = self._agent_handler.agents.active.position
             state[*obj.position.row_major_order] = TileType.BOX.value
             self._info["object_moved_distance"] = 1
         else:
@@ -428,9 +393,11 @@ class TagEnv(gym.Env):
         self, state: np.ndarray, action: ActionType
     ) -> tuple[Optional[np.ndarray], float]:
         new_state = state.copy()
-        new_agent_position = self._agents.active.position + action.direction.tuple
+        new_agent_position = (
+            self._agent_handler.agents.active.position + action.direction.tuple
+        )
 
-        if self._agents.inactive.position == new_agent_position:
+        if self._agent_handler.agents.inactive.position == new_agent_position:
             self._info["collided"] = 1
             return state, self._tag_rewards.collision_reward
 
@@ -446,27 +413,29 @@ class TagEnv(gym.Env):
 
         if (
             EnvUtils.is_box(new_state, new_agent_position)
-            and self._agents.active_agent == AgentType.HIDER
+            and self._agent_handler.agents.active_agent == AgentType.HIDER
         ):
-            self._bootcamp.slow_hider_factor = 1
+            self._agent_handler.hider_slow_factor = 1
 
         return self._move_agent_within_bounds(
             new_state, new_agent_position
-        ), self._tag_rewards.move_reward[self._agents.active_agent.value]
+        ), self._tag_rewards.move_reward[self._agent_handler.agents.active_agent.value]
 
     def _move_agent_within_bounds(
         self, state: np.ndarray, agent_position: Position
     ) -> Optional[np.ndarray]:
-        previous_position = self._agents.active.position.row_major_order
+        previous_position = self._agent_handler.agents.active.position.row_major_order
         state[*previous_position] = TileType.EMPTY.value
 
-        self._agents.active.position = agent_position
-        agent_tile_type = AGENT_TILE_TYPE.get(self._agents.active_agent)
+        self._agent_handler.agents.active.position = agent_position
+        agent_tile_type = AGENT_TILE_TYPE.get(self._agent_handler.agents.active_agent)
+        assert (
+            agent_tile_type is not None
+        ), f"Invalid agent type {self._agent_handler.agents.active_agent}"
 
-        if agent_tile_type is None:
-            raise ValueError(f"Invalid agent type {self._agents.active_agent}")
-
-        state[*self._agents.active.position.row_major_order] = agent_tile_type
+        state[*self._agent_handler.agents.active.position.row_major_order] = (
+            agent_tile_type
+        )
         return state
 
     def _init_spaces(self):
@@ -476,20 +445,20 @@ class TagEnv(gym.Env):
 
         self.action_space = spaces.Discrete(self.num_actions)
 
-        if self._state_type.value == "full":
+        if self._state.state_type.value == "full":
             self.observation_space = spaces.Box(
                 low=0, high=8, shape=self._state.full.shape, dtype=np.float64
             )
-        elif self._state_type.value == "partial":
+        elif self._state.state_type.value == "partial":
             self.observation_space = spaces.Box(
                 low=0, high=255, shape=self._state.partial.shape, dtype=np.uint8
             )
-        elif self._state_type.value == "rgb":
+        elif self._state.state_type.value == "rgb":
             self.observation_space = spaces.Box(
                 low=0, high=255, shape=self._state.rgb.shape, dtype=np.uint8
             )
         else:
-            raise ValueError(f"Invalid state type {self._state_type.value}")
+            raise ValueError(f"Invalid state type {self._state.state_type.value}")
 
     def _set_initial_positions(self, options: Optional[Dict[str, Any]]):
         """Sets the initial positions of the agent and goal."""
@@ -510,9 +479,7 @@ class TagEnv(gym.Env):
                 if options is None or "hider" not in options
                 else Position(options["hider"])
             )
-        seeker = Agent(seeker_position)
-        hider = Agent(hider_position)
-        self._agents = DualAgents(seeker, hider)
+        self._agent_handler.set_agents(seeker_position, hider_position)
 
     def _set_object_positions(self):
         obstacle_positions = self._state.get_obstacle_positions()
@@ -550,8 +517,8 @@ class TagEnv(gym.Env):
                 "has_direct_sight": self._info["has_direct_sight"],
             },
             "data_constant": {
-                "slow_factor": self._bootcamp.agent_slow_factor(
-                    self._agents.active_agent
+                "slow_factor": self._agent_handler.agent_slow_factor(
+                    self._agent_handler.agents.active_agent
                 ),
             },
         }

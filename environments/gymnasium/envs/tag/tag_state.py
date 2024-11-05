@@ -14,6 +14,7 @@ from environments.gymnasium.envs.tag.utils import (
 from rl.src.common.getter import get_torch_from_numpy
 from environments.gymnasium.utils import Position, State, StateType
 from utils import Color
+from typing import Callable
 
 
 class TagState:
@@ -24,118 +25,28 @@ class TagState:
         state_type: StateType,
         filename: str,
     ):
-        self.screen_width = screen_width
-        self.screen_height = screen_height
-        self.state_type = state_type
-        self.random_seeker_position = True
-        self.random_hider_position = True
-        self.random_box_position = True
+        self._screen_width = screen_width
+        self._screen_height = screen_height
+        self._state_type = state_type
+        self._random_seeker_position = True
+        self._random_hider_position = True
+        self._random_box_position = True
         self._init_states(filename)
         self._init_dimensions()
 
-    @property
-    def init_full_state(self):
-        init_state = self._init_full_state
-
-        if self.random_seeker_position:
-            init_state = FullStateDataModifier.random_agent_position(
-                init_state, AgentType.SEEKER
-            )
-        if self.random_hider_position:
-            init_state = FullStateDataModifier.random_agent_position(
-                init_state, AgentType.HIDER
-            )
-        if self.random_box_position:
-            init_state = FullStateDataModifier.random_objects_position(
-                init_state, TileType.BOX
-            )
-
-        self.validate_state(init_state)
-        return init_state
-
-    @init_full_state.setter
-    def init_full_state(self, value: np.ndarray):
-        self._init_full_state = value
-
-    @property
-    def active_state(self, normalized: bool = True) -> np.ndarray:
-        if normalized:
-            return self.state.normalized_full_state
-        return self.state.active_state
-
-    @property
-    def normalized_full_state(self) -> np.ndarray:
-        return self.state.normalized_full_state
-
-    @property
-    def full(self) -> np.ndarray:
-        return self.state.full
-
-    @full.setter
-    def full(self, value: np.ndarray):
-        self.state.full = value
-
-    @property
-    def partial(self) -> np.ndarray:
-        return self.state.partial
-
-    @property
-    def rgb(self) -> np.ndarray:
-        return self.state.rgb
-
-    @property
-    def feature_names(self) -> list[str]:
-        hider_position_names = ["Hider X", "Hider Y"]
-        seeker_position_names = ["Seeker X", "Seeker Y"]
-        distance_name = "Distance"
-        direction_names = ["Direction X", "Direction Y"]
-        obstacle_names = []
-        for i in range(self._num_obstacles):
-            for name in Object.feature_names_static():
-                obstacle_names.append(f"Obstacle {i} {name}")
-        box_names = []
-        for i in range(self._num_boxes):
-            for name in Object.feature_names_static():
-                box_names.append(f"Box {i} {name}")
-        return [
-            *hider_position_names,
-            *seeker_position_names,
-            distance_name,
-            *direction_names,
-            *obstacle_names,
-            *box_names,
-        ]
-
-    def _init_states(self, filename: str):
-        self.init_full_state = self._load_env_from_file(filename)
-        full_state = self.init_full_state
-        partial_state = np.ndarray(self.partial_state_size, dtype=np.uint8)
-        rgb_state = self._create_rgb_state()
-
-        self.state = State(
-            full=full_state,
-            partial=partial_state,
-            rgb=rgb_state,
-            active=self.state_type,
-        )
-
-    def _init_dimensions(self):
-        self.width = self.init_full_state.shape[1]
-        self.height = self.init_full_state.shape[0]
-
     def reset(self):
-        self.state.full = self.init_full_state
+        self._state.full = self.init_full_state
         seeker_position = FullStateDataExtractor.get_agent_position(
-            self.state.full, AgentType.SEEKER
+            self._state.full, AgentType.SEEKER
         )
         hider_position = FullStateDataExtractor.get_agent_position(
-            self.state.full, AgentType.HIDER
+            self._state.full, AgentType.HIDER
         )
         obstacle_positions = FullStateDataExtractor.get_positions(
-            self.state.full, TileType.OBSTACLE
+            self._state.full, TileType.OBSTACLE
         )
         box_positions = FullStateDataExtractor.get_positions(
-            self.state.full, TileType.BOX
+            self._state.full, TileType.BOX
         )
         obstacles = [
             Object(ObjectType.OBSTACLE, position, False)
@@ -144,12 +55,12 @@ class TagState:
         boxes = [Object(ObjectType.BOX, position, True) for position in box_positions]
         objects = Objects(obstacles, boxes)
 
-        self.validate_state(self.state.full)
+        self.validate_state(self._state.full)
 
-        self.state.partial = self._create_partial_state(
+        self._state.partial = self._create_partial_state(
             seeker_position, hider_position, objects
         )
-        self.state.rgb = self._create_rgb_state()
+        self._state.rgb = self._create_rgb_state()
 
     def update(
         self,
@@ -158,22 +69,21 @@ class TagState:
         hider_position: Position,
         objects: Objects,
     ):
-        self.state.full = new_full_state
-        self.state.partial = self._create_partial_state(
+        self._state.full = new_full_state
+        self._state.partial = self._create_partial_state(
             seeker_position, hider_position, objects
         )
-        self.state.rgb = self._create_rgb_state()
+        self._state.rgb = self._create_rgb_state()
 
     def get_agent_position(
         self, agent: AgentType, state: np.ndarray | None = None
     ) -> Position:
         if state is None:
-            return FullStateDataExtractor.get_agent_position(self.state.full, agent)
+            return FullStateDataExtractor.get_agent_position(self._state.full, agent)
         return FullStateDataExtractor.get_agent_position(state, agent)
 
     def get_initial_agent_position(self, agent: AgentType) -> Position:
-        if self.init_full_state is None:
-            raise ValueError("Initial full state is not set yet.")
+        assert self.init_full_state is not None, "Initial full state is not set yet."
         return FullStateDataExtractor.get_agent_position(self.init_full_state, agent)
 
     def concatenate_states(self, states: list[np.ndarray]) -> tuple[np.ndarray, bool]:
@@ -193,15 +103,303 @@ class TagState:
     def get_all_possible_states(
         self, active_agent: AgentType, inactive_agent: AgentType, objects: Objects
     ) -> np.ndarray:
-        if self.state_type == StateType.FULL:
+        if self._state_type == StateType.FULL:
             return self._get_all_possible_full_states(active_agent)
-        elif self.state_type == StateType.PARTIAL:
+        elif self._state_type == StateType.PARTIAL:
             return self._get_all_possible_partial_states(
                 active_agent, inactive_agent, objects
             )
-        elif self.state_type == StateType.RGB:
+        elif self._state_type == StateType.RGB:
             raise NotImplementedError("RGB state type not implemented yet.")
-        raise ValueError(f"Unknown state type: {self.state_type}")
+        raise ValueError(f"Unknown state type: {self._state_type}")
+
+    def validate_state(self, state: np.ndarray):
+        FullStateDataExtractor.get_agent_position(state, AgentType.SEEKER)
+        FullStateDataExtractor.get_agent_position(state, AgentType.HIDER)
+
+    def get_occluded_states(self) -> np.ndarray:
+        assert (
+            self._state_type == StateType.FULL
+        ), f"Occlusion is only supported for full state type, not {self._state_type}"
+
+        states = np.ndarray(
+            (self.height, self.width, *self.full_state_size), dtype=np.uint8
+        )
+
+        for y in range(self.height):
+            for x in range(self.width):
+                state = self._state.full.copy()
+                state = FullStateDataModifier.occlude(state, Position(x, y))
+                torch_state = get_torch_from_numpy(state)
+                states[y, x] = torch_state.unsqueeze(0)
+        return states
+
+    def place_seeker_next_to_hider(self):
+        new_full_state = FullStateDataModifier.place_seeker_next_to_hider(
+            self._state.full
+        )
+        self.update(
+            new_full_state,
+            self.get_agent_position(AgentType.SEEKER),
+            self.get_agent_position(AgentType.HIDER),
+            Objects([], []),
+        )
+
+    def place_agent_next_to_box(self, agent_type: AgentType):
+        new_full_state = FullStateDataModifier.place_agent_next_to_box(
+            self._state.full, agent_type
+        )
+        self.update(
+            new_full_state,
+            self.get_agent_position(AgentType.SEEKER),
+            self.get_agent_position(AgentType.HIDER),
+            Objects([], []),
+        )
+
+    def remove_box(self):
+        new_full_state, _ = FullStateDataModifier.remove_objects(
+            self._state.full, TileType.BOX
+        )
+        self.update(
+            new_full_state,
+            self.get_agent_position(AgentType.SEEKER),
+            self.get_agent_position(AgentType.HIDER),
+            Objects([], []),
+        )
+
+    def remove_agent(self, agent_type: AgentType):
+        new_full_state = FullStateDataModifier.remove_agent(
+            self._state.full, agent_type
+        )
+        if agent_type == AgentType.SEEKER:
+            return self.update(
+                new_full_state,
+                Position(-1, -1),
+                self.get_agent_position(AgentType.HIDER),
+                Objects([], []),
+            )
+        return self.update(
+            new_full_state,
+            self.get_agent_position(AgentType.SEEKER),
+            Position(-1, -1),
+            Objects([], []),
+        )
+
+    def has_direct_sight(self, state: np.ndarray) -> tuple[bool, list[Position]]:
+        return FullStateDataExtractor.has_direct_sight(state)
+
+    def place_agent_with_direct_sight(self):
+        new_full_state = self._get_random_state_with_criteria(
+            lambda state: self.has_direct_sight(state)[0]
+        )
+        return self.update(
+            new_full_state,
+            self.get_agent_position(AgentType.SEEKER, new_full_state),
+            self.get_agent_position(AgentType.HIDER, new_full_state),
+            Objects([], []),
+        )
+
+    def place_agent_with_no_direct_sight(self):
+        new_full_state = self._get_random_state_with_criteria(
+            lambda state: not self.has_direct_sight(state)[0]
+        )
+        return self.update(
+            new_full_state,
+            self.get_agent_position(AgentType.SEEKER, new_full_state),
+            self.get_agent_position(AgentType.HIDER, new_full_state),
+            Objects([], []),
+        )
+
+    def place_agents_far_apart(self):
+        radius = self.height // 2
+        new_full_state = FullStateDataModifier.place_agents_far_apart(
+            self._state.full, radius
+        )
+        self.update(
+            new_full_state,
+            self.get_agent_position(AgentType.SEEKER),
+            self.get_agent_position(AgentType.HIDER),
+            Objects([], []),
+        )
+
+    @property
+    def init_full_state(self):
+        init_state = self._init_full_state
+
+        if self._random_seeker_position:
+            init_state = FullStateDataModifier.random_agent_position(
+                init_state, AgentType.SEEKER
+            )
+        if self._random_hider_position:
+            init_state = FullStateDataModifier.random_agent_position(
+                init_state, AgentType.HIDER
+            )
+        if self._random_box_position:
+            init_state = FullStateDataModifier.random_objects_position(
+                init_state, TileType.BOX
+            )
+
+        self.validate_state(init_state)
+        return init_state
+
+    @init_full_state.setter
+    def init_full_state(self, value: np.ndarray):
+        self._init_full_state = value
+
+    @property
+    def state_type(self) -> StateType:
+        return self._state_type
+
+    @property
+    def active_state(self, normalized: bool = True) -> np.ndarray:
+        if normalized:
+            return self._state.normalized_full_state
+        return self._state.active_state
+
+    @property
+    def normalized_full_state(self) -> np.ndarray:
+        return self._state.normalized_full_state
+
+    @property
+    def full(self) -> np.ndarray:
+        return self._state.full
+
+    @full.setter
+    def full(self, value: np.ndarray):
+        self._state.full = value
+
+    @property
+    def random_seeker_position(self) -> bool:
+        return self._random_seeker_position
+
+    @random_seeker_position.setter
+    def random_seeker_position(self, value: bool):
+        self._random_seeker_position = value
+
+    @property
+    def random_hider_position(self) -> bool:
+        return self._random_hider_position
+
+    @random_hider_position.setter
+    def random_hider_position(self, value: bool):
+        self._random_hider_position = value
+
+    @property
+    def random_box_position(self) -> bool:
+        return self._random_box_position
+
+    @random_box_position.setter
+    def random_box_position(self, value: bool):
+        self._random_box_position = value
+
+    @property
+    def partial(self) -> np.ndarray:
+        return self._state.partial
+
+    @property
+    def rgb(self) -> np.ndarray:
+        return self._state.rgb
+
+    @property
+    def full_state_size(self) -> tuple[int, int]:
+        return self.init_full_state.shape[0], self.init_full_state.shape[1]
+
+    @property
+    def partial_state_size(self) -> np.ndarray:
+        partial_state_size = (
+            self._active_agnet_position_size
+            + self._inactive_agent_position_size
+            + self._distance_size
+            + self._direction_size
+            + self._obstacle_state_size
+            + self._box_state_size
+        )
+        return np.array([partial_state_size], dtype=np.uint8)
+
+    @property
+    def _active_agnet_position_size(self) -> int:
+        return 2
+
+    @property
+    def _inactive_agent_position_size(self) -> int:
+        return 2
+
+    @property
+    def _distance_size(self) -> int:
+        return 1
+
+    @property
+    def _direction_size(self) -> int:
+        return 2
+
+    @property
+    def _obstacle_state_size(self) -> int:
+        return self._num_obstacles * Object.state_size_static()
+
+    @property
+    def _num_obstacles(self) -> int:
+        return len(
+            FullStateDataExtractor.get_positions(
+                self.init_full_state, TileType.OBSTACLE
+            )
+        )
+
+    @property
+    def _box_state_size(self) -> int:
+        return self._num_boxes * Object.state_size_static()
+
+    @property
+    def _num_boxes(self) -> int:
+        return len(
+            FullStateDataExtractor.get_positions(self.init_full_state, TileType.BOX)
+        )
+
+    @property
+    def agent_distance(self) -> float:
+        seeker_position = FullStateDataExtractor.get_agent_position(
+            self._state.full, AgentType.SEEKER
+        )
+        hider_position = FullStateDataExtractor.get_agent_position(
+            self._state.full, AgentType.HIDER
+        )
+        distance_vector = seeker_position - hider_position
+        distance = np.linalg.norm(distance_vector.tuple)
+
+        return float(distance)
+
+    def _get_random_state_with_criteria(
+        self, criteria: Callable[[np.ndarray], bool]
+    ) -> np.ndarray:
+        new_full_state = self._state.full.copy()
+
+        while True:
+            new_full_state = FullStateDataModifier.random_agent_position(
+                new_full_state, AgentType.SEEKER
+            )
+            new_full_state = FullStateDataModifier.random_agent_position(
+                new_full_state, AgentType.HIDER
+            )
+            if criteria(new_full_state):
+                break
+
+        return new_full_state
+
+    def _init_states(self, filename: str):
+        self.init_full_state = self._load_env_from_file(filename)
+        full_state = self.init_full_state
+        partial_state = np.ndarray(self.partial_state_size, dtype=np.uint8)
+        rgb_state = self._create_rgb_state()
+
+        self._state = State(
+            full=full_state,
+            partial=partial_state,
+            rgb=rgb_state,
+            active=self._state_type,
+        )
+
+    def _init_dimensions(self):
+        self.width = self.init_full_state.shape[1]
+        self.height = self.init_full_state.shape[0]
 
     def _load_env_from_file(self, filename: str) -> np.ndarray:
         if not os.path.exists(filename):
@@ -214,11 +412,7 @@ class TagState:
         return np.array(env, dtype=np.uint8)
 
     def _create_rgb_state(self) -> np.ndarray:
-        return np.full((self.screen_height, self.screen_width, 3), Color.WHITE.value)
-
-    def validate_state(self, state: np.ndarray):
-        FullStateDataExtractor.get_agent_position(state, AgentType.SEEKER)
-        FullStateDataExtractor.get_agent_position(state, AgentType.HIDER)
+        return np.full((self._screen_height, self._screen_width, 3), Color.WHITE.value)
 
     def _create_partial_state(
         self, seeker_position: Position, hider_position: Position, objects: Objects
@@ -303,7 +497,7 @@ class TagState:
         return state, False
 
     def _get_all_possible_full_states(self, active_agent: AgentType) -> np.ndarray:
-        clean_agent_state = self.state.full.copy()
+        clean_agent_state = self._state.full.copy()
         clean_agent_state = FullStateDataModifier.remove_agent(
             clean_agent_state, active_agent
         )
@@ -346,11 +540,11 @@ class TagState:
                     clean_agent_state, active_agent_position
                 ):
                     if active_agent == AgentType.SEEKER:
-                        state = self.state.partial = self._create_partial_state(
+                        state = self._state.partial = self._create_partial_state(
                             active_agent_position, inactive_agent_position, objects
                         )
                     else:
-                        state = self.state.partial = self._create_partial_state(
+                        state = self._state.partial = self._create_partial_state(
                             inactive_agent_position, active_agent_position, objects
                         )
                 else:
@@ -358,178 +552,8 @@ class TagState:
                 states[active_agent_position.row_major_order] = state
         return states
 
-    def get_occluded_states(self) -> np.ndarray:
-        if self.state_type != StateType.FULL:
-            raise ValueError(
-                f"Occlusion is only supported for full state type, not {self.state_type}"
-            )
-
-        states = np.ndarray(
-            (self.height, self.width, *self.full_state_size), dtype=np.uint8
-        )
-
-        for y in range(self.height):
-            for x in range(self.width):
-                state = self.state.full.copy()
-                state = FullStateDataModifier.occlude(state, Position(x, y))
-                torch_state = get_torch_from_numpy(state)
-                states[y, x] = torch_state.unsqueeze(0)
-        return states
-
     def _create_empty_full_state(self):
         return np.zeros((self.height, self.width), dtype=np.uint8)
 
     def _create_empty_partial_state(self):
         return np.ndarray(self.partial_state_size, dtype=np.uint8)
-
-    def place_seeker_next_to_hider(self):
-        new_full_state = FullStateDataModifier.place_seeker_next_to_hider(
-            self.state.full
-        )
-        self.update(
-            new_full_state,
-            self.get_agent_position(AgentType.SEEKER),
-            self.get_agent_position(AgentType.HIDER),
-            Objects([], []),
-        )
-
-    def place_agent_next_to_box(self, agent_type: AgentType):
-        new_full_state = FullStateDataModifier.place_agent_next_to_box(
-            self.state.full, agent_type
-        )
-        self.update(
-            new_full_state,
-            self.get_agent_position(AgentType.SEEKER),
-            self.get_agent_position(AgentType.HIDER),
-            Objects([], []),
-        )
-
-    def remove_box(self):
-        new_full_state, _ = FullStateDataModifier.remove_objects(
-            self.state.full, TileType.BOX
-        )
-        self.update(
-            new_full_state,
-            self.get_agent_position(AgentType.SEEKER),
-            self.get_agent_position(AgentType.HIDER),
-            Objects([], []),
-        )
-
-    def remove_agent(self, agent_type: AgentType):
-        new_full_state = FullStateDataModifier.remove_agent(self.state.full, agent_type)
-        if agent_type == AgentType.SEEKER:
-            return self.update(
-                new_full_state,
-                Position(-1, -1),
-                self.get_agent_position(AgentType.HIDER),
-                Objects([], []),
-            )
-        return self.update(
-            new_full_state,
-            self.get_agent_position(AgentType.SEEKER),
-            Position(-1, -1),
-            Objects([], []),
-        )
-
-    def has_direct_sight(self, state: np.ndarray) -> tuple[bool, list[Position]]:
-        return FullStateDataExtractor.has_direct_sight(state)
-
-    def place_agent_to_direct_sight(self):
-        new_full_state = self.state.full.copy()
-
-        while True:
-            new_full_state = FullStateDataModifier.random_agent_position(
-                new_full_state, AgentType.SEEKER
-            )
-            new_full_state = FullStateDataModifier.random_agent_position(
-                new_full_state, AgentType.HIDER
-            )
-            has_direct_sight, _ = self.has_direct_sight(new_full_state)
-            if has_direct_sight:
-                break
-
-        return self.update(
-            new_full_state,
-            self.get_agent_position(AgentType.SEEKER, new_full_state),
-            self.get_agent_position(AgentType.HIDER, new_full_state),
-            Objects([], []),
-        )
-
-    def place_agents_far_apart(self):
-        radius = self.height // 2
-        new_full_state = FullStateDataModifier.place_agents_far_apart(
-            self.state.full, radius
-        )
-        self.update(
-            new_full_state,
-            self.get_agent_position(AgentType.SEEKER),
-            self.get_agent_position(AgentType.HIDER),
-            Objects([], []),
-        )
-
-    @property
-    def full_state_size(self) -> tuple[int, int]:
-        return self.init_full_state.shape[0], self.init_full_state.shape[1]
-
-    @property
-    def partial_state_size(self) -> np.ndarray:
-        partial_state_size = (
-            self._active_agnet_position_size
-            + self._inactive_agent_position_size
-            + self._distance_size
-            + self._direction_size
-            + self._obstacle_state_size
-            + self._box_state_size
-        )
-        return np.array([partial_state_size], dtype=np.uint8)
-
-    @property
-    def _active_agnet_position_size(self) -> int:
-        return 2
-
-    @property
-    def _inactive_agent_position_size(self) -> int:
-        return 2
-
-    @property
-    def _distance_size(self) -> int:
-        return 1
-
-    @property
-    def _direction_size(self) -> int:
-        return 2
-
-    @property
-    def _obstacle_state_size(self) -> int:
-        return self._num_obstacles * Object.state_size_static()
-
-    @property
-    def _num_obstacles(self) -> int:
-        return len(
-            FullStateDataExtractor.get_positions(
-                self.init_full_state, TileType.OBSTACLE
-            )
-        )
-
-    @property
-    def _box_state_size(self) -> int:
-        return self._num_boxes * Object.state_size_static()
-
-    @property
-    def _num_boxes(self) -> int:
-        return len(
-            FullStateDataExtractor.get_positions(self.init_full_state, TileType.BOX)
-        )
-
-    @property
-    def agent_distance(self) -> float:
-        seeker_position = FullStateDataExtractor.get_agent_position(
-            self.state.full, AgentType.SEEKER
-        )
-        hider_position = FullStateDataExtractor.get_agent_position(
-            self.state.full, AgentType.HIDER
-        )
-        distance_vector = seeker_position - hider_position
-        distance = np.linalg.norm(distance_vector.tuple)
-
-        return float(distance)

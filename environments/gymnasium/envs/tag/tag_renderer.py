@@ -35,64 +35,6 @@ class TagRenderer:
 
         self._load_sprites()
 
-    def _load_sprites(self):
-        try:
-            seeker_sprite = pg.image.load("assets/sprites/tom.png")
-            hider_sprite = pg.image.load("assets/sprites/jerry.png")
-            box_sprite = pg.image.load("assets/sprites/cheese.png")
-            obstacle_sprite = pg.image.load("assets/sprites/bush.png")
-
-            scaled_seeker_sprite = pg.transform.scale(seeker_sprite, self._scale)
-            scaled_hider_sprite = pg.transform.scale(hider_sprite, self._scale)
-            scaled_box_sprite = pg.transform.scale(box_sprite, self._scale)
-            obstacle_sprite = pg.transform.scale(obstacle_sprite, self._scale)
-            self._seeker_sprite = scaled_seeker_sprite
-            self._hider_sprite = scaled_hider_sprite
-            self._hider_sprite = pg.transform.flip(scaled_hider_sprite, True, False)
-            self._box_sprite = scaled_box_sprite
-            self._obstacle_sprite = obstacle_sprite
-        except FileNotFoundError:
-            logging.warning("Sprites not found. Rendering without sprites.")
-            self._seeker_sprite = None
-            self._hider_sprite = None
-            self._box_sprite = None
-            self._obstacle_sprite = None
-
-    def _init_render(self):
-        """Initializes rendering settings."""
-        pg.init()
-        self._clock = pg.time.Clock()
-        self._is_open = True
-
-    def _init_surface(self):
-        if self._post_init_surface:
-            return
-        self._surface = pg.Surface((self._screen_width, self._screen_height))
-        self._post_init_surface = True
-
-    def _init_screen(self):
-        if self._post_init_screen:
-            return
-        pg.display.init()
-        pg.display.set_caption("")
-        self._screen = pg.display.set_mode((self._screen_width, self._screen_height))
-        self._post_init_screen = True
-
-    @property
-    def render_mode(self) -> str | None:
-        return self._render_mode
-
-    @render_mode.setter
-    def render_mode(self, render_mode: Optional[str] = None):
-        if render_mode is None:
-            return self._render_mode
-        if render_mode and render_mode not in self.metadata["render_modes"]:
-            raise ValueError(
-                f"Invalid render mode {render_mode}. "
-                f"Available modes: {self.metadata['render_modes']}"
-            )
-        self._render_mode = render_mode
-
     def render(
         self,
         state: np.ndarray,
@@ -127,6 +69,104 @@ class TagRenderer:
             return None
         else:
             raise ValueError(f"Invalid render mode {self._render_mode}")
+
+    def close(self):
+        if hasattr(self, "screen") and self._screen:
+            pg.display.quit()
+            pg.quit()
+            self._is_open = False
+
+    def apply_color_masks(self, color_matrix, full_state):
+        """Applies color masks to the tag."""
+        color_matrix[full_state == TileType.OBSTACLE.value] = Color.BLACK.value
+        color_matrix[full_state == TileType.BOX.value] = Color.YELLOW.value
+        color_matrix[full_state == TileType.SEEKER.value] = Color.BLUE.value
+        color_matrix[full_state == TileType.HIDER.value] = Color.GREEN.value
+
+    @property
+    def render_mode(self) -> str | None:
+        return self._render_mode
+
+    @render_mode.setter
+    def render_mode(self, render_mode: Optional[str] = None):
+        if render_mode is None:
+            return self._render_mode
+        if render_mode and render_mode not in self.metadata["render_modes"]:
+            raise ValueError(
+                f"Invalid render mode {render_mode}. "
+                f"Available modes: {self.metadata['render_modes']}"
+            )
+        self._render_mode = render_mode
+
+    @property
+    def direct_sight_positions(self):
+        return self._direct_sight_positions
+
+    @direct_sight_positions.setter
+    def direct_sight_positions(self, direct_sight_positions: list[Position]):
+        assert all(
+            isinstance(position, Position) for position in direct_sight_positions
+        )
+        self._direct_sight_positions = direct_sight_positions
+
+    @property
+    def seeker_action(self):
+        return self._seeker_action
+
+    @seeker_action.setter
+    def seeker_action(self, seeker_action: ActionType):
+        self._seeker_action = seeker_action
+
+    @property
+    def hider_action(self):
+        return self._hider_action
+
+    @hider_action.setter
+    def hider_action(self, hider_action: ActionType):
+        self._hider_action = hider_action
+
+    def _init_render(self):
+        """Initializes rendering settings."""
+        pg.init()
+        self._clock = pg.time.Clock()
+        self._is_open = True
+
+    def _init_surface(self):
+        if self._post_init_surface:
+            return
+        self._surface = pg.Surface((self._screen_width, self._screen_height))
+        self._post_init_surface = True
+
+    def _init_screen(self):
+        if self._post_init_screen:
+            return
+        pg.display.init()
+        pg.display.set_caption("")
+        self._screen = pg.display.set_mode((self._screen_width, self._screen_height))
+        self._post_init_screen = True
+
+    def _load_sprites(self):
+        try:
+            seeker_sprite = pg.image.load("assets/sprites/tom.png")
+            hider_sprite = pg.image.load("assets/sprites/jerry.png")
+            box_sprite = pg.image.load("assets/sprites/cheese.png")
+            obstacle_sprite = pg.image.load("assets/sprites/bush.png")
+
+            scaled_seeker_sprite = pg.transform.scale(seeker_sprite, self._scale)
+            scaled_hider_sprite = pg.transform.scale(hider_sprite, self._scale)
+            scaled_box_sprite = pg.transform.scale(box_sprite, self._scale)
+            obstacle_sprite = pg.transform.scale(obstacle_sprite, self._scale)
+            self._seeker_sprite = scaled_seeker_sprite
+            self._hider_sprite = scaled_hider_sprite
+            self._hider_sprite = pg.transform.flip(scaled_hider_sprite, True, False)
+            self._box_sprite = scaled_box_sprite
+            self._obstacle_sprite = obstacle_sprite
+        except FileNotFoundError:
+            logging.warning("Sprites not found. Rendering without sprites.")
+            self._seeker_sprite = None
+            self._hider_sprite = None
+            self._box_sprite = None
+            self._obstacle_sprite = None
 
     def _apply_sprites(self, surf: pg.Surface, state: np.ndarray):
         if self._seeker_sprite is not None:
@@ -163,43 +203,3 @@ class TagRenderer:
             return pg.transform.flip(sprite, True, False)
         else:
             return sprite
-
-    def close(self):
-        if hasattr(self, "screen") and self._screen:
-            pg.display.quit()
-            pg.quit()
-            self._is_open = False
-
-    def apply_color_masks(self, color_matrix, full_state):
-        """Applies color masks to the tag."""
-        color_matrix[full_state == TileType.OBSTACLE.value] = Color.BLACK.value
-        color_matrix[full_state == TileType.BOX.value] = Color.YELLOW.value
-        color_matrix[full_state == TileType.SEEKER.value] = Color.BLUE.value
-        color_matrix[full_state == TileType.HIDER.value] = Color.GREEN.value
-
-    @property
-    def direct_sight_positions(self):
-        return self._direct_sight_positions
-
-    @direct_sight_positions.setter
-    def direct_sight_positions(self, direct_sight_positions: list[Position]):
-        assert all(
-            isinstance(position, Position) for position in direct_sight_positions
-        )
-        self._direct_sight_positions = direct_sight_positions
-
-    @property
-    def seeker_action(self):
-        return self._seeker_action
-
-    @seeker_action.setter
-    def seeker_action(self, seeker_action: ActionType):
-        self._seeker_action = seeker_action
-
-    @property
-    def hider_action(self):
-        return self._hider_action
-
-    @hider_action.setter
-    def hider_action(self, hider_action: ActionType):
-        self._hider_action = hider_action
