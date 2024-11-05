@@ -11,7 +11,12 @@ class Sample:
     label: str
 
     def __str__(self) -> str:
-        return f"Sample {self.id}: {self.data}, {self.label}"
+        return f"""
+--------------------------------
+Sample {self.id}:
+{self.data}
+Label: {self.label}
+        """
 
 
 class Data:
@@ -89,6 +94,13 @@ class Data:
         data2 = Data()
         data2.load_samples(samples2)
         return data1, data2
+
+    def show_random_sample(self, n_samples: int) -> None:
+        import random
+
+        for _ in range(n_samples):
+            sample = random.choice(self.samples)
+            print(sample)
 
     def __str__(self) -> str:
         return str(self.samples)

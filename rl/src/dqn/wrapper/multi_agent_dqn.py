@@ -217,7 +217,7 @@ class MultiAgentDQN(MultiAgentBase):
 
             for i in range(self.num_agents):
                 skip = infos[i].get("skip")
-                if skip:
+                if skip is True:
                     continue
 
                 data_additative = infos[i].get("data_additative")

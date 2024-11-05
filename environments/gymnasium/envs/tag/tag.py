@@ -257,6 +257,7 @@ class TagEnv(gym.Env):
         self.steps = 0
         self.steps_beyond_terminated = None
 
+        self.bootcamp.slow_hider_factor = 2
         if full_reset:
             self.bootcamp.reset()
 
@@ -381,7 +382,10 @@ class TagEnv(gym.Env):
             self.info["collided"] = 1
             return state, self.tag_rewards.collision_reward
         if EnvUtils.is_within_bounds(new_state, new_agent_position):
-            if not EnvUtils.is_object(new_state, new_agent_position):
+            if not EnvUtils.is_obstacle(new_state, new_agent_position):
+                if EnvUtils.is_box(new_state, new_agent_position):
+                    if self.agents.active_agent == AgentType.HIDER:
+                        self.bootcamp.slow_hider_factor = 1
                 return self._move_agent_within_bounds(
                     new_state, new_agent_position
                 ), self.tag_rewards.move_reward[self.agents.active_agent.value]

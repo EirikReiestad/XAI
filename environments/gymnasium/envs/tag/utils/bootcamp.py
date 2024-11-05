@@ -46,8 +46,8 @@ class Bootcamp:
         self.slow_step_factor = 1
         self.slow_agent = 0
 
-        self.slow_hider_factor = 1
-        self.slow_seeker_factor = 1
+        self._slow_seeker_factor = 1
+        self._slow_hider_factor = 2
 
     def reset(self):
         self._name = BootcampName.HIDER
@@ -176,3 +176,19 @@ class Bootcamp:
     @property
     def name(self):
         return self._name
+
+    @property
+    def slow_seeker_factor(self):
+        return self._slow_seeker_factor
+
+    @slow_seeker_factor.setter
+    def slow_seeker_factor(self, value: int):
+        self._slow_seeker_factor = value
+
+    @property
+    def slow_hider_factor(self):
+        return self._slow_hider_factor
+
+    @slow_hider_factor.setter
+    def slow_hider_factor(self, value: int):
+        self._slow_hider_factor = value

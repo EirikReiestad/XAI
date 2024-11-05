@@ -38,5 +38,8 @@ class DataHandler:
         dh2.load_samples(data2.samples)
         return dh1, dh2
 
+    def show_random_sample(self, n_samples: int) -> None:
+        self.data.show_random_sample(n_samples)
+
     def __str__(self) -> str:
         return str(self.data)

@@ -12,6 +12,12 @@ class EnvUtils:
 
     @staticmethod
     def is_object(env: np.ndarray, position: Position):
-        is_obstacle = env[position.row_major_order] == TileType.OBSTACLE.value
-        is_box = env[position.row_major_order] == TileType.BOX.value
-        return is_obstacle or is_box
+        return EnvUtils.is_obstacle(env, position) or EnvUtils.is_box(env, position)
+
+    @staticmethod
+    def is_obstacle(env: np.ndarray, position: Position):
+        return env[position.row_major_order] == TileType.OBSTACLE.value
+
+    @staticmethod
+    def is_box(env: np.ndarray, position: Position):
+        return env[position.row_major_order] == TileType.BOX.value

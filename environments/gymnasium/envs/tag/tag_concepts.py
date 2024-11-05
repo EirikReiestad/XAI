@@ -80,6 +80,11 @@ class TagConcepts:
                 "The hider exists in the environment.",
                 self._get_hider_exists,
             ),
+            Concept(
+                "has-sight",
+                "The seeker has a direct line of sight to the hider.",
+                self._get_has_sight,
+            ),
         ]
 
     @property
@@ -228,6 +233,20 @@ class TagConcepts:
         for _ in range(samples):
             self._state.reset()
             self._state.remove_agent(agent_type=AgentType.HIDER)
+            states.append(self._state.normalized_full_state)
+            labels.append(np.random.randint(self._num_actions))
+        return states, labels
+
+    def _get_has_sight(self, samples: int) -> tuple[list[np.ndarray], list[str]]:
+        self._state.random_seeker_position = True
+        self._state.random_hider_position = True
+        self._state.random_box_position = True
+        states = []
+        labels = []
+        for _ in range(samples):
+            self._state.reset()
+            if not self._state.has_direct_sight(self._state.state.full):
+                continue
             states.append(self._state.normalized_full_state)
             labels.append(np.random.randint(self._num_actions))
         return states, labels
