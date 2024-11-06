@@ -52,7 +52,7 @@ class TagEnv(gym.Env):
         self._steps_beyond_terminated = None
 
         folder_name = "environments/gymnasium/data/tag/"
-        filename = "advanced-tag-0-10-10.txt"
+        filename = "tag-0-7.txt"
         FileHandler.file_exist(folder_name, filename)
         filename = folder_name + filename
 

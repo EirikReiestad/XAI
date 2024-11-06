@@ -28,9 +28,9 @@ class TagState:
         self._screen_width = screen_width
         self._screen_height = screen_height
         self._state_type = state_type
-        self._random_seeker_position = False
-        self._random_hider_position = False
-        self._random_box_position = False
+        self._random_seeker_position = True
+        self._random_hider_position = True
+        self._random_box_position = True
         self._init_states(filename)
         self._init_dimensions()
 
