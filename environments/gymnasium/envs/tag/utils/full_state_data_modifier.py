@@ -56,6 +56,11 @@ class FullStateDataModifier:
         removed_seeker_position = FullStateDataModifier.remove_agent(
             new_state, AgentType.SEEKER
         )
+        if len(empty_positions_around_position) == 0:
+            new_state = FullStateDataModifier.random_agent_position(
+                new_state, AgentType.HIDER
+            )
+            return FullStateDataModifier.place_seeker_next_to_hider(new_state)
         random_position = np.random.choice(np.array(empty_positions_around_position))
         placed_seeker = FullStateDataModifier.place_agent(
             removed_seeker_position, random_position, AgentType.SEEKER
@@ -77,6 +82,12 @@ class FullStateDataModifier:
                 state, box_position
             )
         )
+
+        if len(empty_positions_around_position) == 0:
+            new_state = FullStateDataModifier.random_objects_position(
+                new_state, TileType.BOX
+            )
+            return FullStateDataModifier.place_agent_next_to_box(new_state, agent)
 
         random_position = np.random.choice(empty_positions_around_position)
         placed_agent_state = FullStateDataModifier.place_agent(

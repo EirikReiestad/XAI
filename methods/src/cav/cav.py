@@ -21,11 +21,12 @@ class CAV:
     ):
         self._model = model
         self._model.eval()
-
         self._load_data(positive_sample_path, negative_sample_path)
         self._register_hooks()
 
         self._activations = {}
+
+        self.scaler = StandardScaler()
 
         np.random.seed(None)
 
@@ -57,47 +58,47 @@ class CAV:
         negative_data, negative_labels = self._negative_data.get_data_lists()
         test_data, test_labels = self._test_positive_data.get_data_lists()
 
-        if custom_test_data:
+        if custom_test_data is not None:
             test_data_handler = DataHandler()
             test_data_handler.load_samples(custom_test_data)
             test_data, test_labels = test_data_handler.get_data_lists()
 
         positive_activations, positive_output = self._compute_activations(
-            positive_data, requires_grad=True
+            positive_data, requires_grad=False
         )
         negative_activations, negative_output = self._compute_activations(
-            negative_data, requires_grad=True
+            negative_data, requires_grad=False
         )
         test_activations, test_output = self._compute_activations(
-            test_data, requires_grad=True
+            test_data, requires_grad=False
         )
 
         cavs = {}
         binary_concept_scores = {}
         tcav_scores = {}
 
-        for layer in self._activations.keys():
+        for i, layer in enumerate(self._activations.keys()):
             regressor = self._compute_regressor(
                 positive_activations[layer], negative_activations[layer]
             )
             cav = self._cav(regressor)
-            tcav_score = self._tcav_score(test_activations[layer], test_output, cav)
+            # tcav_score = self._tcav_score(test_activations[layer], test_output, cav)
             binary_concept_score = self._binary_concept_score(
                 test_activations[layer], regressor
             )
 
             cavs[layer] = cav
             binary_concept_scores[layer] = binary_concept_score
-            tcav_scores[layer] = tcav_score
+            # tcav_scores[layer] = tcav_score
+            tcav_scores[layer] = 0.0
 
         return cavs, binary_concept_scores, tcav_scores
 
     def _preprocess_activations(self, activations: dict) -> np.ndarray:
         numpy_activations = activations["output"].detach().numpy()
         activations = numpy_activations.reshape(numpy_activations.shape[0], -1)
-        scaler = StandardScaler()
-        scaled_act = scaler.fit_transform(activations)
-        return scaled_act
+        scaled_act = self.scaler.fit_transform(activations)
+        return activations
 
     def _cav(self, regressor: LogisticRegression):
         return regressor.coef_
@@ -118,16 +119,13 @@ class CAV:
         combined_activations = np.concatenate([pos_act, neg_act])
         combined_labels = np.concatenate([positive_labels, negative_labels])
 
+        """
         idx = np.random.permutation(combined_activations.shape[0])
         combined_activations = combined_activations[idx]
         combined_labels = combined_labels[idx]
+        """
 
-        scaler = StandardScaler()
-        combined_activations = scaler.fit_transform(combined_activations)
-
-        regressor = LogisticRegression(max_iter=200, warm_start=True)
-        regressor.coef_ = np.random.rand(1, combined_activations.shape[1])
-        regressor.intercept_ = np.random.rand(1)
+        regressor = LogisticRegression()
         regressor.fit(combined_activations, combined_labels)
 
         return regressor
@@ -166,7 +164,8 @@ class CAV:
     ) -> float:
         act = self._preprocess_activations(activations)
         labels = np.ones(act.shape[0])
-        return regressor.score(act, labels)
+        score = regressor.score(act, labels)
+        return score
 
     def _compute_activations(
         self, inputs: list[np.ndarray], requires_grad=False

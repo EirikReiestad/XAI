@@ -15,7 +15,6 @@ action_space = gym.action_space
 
 env = CAVWrapper(gym)
 concept_names = env.get_concept_names()
-concept_names = ["agents-close", "agents-far-apart"]
 
 
 def plot(positive_concept: str, cav_scores: list, steps: list, prefix: str = ""):
@@ -35,7 +34,7 @@ def analyse(
     tcav_scores = []
     steps = []
 
-    for suffix in ["0"]:
+    for suffix in ["0", "1"]:
         model = DQNPolicy(observation_space, action_space, [128, 128], [32, 32])
         models = Models(model, folder_suffix=suffix)
         analysis = Analysis(
@@ -54,4 +53,4 @@ for concept in concept_names:
     cav_scores, tcav_scores, steps = analyse(
         concept, negative_concept, observation_space, action_space
     )
-    plot(concept, cav_scores, steps)
+    plot(concept, tcav_scores, steps, prefix="_tcav")
