@@ -64,13 +64,13 @@ class CAV:
             test_data, test_labels = test_data_handler.get_data_lists()
 
         positive_activations, positive_output = self._compute_activations(
-            positive_data, requires_grad=False
+            positive_data, requires_grad=True
         )
         negative_activations, negative_output = self._compute_activations(
-            negative_data, requires_grad=False
+            negative_data, requires_grad=True
         )
         test_activations, test_output = self._compute_activations(
-            test_data, requires_grad=False
+            test_data, requires_grad=True
         )
 
         cavs = {}
@@ -82,15 +82,14 @@ class CAV:
                 positive_activations[layer], negative_activations[layer]
             )
             cav = self._cav(regressor)
-            # tcav_score = self._tcav_score(test_activations[layer], test_output, cav)
+            tcav_score = self._tcav_score(test_activations[layer], test_output, cav)
             binary_concept_score = self._binary_concept_score(
                 test_activations[layer], regressor
             )
 
             cavs[layer] = cav
             binary_concept_scores[layer] = binary_concept_score
-            # tcav_scores[layer] = tcav_score
-            tcav_scores[layer] = 0.0
+            tcav_scores[layer] = tcav_score
 
         return cavs, binary_concept_scores, tcav_scores
 
@@ -119,13 +118,14 @@ class CAV:
         combined_activations = np.concatenate([pos_act, neg_act])
         combined_labels = np.concatenate([positive_labels, negative_labels])
 
-        """
         idx = np.random.permutation(combined_activations.shape[0])
         combined_activations = combined_activations[idx]
         combined_labels = combined_labels[idx]
-        """
 
-        regressor = LogisticRegression()
+        regressor = LogisticRegression(warm_start=True)
+        # Randomize weights
+        regressor.coef_ = np.random.rand(1, combined_activations.shape[1])
+        regressor.intercept_ = np.random.rand(1)
         regressor.fit(combined_activations, combined_labels)
 
         return regressor
@@ -155,7 +155,7 @@ class CAV:
             retain_graph=True,
         )[0]
 
-        grads_flattened = grads.view(grads.size(0), -1)
+        grads_flattened = grads.view(grads.size(0), -1).detach().numpy()
 
         return np.dot(grads_flattened, cav.T)
 

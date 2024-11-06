@@ -43,7 +43,6 @@ class Analysis:
         self._cavs = {}
         self._binary_concept_scores = {}
         self._tcav_scores = {}
-        np.random.seed(0)
 
     def _add_total_cav_scores(self):
         for model, layers in self._cav_scores.items():
