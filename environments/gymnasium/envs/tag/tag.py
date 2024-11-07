@@ -46,7 +46,7 @@ class TagEnv(gym.Env):
         self._tag_radius = 1
         self._tag_head_start = 0
         self._terminate_out_of_bounds = False
-        self._max_steps = self._width * self._height * 4
+        self._max_steps = self._width * self._height * 6
         self.render_mode = render_mode
         self._steps = 0
         self._steps_beyond_terminated = None
