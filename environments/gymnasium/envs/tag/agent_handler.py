@@ -26,7 +26,7 @@ class AgentHandler:
     def __init__(self) -> None:
         self._freeze_hider = False
         self._seeker_controller = AgentController(1)
-        self._hider_controller = AgentController(3)
+        self._hider_controller = AgentController(2)
 
     def reset(self) -> None:
         self._seeker_controller.reset()
