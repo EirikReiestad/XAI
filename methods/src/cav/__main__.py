@@ -41,7 +41,7 @@ def analyse(
         analysis = Analysis(
             models, positive_concept + ".csv", negative_concept + ".csv"
         )
-        analysis.run(averages=2)
+        analysis.run(averages=1)
         cav_scores.append(analysis.cav_scores)
         tcav_scores.append(analysis.tcav_scores)
         steps.append(analysis.steps)

@@ -1,6 +1,7 @@
 import warnings
 
 import numpy as np
+from sklearn.base import re
 import torch
 import torch.nn as nn
 from sklearn.exceptions import ConvergenceWarning
@@ -25,6 +26,7 @@ class CAV:
         self._register_hooks()
 
         self._activations = {}
+        self._random_weights = False
 
         self.scaler = StandardScaler()
 
@@ -122,10 +124,11 @@ class CAV:
         combined_activations = combined_activations[idx]
         combined_labels = combined_labels[idx]
 
-        regressor = LogisticRegression(warm_start=True)
-        # Randomize weights
-        regressor.coef_ = np.random.rand(1, combined_activations.shape[1])
-        regressor.intercept_ = np.random.rand(1)
+        regressor = LogisticRegression()
+        if self._random_weights:
+            regressor = LogisticRegression(warm_start=True)
+            regressor.coef_ = np.random.rand(1, combined_activations.shape[1])
+            regressor.intercept_ = np.random.rand(1)
         regressor.fit(combined_activations, combined_labels)
 
         return regressor
