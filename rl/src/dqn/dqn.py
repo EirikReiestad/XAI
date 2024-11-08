@@ -48,7 +48,7 @@ class DQN(SingleAgentBase):
         epsilon_end: float = 0.05,
         epsilon_decay: float = 0.00001,
         slow_decay_point: float = 0.45,
-        slow_decay_factor: float = 10,
+        slow_decay_factor: float = 0.1,
         batch_size: int = 64,
         tau: float = 0.005,
         hidden_layers: list[int] = [128, 128],
