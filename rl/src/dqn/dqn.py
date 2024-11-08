@@ -46,7 +46,7 @@ class DQN(SingleAgentBase):
         gamma: float = 0.99,
         epsilon_start: float = 1.0,
         epsilon_end: float = 0.05,
-        epsilon_decay: float = 0.00001,
+        epsilon_decay: float = 0.0000001,
         slow_decay_point: float = 0.45,
         slow_decay_factor: float = 0.1,
         batch_size: int = 64,
