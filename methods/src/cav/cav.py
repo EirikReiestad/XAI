@@ -6,7 +6,7 @@ import torch
 import torch.nn as nn
 from sklearn.exceptions import ConvergenceWarning
 from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
 from data_handler import DataHandler
 from data_handler.src.utils.data import Sample
@@ -26,9 +26,7 @@ class CAV:
         self._register_hooks()
 
         self._activations = {}
-        self._random_weights = False
-
-        self.scaler = StandardScaler()
+        self._random_weights = True
 
         np.random.seed(None)
 
@@ -80,6 +78,8 @@ class CAV:
         tcav_scores = {}
 
         for i, layer in enumerate(self._activations.keys()):
+            self.scaler = MinMaxScaler()
+            self.scaler = StandardScaler()
             regressor = self._compute_regressor(
                 positive_activations[layer], negative_activations[layer]
             )
@@ -96,10 +96,15 @@ class CAV:
         return cavs, binary_concept_scores, tcav_scores
 
     def _preprocess_activations(self, activations: dict) -> np.ndarray:
+        # print("clean", np.min(activations), np.max(activations))
         numpy_activations = activations["output"].detach().numpy()
         activations = numpy_activations.reshape(numpy_activations.shape[0], -1)
+        # print("ACTIVATIONS")
+        # print("clean", np.min(activations), np.max(activations))
         scaled_act = self.scaler.fit_transform(activations)
+        # print("scaled", np.min(scaled_act), np.max(scaled_act))
         return activations
+        return scaled_act
 
     def _cav(self, regressor: LogisticRegression):
         return regressor.coef_

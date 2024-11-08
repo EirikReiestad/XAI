@@ -131,7 +131,7 @@ class Analysis:
         assert len(labels) == len(matrices)
         save_path = f"{folder_path}/{filename}"
 
-        model_steps = [f"{step:.1e}" for step in steps[0].values()]
+        model_steps = [f"{step}" for step in steps[0].values()]
 
         fig = plt.figure()
         ax1 = fig.add_subplot(projection="3d")

@@ -130,16 +130,23 @@ class WandBManager:
         if not self.active:
             return
 
-        if not os.path.isfile(path) or os.path.getsize(path) == 0:
-            logging.warning(f"Error: The file {path} does not exist or is empty.")
-            return
-
-        artifact_name = f"{model_artifact}_{step}"
-        artifact = wandb.Artifact(artifact_name, type="model")
-        artifact.metadata = metadata
-        artifact.add_file(path)
-        wandb.log_artifact(artifact)
-        wandb.log({"model_logged": True}, step=step + 1)
+        try:
+            artifact_name = f"{model_artifact}_{step}"
+            artifact = wandb.Artifact(artifact_name, type="model")
+            artifact.metadata = metadata
+            artifact.add_file(path)
+            wandb.log_artifact(artifact)
+            wandb.log({"model_logged": True}, step=step + 1)
+        except wandb.Error as e:
+            logging.error(
+                f"Error: Could not save model with artifact: {model_artifact}"
+            )
+            logging.error(f"Error: {e}")
+        except Exception as e:
+            logging.error(
+                f"Error: Could not save model with artifact: {model_artifact}"
+            )
+            logging.error(f"Error: {e}")
 
     def _delete_local_models(self):
         run = wandb.run
@@ -202,7 +209,8 @@ class WandBManager:
     def save_gif(self, path: str, step: int, append: str = ""):
         if not self.active:
             return
-        if not os.path.isfile(path) or os.path.getsize(path) == 0:
-            logging.warning(f"Error: The file {path} does not exist or is empty.")
-            return
-        wandb.log({f"gif{append}": wandb.Image(path)}, step=step + 1)
+        try:
+            wandb.log({f"gif{append}": wandb.Image(path)}, step=step + 1)
+        except Exception as e:
+            logging.error(f"Error: Could not save gif at path: {path}")
+            logging.error(f"Error: {e}")
