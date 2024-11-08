@@ -41,12 +41,12 @@ class DQN(SingleAgentBase):
         agent_id: int = 0,
         dueling: bool = False,
         double: bool = True,
-        memory_size: int = 100000,
+        memory_size: int = 1000000,
         lr: float = 1e-4,
         gamma: float = 0.99,
         epsilon_start: float = 1.0,
         epsilon_end: float = 0.05,
-        epsilon_decay: int = 1000000,
+        epsilon_decay: float = 0.00001,
         slow_decay_point: float = 0.45,
         slow_decay_factor: float = 10,
         batch_size: int = 64,
@@ -322,7 +322,7 @@ class DQN(SingleAgentBase):
 
         self.eps_threshold = self.hp.eps_end + (
             self.hp.eps_start - self.hp.eps_end
-        ) * math.exp(-self.steps_done / self.hp.eps_decay)
+        ) * math.exp(-self.steps_done * self.hp.eps_decay)
         self.steps_done += 1
 
         if (
