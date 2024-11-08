@@ -1,5 +1,10 @@
 import numpy as np
-from environments.gymnasium.envs.tag.utils import TileType
+from environments.gymnasium.envs.tag.utils import (
+    TileType,
+    create_object,
+    ObjectType,
+    Object,
+)
 from environments.gymnasium.utils import Position
 
 
@@ -11,13 +16,20 @@ class EnvUtils:
         return 0 <= position.x < env.shape[0] and 0 <= position.y < env.shape[1]
 
     @staticmethod
-    def is_object(env: np.ndarray, position: Position):
-        return EnvUtils.is_obstacle(env, position) or EnvUtils.is_box(env, position)
+    def get_object(env: np.ndarray, position: Position) -> Object | None:
+        value = env[position.row_major_order]
+        if value == TileType.OBSTACLE.value:
+            return create_object(ObjectType.OBSTACLE, position)
+        if value == TileType.BOX.value:
+            return create_object(ObjectType.BOX, position)
+        if value == TileType.POWERUP0.value:
+            return create_object(ObjectType.POWERUP0, position)
+        if value == TileType.POWERUP1.value:
+            return create_object(ObjectType.POWERUP1, position)
+        return None
 
     @staticmethod
-    def is_obstacle(env: np.ndarray, position: Position):
-        return env[position.row_major_order] == TileType.OBSTACLE.value
-
-    @staticmethod
-    def is_box(env: np.ndarray, position: Position):
-        return env[position.row_major_order] == TileType.BOX.value
+    def is_obstacle(obj: Object) -> bool:
+        if obj.grabable or obj.consumeable:
+            return False
+        return True

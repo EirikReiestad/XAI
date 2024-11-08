@@ -48,12 +48,26 @@ class TagState:
         box_positions = FullStateDataExtractor.get_positions(
             self._state.full, TileType.BOX
         )
+        powerup0_positions = FullStateDataExtractor.get_positions(
+            self._state.full, TileType.POWERUP0
+        )
+        powerup1_positions = FullStateDataExtractor.get_positions(
+            self._state.full, TileType.POWERUP1
+        )
         obstacles = [
             Object(ObjectType.OBSTACLE, position, False)
             for position in obstacle_positions
         ]
         boxes = [Object(ObjectType.BOX, position, True) for position in box_positions]
-        objects = Objects(obstacles, boxes)
+        powerup0 = [
+            Object(ObjectType.POWERUP0, position, True)
+            for position in powerup0_positions
+        ]
+        powerup1 = [
+            Object(ObjectType.POWERUP1, position, True)
+            for position in powerup1_positions
+        ]
+        objects = Objects(obstacles, boxes, powerup0, powerup1)
 
         self.validate_state(self._state.full)
 
@@ -100,6 +114,13 @@ class TagState:
     def get_box_positions(self) -> list[Position]:
         return FullStateDataExtractor.get_positions(self.full, TileType.BOX)
 
+    def get_powerup_positions(self, num: int) -> list[Position]:
+        if num == 0:
+            return FullStateDataExtractor.get_positions(self.full, TileType.POWERUP0)
+        if num == 1:
+            return FullStateDataExtractor.get_positions(self.full, TileType.POWERUP1)
+        raise ValueError(f"Powerup number {num} is not implemented yet.")
+
     def get_all_possible_states(
         self, active_agent: AgentType, inactive_agent: AgentType, objects: Objects
     ) -> np.ndarray:
@@ -142,7 +163,7 @@ class TagState:
             new_full_state,
             self.get_agent_position(AgentType.SEEKER),
             self.get_agent_position(AgentType.HIDER),
-            Objects([], []),
+            Objects([], [], [], []),
         )
 
     def place_agent_next_to_box(self, agent_type: AgentType):
@@ -153,7 +174,7 @@ class TagState:
             new_full_state,
             self.get_agent_position(AgentType.SEEKER),
             self.get_agent_position(AgentType.HIDER),
-            Objects([], []),
+            Objects([], [], [], []),
         )
 
     def remove_box(self):
@@ -164,7 +185,7 @@ class TagState:
             new_full_state,
             self.get_agent_position(AgentType.SEEKER),
             self.get_agent_position(AgentType.HIDER),
-            Objects([], []),
+            Objects([], [], [], []),
         )
 
     def remove_agent(self, agent_type: AgentType):
@@ -176,13 +197,13 @@ class TagState:
                 new_full_state,
                 Position(-1, -1),
                 self.get_agent_position(AgentType.HIDER),
-                Objects([], []),
+                Objects([], [], [], []),
             )
         return self.update(
             new_full_state,
             self.get_agent_position(AgentType.SEEKER),
             Position(-1, -1),
-            Objects([], []),
+            Objects([], [], [], []),
         )
 
     def has_direct_sight(self, state: np.ndarray) -> tuple[bool, list[Position]]:
@@ -196,7 +217,7 @@ class TagState:
             new_full_state,
             self.get_agent_position(AgentType.SEEKER, new_full_state),
             self.get_agent_position(AgentType.HIDER, new_full_state),
-            Objects([], []),
+            Objects([], [], [], []),
         )
 
     def place_agent_with_no_direct_sight(self):
@@ -207,7 +228,7 @@ class TagState:
             new_full_state,
             self.get_agent_position(AgentType.SEEKER, new_full_state),
             self.get_agent_position(AgentType.HIDER, new_full_state),
-            Objects([], []),
+            Objects([], [], [], []),
         )
 
     def place_agents_far_apart(self):
@@ -219,7 +240,7 @@ class TagState:
             new_full_state,
             self.get_agent_position(AgentType.SEEKER),
             self.get_agent_position(AgentType.HIDER),
-            Objects([], []),
+            Objects([], [], [], []),
         )
 
     @property
@@ -485,10 +506,26 @@ class TagState:
         seeker_box_positions = FullStateDataExtractor.get_positions(
             seeker_state, TileType.BOX
         )
+        seeker_powerup0_positions = FullStateDataExtractor.get_positions(
+            seeker_state, TileType.POWERUP0
+        )
+        hider_powerup0_positions = FullStateDataExtractor.get_positions(
+            hider_state, TileType.POWERUP0
+        )
+        seeker_powerup1_positions = FullStateDataExtractor.get_positions(
+            seeker_state, TileType.POWERUP1
+        )
+        hider_powerup1_positions = FullStateDataExtractor.get_positions(
+            hider_state, TileType.POWERUP1
+        )
 
         state = np.zeros((self.height, self.width), dtype=np.float32)
         for box_position in hider_box_positions + seeker_box_positions:
             state[*box_position.row_major_order] = TileType.BOX.value
+        for powerup0_position in seeker_powerup0_positions + hider_powerup0_positions:
+            state[*powerup0_position.row_major_order] = TileType.POWERUP0.value
+        for powerup1_position in seeker_powerup1_positions + hider_powerup1_positions:
+            state[*powerup1_position.row_major_order] = TileType.POWERUP1.value
         state[*seeker_position.row_major_order] = TileType.SEEKER.value
         state[*hider_position.row_major_order] = TileType.HIDER.value
         for obstacle_position in obstacle_positions:

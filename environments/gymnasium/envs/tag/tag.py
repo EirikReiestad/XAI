@@ -52,7 +52,7 @@ class TagEnv(gym.Env):
         self._steps_beyond_terminated = None
 
         folder_name = "environments/gymnasium/data/tag/"
-        filename = "maze-tag-0-10-10.txt"
+        filename = "clean-tag-0-10-10.txt"
         FileHandler.file_exist(folder_name, filename)
         filename = folder_name + filename
 
@@ -81,7 +81,8 @@ class TagEnv(gym.Env):
             "wrong_grab_release": 0,
             "has_direct_sight": 0,
             "distance_to_agent": 0.0,
-            "eat_box": 0,
+            "eat_powerup0": 0,
+            "eat_powerup1": 0,
         }
 
     def step(self, action: int) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
@@ -225,7 +226,7 @@ class TagEnv(gym.Env):
 
     @property
     def num_actions(self) -> int:
-        return 4
+        return 5
 
     @property
     def concepts(self) -> str:
@@ -245,7 +246,8 @@ class TagEnv(gym.Env):
             "wrong_grab_release": 0,
             "has_direct_sight": 0,
             "distance_to_agent": 0.0,
-            "eat_box": 0,
+            "eat_powerup0": 0,
+            "eat_powerup1": 0,
         }
 
     def _increment_termination_steps(self):
@@ -286,7 +288,8 @@ class TagEnv(gym.Env):
                     "collided": self._info["collided"],
                     "wrong_grab_release": self._info["wrong_grab_release"],
                     "has_direct_sight": self._info["has_direct_sight"],
-                    "eat_box": self._info["eat_box"],
+                    "eat_powerup0": self._info["eat_powerup0"],
+                    "eat_powerup1": self._info["eat_powerup1"],
                 },
                 "data_average": {
                     "distance_to_agent": self._info["distance_to_agent"],
@@ -330,7 +333,8 @@ class TagEnv(gym.Env):
                     "collided": self._info["collided"],
                     "wrong_grab_release": self._info["wrong_grab_release"],
                     "has_direct_sight": self._info["has_direct_sight"],
-                    "eat_box": self._info["eat_box"],
+                    "eat_powerup0": self._info["eat_powerup0"],
+                    "eat_powerup1": self._info["eat_powerup1"],
                 },
                 "data_average": {
                     "distance_to_agent": self._info["distance_to_agent"],
@@ -353,16 +357,18 @@ class TagEnv(gym.Env):
                 if not self._grab_entity():
                     self._info["wrong_grab_release"] = 1
                     reward += self._tag_rewards.wrong_grab_release_reward
+            return self._state.full, reward
 
         new_full_state, move_reward = self._move_agent(self._state.full, action)
+        new_full_state = self._move_grabbed_object(new_full_state)
         reward += move_reward
 
         if new_full_state is None:
             return None, reward
-        return self._move_grabbed_object(new_full_state), reward
+        return new_full_state, reward
 
     def _grab_entity(self) -> bool:
-        for obj in self.objects.boxes:
+        for obj in self.objects.objects:
             if (
                 self._agent_handler.agents.active.position.distance_to(obj.position)
                 <= 1
@@ -377,7 +383,9 @@ class TagEnv(gym.Env):
     def _release_entity(self):
         return self._agent_handler.agents.active.release()
 
-    def _move_grabbed_object(self, state: np.ndarray) -> Optional[np.ndarray]:
+    def _move_grabbed_object(self, state: Optional[np.ndarray]) -> Optional[np.ndarray]:
+        if state is None:
+            return None
         obj = self._agent_handler.agents.active.grabbed_object
         self._info["object_moved_distance"] = 0
 
@@ -420,24 +428,44 @@ class TagEnv(gym.Env):
                 if self._terminate_out_of_bounds
                 else (state, self._tag_rewards.collision_reward)
             )
-        if EnvUtils.is_obstacle(new_state, new_agent_position):
-            self._info["collided"] = 1
-            return state, self._tag_rewards.collision_reward
 
-        if EnvUtils.is_box(new_state, new_agent_position):
-            grabbed_object = self._agent_handler.agents.active.grabbed_object
-            if (
-                grabbed_object is not None
-                and grabbed_object.position == new_agent_position
-            ):
-                self._info["collided"] = 1
-                return state, self._tag_rewards.collision_reward
-            self._agent_handler.move_in_box()
-            self._info["eat_box"] = 1
+        obj = EnvUtils.get_object(new_state, new_agent_position)
+
+        if obj is None:
+            return self._move_agent_within_bounds(
+                new_state, new_agent_position
+            ), self._tag_rewards.move_reward[
+                self._agent_handler.agents.active_agent.value
+            ]
+
+        state, rewards, collided = self._move_in_obstacle(new_state, obj)
+        if collided:
+            return state, rewards
+
+        if obj.consumeable:
+            self._agent_handler.move_in_object(obj.object_type)
+            if obj.object_type == ObjectType.POWERUP0:
+                self._info["eat_powerup0"] = 1
+            if obj.object_type == ObjectType.POWERUP1:
+                self._info["eat_powerup1"]
 
         return self._move_agent_within_bounds(
             new_state, new_agent_position
         ), self._tag_rewards.move_reward[self._agent_handler.agents.active_agent.value]
+
+    def _move_in_obstacle(
+        self, state: np.ndarray, obj: Object
+    ) -> Tuple[np.ndarray, float, bool]:
+        if obj.object_type == ObjectType.OBSTACLE:
+            self._info["collided"] = 1
+            return state, self._tag_rewards.collision_reward, True
+
+        if obj.grabable:
+            grabbed_object = self._agent_handler.agents.active.grabbed_object
+            if grabbed_object is not None and grabbed_object.position == obj.position:
+                self._info["collided"] = 1
+                return state, self._tag_rewards.collision_reward, True
+        return state, 0, False
 
     def _move_agent_within_bounds(
         self, state: np.ndarray, agent_position: Position
@@ -502,16 +530,19 @@ class TagEnv(gym.Env):
     def _set_object_positions(self):
         obstacle_positions = self._state.get_obstacle_positions()
         box_positions = self._state.get_box_positions()
+        powerup0_positions = self._state.get_powerup_positions(0)
+        powerup1_positions = self._state.get_powerup_positions(1)
 
         obstacle_objects: list[Object] = []
         box_objects: list[Object] = []
+        powerup0_objects: list[Object] = []
+        powerup1_objects: list[Object] = []
 
         for position in obstacle_positions:
             obstacle_objects.append(
                 Object(
                     object_type=ObjectType.OBSTACLE,
                     position=position,
-                    grabable=False,
                 )
             )
 
@@ -523,7 +554,28 @@ class TagEnv(gym.Env):
                     grabable=True,
                 )
             )
-        self.objects = Objects(obstacle_objects, box_objects)
+
+        for position in powerup0_positions:
+            powerup0_objects.append(
+                Object(
+                    object_type=ObjectType.POWERUP0,
+                    position=position,
+                    consumeable=True,
+                )
+            )
+
+        for position in powerup1_positions:
+            powerup1_objects.append(
+                Object(
+                    object_type=ObjectType.POWERUP1,
+                    position=position,
+                    consumeable=True,
+                )
+            )
+
+        self.objects = Objects(
+            obstacle_objects, box_objects, powerup0_objects, powerup1_objects
+        )
 
     def _generate_return_info(self) -> Dict[str, Any]:
         return {
@@ -533,7 +585,8 @@ class TagEnv(gym.Env):
                 "collided": self._info["collided"],
                 "wrong_grab_release": self._info["wrong_grab_release"],
                 "has_direct_sight": self._info["has_direct_sight"],
-                "eat_box": self._info["eat_box"],
+                "eat_powerup0": self._info["eat_powerup0"],
+                "eat_powerup1": self._info["eat_powerup1"],
             },
             "data_average": {
                 "distance_to_agent": self._info["distance_to_agent"],

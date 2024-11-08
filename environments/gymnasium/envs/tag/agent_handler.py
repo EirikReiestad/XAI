@@ -1,4 +1,5 @@
 from environments.gymnasium.envs.tag.utils.agent_type import AgentType
+from environments.gymnasium.envs.tag.utils import ObjectType
 from environments.gymnasium.utils import Position
 
 from .utils.agents import Agent, DualAgents
@@ -48,8 +49,11 @@ class AgentHandler:
             return self._can_move_seeker(steps)
         return self._can_move_hider(steps)
 
-    def move_in_box(self):
-        if self.agents.active_agent == AgentType.HIDER:
+    def move_in_object(self, object_type: ObjectType) -> None:
+        if (
+            object_type == ObjectType.POWERUP0
+            and self.agents.active_agent == AgentType.SEEKER
+        ):
             self._hider_controller.slow_factor = 1
 
     def set_agent_slow_factor(self, agent: AgentType, value: int) -> None:

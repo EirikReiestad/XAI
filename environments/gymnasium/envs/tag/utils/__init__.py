@@ -4,7 +4,7 @@ from .agent_type import AgentType
 from .agents import Agent, DualAgents
 from .full_state_data_extractor import FullStateDataExtractor
 from .full_state_data_modifier import FullStateDataModifier
-from .object import Object, Objects, ObjectType
+from .object import Object, Objects, ObjectType, create_object
 from .tile_type import TileType
 from .bootcamp import Bootcamp, BootcampName
 
@@ -22,4 +22,5 @@ __all__ = [
     "ObjectType",
     "Bootcamp",
     "BootcampName",
+    "create_object",
 ]

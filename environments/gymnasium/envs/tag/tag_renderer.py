@@ -149,24 +149,32 @@ class TagRenderer:
         try:
             seeker_sprite = pg.image.load("assets/sprites/tom.png")
             hider_sprite = pg.image.load("assets/sprites/jerry.png")
-            box_sprite = pg.image.load("assets/sprites/cheese.png")
+            box_sprite = pg.image.load("assets/sprites/dog.png")
             obstacle_sprite = pg.image.load("assets/sprites/bush.png")
+            powerup0_sprite = pg.image.load("assets/sprites/cheese.png")
+            powerup1_sprite = pg.image.load("assets/sprites/blue_potion.png")
 
             scaled_seeker_sprite = pg.transform.scale(seeker_sprite, self._scale)
             scaled_hider_sprite = pg.transform.scale(hider_sprite, self._scale)
             scaled_box_sprite = pg.transform.scale(box_sprite, self._scale)
             obstacle_sprite = pg.transform.scale(obstacle_sprite, self._scale)
+            powerup0_sprite = pg.transform.scale(powerup0_sprite, self._scale)
+            powerup1_sprite = pg.transform.scale(powerup1_sprite, self._scale)
             self._seeker_sprite = scaled_seeker_sprite
             self._hider_sprite = scaled_hider_sprite
             self._hider_sprite = pg.transform.flip(scaled_hider_sprite, True, False)
             self._box_sprite = scaled_box_sprite
             self._obstacle_sprite = obstacle_sprite
+            self._powerup0_sprite = powerup0_sprite
+            self._powerup1_sprite = powerup1_sprite
         except FileNotFoundError:
             logging.warning("Sprites not found. Rendering without sprites.")
             self._seeker_sprite = None
             self._hider_sprite = None
             self._box_sprite = None
             self._obstacle_sprite = None
+            self._powerup0_sprite = None
+            self._powerup1_sprite = None
 
     def _apply_sprites(self, surf: pg.Surface, state: np.ndarray):
         if self._seeker_sprite is not None:
@@ -190,6 +198,19 @@ class TagRenderer:
                 surf.blit(
                     self._obstacle_sprite, obstacle_position[::-1] * self._scale[0]
                 )
+        if self._powerup0_sprite is not None:
+            powerup0_positions = np.argwhere(state == TileType.POWERUP0.value)
+            for powerup0_position in powerup0_positions:
+                surf.blit(
+                    self._powerup0_sprite, powerup0_position[::-1] * self._scale[0]
+                )
+        if self._powerup1_sprite is not None:
+            powerup1_positions = np.argwhere(state == TileType.POWERUP1.value)
+            for powerup1_position in powerup1_positions:
+                surf.blit(
+                    self._powerup1_sprite, powerup1_position[::-1] * self._scale[0]
+                )
+
         return surf
 
     def _transform_sprite(self, sprite: pg.Surface, action: ActionType):
