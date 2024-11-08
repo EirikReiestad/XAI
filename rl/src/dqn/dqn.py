@@ -39,21 +39,21 @@ class DQN(SingleAgentBase):
         dqn_policy: str | DQNPolicy,
         seed: int | None = None,
         agent_id: int = 0,
-        dueling: bool = False,
+        dueling: bool = True,
         double: bool = True,
         memory_size: int = 1000000,
         lr: float = 1e-4,
         gamma: float = 0.99,
         epsilon_start: float = 1.0,
         epsilon_end: float = 0.05,
-        epsilon_decay: float = 0.000001,
+        epsilon_decay: float = 0.0000005,
         slow_decay_point: float = 0.45,
         slow_decay_factor: float = 0.1,
         batch_size: int = 64,
         tau: float = 0.005,
         hidden_layers: list[int] = [128, 128],
         conv_layers: list[int] = [32, 32],
-        train_frequency: int = 16,
+        train_frequency: int = 20,
         update_target_frequency: int = 1000,
         optimize_method: str = "hard",  # "hard" or "soft"
         wandb_active: bool = False,
@@ -128,7 +128,7 @@ class DQN(SingleAgentBase):
         optimizer = OptimizerManager(self.policy_net, self.hp.lr)
         self.optimizer = optimizer.initialize()
 
-        self.memory = MemoryManager(memory_size).initialize()
+        self.memory = MemoryManager(memory_size).initialize(memory_type="prioritized")
 
         self.steps_done = 0
         self.episodes = 0

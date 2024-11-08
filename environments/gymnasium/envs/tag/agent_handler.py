@@ -50,11 +50,32 @@ class AgentHandler:
         return self._can_move_hider(steps)
 
     def move_in_object(self, object_type: ObjectType) -> None:
-        if (
-            object_type == ObjectType.POWERUP0
-            and self.agents.active_agent == AgentType.SEEKER
-        ):
+        if object_type == ObjectType.POWERUP0:
+            if self.agents.active_agent == AgentType.SEEKER:
+                self._seeker_controller.slow_factor = 1
+            else:
+                self._hider_controller.slow_factor = 1
+        if object_type == ObjectType.POWERUP1:
+            if self.agents.active_agent == AgentType.SEEKER:
+                self._hider_controller.slow_factor = 2
+                self._normalize_slow_factor()
+            else:
+                self._seeker_controller.slow_factor = 2
+                self._normalize_slow_factor()
+
+    def _normalize_slow_factor(self) -> None:
+        if self._seeker_controller.slow_factor < self._hider_controller.slow_factor:
+            scale = 1 / self._seeker_controller.slow_factor
+            self._seeker_controller.slow_factor = 1
+            self._hider_controller.slow_factor = int(
+                self._hider_controller.slow_factor * scale
+            )
+        else:
+            scale = 1 / self._hider_controller.slow_factor
             self._hider_controller.slow_factor = 1
+            self._seeker_controller.slow_factor = int(
+                self._seeker_controller.slow_factor * scale
+            )
 
     def set_agent_slow_factor(self, agent: AgentType, value: int) -> None:
         if agent == AgentType.SEEKER:

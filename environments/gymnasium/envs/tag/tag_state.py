@@ -28,9 +28,11 @@ class TagState:
         self._screen_width = screen_width
         self._screen_height = screen_height
         self._state_type = state_type
-        self._random_seeker_position = False
-        self._random_hider_position = False
-        self._random_box_position = False
+        self._random_seeker_position = True
+        self._random_hider_position = True
+        self._random_box_position = True
+        self._random_powerup0_position = True
+        self._random_powerup1_position = True
         self._init_states(filename)
         self._init_dimensions()
 
@@ -258,6 +260,14 @@ class TagState:
         if self._random_box_position:
             init_state = FullStateDataModifier.random_objects_position(
                 init_state, TileType.BOX
+            )
+        if self._random_powerup0_position:
+            init_state = FullStateDataModifier.random_objects_position(
+                init_state, TileType.POWERUP0
+            )
+        if self._random_powerup1_position:
+            init_state = FullStateDataModifier.random_objects_position(
+                init_state, TileType.POWERUP1
             )
 
         self.validate_state(init_state)

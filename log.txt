@@ -20353,3 +20353,1075 @@ INFO: QNetwork(
 )
 WARNING: GIF is enabled but the environment does not support RGB array rendering.
 INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+ERROR: Error: Could not save gif at path: assets/gifs/dqn_agent0.gif
+ERROR: Error: [Errno 2] No such file or directory: 'assets/gifs/dqn_agent0.gif'
+ERROR: Error: Could not save gif at path: assets/gifs/dqn_agent1.gif
+ERROR: Error: [Errno 2] No such file or directory: 'assets/gifs/dqn_agent1.gif'
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: 'skip'
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 207, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 37, in step_multiple
+    assert any(info["skip"] is True for info in infos)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 37, in <genexpr>
+    assert any(info["skip"] is True for info in infos)
+               ~~~~^^^^^^^^
+KeyError: 'skip'
+
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: 'skip'
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 207, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 38, in step_multiple
+    assert any(info["skip"] is True for info in infos)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 38, in <genexpr>
+    assert any(info["skip"] is True for info in infos)
+               ~~~~^^^^^^^^
+KeyError: 'skip'
+
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: 
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 207, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 37, in step_multiple
+    assert any(info.get("skip") is True for info in infos)
+AssertionError
+
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: 
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 207, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 37, in step_multiple
+    assert any(info.get("skip") is False for info in infos)
+AssertionError
+
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: 
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 207, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 38, in step_multiple
+    assert any(info.get("skip") is False for info in infos)
+AssertionError
+
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: 
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 207, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 38, in step_multiple
+    assert any(info.get("skip") is False for info in infos)
+AssertionError
+
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: 
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 207, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 38, in step_multiple
+    assert any([info.get("skip") is False for info in infos])
+AssertionError
+
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: 'skip'
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 207, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 37, in step_multiple
+    print([info["skip"] for info in infos])
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 37, in <listcomp>
+    print([info["skip"] for info in infos])
+           ~~~~^^^^^^^^
+KeyError: 'skip'
+
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: 
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 207, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 38, in step_multiple
+    assert any(info.get("skip") is False for info in infos)
+AssertionError
+
+WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: 
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 207, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 38, in step_multiple
+    assert any([info.get("skip") in [False, None] for info in infos])
+AssertionError
+
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: 
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 208, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 38, in step_multiple
+    assert any([info.get("skip") in [False, None] for info in infos])
+AssertionError
+
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: 
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 208, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 38, in step_multiple
+    assert any([info.get("skip") in [False, None] for info in infos])
+AssertionError
+
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: Can not skip both agents
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 208, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 38, in step_multiple
+    assert any(
+AssertionError: Can not skip both agents
+
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: integer modulo by zero
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 208, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 30, in step_multiple
+    observation, reward, terminated, trunc, info = self.env.step(action)
+                                                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/order_enforcing.py", line 56, in step
+    return self.env.step(action)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/env_checker.py", line 51, in step
+    return self.env.step(action)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 93, in step
+    if not self._agent_handler.can_move(self._steps):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/agent_handler.py", line 50, in can_move
+    return self._can_move_hider(steps)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/agent_handler.py", line 87, in _can_move_hider
+    if steps % self._hider_controller.slow_factor == 0:
+       ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ZeroDivisionError: integer modulo by zero
+
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: integer modulo by zero
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 208, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 30, in step_multiple
+    observation, reward, terminated, trunc, info = self.env.step(action)
+                                                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/order_enforcing.py", line 56, in step
+    return self.env.step(action)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/env_checker.py", line 51, in step
+    return self.env.step(action)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 93, in step
+    if not self._agent_handler.can_move(self._steps):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/agent_handler.py", line 50, in can_move
+    return self._can_move_hider(steps)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/agent_handler.py", line 89, in _can_move_hider
+    if steps % self._hider_controller.slow_factor == 0:
+       ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ZeroDivisionError: integer modulo by zero
+
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: integer modulo by zero
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 208, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 30, in step_multiple
+    observation, reward, terminated, trunc, info = self.env.step(action)
+                                                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/order_enforcing.py", line 56, in step
+    return self.env.step(action)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/env_checker.py", line 51, in step
+    return self.env.step(action)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 93, in step
+    if not self._agent_handler.can_move(self._steps):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/agent_handler.py", line 50, in can_move
+    return self._can_move_hider(steps)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/agent_handler.py", line 90, in _can_move_hider
+    if steps % self._hider_controller.slow_factor == 0:
+       ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ZeroDivisionError: integer modulo by zero
+
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 174309
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 240486
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+  )
+  (value_stream): Sequential(
+    (0): Linear(in_features=128, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=1, bias=True)
+  )
+  (advantage_stream): Sequential(
+    (0): Linear(in_features=128, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 240486
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+  )
+  (value_stream): Sequential(
+    (0): Linear(in_features=128, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=1, bias=True)
+  )
+  (advantage_stream): Sequential(
+    (0): Linear(in_features=128, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 240486
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+  )
+  (value_stream): Sequential(
+    (0): Linear(in_features=128, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=1, bias=True)
+  )
+  (advantage_stream): Sequential(
+    (0): Linear(in_features=128, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 240486
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+  )
+  (value_stream): Sequential(
+    (0): Linear(in_features=128, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=1, bias=True)
+  )
+  (advantage_stream): Sequential(
+    (0): Linear(in_features=128, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 240486
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+  )
+  (value_stream): Sequential(
+    (0): Linear(in_features=128, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=1, bias=True)
+  )
+  (advantage_stream): Sequential(
+    (0): Linear(in_features=128, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...

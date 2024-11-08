@@ -34,6 +34,9 @@ class MultiAgentEnv(gym.Wrapper):
             infos.append(info)
 
         full_states = [info["full_state"] for info in infos]
+        assert any(
+            [info.get("skip") in [False, None] for info in infos]
+        ), "Can not skip both agents"
         (
             full_state,
             concatenated_state_rewards,
