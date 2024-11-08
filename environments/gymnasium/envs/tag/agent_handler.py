@@ -14,6 +14,13 @@ class AgentController:
     def reset(self) -> None:
         self._slow_factor = self._init_slow_factor
 
+    def add_slow_factor(self, value: int) -> None:
+        self._slow_factor += value
+
+    def decrease_slow_factor(self, value: int) -> None:
+        self._slow_factor -= value
+        self._slow_factor = max(1, self._slow_factor)
+
     @property
     def slow_factor(self) -> int:
         return self._slow_factor
@@ -52,15 +59,15 @@ class AgentHandler:
     def move_in_object(self, object_type: ObjectType) -> None:
         if object_type == ObjectType.POWERUP0:
             if self.agents.active_agent == AgentType.SEEKER:
-                self._seeker_controller.slow_factor = 1
+                self._seeker_controller.decrease_slow_factor(1)
             else:
-                self._hider_controller.slow_factor = 1
+                self._hider_controller.decrease_slow_factor(1)
         if object_type == ObjectType.POWERUP1:
             if self.agents.active_agent == AgentType.SEEKER:
-                self._hider_controller.slow_factor = 2
+                self._hider_controller.add_slow_factor(1)
                 self._normalize_slow_factor()
             else:
-                self._seeker_controller.slow_factor = 2
+                self._seeker_controller.add_slow_factor(1)
                 self._normalize_slow_factor()
 
     def _normalize_slow_factor(self) -> None:

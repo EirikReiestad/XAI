@@ -46,13 +46,13 @@ class TagEnv(gym.Env):
         self._tag_radius = 1
         self._tag_head_start = 0
         self._terminate_out_of_bounds = False
-        self._max_steps = self._width * self._height * 6
+        self._max_steps = self._width * self._height * 10
         self.render_mode = render_mode
         self._steps = 0
         self._steps_beyond_terminated = None
 
         folder_name = "environments/gymnasium/data/tag/"
-        filename = "maze-tag-0-10-10.txt"
+        filename = "maze-tag-0-20-20.txt"
         FileHandler.file_exist(folder_name, filename)
         filename = folder_name + filename
 
