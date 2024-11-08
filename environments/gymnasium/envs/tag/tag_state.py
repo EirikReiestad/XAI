@@ -269,7 +269,6 @@ class TagState:
             init_state = FullStateDataModifier.random_objects_position(
                 init_state, TileType.POWERUP1
             )
-
         self.validate_state(init_state)
         return init_state
 
