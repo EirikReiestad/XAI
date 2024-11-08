@@ -52,7 +52,7 @@ class TagEnv(gym.Env):
         self._steps_beyond_terminated = None
 
         folder_name = "environments/gymnasium/data/tag/"
-        filename = "clean-tag-0-10-10.txt"
+        filename = "tag-0-7.txt"
         FileHandler.file_exist(folder_name, filename)
         filename = folder_name + filename
 
@@ -461,10 +461,8 @@ class TagEnv(gym.Env):
             return state, self._tag_rewards.collision_reward, True
 
         if obj.grabable:
-            grabbed_object = self._agent_handler.agents.active.grabbed_object
-            if grabbed_object is not None and grabbed_object.position == obj.position:
-                self._info["collided"] = 1
-                return state, self._tag_rewards.collision_reward, True
+            self._info["collided"] = 1
+            return state, self._tag_rewards.collision_reward, True
         return state, 0, False
 
     def _move_agent_within_bounds(

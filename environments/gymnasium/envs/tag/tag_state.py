@@ -28,9 +28,9 @@ class TagState:
         self._screen_width = screen_width
         self._screen_height = screen_height
         self._state_type = state_type
-        self._random_seeker_position = True
-        self._random_hider_position = True
-        self._random_box_position = True
+        self._random_seeker_position = False
+        self._random_hider_position = False
+        self._random_box_position = False
         self._init_states(filename)
         self._init_dimensions()
 
@@ -499,13 +499,8 @@ class TagState:
         obstacle_positions = FullStateDataExtractor.get_positions(
             seeker_state, TileType.OBSTACLE
         )
-        # NOTE: This need to be changed if we are allowed to drag the boxes
-        hider_box_positions = FullStateDataExtractor.get_positions(
-            hider_state, TileType.BOX
-        )
-        seeker_box_positions = FullStateDataExtractor.get_positions(
-            seeker_state, TileType.BOX
-        )
+        # TODO: This might be wrong logic (for box or moveable objects in general)? Should compare the last state?
+        box_positions = FullStateDataExtractor.get_positions(hider_state, TileType.BOX)
         seeker_powerup0_positions = FullStateDataExtractor.get_positions(
             seeker_state, TileType.POWERUP0
         )
@@ -520,14 +515,14 @@ class TagState:
         )
 
         state = np.zeros((self.height, self.width), dtype=np.float32)
-        for box_position in hider_box_positions + seeker_box_positions:
-            state[*box_position.row_major_order] = TileType.BOX.value
         for powerup0_position in seeker_powerup0_positions + hider_powerup0_positions:
             state[*powerup0_position.row_major_order] = TileType.POWERUP0.value
         for powerup1_position in seeker_powerup1_positions + hider_powerup1_positions:
             state[*powerup1_position.row_major_order] = TileType.POWERUP1.value
         state[*seeker_position.row_major_order] = TileType.SEEKER.value
         state[*hider_position.row_major_order] = TileType.HIDER.value
+        for box_position in box_positions:
+            state[*box_position.row_major_order] = TileType.BOX.value
         for obstacle_position in obstacle_positions:
             state[*obstacle_position.row_major_order] = TileType.OBSTACLE.value
 

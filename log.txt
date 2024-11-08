@@ -20066,3 +20066,290 @@ ERROR: Traceback (most recent call last):
 TypeError: EnvUtils.is_obstacle() takes 1 positional argument but 2 were given
 
 WARNING: Error: Could not find wandb directory: ./wandb
+INFO: Number of parameters: 174309
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=1152, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+ERROR: No agent found in the state [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 4. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 5. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 6. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 2. 0. 0. 0.]]
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/eirik/Projects/XAI/demo/__main__.py", line 14, in <module>
+    demo.run()
+  File "/home/eirik/Projects/XAI/demo/src/demos/multi_agent/tag.py", line 73, in run
+    self.dqn.learn(episodes)
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 207, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 29, in step_multiple
+    observation, reward, terminated, trunc, info = self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/order_enforcing.py", line 56, in step
+    return self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/env_checker.py", line 51, in step
+    return self.env.step(action)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 106, in step
+    reward, collided = self._perform_action(action)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 272, in _perform_action
+    self.update_state(new_full_state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 181, in update_state
+    self._state.validate_state(state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_state.py", line 139, in validate_state
+    FullStateDataExtractor.get_agent_position(state, AgentType.HIDER)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/full_state_data_extractor.py", line 80, in get_agent_position
+    + "".join(traceback.format_stack())
+
+ERROR: Traceback (most recent call last):
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 207, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 29, in step_multiple
+    observation, reward, terminated, trunc, info = self.env.step(action)
+                                                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/order_enforcing.py", line 56, in step
+    return self.env.step(action)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/env_checker.py", line 51, in step
+    return self.env.step(action)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 106, in step
+    reward, collided = self._perform_action(action)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 272, in _perform_action
+    self.update_state(new_full_state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 181, in update_state
+    self._state.validate_state(state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_state.py", line 139, in validate_state
+    FullStateDataExtractor.get_agent_position(state, AgentType.HIDER)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/full_state_data_extractor.py", line 78, in get_agent_position
+    raise ValueError(
+ValueError: No agent found in the state [[0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 4. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 5. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 6. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0. 0. 2. 0. 0. 0.]]
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/eirik/Projects/XAI/demo/__main__.py", line 14, in <module>
+    demo.run()
+  File "/home/eirik/Projects/XAI/demo/src/demos/multi_agent/tag.py", line 73, in run
+    self.dqn.learn(episodes)
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 108, in learn
+    self._collect_rollouts()
+  File "/home/eirik/Projects/XAI/rl/src/dqn/wrapper/multi_agent_dqn.py", line 207, in _collect_rollouts
+    ) = self.env.get_wrapper_attr("step_multiple")(actions)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/wrappers/multi_agent_env.py", line 29, in step_multiple
+    observation, reward, terminated, trunc, info = self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/order_enforcing.py", line 56, in step
+    return self.env.step(action)
+  File "/home/eirik/.cache/pypoetry/virtualenvs/xai-is73Zs3s-py3.11/lib/python3.11/site-packages/gymnasium/wrappers/env_checker.py", line 51, in step
+    return self.env.step(action)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 106, in step
+    reward, collided = self._perform_action(action)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 272, in _perform_action
+    self.update_state(new_full_state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag.py", line 181, in update_state
+    self._state.validate_state(state)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/tag_state.py", line 139, in validate_state
+    FullStateDataExtractor.get_agent_position(state, AgentType.HIDER)
+  File "/home/eirik/Projects/XAI/environments/gymnasium/envs/tag/utils/full_state_data_extractor.py", line 80, in get_agent_position
+    + "".join(traceback.format_stack())
+
+
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+WARNING: No frames in gif to save.
+WARNING: No frames in gif to save.
+ERROR: Error: Could not save gif at path: assets/gifs/dqn_agent0.gif
+ERROR: Error: [Errno 2] No such file or directory: 'assets/gifs/dqn_agent0.gif'
+ERROR: Error: Could not save gif at path: assets/gifs/dqn_agent1.gif
+ERROR: Error: [Errno 2] No such file or directory: 'assets/gifs/dqn_agent1.gif'
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
+INFO: Number of parameters: 63717
+INFO: QNetwork(
+  (conv_feature): Sequential(
+    (0): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+    (1): ReLU()
+    (2): Conv2d(32, 32, kernel_size=(3, 3), stride=(1, 1))
+    (3): ReLU()
+  )
+  (fc_feature): Sequential(
+    (0): Linear(in_features=288, out_features=128, bias=True)
+    (1): ReLU()
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ReLU()
+    (4): Linear(in_features=128, out_features=5, bias=True)
+  )
+)
+WARNING: GIF is enabled but the environment does not support RGB array rendering.
+INFO: Learning...
