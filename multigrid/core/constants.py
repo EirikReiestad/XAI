@@ -1,0 +1,1 @@
+TILE_PIXELS = 32
