@@ -1,14 +1,16 @@
 from abc import ABC, abstractmethod
-from typing import Any, Iterable
+from collections import defaultdict
+from typing import Any, Dict, Iterable
 
 import gymnasium as gym
 from gymnasium import spaces
 
-from .core.agent import Agent
+from .core.agent import Agent, AgentState
 from .core.constants import TILE_PIXELS
 from .core.grid import Grid
 
 AgentID = int
+ObservationType = Dict[str, Any]
 
 
 class MultiGridEnv(gym.Env, ABC):
@@ -30,16 +32,25 @@ class MultiGridEnv(gym.Env, ABC):
 
         self._agents = agents
         if isinstance(agents, int):
-            self._agents = [Agent() for _ in range(agents)]
+            self._num_agents = agents
+            self._agent_states = AgentState(agents)
+            self._agents: list[Agent] = []
+            for i in range(agents):
+                agent = Agent(i)
+                agent.state = self._agent_states[i]
+                self._agents.append(agent)
+        else:
+            raise NotImplementedError("Only support integer number of agents")
 
     def reset(
         self, seed: int | None = None, **kwargs
-    ) -> tuple[dict[AgentID, ObsType] : dict[AgentID, dict[str, Any]]]:
+    ) -> tuple[dict[AgentID, ObservationType] : dict[AgentID, dict[str, Any]]]:
         super().reset(seed=seed, **kwargs)
         self._grid.reset()
         for agent in self._agents:
             agent.reset()
-        return self._get_obs()
+        observations = self._generate_observations()
+        return observations, defaultdict(dict)
 
     @property
     def observation_space(self) -> gym.spaces.Space:
@@ -50,3 +61,6 @@ class MultiGridEnv(gym.Env, ABC):
     @property
     def action_space(self) -> gym.spaces.Space:
         return spaces.Dict({agent.index: agent.action_space for agent in self._agents})
+
+    def _generate_observations(self) -> dict[AgentID, ObservationType]:
+        pass

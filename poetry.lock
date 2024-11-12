@@ -12,6 +12,18 @@ files = [
 ]
 
 [[package]]
+name = "aenum"
+version = "3.1.15"
+description = "Advanced Enumerations (compatible with Python's stdlib Enum), NamedTuples, and NamedConstants"
+optional = false
+python-versions = "*"
+files = [
+    {file = "aenum-3.1.15-py2-none-any.whl", hash = "sha256:27b1710b9d084de6e2e695dab78fe9f269de924b51ae2850170ee7e1ca6288a5"},
+    {file = "aenum-3.1.15-py3-none-any.whl", hash = "sha256:e0dfaeea4c2bd362144b87377e2c61d91958c5ed0b4daf89cb6f45ae23af6288"},
+    {file = "aenum-3.1.15.tar.gz", hash = "sha256:8cbd76cd18c4f870ff39b24284d3ea028fbe8731a58df3aa581e434c575b9559"},
+]
+
+[[package]]
 name = "astroid"
 version = "3.3.4"
 description = "An abstract syntax tree for Python with inference support."
@@ -3121,4 +3133,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "b58df846fc9a9d0db9187991383429a1e15f6aaf755289a32f6002d5b408fe3c"
+content-hash = "583f27f998f42a210784db0c8342d2561cb89b682eeecf5bfb2ddf5f9b558caa"
