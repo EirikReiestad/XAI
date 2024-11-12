@@ -33,11 +33,8 @@ class CAV:
     def _register_hooks(self):
         for name, layer in self._model.named_children():
             if not isinstance(layer, nn.Sequential):
-                layer.register_forward_hook(self._module_hook)
                 continue
             for sub_layer in layer:
-                if not isinstance(sub_layer, nn.Linear | nn.Conv2d):
-                    continue
                 sub_layer.register_forward_hook(self._module_hook)
 
     def _load_data(self, positive_sample_path: str, negative_sample_path: str):
@@ -172,7 +169,7 @@ class CAV:
     ) -> float:
         act = self._preprocess_activations(activations)
         labels = np.ones(act.shape[0])
-        score = regressor.score(act, labels)
+        score = max(2 * (regressor.score(act, labels) - 0.5), 0)
         return score
 
     def _compute_activations(

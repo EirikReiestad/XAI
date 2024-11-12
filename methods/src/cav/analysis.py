@@ -85,13 +85,10 @@ class Analysis:
                 self._negative_sample_path,
             )
             cavs, binary_concept_scores, tcav_scores = cav.compute_cavs()
-            self._cav_scores[self._models.current_model_idx] = (
-                binary_concept_scores.copy()
-            )
-            self._tcav_scores[self._models.current_model_idx] = tcav_scores.copy()
-            self._model_steps[self._models.current_model_idx] = (
-                self._models.current_model_steps
-            )
+            name = f"{self._models.current_layer_name}_{self._models.current_model_idx}"
+            self._cav_scores[name] = binary_concept_scores.copy()
+            self._tcav_scores[name] = tcav_scores.copy()
+            self._model_steps[name] = self._models.current_model_steps
             if not self._models.has_next():
                 break
             self._models.next()
@@ -121,14 +118,19 @@ class Analysis:
         matrices = []
         for score in scores:
             matrix = np.array([list(s.values()) for s in score.values()])
+            print(matrix.shape)
             matrices.append(np.array(matrix))
+
+        print(len(scores[0]))
+
+        score_labels = list(scores[0].keys())
 
         use_labels = True
         if labels is None:
             use_labels = False
             labels = [str(i) for i in range(len(matrices))]
 
-        assert len(labels) == len(matrices)
+        assert len(labels) == len(matrices) == len(scores)
         save_path = f"{folder_path}/{filename}"
 
         model_steps = [f"{step}" for step in steps[0].values()]
@@ -168,7 +170,6 @@ class Analysis:
         ax1.set_xlabel("Layer")
         ax1.set_ylabel("Steps")
         ax1.set_zlabel("Score")
-
         ax1.set_xticks(np.arange(matrices[0].shape[1]))
         ax1.set_xticklabels([str(i) for i in range(1, matrices[0].shape[1] + 1)])
         ax1.set_yticks(np.arange(len(model_steps)))

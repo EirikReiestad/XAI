@@ -4,6 +4,7 @@ import os
 import re
 
 import torch
+import torch.nn as nn
 
 from rl.src.dqn.policies import DQNPolicy
 
@@ -22,6 +23,16 @@ class Models:
     def reset(self):
         self._model_idx = 0
         self._load_model()
+        self._layer_names: list[str] = self._get_layer_names()
+
+    def _get_layer_names(self):
+        names = []
+        for name, layer in self._model.policy_net.named_children():
+            if not isinstance(layer, nn.Sequential):
+                continue
+            for sub_name in layer:
+                names += [f"{sub_name.__class__.__name__}"]
+        return names
 
     def _extract_models(self, folder_suffix: str):
         model_folder = os.path.join("models", "latest" + folder_suffix)
@@ -114,3 +125,7 @@ class Models:
     @property
     def current_model_idx(self):
         return self._model_idx
+
+    @property
+    def current_layer_name(self) -> str:
+        return self._layer_names[self._model_idx]
