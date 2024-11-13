@@ -15,7 +15,7 @@ action_space = gym.action_space
 
 env = CAVWrapper(gym)
 concept_names = env.get_concept_names()
-concept_names = ["random"]
+concept_names = ["random", "has-direct-sight", "seeker-close-to-box"]
 
 
 def plot(positive_concept: str, scores: list, steps: list, prefix: str = ""):

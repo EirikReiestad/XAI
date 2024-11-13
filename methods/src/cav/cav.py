@@ -169,7 +169,7 @@ class CAV:
     ) -> float:
         act = self._preprocess_activations(activations)
         labels = np.ones(act.shape[0])
-        score = max(2 * (regressor.score(act, labels) - 0.5), 0)
+        score = regressor.score(act, labels)
         return score
 
     def _compute_activations(
