@@ -88,9 +88,11 @@ class QNetwork(BasePolicy):
         return nn.Sequential(*layers)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        assert isinstance(x, torch.Tensor)
         device = next(self.parameters()).device
         x = self._alter_input_shape(x)
 
+        x = x.float()
         x = self.conv_feature(x)
 
         x = torch.flatten(x, start_dim=1)

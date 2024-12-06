@@ -91,6 +91,7 @@ class AgentHandler:
             self._hider_controller.slow_factor = value
 
     def _can_move_hider(self, steps: int) -> bool:
+        return False
         if steps % self._hider_controller.slow_factor == 0:
             return not self._freeze_hider
         return False

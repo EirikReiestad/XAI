@@ -8,6 +8,7 @@ from rl.src.dqn.policies import DQNPolicy
 project_folder = "tag-v0-eirre"
 model_name = "tag-v0"
 models0 = [
+    "model_100:v456",
     "model_1000:v269",
     "model_5000:v85",
     "model_10000:v35",
@@ -18,6 +19,7 @@ models0 = [
 ]
 
 models1 = [
+    "model_100:v457",
     "model_1000:v270",
     "model_5000:v86",
     "model_10000:v36",

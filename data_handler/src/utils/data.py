@@ -1,5 +1,6 @@
-import logging
 import os
+import random
+import logging
 from dataclasses import dataclass
 
 import numpy as np
@@ -77,19 +78,24 @@ class Data:
                 )
                 f.write(f"{sample.id},{matrix_str},{sample.label}\n")
 
-    def get_data_lists(self) -> tuple[list[np.ndarray], list[str]]:
+    def get_data_lists(
+        self, sample_ratio: float = 1.0
+    ) -> tuple[list[np.ndarray], list[str]]:
+        random.seed(None)
         states = []
         labels = []
-        for sample in self.samples:
+        samples = random.sample(self.samples, int(len(self.samples) * sample_ratio))
+        for sample in samples:
             states.append(sample.data)
             labels.append(sample.label)
         return states, labels
 
-    def split(self, ratio: float) -> tuple["Data", "Data"]:
+    def split(self, ratio: float, bootstrapped: float) -> tuple["Data", "Data"]:
         n_samples = len(self.samples)
-        n_samples1 = int(n_samples * ratio)
-        samples1 = self.samples[:n_samples1]
-        samples2 = self.samples[n_samples1:]
+        samples = random.sample(self.samples, int(n_samples * bootstrapped))
+        n_samples1 = int(n_samples * bootstrapped * ratio)
+        samples1 = samples[:n_samples1]
+        samples2 = samples[n_samples1 : int(n_samples * bootstrapped)]
         data1 = Data()
         data1.load_samples(samples1)
         data2 = Data()
@@ -102,6 +108,7 @@ class Data:
         for _ in range(n_samples):
             sample = random.choice(self.samples)
             logging.info(sample)
+            print(sample)
 
     def __str__(self) -> str:
         return str(self.samples)

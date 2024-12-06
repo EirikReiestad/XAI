@@ -22,6 +22,7 @@ tensorflow = "^2.17.0"
 memory-profiler = "^0.61.0"
 opencv-python = "^4.10.0.84"
 customtkinter = "^5.2.2"
+seaborn = "^0.13.2"
 
 [tool.pyright]
 venvPath = "."

@@ -1,9 +1,5 @@
 import logging
 
-import matplotlib.pyplot as plt
-import numpy as np
-from matplotlib import cm
-
 from methods.src.cav import CAV
 from methods.src.utils import Models
 
@@ -14,6 +10,8 @@ class Analysis:
         models: Models,
         positive_sample_path: str,
         negative_sample_path: str,
+        plot_distribution: bool = False,
+        scaler: str = "",
     ) -> None:
         self._models = models
         self._positive_sample_path = positive_sample_path
@@ -27,6 +25,11 @@ class Analysis:
         self._total_cav_scores = {}
         self._total_tcav_scores = {}
         self._average_cav_scores = {}
+        self._average_tcav_scores = {}
+
+        self._plot_distribution = plot_distribution
+
+        self._scaler = scaler
 
     def run(self, averages: int = 10):
         for i in range(averages):
@@ -38,6 +41,7 @@ class Analysis:
             self._add_total_tcav_scores()
 
         self._calculate_average_cav_scores(averages)
+        self._calculate_average_tcav_scores(averages)
 
     def _reset(self):
         self._cavs = {}
@@ -77,15 +81,31 @@ class Analysis:
             ) in layers.items():
                 self._average_cav_scores[model][layer] = score / n
 
+    def _calculate_average_tcav_scores(self, n: int):
+        for model, layers in self._total_tcav_scores.items():
+            self._average_tcav_scores[model] = {}
+            for (
+                layer,
+                score,
+            ) in layers.items():
+                self._average_tcav_scores[model][layer] = score / n
+
     def _run_cav(self):
+        plot_distribution = False
         while True:
+            if not self._models.has_next():
+                plot_distribution = self._plot_distribution
             cav = CAV(
                 self._models.policy_net,
                 self._positive_sample_path,
                 self._negative_sample_path,
+                self._scaler,
             )
-            cavs, binary_concept_scores, tcav_scores = cav.compute_cavs()
-            name = f"{self._models.current_layer_name}_{self._models.current_model_idx}"
+            cavs, binary_concept_scores, tcav_scores = cav.compute_cavs(
+                plot_distribution=plot_distribution
+            )
+            plot_distribution = False
+            name = str(self._models.current_model_steps)
             self._cav_scores[name] = binary_concept_scores.copy()
             self._tcav_scores[name] = tcav_scores.copy()
             self._model_steps[name] = self._models.current_model_steps
@@ -104,77 +124,3 @@ class Analysis:
     @property
     def steps(self):
         return self._model_steps.copy()
-
-    @staticmethod
-    def plot(
-        scores: list[dict],
-        steps: list[dict],
-        folder_path: str = "assets/figures",
-        filename: str = "cav_plot.png",
-        labels: list[str] | None = None,
-        title: str = "Plot",
-        show: bool = True,
-    ):
-        matrices = []
-        for score in scores:
-            matrix = np.array([list(s.values()) for s in score.values()])
-            print(matrix.shape)
-            matrices.append(np.array(matrix))
-
-        print(len(scores[0]))
-
-        score_labels = list(scores[0].keys())
-
-        use_labels = True
-        if labels is None:
-            use_labels = False
-            labels = [str(i) for i in range(len(matrices))]
-
-        assert len(labels) == len(matrices) == len(scores)
-        save_path = f"{folder_path}/{filename}"
-
-        model_steps = [f"{step}" for step in steps[0].values()]
-
-        fig = plt.figure()
-        ax1 = fig.add_subplot(projection="3d")
-
-        _x = np.arange(matrices[0].shape[1])
-        _y = np.arange(matrices[0].shape[0])
-        _xx, _yy = np.meshgrid(_x, _y)
-
-        for i, (matrix, label) in enumerate(zip(matrices, labels)):
-            cmap = cm.get_cmap("viridis")
-            color = cmap(i / len(matrices))
-            ax1.plot_surface(
-                _xx,
-                _yy,
-                matrix,
-                edgecolor="k",
-                color=color,
-                alpha=0.5,
-                shade=True,
-                label=label,
-            )
-            if use_labels:
-                ax1.text2D(
-                    0.05,
-                    0.05 - i * 0.05,
-                    label,
-                    transform=ax1.transAxes,
-                    fontsize=10,
-                    color=color,
-                )
-
-        ax1.set_zlim(0, 1)
-        ax1.set_title(title)
-        ax1.set_xlabel("Layer")
-        ax1.set_ylabel("Steps")
-        ax1.set_zlabel("Score")
-        ax1.set_xticks(np.arange(matrices[0].shape[1]))
-        ax1.set_xticklabels([str(i) for i in range(1, matrices[0].shape[1] + 1)])
-        ax1.set_yticks(np.arange(len(model_steps)))
-        ax1.set_yticklabels(model_steps)
-
-        if show:
-            plt.show()
-        fig.savefig(save_path)

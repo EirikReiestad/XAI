@@ -55,13 +55,13 @@ class TagConcepts:
                 self._get_seeker_close_to_box,
             ),
             Concept(
-                "seeker-exists",
-                "The seeker exists in the environment.",
+                "seeker-not-exist",
+                "The seeker does not exist in the environment.",
                 self._get_seeker_exists,
             ),
             Concept(
-                "hider-exists",
-                "The hider exists in the environment.",
+                "hider-not-exist",
+                "The hider does not exist in the environment.",
                 self._get_hider_exists,
             ),
             Concept(

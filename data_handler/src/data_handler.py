@@ -27,11 +27,13 @@ class DataHandler:
         samples = self._get_samples(states, labels)
         self.load_samples(samples)
 
-    def get_data_lists(self) -> tuple[list[np.ndarray], list[str]]:
-        return self.data.get_data_lists()
+    def get_data_lists(self, sample_ratio) -> tuple[list[np.ndarray], list[str]]:
+        return self.data.get_data_lists(sample_ratio=sample_ratio)
 
-    def split(self, ratio: float) -> tuple["DataHandler", "DataHandler"]:
-        data1, data2 = self.data.split(ratio)
+    def split(
+        self, ratio: float, bootstrapped: float = 1.0
+    ) -> tuple["DataHandler", "DataHandler"]:
+        data1, data2 = self.data.split(ratio, bootstrapped)
         dh1 = DataHandler()
         dh1.load_samples(data1.samples)
         dh2 = DataHandler()
