@@ -29,6 +29,29 @@ models1 = [
     "model_30000:v7",
 ]
 
+models0 = [
+    "model_100:v518",
+    "model_500:v393",
+    "model_1000:v325",
+    "model_1500:v246",
+    "model_2000:v193",
+    "model_2500:v188",
+    "model_3000:v164",
+    "model_3500:v150",
+    "model_4000:v136",
+]
+models1 = [
+    "model_100:v519",
+    "model_500:v394",
+    "model_1000:v326",
+    "model_1500:v247",
+    "model_2000:v194",
+    "model_2500:v189",
+    "model_3000:v165",
+    "model_3500:v151",
+    "model_4000:v137",
+]
+
 models = [models0, models1]
 
 gym = gym.make("TagEnv-v0")
