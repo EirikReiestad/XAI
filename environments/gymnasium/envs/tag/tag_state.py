@@ -29,7 +29,7 @@ class TagState:
         self._screen_height = screen_height
         self._state_type = state_type
         self._random_seeker_position = False
-        self._random_hider_position = False
+        self._random_hider_position = True
         self._random_box_position = True
         self._random_powerup0_position = True
         self._random_powerup1_position = True
