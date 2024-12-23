@@ -10,7 +10,13 @@ env_wrapped = CAVWrapper(env)
 concepts = env_wrapped.get_concepts()
 logging.info(f"Concepts: {concepts}")
 concept_names = env_wrapped.get_concept_names()
-concept_names = ["random", "has-direct-sight", "seeker-close-to-box"]
+concept_names = [
+    "random",
+    "has-direct-sight",
+    "agents-close",
+    "hider-not-exist",
+    "seeker-not-exist",
+]
 
 for concept in concept_names:
     logging.info(f"{'='*5} Generating data for concept: {concept}{'='*5}")

@@ -6,10 +6,7 @@ from dataclasses import dataclass
 import wandb
 
 
-@dataclass
-class WandBConfig:
-    def __init__(
-        self,
+@dataclass class WandBConfig: def __init__( self,
         project: str = "",
         run_name: str = "",
         tags: list[str] = [],

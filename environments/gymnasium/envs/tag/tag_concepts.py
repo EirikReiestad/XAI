@@ -103,7 +103,7 @@ class TagConcepts:
         self, samples: int, position_func: Callable[[], None]
     ) -> tuple[list[np.ndarray], list[str]]:
         self._state.random_seeker_position = True
-        self._state.random_hider_position = True
+        self._state.random_hider_position = False
         self._state.random_box_position = True
         states, labels = [], []
         for _ in range(samples):

@@ -1,3 +1,4 @@
+import logging
 import warnings
 from typing import Optional
 
@@ -57,12 +58,12 @@ class CAV:
         positive_data = DataHandler()
         positive_data.load_data_from_path(positive_sample_path)
 
-        self._positive_data, self._test_positive_data = positive_data.split(0.8, 0.1)
+        self._positive_data, self._test_positive_data = positive_data.split(0.8, 0.8)
 
         negative_data = DataHandler()
         negative_data.load_data_from_path(negative_sample_path)
 
-        self._negative_data, self._test_negative_data = negative_data.split(0.8, 0.1)
+        self._negative_data, self._test_negative_data = negative_data.split(0.8, 0.8)
 
     def compute_cavs(
         self,
@@ -141,6 +142,7 @@ class CAV:
         return reshaped_activations
 
     def _plot_distribution(self, activations: np.ndarray, filename: str):
+        return
         filename += self._scaler_name
         filepath = f"assets/figures/act_dist{filename}.png"
         flatten_activations = activations.flatten()
@@ -153,10 +155,10 @@ class CAV:
         ), f"Activations must be float, not {type(flatten_activations[0])}"
         try:
             sns.histplot(flatten_activations, kde=True, stat="density", ax=ax)
-        except ValueError as e:
-            raise ValueError(
+        except Exception:
+            logging.error(
                 f"Error while plotting distribution for layer {filename}, activations shape: {flatten_activations.shape}, activations: {flatten_activations}"
-            ) from e
+            )
         plt.xlabel("Activation")
         plt.ylabel("Density")
         plt.title(f"Activation Distribution for layer {filename}")
@@ -214,13 +216,13 @@ class CAV:
         assert (
             torch_activations.requires_grad
         ), "Activations must have requires_grad=True"
-        sensitivity_score = self._sensitivity_score(
-            torch_activations, network_output, cav
-        )
-        self._plot_distribution(
-            sensitivity_score, f"sensitivity_score_{self._layer_idx}_{CAV.id}"
-        )
-        return (sensitivity_score > 0).mean()
+        outputs = [network_output[..., i] for i in range(len(network_output[0]))]
+        tcav_score = 0
+        for output in outputs:
+            sensitivity_score = self._sensitivity_score(torch_activations, output, cav)
+            mean_sensitivity_score = (sensitivity_score > 0).mean()
+            tcav_score += mean_sensitivity_score
+        return tcav_score / len(outputs)
 
     def _sensitivity_score(
         self, activations: torch.Tensor, network_output: torch.Tensor, cav: np.ndarray
@@ -229,11 +231,10 @@ class CAV:
         assert activations.requires_grad, "Activations must have requires_grad=True"
         assert cav.ndim == 2, "Coef must be 2D (n_features, n_classes)"
 
-        output = network_output.max(dim=1)[0]
         grads = torch.autograd.grad(
-            output,
+            network_output,
             activations,
-            grad_outputs=torch.ones_like(output),
+            grad_outputs=torch.ones_like(network_output),
             create_graph=True,
             retain_graph=True,
         )[0]
@@ -244,6 +245,7 @@ class CAV:
             f"grads_flattened_{self._layer_idx}_{CAV.id}",
         )
         sensitivity_score = np.dot(grads_flattened, cav.T)
+
         return sensitivity_score
 
     def _binary_concept_score(

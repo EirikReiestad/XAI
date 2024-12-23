@@ -13,6 +13,8 @@ def plot_3d(
     labels: list[str] | None = None,
     title: str = "Plot",
     show: bool = True,
+    z_min: float = 0,
+    z_max: float = 1,
 ):
     save_path = f"{folder_path}/{filename}"
     matrices = []
@@ -31,13 +33,7 @@ def plot_3d(
     score_labels = [str(i) for i in range(1, len(score_labels) + 1)]
 
     model_steps = [step for step in steps[0].values()]
-    formatted_steps = [
-        (
-            lambda step: f"{math.ceil(step / 10**int(math.log10(step))) if math.ceil(step / 10**int(math.log10(step))) < 10 else 1} * 10^{int(math.log10(step)) + (1 if math.ceil(step / 10**int(math.log10(step))) == 10 else 0)}"
-        )(step)
-        for step in model_steps
-    ]
-    formatted_steps = [f"10^{int(math.log10(step))}" for step in model_steps]
+    formatted_steps = [f"{step // 1000}" for step in model_steps]
 
     n_plots = len(matrices)
     n_cols = n_plots
@@ -73,10 +69,10 @@ def plot_3d(
 
         # Change font size
         ax.tick_params(axis="both", which="major", labelsize=16)
-        ax.set_zlim(0, 1)
+        ax.set_zlim(z_min, z_max)
         ax.set_title(f"{title} - {label}", fontsize=30)
         ax.set_xlabel("Layer", fontsize=20)
-        ax.set_ylabel("Steps", fontsize=20, labelpad=20)
+        ax.set_ylabel("Checkpoint (x10^3)", fontsize=20, labelpad=20)
         ax.set_zlabel("Score", fontsize=20)
         ax.set_xticks(np.arange(matrices[0].shape[1]))
         ax.set_xticklabels(score_labels)
@@ -98,6 +94,8 @@ def plot_line(
     labels: list[str] | None = None,
     title: str = "Plot",
     show: bool = True,
+    y_min: float = 0,
+    y_max: float = 1,
 ):
     save_path = f"{folder_path}/{filename}"
 
@@ -140,17 +138,25 @@ def plot_line(
     ):
         ax = axes[i]
 
-        for concept, values in matrix.items():
-            _x = np.arange(len(values))
-            ax.plot(_x, values, marker="o", label=concept)
+        cmap = cm.get_cmap("plasma", len(matrix.items()))
+        for j, (concept, values) in enumerate(matrix.items()):
+            _x = np.arange(1, len(values) + 1)
+            ax.plot(_x, values, marker="o", label=concept, color=cmap(j))
 
-        ax.set_ylim(0, 1)
-        ax.set_title(f"{title} - {label}")
-        ax.set_xticks(np.arange(len(matrix[concept])))
-        ax.set_xlabel("Layer")
-        ax.set_ylabel("Average Score")
+        ax.set_ylim(y_min, y_max)
+        ax.set_title(f"{title} - {label}", fontsize=30)
+        ax.set_xticks(np.arange(1, len(matrix[concept]) + 1))
+        ax.set_xlabel("Layer", fontsize=20)
+        ax.set_ylabel("Score", fontsize=20)
+        ax.tick_params(axis="both", which="major", labelsize=16)
         if i == len(concept_matrices) - 1:
-            ax.legend(bbox_to_anchor=(1.05, 1), loc="upper left", title="Concepts")
+            ax.legend(
+                bbox_to_anchor=(1.05, 1),
+                loc="upper left",
+                title="Concepts",
+                title_fontsize=20,
+                fontsize=16,
+            )
 
     fig.tight_layout()
 
@@ -222,10 +228,9 @@ def plot_bar_with_bootstrap(
     ax.set_xlabel("Concepts")
     ax.set_ylabel("Mean Score")
     ax.set_ylim(0, 1)
-    ax.set_title("Bar Plot with Bootstrapped 95% Confidence Intervals")
+    ax.set_title("Concepts Bar Plot with Bootstrapped 95% Confidence Intervals")
     plt.xticks(rotation=60)
     plt.tight_layout()
-    plt.title(title)
     ax.legend()  # Add a legend
 
     if show:
